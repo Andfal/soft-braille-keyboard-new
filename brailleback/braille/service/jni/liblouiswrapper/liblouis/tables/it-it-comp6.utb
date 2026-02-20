@@ -23,6 +23,7 @@ sign + 5-235								43
 midnum + 235							43
 sign / 5-256								47
 uplow \x00D2\x00F2 346			# o with grave above
+uplow \x00D6\x00F6 6-246			# o with diaeresis
 digit        0      3456
 
 include digits6DotsPlusDot6.uti
@@ -37,6 +38,7 @@ sign @ 345						commercial at	64		x0040
 
 include latinLetterDef6Dots.uti
 uplow Ââ 5-16				a accent circonflexe
+uplow \x018F\x0259 6-16				schwa
 uplow Êê 5-126			e accent circonflexe
 uplow Îî 5-146			i accent circonflexe
 uplow Ôô 5-1456			o accent circonflexe
