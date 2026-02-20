@@ -77,6 +77,34 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     @Override
+    public void onWindowShown() {
+        super.onWindowShown();
+        updatePassthroughRegion();
+    }
+
+    private void updatePassthroughRegion() {
+        if (android.os.Build.VERSION.SDK_INT >= 33 && brailleView != null) {
+            BrailleAccessibilityService accService = BrailleAccessibilityService.getInstance();
+            if (accService != null) {
+                int[] location = new int[2];
+                brailleView.getLocationOnScreen(location);
+                accService.updatePassthroughRegion(location[0], location[1], brailleView.getWidth(), brailleView.getHeight());
+            }
+        }
+    }
+
+    @Override
+    public void onWindowHidden() {
+        super.onWindowHidden();
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            BrailleAccessibilityService accService = BrailleAccessibilityService.getInstance();
+            if (accService != null) {
+                accService.clearPassthroughRegion();
+            }
+        }
+    }
+
+    @Override
     public View onCreateInputView() {
         super.onCreateInputView();
         brailleView = (BrailleView) getLayoutInflater().inflate(
@@ -97,6 +125,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 startActivity(intent);
             }
         }
+        updatePassthroughRegion();
         return brailleView;
     }
 

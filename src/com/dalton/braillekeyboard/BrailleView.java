@@ -159,6 +159,13 @@ public class BrailleView extends View {
     public void onInitialiseForInput(Context context, KeyboardListener listener) {
         this.listener = listener;
 
+        // Hide this view from accessibility services like TalkBack
+        // This prevents TalkBack from trying to explore the dots and 
+        // allows standard touch events to reach the view more reliably.
+        if (android.os.Build.VERSION.SDK_INT >= 16) {
+            setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+        }
+
         // Set up speech and announce when it's ready to the user.
         speech = new Speech(getContext(), new Speech.OnReadyListener() {
 

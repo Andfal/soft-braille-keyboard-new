@@ -311,4 +311,6 @@
       Description: This is spoken to the user. [CHAR LIMIT="NONE"]
     -->
     <string name="punctuation_right_brace">Right brace</string>
+    <string name="accessibility_service_description">Consente alla tastiera Soft Braille di funzionare correttamente quando TalkBack è attivo, creando un\'area in cui i tocchi non vengono intercettati dallo screen reader.</string>
+    <string name="accessibility_service_label">Soft Braille Keyboard Accessibility</string>
 </resources>
