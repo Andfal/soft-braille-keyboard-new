@@ -28,6 +28,28 @@
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 
+static void lou_log_callback(logLevels level, const char *message) {
+  switch (level) {
+    case LOU_LOG_ALL:
+    case LOU_LOG_DEBUG:
+      LOGV("Liblouis Debug: %s", message);
+      break;
+    case LOU_LOG_INFO:
+      LOGI("Liblouis Info: %s", message);
+      break;
+    case LOU_LOG_WARN:
+      LOGI("Liblouis Warn: %s", message);
+      break;
+    case LOU_LOG_ERROR:
+    case LOU_LOG_FATAL:
+      LOGE("Liblouis Error: %s", message);
+      break;
+    default:
+      LOGI("Liblouis: %s", message);
+      break;
+  }
+}
+
 static jclass class_TranslationResult;
 static jmethodID method_TranslationResult_ctor;
 static jclass class_OutOfMemoryError;
@@ -251,6 +273,8 @@ Java_com_googlecode_eyesfree_braille_service_translate_LibLouisWrapper_setTables
 void
 Java_com_googlecode_eyesfree_braille_service_translate_LibLouisWrapper_classInitNative(
     JNIEnv* env, jclass clazz) {
+  lou_registerLogCallback(lou_log_callback);
+  lou_setLogLevel(LOU_LOG_ALL);
   if (!(class_TranslationResult = getGlobalClassRef(env,
           TRANSLATE_PACKAGE "TranslationResult"))) {
     return;

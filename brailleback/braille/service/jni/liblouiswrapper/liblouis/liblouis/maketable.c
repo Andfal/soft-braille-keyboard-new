@@ -18,16 +18,19 @@
    License along with liblouis. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "internal.h"
 
 static const TranslationTableHeader *table;
+static const DisplayTableHeader *displayTable;
 
 extern void
 loadTable(const char *tableList) {
-	table = lou_getTable(tableList);
+	_lou_getTable(tableList, tableList, &table, &displayTable);
 }
 
 extern int
@@ -40,11 +43,11 @@ isLetter(widechar c) {
 	static unsigned long int hash;
 	static TranslationTableOffset offset;
 	static TranslationTableCharacter *character;
-	hash = (unsigned long int)c % HASHNUM;
+	hash = _lou_charHash(c);
 	offset = table->characters[hash];
 	while (offset) {
 		character = (TranslationTableCharacter *)&table->ruleArea[offset];
-		if (character->realchar == c) return character->attributes & CTC_Letter;
+		if (character->value == c) return character->attributes & CTC_Letter;
 		offset = character->next;
 	}
 	return 0;
@@ -52,14 +55,26 @@ isLetter(widechar c) {
 
 extern widechar
 toLowercase(widechar c) {
-	static unsigned long int hash;
 	static TranslationTableOffset offset;
 	static TranslationTableCharacter *character;
-	hash = (unsigned long int)c % HASHNUM;
-	offset = table->characters[hash];
+	offset = table->characters[_lou_charHash(c)];
 	while (offset) {
 		character = (TranslationTableCharacter *)&table->ruleArea[offset];
-		if (character->realchar == c) return character->lowercase;
+		if (character->value == c) {
+			if (character->mode & CTC_UpperCase) {
+				const TranslationTableCharacter *c = character;
+				if (c->basechar)
+					c = (TranslationTableCharacter *)&table->ruleArea[c->basechar];
+				while (1) {
+					if ((c->mode & (character->mode & ~CTC_UpperCase)) ==
+							(character->mode & ~CTC_UpperCase))
+						return c->value;
+					if (!c->linked) break;
+					c = (TranslationTableCharacter *)&table->ruleArea[c->linked];
+				}
+			}
+			return character->value;
+		}
 		offset = character->next;
 	}
 	return c;
@@ -73,14 +88,13 @@ toDotPattern(widechar *braille, char *pattern) {
 	for (length = 0; braille[length]; length++)
 		;
 	dots = (widechar *)malloc((length + 1) * sizeof(widechar));
-	for (i = 0; i < length; i++) dots[i] = _lou_getDotsForChar(braille[i]);
+	for (i = 0; i < length; i++) dots[i] = _lou_getDotsForChar(braille[i], displayTable);
 	strcpy(pattern, _lou_showDots(dots, length));
 	free(dots);
 }
 
 extern int
 printRule(TranslationTableRule *rule, widechar *rule_string) {
-	int k, l;
 	switch (rule->opcode) {
 	case CTO_Context:
 	case CTO_Correct:
@@ -90,17 +104,37 @@ printRule(TranslationTableRule *rule, widechar *rule_string) {
 	case CTO_Pass3:
 	case CTO_Pass4:
 		return 0;
-	default:
-		l = 0;
+	default: {
+		int l = 0;
+		if (rule->nocross)
+			for (char *c = "nocross "; *c; c++) rule_string[l++] = *c;
 		const char *opcode = _lou_findOpcodeName(rule->opcode);
-		for (k = 0; k < strlen(opcode); k++) rule_string[l++] = opcode[k];
-		rule_string[l++] = ' ';
-		for (k = 0; k < rule->charslen; k++) rule_string[l++] = rule->charsdots[k];
-		rule_string[l++] = ' ';
-		for (k = 0; k < rule->dotslen; k++)
-			rule_string[l++] = _lou_getCharFromDots(rule->charsdots[rule->charslen + k]);
+		for (size_t k = 0; k < strlen(opcode); k++) rule_string[l++] = opcode[k];
+		rule_string[l++] = '\t';
+		for (int k = 0; k < rule->charslen; k++) rule_string[l++] = rule->charsdots[k];
+		rule_string[l++] = '\t';
+		for (int k = 0; k < rule->dotslen; k++) {
+			rule_string[l] = _lou_getCharForDots(
+					rule->charsdots[rule->charslen + k], displayTable);
+			if (rule_string[l] == '\0') {
+				// if a dot pattern can not be displayed, print an error message
+				char *message = (char *)malloc(50 * sizeof(char));
+				sprintf(message, "ERROR: provide a display rule for dots %s",
+						_lou_showDots(&rule->charsdots[rule->charslen + k], 1));
+				l = 0;
+				while (message[l]) {
+					rule_string[l] = message[l];
+					l++;
+				}
+				rule_string[l++] = '\0';
+				free(message);
+				return 1;
+			}
+			l++;
+		}
 		rule_string[l++] = '\0';
 		return 1;
+	}
 	}
 }
 
@@ -118,7 +152,6 @@ printRule(TranslationTableRule *rule, widechar *rule_string) {
 static int
 find_matching_rules(widechar *text, int text_len, widechar *braille, int braille_len,
 		char *data, int clear_data) {
-	unsigned long int hash;
 	TranslationTableOffset offset;
 	TranslationTableRule *rule;
 	TranslationTableCharacter *character;
@@ -160,17 +193,13 @@ find_matching_rules(widechar *text, int text_len, widechar *braille, int braille
 		switch (hash_len) {
 		case 2:
 			if (text_len < 2) break;
-			hash = (unsigned long int)toLowercase(text[0]) << 8;
-			hash += (unsigned long int)toLowercase(text[1]);
-			hash %= HASHNUM;
-			offset = table->forRules[hash];
+			offset = table->forRules[_lou_stringHash(text, 1, table)];
 			break;
 		case 1:
-			hash = (unsigned long int)text[0] % HASHNUM;
-			offset = table->characters[hash];
+			offset = table->characters[_lou_charHash(text[0])];
 			while (offset) {
 				character = (TranslationTableCharacter *)&table->ruleArea[offset];
-				if (character->realchar == text[0]) {
+				if (character->value == text[0]) {
 					offset = character->otherRules;
 					break;
 				} else
@@ -215,8 +244,6 @@ find_matching_rules(widechar *text, int text_len, widechar *braille, int braille
 			case CTO_EndWord:
 				if (data[-1] != '^' && rule->charslen == text_len) break;
 				goto next_rule;
-			case CTO_NoCross:
-				break;
 			case CTO_Letter:
 			case CTO_UpperCase:
 			case CTO_LowerCase:
@@ -232,29 +259,29 @@ find_matching_rules(widechar *text, int text_len, widechar *braille, int braille
 
 			/* inhibit rule */
 			if (rule->dotslen > braille_len ||
-					rule->charslen == text_len && rule->dotslen < braille_len ||
-					rule->dotslen == braille_len && rule->charslen < text_len)
+					(rule->charslen == text_len && rule->dotslen < braille_len) ||
+					(rule->dotslen == braille_len && rule->charslen < text_len))
 				goto inhibit;
 			for (k = 0; k < rule->dotslen; k++)
-				if (_lou_getCharFromDots(rule->charsdots[rule->charslen + k]) !=
-						braille[k])
+				if (_lou_getCharForDots(rule->charsdots[rule->charslen + k],
+							displayTable) != braille[k])
 					goto inhibit;
 
 			/* don't let this rule be inhibited by an earlier rule */
 			int inhibit_all = 0;
-			if (rule->opcode == CTO_NoCross)
+			if (rule->nocross)
 				for (k = 0; k < rule->charslen - 1; k++)
-					if (data[k + 1] == '>')
+					if (data[k + 1] == '>') {
 						if (data[-1] == 'x')
 							inhibit_all = 1;
 						else
 							goto next_rule;
+					}
 
 			/* fill data */
-			switch (rule->opcode) {
-			case CTO_NoCross:  // deferred: see success
-				break;
-			default:
+			if (rule->nocross)
+				;  // deferred: see success
+			else {
 				k = 0;
 				while (k < rule->charslen - 1) {
 					if (data[k + 1] == '>') {
@@ -279,8 +306,7 @@ find_matching_rules(widechar *text, int text_len, widechar *braille, int braille
 
 		inhibit:
 			debug("** rule inhibited **");
-			switch (rule->opcode) {
-			case CTO_NoCross:
+			if (rule->nocross) {
 				if (rule->charslen < 2) goto abort;
 				/* inhibited by earlier rule */
 				for (k = 0; k < rule->charslen - 1; k++)
@@ -288,15 +314,14 @@ find_matching_rules(widechar *text, int text_len, widechar *braille, int braille
 				data[rule->charslen - 1] = ')';
 				debug("%s", data);
 				goto next_rule;
-			default:
+			} else {
 				goto abort;
 			}
 
 		success:
 			/* fill data (deferred) */
 			if (inhibit_all) data[-1] = '1';
-			switch (rule->opcode) {
-			case CTO_NoCross:
+			if (rule->nocross) {
 				memset(data, '0', rule->charslen - 1);
 				debug("%s", data);
 			}
@@ -376,12 +401,11 @@ suggestChunks(widechar *text, widechar *braille, char *hyphen_string) {
 extern void
 findRelevantRules(widechar *text, widechar **rules_str) {
 	int text_len, rules_len;
-	unsigned long int hash;
 	TranslationTableOffset offset;
 	TranslationTableCharacter *character;
 	TranslationTableRule *rule;
 	TranslationTableRule **rules;
-	int hash_len, k, l, m, n;
+	int hash_len, k, m, n;
 	for (text_len = 0; text[text_len]; text_len++)
 		;
 	for (rules_len = 0; rules_str[rules_len]; rules_len++)
@@ -395,17 +419,13 @@ findRelevantRules(widechar *text, widechar **rules_str) {
 			switch (hash_len) {
 			case 2:
 				if (text_len - n < 2) break;
-				hash = (unsigned long int)toLowercase(text[n]) << 8;
-				hash += (unsigned long int)toLowercase(text[n + 1]);
-				hash %= HASHNUM;
-				offset = table->forRules[hash];
+				offset = table->forRules[_lou_stringHash(&text[n], 1, table)];
 				break;
 			case 1:
-				hash = (unsigned long int)text[n] % HASHNUM;
-				offset = table->characters[hash];
+				offset = table->characters[_lou_charHash(text[n])];
 				while (offset) {
 					character = (TranslationTableCharacter *)&table->ruleArea[offset];
-					if (character->realchar == text[0]) {
+					if (character->value == text[0]) {
 						offset = character->otherRules;
 						break;
 					} else
@@ -424,7 +444,6 @@ findRelevantRules(widechar *text, widechar **rules_str) {
 				case CTO_MidWord:
 				case CTO_MidEndWord:
 				case CTO_EndWord:
-				case CTO_NoCross:
 					break;
 				default:
 					goto next_rule;

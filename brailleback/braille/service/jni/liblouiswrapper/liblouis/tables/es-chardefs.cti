@@ -27,6 +27,11 @@
 #
 # ----------------------------------------------------------------------------------------------
 
+space       \x0009        9                                       <control> HORIZONTAL TABULATION
+space       \x001B        1b                                      <control> ESCAPE
+space       \x00A0        a                                       NO-BREAK SPACE
+include spaces.uti
+
 # ==============================================================================================
 # SINGLE-CELL
 # ==============================================================================================
@@ -37,23 +42,25 @@
 
 include latinLetterDef6Dots.uti
 
-uplow       \x00C1\x00E1  12356,12356         Áá                  LATIN CAPITAL LETTER A WITH ACUTE - LATIN SMALL LETTER A WITH ACUTE
-uplow       \x00C9\x00E9  2346,2346           Éé                  LATIN CAPITAL LETTER E WITH ACUTE - LATIN SMALL LETTER E WITH ACUTE
-uplow       \x00CD\x00ED  34,34               Íí                  LATIN CAPITAL LETTER I WITH ACUTE - LATIN SMALL LETTER I WITH ACUTE
-uplow       \x00D1\x00F1  12456,12456         Ññ                  LATIN CAPITAL LETTER N WITH TILDE - LATIN SMALL LETTER N WITH TILDE
-uplow       \x00D3\x00F3  346,346             Óó                  LATIN CAPITAL LETTER O WITH ACUTE - LATIN SMALL LETTER O WITH ACUTE
-uplow       \x00DA\x00FA  23456,23456         Úú                  LATIN CAPITAL LETTER U WITH ACUTE - LATIN SMALL LETTER U WITH ACUTE
-uplow       \x00DC\x00FC  1256,1256           Üü                  LATIN CAPITAL LETTER U WITH DIAERESIS - LATIN SMALL LETTER U WITH DIAERESIS
+lowercase   \x00E1        12356               á                   LATIN SMALL LETTER A WITH ACUTE
+lowercase   \x00E9        2346                é                   LATIN SMALL LETTER E WITH ACUTE
+lowercase   \x00ED        34                  í                   LATIN SMALL LETTER I WITH ACUTE
+lowercase   \x00F1        12456               ñ                   LATIN SMALL LETTER N WITH TILDE
+lowercase   \x00F3        346                 ó                   LATIN SMALL LETTER O WITH ACUTE
+lowercase   \x00FA        23456               ú                   LATIN SMALL LETTER U WITH ACUTE
+lowercase   \x00FC        1256                ü                   LATIN SMALL LETTER U WITH DIAERESIS
 
-space       \x0009        9                                       <control> HORIZONTAL TABULATION
-space       \x000A        0                                       <control> LINE FEED
-space       \x000C        0                                       <control> FORM FEED
-space       \x000D        0                                       <control> CARRIAGE RETURN
-space       \x001B        1b                                      <control> ESCAPE
-space       \x0020        0                                       SPACE
+base uppercase       \x00C1 \x00E1  Áá                  LATIN CAPITAL LETTER A WITH ACUTE - LATIN SMALL LETTER A WITH ACUTE
+base uppercase       \x00C9 \x00E9  Éé                  LATIN CAPITAL LETTER E WITH ACUTE - LATIN SMALL LETTER E WITH ACUTE
+base uppercase       \x00CD \x00ED  Íí                  LATIN CAPITAL LETTER I WITH ACUTE - LATIN SMALL LETTER I WITH ACUTE
+base uppercase       \x00D1 \x00F1  Ññ                  LATIN CAPITAL LETTER N WITH TILDE - LATIN SMALL LETTER N WITH TILDE
+base uppercase       \x00D3 \x00F3  Óó                  LATIN CAPITAL LETTER O WITH ACUTE - LATIN SMALL LETTER O WITH ACUTE
+base uppercase       \x00DA \x00FA  Úú                  LATIN CAPITAL LETTER U WITH ACUTE - LATIN SMALL LETTER U WITH ACUTE
+base uppercase       \x00DC \x00FC  Üü                  LATIN CAPITAL LETTER U WITH DIAERESIS - LATIN SMALL LETTER U WITH DIAERESIS
+
 punctuation \x0021        235                 !                   EXCLAMATION MARK
 punctuation \x0022        236                 "                   QUOTATION MARK
-punctuation \x0027        3                   '                   APOSTROPHE
+noback punctuation \x0027        3                   '                   APOSTROPHE
 punctuation \x0028        126                 (                   LEFT PARENTHESIS
 punctuation \x0029        345                 )                   RIGHT PARENTHESIS
 sign        \x002A        35                  *                   ASTERISK
@@ -61,7 +68,6 @@ math        \x002B        235                 +                   PLUS SIGN
 punctuation \x002C        2                   ,                   COMMA
 punctuation \x002D        36                  -                   HYPHEN-MINUS
 punctuation \x002E        3                   .                   FULL STOP
-include loweredDigits6Dots.uti
 punctuation \x003A        25                  :                   COLON
 punctuation \x003B        23                  ;                   SEMICOLON
 math        \x003C        246                 <                   LESS-THAN SIGN
@@ -82,7 +88,6 @@ punctuation \x0084        236                 „                   <control> - 
 punctuation \x0093        236                 “                   <control> SET TRANSMIT STATE - ANSI: LEFT DOUBLE QUOTATION MARK - MACROMAN: I GRAVE
 punctuation \x0094        236                 ”                   <control> CANCEL CHARACTER - ANSI: RIGHT DOUBLE QUOTATION MARK - MACROMAN: I CIRCUMFLEX
 punctuation \x0096        36                  –                   <control> START OF GUARDED AREA - ANSI: EN DASH - MACROMAN: N TILDE
-space       \x00A0        a                                       NO-BREAK SPACE
 punctuation \x00A1        235                 ¡                   INVERTED EXCLAMATION MARK
 punctuation \x00AB        236                 «                   LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
 punctuation \x00AD        36                  ­                    SOFT HYPHEN

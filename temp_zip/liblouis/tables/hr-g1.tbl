@@ -1,4 +1,7 @@
-#+locale: hr
+#-index-name: Croatian
+#-display-name: Croatian braille
+
+#+language: hr
 #+type: literary
 #+grade: 1
 
