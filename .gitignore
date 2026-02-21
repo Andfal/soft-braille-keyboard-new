@@ -75,6 +75,10 @@ fastlane/readme.md
 .DS_Store
 Thumbs.db
 
+# Temporary and generated files
+temp_zip/
+liblouis_files.txt
+
 # Python scripts generated files (if any)
 __pycache__/
 *.pyc
