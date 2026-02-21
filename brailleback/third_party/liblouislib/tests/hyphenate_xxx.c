@@ -7,6 +7,8 @@ are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved. This file is offered as-is,
 without any warranty. */
 
+#include <config.h>
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
@@ -25,7 +27,7 @@ int main(int argc, char **argv)
   hyphens[1] = '0';
   hyphens[2] = '0';
 
-  ret = check_hyphenation(tables, word, hyphens);
+  ret = check_hyphenation_pos(tables, word, hyphens);
   assert(hyphens[3] == '\0');
   assert(hyphens[4] == '\0');
   free(hyphens);

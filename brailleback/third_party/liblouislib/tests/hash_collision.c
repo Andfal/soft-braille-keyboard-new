@@ -7,6 +7,8 @@ are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved. This file is offered as-is,
 without any warranty. */
 
+#include <config.h>
+
 #include <stdio.h>
 #include "liblouis.h"
 #include "brl_checks.h"
@@ -29,9 +31,9 @@ main (int argc, char **argv)
     }
   }
 
-  result |= check_translation(table, "aaaaa", NULL, "a");
-  result |= check_translation(table, "aaaaa", NULL, "a");
-  result |= check_translation(table, "aazzz", NULL, "a");
+  result |= check(table, "aaaaa", "a");
+  result |= check(table, "aaaaa", "a");
+  result |= check(table, "aazzz", "a");
 
   lou_free();
   return result;

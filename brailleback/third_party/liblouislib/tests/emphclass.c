@@ -9,6 +9,8 @@ are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved. This file is offered as-is,
 without any warranty. */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -54,6 +56,7 @@ main (int argc, char **argv)
 {
 	int result = 0;
 	const char* table;
+	static formtype *formtype;
 	table = "tests/tables/emphclass/emphclass_invalid_1.utb";
 	if (lou_getTable(table)) {
 		fprintf(stderr, "%s should be invalid\n", table);
@@ -70,11 +73,10 @@ main (int argc, char **argv)
 		return 1;
 	}
 	emph_classes = lou_getEmphClasses(table);
-	result |= check_translation(table,
-	                            "foobar",
-	                            typeform("foo", "+++++"),
-	                            "~,foobar");
-        if (emph_classes) free(emph_classes);
+	formtype = typeform("foo", "++++++");
+	result |= check(table, "foobar", "~,foobar", .typeform=formtype);
+	if (emph_classes) free(emph_classes);
+	free(formtype);
 	lou_free();
 	return result;
 }

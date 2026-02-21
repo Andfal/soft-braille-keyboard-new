@@ -1,6 +1,7 @@
 SUBDIRS = gnulib lou_maketable.d
 
 AM_CPPFLAGS =					\
+	$(WARN_CFLAGS)				\
 	-I$(top_srcdir)/liblouis		\
 	-I$(top_srcdir)/tools/gnulib		\
 	-I$(top_builddir)/tools/gnulib
@@ -10,8 +11,20 @@ lou_checkyaml_CPPFLAGS = $(AM_CPPFLAGS) $(YAML_CFLAGS)
 LDADD =							\
 	$(top_builddir)/liblouis/liblouis.la		\
 	$(top_builddir)/tools/gnulib/libgnutools.la	\
-	$(top_builddir)/tools/libbrlcheck.la		\
-	$(LTLIBINTL)
+	libbrlcheck.la		\
+	$(LTLIBINTL) $(LIBFUZZER_NO_MAIN)
+
+AM_LDFLAGS =
+
+# Pass x86_64 and/or arm64 in compiler and linker flags if asked
+if CLANG_ARCH_X86_64
+AM_CPPFLAGS += -arch x86_64
+AM_LDFLAGS += -arch x86_64
+endif
+if CLANG_ARCH_ARM64
+AM_CPPFLAGS += -arch arm64
+AM_LDFLAGS += -arch arm64
+endif
 
 # libbrlcheck is a convenience library that contains functionality to
 # check a translation. This is mostly needed for the tests in ../tests
@@ -40,7 +53,6 @@ bin_PROGRAMS =					\
 	lou_debug				\
 	lou_translate				\
 	lou_trace				\
-	lou_compare				\
 	lou_tableinfo
 
 # install lou_checkyaml only if libyaml is found
@@ -56,7 +68,6 @@ lou_checktable_SOURCES = lou_checktable.c
 lou_debug_SOURCES = lou_debug.c
 lou_translate_SOURCES =	lou_translate.c
 lou_trace_SOURCES = lou_trace.c
-lou_compare_SOURCES = lou_compare.c
 lou_checkyaml_SOURCES =	lou_checkyaml.c
 lou_tableinfo_SOURCES =	lou_tableinfo.c
 
@@ -76,6 +87,9 @@ nobase_dist_bin_SCRIPTS = \
 	lou_maketable.d/utils.py                \
 	lou_maketable.d/wrap_patgen.sh
 endif
+
+# package the lou_maketable wrapper in the tar ball
+EXTRA_DIST = lou_maketable
 
 if HAVE_SOURCE_FORMATTER
 format-sources-local:

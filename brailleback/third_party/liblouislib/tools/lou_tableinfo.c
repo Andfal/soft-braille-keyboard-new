@@ -17,6 +17,7 @@
 */
 
 #include <config.h>
+
 #include <stdlib.h>
 #include "liblouis.h"
 #include <getopt.h>
@@ -24,7 +25,8 @@
 #include "version-etc.h"
 
 static const struct option longopts[] = {
-	{ "help", no_argument, NULL, 'h' }, { "version", no_argument, NULL, 'v' },
+	{ "help", no_argument, NULL, 'h' },
+	{ "version", no_argument, NULL, 'v' },
 	{ NULL, 0, NULL, 0 },
 };
 
@@ -85,7 +87,7 @@ main(int argc, char **argv) {
 		fprintf(stderr, "Try `%s --help' for more information.\n", program_name);
 		exit(EXIT_FAILURE);
 	} else if (optind == argc - 1) {
-		const char *table = argv[optind];
+		// const char *table = argv[optind];
 		fprintf(stderr, "Not supported yet\n");
 		exit(EXIT_FAILURE);
 	} else if (optind == argc - 2) {

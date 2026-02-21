@@ -6,7 +6,7 @@ midilibgiturl="https://github.com/LeffelMania/android-midi-lib.git"
 brlttygiturl="https://github.com/brltty/brltty.git"
 liblouisgiturl="https://github.com/liblouis/liblouis.git"
 git clone $midilibgiturl $basedir/third_party/midilib
-git clone --branch v3.4.0 $liblouisgiturl $basedir/third_party/liblouislib
+git clone --branch v3.36.0 $liblouisgiturl $basedir/third_party/liblouislib
 git clone --branch BRLTTY-5.6 $brlttygiturl $basedir/third_party/brlttylib
 cp -r $basedir/third_party/midilib/src/main/java/* $basedir/braille/libraries/utils/src
 cp $basedir/third_party/midilib/LICENSE $basedir/braille/libraries/utils

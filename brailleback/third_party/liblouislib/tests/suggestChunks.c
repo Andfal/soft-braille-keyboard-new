@@ -7,6 +7,8 @@ are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved. This file is offered as-is,
 without any warranty. */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -33,14 +35,19 @@ static int check_suggestion(const char* text, const char* braille, const char* e
 	inbuf[in_len] = '\0';
 	outbuf[out_len] = '\0';
 	char *hyphen_string = malloc(sizeof(char) * (in_len + 2));
+	int ret;
 	if (!suggestChunks(inbuf, outbuf, hyphen_string)) {
 		printf("Could not find a solution for %s => %s\n", text, braille);
-		return 1;
+		ret = 1;
 	} else if (strcmp(expected_hyphen_string, hyphen_string) != 0) {
 		printf("Expected %s but got %s\n", expected_hyphen_string, hyphen_string);
-		return 1;
+		ret = 1;
 	} else
-		return 0;
+		ret = 0;
+	free(inbuf);
+	free(outbuf);
+	free(hyphen_string);
+	return ret;
 }
 
 int main(int argc, char **argv) {

@@ -22,6 +22,7 @@
 */
 
 #include <config.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,7 +33,8 @@
 #include "version-etc.h"
 
 static const struct option longopts[] = {
-	{ "help", no_argument, NULL, 'h' }, { "version", no_argument, NULL, 'v' },
+	{ "help", no_argument, NULL, 'h' },
+	{ "version", no_argument, NULL, 'v' },
 	{ NULL, 0, NULL, 0 },
 };
 
@@ -75,6 +77,7 @@ more.\n\n",
 #define BUFSIZE 256
 
 static const TranslationTableHeader *table;
+static const DisplayTableHeader *displayTable;
 static char inputBuffer[BUFSIZE];
 
 static int
@@ -106,8 +109,8 @@ static int
 printRule(TranslationTableRule *thisRule, int mode) {
 	printf("Rule: ");
 	printf("opcode=%s, ", _lou_findOpcodeName(thisRule->opcode));
-	if (thisRule->before) printf("before=%x, ", thisRule->before);
-	if (thisRule->after) printf("after=%x, ", thisRule->after);
+	if (thisRule->before) printf("before=%llx, ", thisRule->before);
+	if (thisRule->after) printf("after=%llx, ", thisRule->after);
 	switch (thisRule->opcode) {
 	case CTO_Context:
 	case CTO_Correct:
@@ -122,11 +125,13 @@ printRule(TranslationTableRule *thisRule, int mode) {
 	default:
 		if (mode == 0) {
 			printf("chars=%s, ", print_chars(thisRule->charsdots, thisRule->charslen));
-			printf("dots=%s, ", _lou_showDots(&thisRule->charsdots[thisRule->charslen],
-										thisRule->dotslen));
+			printf("dots=%s, ",
+					_lou_showDots(
+							&thisRule->charsdots[thisRule->charslen], thisRule->dotslen));
 		} else {
-			printf("dots=%s, ", _lou_showDots(&thisRule->charsdots[thisRule->charslen],
-										thisRule->dotslen));
+			printf("dots=%s, ",
+					_lou_showDots(
+							&thisRule->charsdots[thisRule->charslen], thisRule->dotslen));
 			printf("chars=%s, ", print_chars(thisRule->charsdots, thisRule->charslen));
 		}
 		break;
@@ -140,11 +145,9 @@ printCharacter(TranslationTableCharacter *thisChar, int mode) {
 	TranslationTableOffset nextRule;
 	if (mode == 0) {
 		printf("Char: ");
-		printf("real=%s, ", print_chars(&thisChar->realchar, 1));
-		printf("upper=%s, ", print_chars(&thisChar->uppercase, 1));
-		printf("lower=%s, ", print_chars(&thisChar->lowercase, 1));
+		printf("value=%s, ", print_chars(&thisChar->value, 1));
 	} else
-		printf("Dots: real=%s, ", _lou_showDots(&thisChar->realchar, 1));
+		printf("Dots: value=%s, ", _lou_showDots(&thisChar->value, 1));
 	printf("attr=%s, ", _lou_showAttributes(thisChar->attributes));
 	nextRule = thisChar->otherRules;
 	while (nextRule) {
@@ -156,6 +159,13 @@ printCharacter(TranslationTableCharacter *thisChar, int mode) {
 			nextRule = thisRule->charsnext;
 		else
 			nextRule = thisRule->dotsnext;
+	}
+	if (mode == 0 && thisChar->compRule) {
+		TranslationTableRule *compRule =
+				(TranslationTableRule *)&table->ruleArea[thisChar->compRule];
+		printf("comp6 ");
+		printRule(compRule, 0);
+		printf("\n");
 	}
 	return 1;
 }
@@ -269,7 +279,7 @@ show_backRules(int startHash) {
 }
 
 static int
-print_brailleIndicator(TranslationTableOffset offset, char *opcode) {
+print_brailleIndicator(TranslationTableOffset offset, const char *opcode) {
 	TranslationTableRule *thisRule;
 	if (!offset) return 0;
 	thisRule = (TranslationTableRule *)&table->ruleArea[offset];
@@ -278,53 +288,49 @@ print_brailleIndicator(TranslationTableOffset offset, char *opcode) {
 }
 
 static int
-print_phraseLength(TranslationTableOffset offset, char *opcode) {
+print_phraseLength(TranslationTableOffset offset, const char *opcode) {
 	if (!offset) return 0;
-	printf("%s %d\n", opcode, offset);
+	printf("%s %u\n", opcode, offset);
 	return 1;
 }
 
 static int
 show_brailleIndicators(void) {
 	char name[BUFSIZE];
-	char *emphNames[] = { "begemphphrase %s", "endemphphrase %s before",
+	const char *emphNames[] = { "begemphphrase %s", "endemphphrase %s before",
 		"endemphphrase %s after", "begemphword %s", "endemphword %s", "emphletter %s",
 		"begemph %s", "endemph %s", NULL };
-	char *capsNames[] = { "firstwordcaps", "lastwordcapsbefore", "lastwordcapsafter",
-		"begcaps", "endcaps", "capsletter", "capsword", "capswordstop", NULL };
+	const char *capsNames[] = { "firstwordcaps", "lastwordcapsbefore",
+		"lastwordcapsafter", "begcaps", "endcaps", "capsletter", "capsword",
+		"capswordstop", NULL };
 
 	// FIXME: update to include all UEB opcodes.
 
 	for (EmphCodeOffset offset = 0; capsNames[offset]; offset++) {
-		print_brailleIndicator(table->emphRules[capsRule][offset], capsNames[offset]);
+		print_brailleIndicator(
+				table->emphRules[MAX_EMPH_CLASSES][offset], capsNames[offset]);
 	}
-	print_phraseLength(table->emphRules[capsRule][lenPhraseOffset], "lencapsphrase");
+	print_phraseLength(
+			table->emphRules[MAX_EMPH_CLASSES][lenPhraseOffset], "lencapsphrase");
 	print_brailleIndicator(table->letterSign, "letsign");
 	print_brailleIndicator(table->numberSign, "numsign");
+	print_brailleIndicator(table->noNumberSign, "nonumsign");
+	print_brailleIndicator(table->noContractSign, "nocontractsign");
 
-	for (int i = 0; table->emphClasses[i]; i++) {
+	for (int i = 0; i < MAX_EMPH_CLASSES && table->emphClassNames[i]; i++) {
 		for (EmphCodeOffset offset = 0; emphNames[offset]; offset++) {
 			snprintf(name, BUFSIZE, emphNames[offset], table->emphClasses[i]);
-			print_brailleIndicator(table->emphRules[emph1Rule][offset], name);
+			print_brailleIndicator(table->emphRules[i][offset], name);
 		}
 		snprintf(name, BUFSIZE, "lenemphphrase %s", table->emphClasses[i]);
-		print_phraseLength(table->emphRules[emph1Rule][lenPhraseOffset], name);
+		print_phraseLength(table->emphRules[i][lenPhraseOffset], name);
 	}
 	print_brailleIndicator(table->begComp, "begcomp");
-	print_brailleIndicator(table->compBegEmph1, "compbegemph1");
-	print_brailleIndicator(table->compEndEmph1, "compendemph1");
-	print_brailleIndicator(table->compBegEmph2, "compbegemph2");
-	print_brailleIndicator(table->compEndEmph2, "compendemph2");
-	print_brailleIndicator(table->compBegEmph3, "compbegemph3");
-	print_brailleIndicator(table->compEndEmph3, "compendemph3");
-	print_brailleIndicator(table->compCapSign, "compcapsign");
-	print_brailleIndicator(table->compBegCaps, "compbegcaps");
-	print_brailleIndicator(table->compEndCaps, "compendcaps");
 	print_brailleIndicator(table->endComp, "endcomp");
 	return 1;
 }
 
-static char *
+static const char *
 pickYN(int a) {
 	if (!a) return "no";
 	return "yes";
@@ -332,8 +338,8 @@ pickYN(int a) {
 
 static int
 show_misc(void) {
-	printf("Table size: %d\n", table->tableSize);
-	printf("Bytes used: %d\n", table->bytesUsed);
+	printf("Table size: %u\n", table->tableSize);
+	printf("Bytes used: %u\n", table->bytesUsed);
 	printf("Number of passes: %d\n", table->numPasses);
 	printf("'correct' opcodes: %s\n", pickYN(table->corrections));
 	printf("'syllable' opcodes: %s\n", pickYN(table->syllables));
@@ -350,7 +356,7 @@ show_misc(void) {
 static int
 show_charMap(int startHash) {
 	int k;
-	CharOrDots *thisChar;
+	CharDotsMapping *thisChar;
 	TranslationTableOffset nextChar;
 	printf("Press enter for next or (e)xit, next-(h)ash, then enter\n");
 	if (startHash < 0)
@@ -358,11 +364,11 @@ show_charMap(int startHash) {
 	else
 		k = startHash;
 	for (; k < HASHNUM; k++)
-		if (table->charToDots[k]) {
+		if (displayTable->charToDots[k]) {
 			printf("Hash=%d\n", k);
-			nextChar = table->charToDots[k];
+			nextChar = displayTable->charToDots[k];
 			while (nextChar) {
-				thisChar = (CharOrDots *)&table->ruleArea[nextChar];
+				thisChar = (CharDotsMapping *)&displayTable->ruleArea[nextChar];
 				printf("Char: %s ", print_chars(&thisChar->lookFor, 1));
 				printf("dots=%s\n", _lou_showDots(&thisChar->found, 1));
 				printf("=> ");
@@ -378,7 +384,7 @@ show_charMap(int startHash) {
 static int
 show_dotsMap(int startHash) {
 	int k;
-	CharOrDots *thisDots;
+	CharDotsMapping *thisDots;
 	TranslationTableOffset nextDots;
 	printf("Press enter for next or (e)xit, next-(h)ash, then enter\n");
 	if (startHash < 0)
@@ -386,11 +392,11 @@ show_dotsMap(int startHash) {
 	else
 		k = startHash;
 	for (; k < HASHNUM; k++)
-		if (table->dotsToChar[k]) {
+		if (displayTable->dotsToChar[k]) {
 			printf("Hash=%d\n", k);
-			nextDots = table->dotsToChar[k];
+			nextDots = displayTable->dotsToChar[k];
 			while (nextDots) {
-				thisDots = (CharOrDots *)&table->ruleArea[nextDots];
+				thisDots = (CharDotsMapping *)&displayTable->ruleArea[nextDots];
 				printf("Dots: %s ", _lou_showDots(&thisDots->lookFor, 1));
 				printf("char=%s\n", print_chars(&thisDots->found, 1));
 				printf("=> ");
@@ -403,34 +409,12 @@ show_dotsMap(int startHash) {
 	return 1;
 }
 
-static int
-show_compDots(int startChar) {
-	widechar k;
-	printf("Press enter for next or (e)xit, next-(h)ash, then enter\n");
-	if (startChar < 0)
-		k = 0;
-	else
-		k = startChar;
-	for (; k < 256; k++)
-		if (table->compdotsPattern[k]) {
-			TranslationTableRule *thisRule =
-					(TranslationTableRule *)&table->ruleArea[table->compdotsPattern[k]];
-			printf("Char: %s ", print_chars(&k, 1));
-			printf("dots=%s\n",
-					_lou_showDots(&thisRule->charsdots[1], thisRule->dotslen));
-			printf("=> ");
-			getInput();
-			if (*inputBuffer == 'e') return 1;
-		}
-	return 1;
-}
-
 static void
 part_paramLetters(void) {
 	printf("show particular hash chains.\n");
 	printf("show-(f)orward-rules, show-(b)ackward-rules, show-(c)haracters, \n");
 	printf("show-(d)ot-patterns, show-(C)har-to-dots, show-(D)ots-tochar\n");
-	printf("(z)-compdots, (h)elp, e(x)it\n");
+	printf("(h)elp, e(x)it\n");
 }
 
 static void
@@ -479,7 +463,7 @@ particular(void) {
 			getInput();
 			if (!_lou_extParseChars(inputBuffer, parsed)) break;
 			startHash = _lou_charHash(*parsed);
-			if (table->charToDots[startHash] == 0) {
+			if (displayTable->charToDots[startHash] == 0) {
 				printf("Character not in table.\n");
 				break;
 			}
@@ -490,7 +474,7 @@ particular(void) {
 			getInput();
 			if (!_lou_extParseDots(inputBuffer, parsed)) break;
 			startHash = _lou_charHash(*parsed);
-			if (table->dotsToChar[startHash] == 0) {
+			if (displayTable->dotsToChar[startHash] == 0) {
 				printf("Dot pattern not in table.\n");
 				break;
 			}
@@ -500,7 +484,7 @@ particular(void) {
 			printf("-> ");
 			getInput();
 			if (!_lou_extParseChars(inputBuffer, parsed)) break;
-			startHash = _lou_stringHash(parsed);
+			startHash = _lou_stringHash(parsed, 0, NULL);
 			if (table->forRules[startHash] == 0) {
 				printf("Character string not in table.\n");
 				break;
@@ -511,23 +495,12 @@ particular(void) {
 			printf("-> ");
 			getInput();
 			if (!_lou_extParseDots(inputBuffer, parsed)) break;
-			startHash = _lou_stringHash(parsed);
+			startHash = _lou_stringHash(parsed, 0, NULL);
 			if (table->backRules[startHash] == 0) {
 				printf("Dot pattern not in table.\n");
 				break;
 			}
 			show_backRules(startHash);
-			break;
-		case 'z':
-			printf("-> ");
-			getInput();
-			if (!_lou_extParseChars(inputBuffer, parsed)) break;
-			startHash = _lou_charHash(*parsed);
-			if (*parsed > 255 || table->compdotsPattern[startHash] == 0) {
-				printf("Character not in table.\n");
-				break;
-			}
-			show_compDots(startHash);
 			break;
 		case 'x':
 			return 1;
@@ -544,8 +517,7 @@ paramLetters(void) {
 	printf("Press one of the letters in parentheses, then enter.\n");
 	printf("show-(f)orward-rules, show-(b)ackward-rules, show-(c)haracters, \n");
 	printf("show-(d)ot-patterns, show-(C)har-to-dots, show-(D)ots-tochar\n");
-	printf("show-(m)isc, show-(z)-compdots\n");
-	printf("show-braille(i)ndicators, show-(p)articulars\n");
+	printf("show-(m)isc, show-braille(i)ndicators, show-(p)articulars\n");
 	printf("(h)elp, (q)uit\n");
 }
 
@@ -571,9 +543,6 @@ getCommands(void) {
 			break;
 		case 'D':
 			show_dotsMap(-1);
-			break;
-		case 'z':
-			show_compDots(-1);
 			break;
 		case 'c':
 			show_characters(-1);
@@ -639,7 +608,8 @@ main(int argc, char **argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	if (!(table = lou_getTable(argv[optind]))) {
+	_lou_getTable(argv[optind], argv[optind], &table, &displayTable);
+	if (!table) {
 		lou_free();
 		exit(EXIT_FAILURE);
 	}

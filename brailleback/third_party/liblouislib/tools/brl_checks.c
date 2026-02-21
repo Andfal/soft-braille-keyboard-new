@@ -5,7 +5,7 @@
    Copyright (C) 2012 Bert Frees <bertfrees@gmail.com>
    Copyright (C) 2014 Mesar Hameed <mesar.hameed@gmail.com>
    Copyright (C) 2015 Mike Gray <mgray@aph.org>
-   Copyright (C) 2010-2016 Swiss Library for the Blind, Visually Impaired and Print
+   Copyright (C) 2010-2017 Swiss Library for the Blind, Visually Impaired and Print
    Disabled
    Copyright (C) 2016-2017 Davy Kager <mail@davykager.nl>
 
@@ -15,7 +15,13 @@
    without any warranty.
 */
 
+/**
+ * @file
+ * @brief Test helper functions
+ */
+
 #include <config.h>
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,12 +31,34 @@
 #include "brl_checks.h"
 #include "unistr.h"
 
-int
-check_full(const char *tableList, const char *str, const formtype *typeform,
-		const char *expected, int mode, const int *cursorPos, int direction,
-		int diagnostics);
+/* see http://stackoverflow.com/questions/5117393/utf-8-strings-length-in-linux-c */
+static int
+my_strlen_utf8_c(char *s) {
+	int i = 0, j = 0;
+	while (s[i]) {
+		if ((s[i] & 0xc0) != 0x80) j++;
+		i++;
+	}
+	return j;
+}
 
-void
+/*
+ * String parsing is also done later in check_base. At this point we
+ * only need it to compute the actual string length in order to be
+ * able to provide error messages when parsing typeform and position arrays.
+ */
+int
+parsed_strlen(char *s) {
+	widechar *buf;
+	int len, maxlen;
+	maxlen = my_strlen_utf8_c(s);
+	buf = malloc(sizeof(widechar) * maxlen);
+	len = _lou_extParseChars(s, buf);
+	free(buf);
+	return len;
+}
+
+static void
 print_int_array(const char *prefix, int *pos_list, int len) {
 	int i;
 	fprintf(stderr, "%s ", prefix);
@@ -38,7 +66,7 @@ print_int_array(const char *prefix, int *pos_list, int len) {
 	fprintf(stderr, "\n");
 }
 
-void
+static void
 print_typeform(const formtype *typeform, int len) {
 	int i;
 	fprintf(stderr, "Typeform:  ");
@@ -46,7 +74,7 @@ print_typeform(const formtype *typeform, int len) {
 	fprintf(stderr, "\n");
 }
 
-void
+static void
 print_widechars(widechar *buffer, int length) {
 	uint8_t *result_buf;
 	size_t result_len;
@@ -60,150 +88,140 @@ print_widechars(widechar *buffer, int length) {
 	free(result_buf);
 }
 
-/* Helper function to convert a typeform string of '0's, '1's, '2's etc.
- * to the required format, which is an array of 0s, 1s, 2s, etc.
- * For example, "0000011111000" is converted to {0,0,0,0,0,1,1,1,1,1,0,0,0}
- * The caller is responsible for freeing the returned array. */
-formtype *
-convert_typeform(const char *typeform_string) {
-	int len = strlen(typeform_string);
-	formtype *typeform = malloc(len * sizeof(formtype));
-	int i;
-	for (i = 0; i < len; i++) typeform[i] = typeform_string[i] - '0';
-	return typeform;
-}
+/* direction, 0=forward, 1=backwards. If diagnostics is 1 then print
+ * diagnostics in case where the translation is not as expected */
 
-void
-update_typeform(const char *typeform_string, formtype *typeform, const typeforms kind) {
-	int len = strlen(typeform_string);
-	int i;
-	for (i = 0; i < len; i++)
-		if (typeform_string[i] != ' ') typeform[i] |= kind;
-}
-
-/* Check if a string is translated as expected. Return 0 if the
- * translation is as expected and 1 otherwise. */
 int
-check_translation(const char *tableList, const char *str, const formtype *typeform,
-		const char *expected) {
-	return check_translation_full(tableList, str, typeform, expected, 0, 0);
-}
+check_base(const char *tableList, const char *input, const char *expected,
+		optional_test_params in) {
 
-/* Check if a string is translated as expected. Return 0 if the
- * translation is as expected and 1 otherwise. */
-int
-check_translation_with_mode(const char *tableList, const char *str,
-		const formtype *typeform, const char *expected, int mode) {
-	return check_translation_full(tableList, str, typeform, expected, mode, 0);
-}
-
-/* Check if a string is translated as expected. Return 0 if the
- * translation is as expected and 1 otherwise. */
-int
-check_translation_with_cursorpos(const char *tableList, const char *str,
-		const formtype *typeform, const char *expected, const int *cursorPos) {
-	return check_translation_full(tableList, str, typeform, expected, 0, cursorPos);
-}
-
-/* Check if a string is translated as expected. Return 0 if the
- * translation is as expected and 1 otherwise. */
-int
-check_translation_full(const char *tableList, const char *str, const formtype *typeform,
-		const char *expected, int mode, const int *cursorPos) {
-	return check_full(tableList, str, typeform, expected, mode, cursorPos, 0, 1);
-}
-
-/* Check if a string is backtranslated as expected. Return 0 if the
- * backtranslation is as expected and 1 otherwise. */
-int
-check_backtranslation(const char *tableList, const char *str, const formtype *typeform,
-		const char *expected) {
-	return check_backtranslation_full(tableList, str, typeform, expected, 0, 0);
-}
-
-/* Check if a string is backtranslated as expected. Return 0 if the
- * backtranslation is as expected and 1 otherwise. */
-int
-check_backtranslation_with_mode(const char *tableList, const char *str,
-		const formtype *typeform, const char *expected, int mode) {
-	return check_backtranslation_full(tableList, str, typeform, expected, mode, 0);
-}
-
-/* Check if a string is backtranslated as expected. Return 0 if the
- * backtranslation is as expected and 1 otherwise. */
-int
-check_backtranslation_with_cursorpos(const char *tableList, const char *str,
-		const formtype *typeform, const char *expected, const int *cursorPos) {
-	return check_backtranslation_full(tableList, str, typeform, expected, 0, cursorPos);
-}
-
-/* Check if a string is backtranslated as expected. Return 0 if the
- * backtranslation is as expected and 1 otherwise. */
-int
-check_backtranslation_full(const char *tableList, const char *str,
-		const formtype *typeform, const char *expected, int mode, const int *cursorPos) {
-	return check_full(tableList, str, typeform, expected, mode, cursorPos, 1, 1);
-}
-
-/* direction, 0=forward, otherwise backwards. If diagnostics is 1 then
- * print diagnostics in case where the translation is not as
- * expected */
-int
-check_full(const char *tableList, const char *str, const formtype *typeform,
-		const char *expected, int mode, const int *cursorPos, int direction,
-		int diagnostics) {
-	widechar *inbuf, *outbuf, *expectedbuf;
-	int inlen = strlen(str);
-	int outlen = inlen * 10;
-	int expectedlen = strlen(expected);
 	int i, retval = 0;
+	int direction = in.direction;
+	const int *expected_inputPos = in.expected_inputPos;
+	const int *expected_outputPos = in.expected_outputPos;
+	if (in.direction < 0 || in.direction > 1) {
+		fprintf(stderr, "Invalid direction.\n");
+		return 1;
+	}
+	if (in.direction != 0 && in.typeform != NULL) {
+		// Currently, in backward translation, nothing is done with the initial value of
+		// the typeform argument, and on return it always contains all zeros, so it
+		// doesn't make any sense to use typeforms in backward translation tests.
+		fprintf(stderr, "typeforms only supported with testmode 'forward'\n");
+		return 1;
+	}
+	if (in.direction == 2 && in.cursorPos >= 0) {
+		fprintf(stderr, "cursorPos not supported with testmode 'bothDirections'\n");
+		return 1;
+	}
+	if (in.direction == 2 && in.max_outlen >= 0) {
+		fprintf(stderr, "maxOutputLength not supported with testmode 'bothDirections'\n");
+		return 1;
+	}
+	if (in.real_inlen >= 0 && in.max_outlen < 0) {
+		fprintf(stderr,
+				"realInputLength not supported when maxOutputLength is not specified\n");
+		return 1;
+	}
+	widechar *inbuf, *outbuf, *expectedbuf;
+	int inlen = parsed_strlen(input);
+	int actualInlen;
+	const int outlen_multiplier = 4 + sizeof(widechar) * 2;
+	int outlen = inlen * outlen_multiplier;
+	int expectedlen = strlen(expected);
 	int funcStatus = 0;
 	formtype *typeformbuf = NULL;
-	int *cursorPosbuf = NULL;
-
+	int *inputPos = NULL;
+	int *outputPos = NULL;
+	int cursorPos = 0;
 	inbuf = malloc(sizeof(widechar) * inlen);
-	outbuf = malloc(sizeof(widechar) * outlen);
+	// + 1 : reserved for the '\0' terminator of C-format string argument used in
+	// `print_widechars`
+	outbuf = malloc(sizeof(widechar) * (outlen + 1));
 	expectedbuf = malloc(sizeof(widechar) * expectedlen);
-	if (typeform != NULL) {
+	if (in.typeform != NULL) {
 		typeformbuf = malloc(outlen * sizeof(formtype));
-		memcpy(typeformbuf, typeform, outlen * sizeof(formtype));
+		memcpy(typeformbuf, in.typeform, inlen * sizeof(formtype));
 	}
-	if (cursorPos != NULL) {
-		cursorPosbuf = malloc(sizeof(int));
-		memcpy(cursorPosbuf, cursorPos, sizeof(int));
+	if (in.cursorPos >= 0) {
+		cursorPos = in.cursorPos;
 	}
-	inlen = _lou_extParseChars(str, inbuf);
+	if (in.max_outlen >= 0) {
+		outlen = in.max_outlen;
+	}
+	inlen = _lou_extParseChars(input, inbuf);
 	if (!inlen) {
 		fprintf(stderr, "Cannot parse input string.\n");
 		retval = 1;
 		goto fail;
 	}
-	if (direction == 0) {
-		funcStatus = lou_translate(tableList, inbuf, &inlen, outbuf, &outlen, typeformbuf,
-				NULL, NULL, NULL, cursorPosbuf, mode);
-	} else {
-		funcStatus = lou_backTranslate(tableList, inbuf, &inlen, outbuf, &outlen,
-				typeformbuf, NULL, NULL, NULL, cursorPosbuf, mode);
+	if (in.real_inlen > inlen) {
+		fprintf(stderr,
+				"expected realInputLength (%d) may not exceed total input length "
+				"(%d)\n",
+				in.real_inlen, inlen);
+		return 1;
 	}
-	if (!funcStatus) {
-		fprintf(stderr, "Translation failed.\n");
-		retval = 1;
-		goto fail;
+	if (expected_inputPos) {
+		inputPos = malloc(sizeof(int) * outlen);
 	}
-
+	if (expected_outputPos) {
+		outputPos = malloc(sizeof(int) * inlen);
+	}
+	actualInlen = inlen;
+	// Note that this loop is not strictly needed to make the current tests pass, but
+	// in the general case it is needed because it is theoretically possible that we
+	// provided a too short output buffer.
+	for (int k = 1; k <= 3; k++) {
+		if (direction == 1) {
+			funcStatus = _lou_backTranslate(tableList, in.display_table, inbuf,
+					&actualInlen, outbuf, &outlen, typeformbuf, NULL, outputPos, inputPos,
+					&cursorPos, in.mode, NULL, NULL);
+		} else {
+			funcStatus = _lou_translate(tableList, in.display_table, inbuf, &actualInlen,
+					outbuf, &outlen, typeformbuf, NULL, outputPos, inputPos, &cursorPos,
+					in.mode, NULL, NULL);
+		}
+		if (!funcStatus) {
+			fprintf(stderr, "Translation failed.\n");
+			retval = 1;
+			goto fail;
+		}
+		if (in.max_outlen >= 0 || inlen == actualInlen) {
+			break;
+		} else if (k < 3) {
+			// Hm, something is not quite right. Try again with a larger outbuf
+			free(outbuf);
+			outlen = inlen * outlen_multiplier * (k + 1);
+			// + 1 : reserved for the '\0' terminator of C-format string argument used in
+			// `print_widechars`
+			outbuf = malloc(sizeof(widechar) * (outlen + 1));
+			if (expected_inputPos) {
+				free(inputPos);
+				inputPos = malloc(sizeof(int) * outlen);
+			}
+			fprintf(stderr,
+					"Warning: For %s: returned inlen (%d) differs from passed inlen "
+					"(%d) "
+					"using outbuf of size %d. Trying again with bigger outbuf "
+					"(%d).\n",
+					input, actualInlen, inlen, inlen * outlen_multiplier * k, outlen);
+			actualInlen = inlen;
+		}
+	}
 	expectedlen = _lou_extParseChars(expected, expectedbuf);
 	for (i = 0; i < outlen && i < expectedlen && expectedbuf[i] == outbuf[i]; i++)
 		;
 	if (i < outlen || i < expectedlen) {
 		retval = 1;
-		if (diagnostics) {
+		if (in.diagnostics) {
 			outbuf[outlen] = 0;
-			fprintf(stderr, "Input:    '%s'\n", str);
+			fprintf(stderr, "Input:    '%s'\n", input);
 			/* Print the original typeform not the typeformbuf, as the
 			 * latter has been modified by the translation and contains some
 			 * information about outbuf */
-			if (typeform != NULL) print_typeform(typeform, inlen);
-			if (cursorPos != NULL) fprintf(stderr, "Cursor:   %d\n", *cursorPos);
+			if (in.typeform != NULL) print_typeform(in.typeform, inlen);
+			if (in.cursorPos >= 0) fprintf(stderr, "Cursor:   %d\n", in.cursorPos);
 			fprintf(stderr, "Expected: '%s' (length %d)\n", expected, expectedlen);
 			fprintf(stderr, "Received: '");
 			print_widechars(outbuf, outlen);
@@ -228,15 +246,90 @@ check_full(const char *tableList, const char *str, const formtype *typeform,
 						out_utf8, i);
 			} else if (i < expectedlen) {
 				fprintf(stderr,
-						"Diff:     Expected '%.*s' but received nothing in index %d\n",
+						"Diff:     Expected '%.*s' but received nothing in index "
+						"%d\n",
 						(int)expected_utf8_len, expected_utf8, i);
 			} else {
 				fprintf(stderr,
-						"Diff:     Expected nothing but received '%.*s' in index %d\n",
+						"Diff:     Expected nothing but received '%.*s' in index "
+						"%d\n",
 						(int)out_utf8_len, out_utf8, i);
 			}
 			free(expected_utf8);
 			free(out_utf8);
+		}
+	}
+	if (expected_inputPos) {
+		int error_printed = 0;
+		// The expected_inputPos array may be shorter than the actual input length.
+		for (i = 0; i < outlen || i < expectedlen; i++) {
+			if (i < outlen && i < expectedlen && expected_inputPos[i] == inputPos[i])
+				continue;
+			retval = 1;
+			if (in.diagnostics) {
+				if (!error_printed) {  // Print only once
+					fprintf(stderr, "Input position failure:\n");
+					error_printed = 1;
+				}
+				if (i < outlen && i < expectedlen) {
+					fprintf(stderr, "Expected %d, received %d in index %d\n",
+							expected_inputPos[i], inputPos[i], i);
+				} else if (i < expectedlen) {
+					fprintf(stderr, "Expected %d, received nothing in index %d\n",
+							expected_inputPos[i], i);
+				} else {
+					fprintf(stderr, "Expected nothing, received %d in index %d\n",
+							inputPos[i], i);
+				}
+			}
+		}
+	}
+	if (expected_outputPos) {
+		int error_printed = 0;
+		for (i = 0; i < inlen; i++) {
+			if (expected_outputPos[i] != outputPos[i]) {
+				retval = 1;
+				if (in.diagnostics) {
+					if (!error_printed) {  // Print only once
+						fprintf(stderr, "Output position failure:\n");
+						error_printed = 1;
+					}
+					fprintf(stderr, "Expected %d, received %d in index %d\n",
+							expected_outputPos[i], outputPos[i], i);
+				}
+			}
+		}
+	}
+	if ((in.expected_cursorPos >= 0) && (cursorPos != in.expected_cursorPos)) {
+		retval = 1;
+		if (in.diagnostics) {
+			fprintf(stderr, "Cursor position failure:\n");
+			fprintf(stderr, "Initial:%d Expected:%d Actual:%d \n", in.cursorPos,
+					in.expected_cursorPos, cursorPos);
+		}
+	}
+	if (in.max_outlen < 0 && inlen != actualInlen) {
+		retval = 1;
+		if (in.diagnostics) {
+			fprintf(stderr,
+					"Unexpected error happened: input length is not the same before "
+					"as "
+					"after the translation:\n");
+			fprintf(stderr, "Before: %d After: %d \n", inlen, actualInlen);
+		}
+	} else if (actualInlen > inlen) {
+		retval = 1;
+		if (in.diagnostics) {
+			fprintf(stderr,
+					"Unexpected error happened: returned input length (%d) exceeds "
+					"total input length (%d)\n",
+					actualInlen, inlen);
+		}
+	} else if (in.real_inlen >= 0 && in.real_inlen != actualInlen) {
+		retval = 1;
+		if (in.diagnostics) {
+			fprintf(stderr, "Real input length failure:\n");
+			fprintf(stderr, "Expected: %d, received: %d\n", in.real_inlen, actualInlen);
 		}
 	}
 
@@ -245,96 +338,31 @@ fail:
 	free(outbuf);
 	free(expectedbuf);
 	free(typeformbuf);
-	free(cursorPosbuf);
+	free(inputPos);
+	free(outputPos);
+
 	return retval;
 }
 
-int
-check_inpos(const char *tableList, const char *str, const int *expected_poslist) {
-	widechar *inbuf;
-	widechar *outbuf;
-	int *inpos;
-	int inlen;
-	int outlen;
-	int i, retval = 0;
-
-	inlen = strlen(str) * 2;
-	outlen = inlen;
-	inbuf = malloc(sizeof(widechar) * inlen);
-	outbuf = malloc(sizeof(widechar) * outlen);
-	inpos = malloc(sizeof(int) * inlen);
-	for (i = 0; i < inlen; i++) {
-		inbuf[i] = str[i];
-	}
-	if (!lou_translate(tableList, inbuf, &inlen, outbuf, &outlen, NULL, NULL, NULL, inpos,
-				NULL, 0)) {
-		fprintf(stderr, "Translation failed.\n");
-		retval = 1;
-		goto fail;
-	}
-	for (i = 0; i < outlen; i++) {
-		if (expected_poslist[i] != inpos[i]) {
-			if (!retval)  // Print only once
-				fprintf(stderr, "Inpos failure:\n");
-			fprintf(stderr, "Expected %d, received %d in index %d\n", expected_poslist[i],
-					inpos[i], i);
-			retval = 1;
-		}
-	}
-
-fail:
-	free(inbuf);
-	free(outbuf);
-	free(inpos);
-	return retval;
+/* Helper function to convert a typeform string of '0's, '1's, '2's etc.
+ * to the required format, which is an array of 0s, 1s, 2s, etc.
+ * For example, "0000011111000" is converted to {0,0,0,0,0,1,1,1,1,1,0,0,0}
+ * The caller is responsible for freeing the returned array. */
+formtype *
+convert_typeform(const char *typeform_string) {
+	int len = strlen(typeform_string);
+	formtype *typeform = malloc(len * sizeof(formtype));
+	int i;
+	for (i = 0; i < len; i++) typeform[i] = typeform_string[i] - '0';
+	return typeform;
 }
 
-int
-check_outpos(const char *tableList, const char *str, const int *expected_poslist) {
-	widechar *inbuf;
-	widechar *outbuf;
-	int *inpos, *outpos;
-	int origInlen, inlen;
-	int outlen;
-	int i, retval = 0;
-
-	origInlen = inlen = strlen(str);
-	outlen = inlen * 2;
-	inbuf = malloc(sizeof(widechar) * inlen);
-	outbuf = malloc(sizeof(widechar) * outlen);
-	/* outputPos can be affected by inputPos, so pass inputPos as well. */
-	inpos = malloc(sizeof(int) * outlen);
-	outpos = malloc(sizeof(int) * inlen);
-	for (i = 0; i < inlen; i++) {
-		inbuf[i] = str[i];
-	}
-	if (!lou_translate(tableList, inbuf, &inlen, outbuf, &outlen, NULL, NULL, outpos,
-				inpos, NULL, 0)) {
-		fprintf(stderr, "Translation failed.\n");
-		retval = 1;
-		goto fail;
-	}
-	if (inlen != origInlen) {
-		fprintf(stderr, "original inlen %d and returned inlen %d differ\n", origInlen,
-				inlen);
-	}
-
-	for (i = 0; i < inlen; i++) {
-		if (expected_poslist[i] != outpos[i]) {
-			if (!retval)  // Print only once
-				fprintf(stderr, "Outpos failure:\n");
-			fprintf(stderr, "Expected %d, received %d in index %d\n", expected_poslist[i],
-					outpos[i], i);
-			retval = 1;
-		}
-	}
-
-fail:
-	free(inbuf);
-	free(outbuf);
-	free(inpos);
-	free(outpos);
-	return retval;
+void
+update_typeform(const char *typeform_string, formtype *typeform, const typeforms kind) {
+	int len = strlen(typeform_string);
+	int i;
+	for (i = 0; i < len; i++)
+		if (typeform_string[i] != ' ') typeform[i] |= kind;
 }
 
 int
@@ -379,10 +407,102 @@ fail:
 	return retval;
 }
 
-/* Check if a string is hyphenated as expected. Return 0 if the
- * hyphenation is as expected and 1 otherwise. */
+/** Check if a display table maps characters to the right dots.
+ *
+ * The dots are read as Unicode braille. Multiple input characters are
+ * allowed to map to the same dot pattern. Virtual dots in the actual
+ * output are discarded.
+ *
+ * @return 0 if the result is as expected and 1 otherwise.
+ */
 int
-check_hyphenation(const char *tableList, const char *str, const char *expected) {
+check_display(const char *displayTableList, const char *input, const char *expected) {
+	widechar *inbuf = NULL;
+	widechar *outbuf = NULL;
+	widechar *expectedbuf = NULL;
+	int retval = 0;
+	int inlen = strlen(input);
+	inbuf = malloc(sizeof(widechar) * inlen);
+	inlen = _lou_extParseChars(input, inbuf);
+	if (!inlen) {
+		fprintf(stderr, "Cannot parse input string.\n");
+		retval = 1;
+		goto fail;
+	}
+	int expectedlen = strlen(expected);
+	expectedbuf = malloc(sizeof(widechar) * expectedlen);
+	expectedlen = _lou_extParseChars(expected, expectedbuf);
+	if (!expectedlen) {
+		fprintf(stderr, "Cannot parse output string.\n");
+		retval = 1;
+		goto fail;
+	}
+	if (inlen != expectedlen) {
+		fprintf(stderr, "Input and output string must be the same length.\n");
+		retval = 1;
+		goto fail;
+	}
+	for (int i = 0; i < expectedlen; i++) {
+		if ((expectedbuf[i] & 0xff00) != LOU_ROW_BRAILLE) {
+			fprintf(stderr, "Output string must be Unicode braille.\n");
+			retval = 1;
+			goto fail;
+		}
+	}
+	outbuf = malloc(sizeof(widechar) * inlen);
+	if (!lou_charToDots(displayTableList, inbuf, outbuf, inlen, ucBrl)) {
+		// This should only happen if the table can not be compiled.
+		// If the table does not have a display rule for a character
+		// in the input, it will result in a blank dot pattern in the
+		// output.
+		fprintf(stderr, "Mapping to dots failed.\n");
+		retval = 1;
+		goto fail;
+	}
+	for (int i = 0; i < inlen; i++) {
+		if (outbuf[i] != expectedbuf[i]) {
+			retval = 1;
+			fprintf(stderr, "Input:    '%s'\n", input);
+			fprintf(stderr, "Expected: '%s'\n", expected);
+			fprintf(stderr, "Received: '");
+			print_widechars(outbuf, inlen);
+			fprintf(stderr, "'\n");
+			uint8_t *expected_utf8;
+			uint8_t *out_utf8;
+			size_t expected_utf8_len;
+			size_t out_utf8_len;
+#ifdef WIDECHARS_ARE_UCS4
+			expected_utf8 = u32_to_u8(&expectedbuf[i], 1, NULL, &expected_utf8_len);
+			out_utf8 = u32_to_u8(&outbuf[i], 1, NULL, &out_utf8_len);
+#else
+			expected_utf8 = u16_to_u8(&expectedbuf[i], 1, NULL, &expected_utf8_len);
+			out_utf8 = u16_to_u8(&outbuf[i], 1, NULL, &out_utf8_len);
+#endif
+			expectedbuf[i] = (expectedbuf[i] & 0x00ff) | LOU_DOTS;
+			outbuf[i] = (outbuf[i] & 0x00ff) | LOU_DOTS;
+			fprintf(stderr, "Diff:     Expected '%.*s' (dots %s)", (int)expected_utf8_len,
+					expected_utf8, _lou_showDots(&expectedbuf[i], 1));
+			fprintf(stderr, " but received '%.*s' (dots %s) in index %d\n",
+					(int)out_utf8_len, out_utf8, _lou_showDots(&outbuf[i], 1), i);
+			free(expected_utf8);
+			free(out_utf8);
+			break;
+		}
+	}
+fail:
+	free(inbuf);
+	free(outbuf);
+	free(expectedbuf);
+	return retval;
+}
+
+/* Check if a string is hyphenated as expected, by passing the
+ * expected hyphenation position array.
+ *
+ * @return 0 if the hyphenation is as expected and 1 otherwise.
+ */
+int
+check_hyphenation_pos(const char *tableList, const char *str, const char *expected) {
 	widechar *inbuf;
 	char *hyphens = NULL;
 	int inlen = strlen(str);
@@ -409,6 +529,85 @@ check_hyphenation(const char *tableList, const char *str, const char *expected) 
 		fprintf(stderr, "Received: '%s'\n", hyphens);
 		retval = 1;
 	}
+
+fail:
+	free(inbuf);
+	free(hyphens);
+	return retval;
+}
+
+/** Check if a string is hyphenated as expected.
+ *
+ * mode is '0' when input is text and '1' when input is braille
+ *
+ * @return 0 if the hyphenation is as expected and 1 otherwise.
+ */
+int
+check_hyphenation(
+		const char *tableList, const char *str, const char *expected, int mode) {
+	widechar *inbuf;
+	widechar *hyphenatedbuf = NULL;
+	uint8_t *hyphenated = NULL;
+	char *hyphens = NULL;
+	int inlen = strlen(str);
+	size_t hyphenatedlen = inlen * 2;
+	int retval = 0;
+
+	inbuf = malloc(sizeof(widechar) * inlen);
+	inlen = _lou_extParseChars(str, inbuf);
+	if (!inlen) {
+		fprintf(stderr, "Cannot parse input string.\n");
+		retval = 1;
+		goto fail;
+	}
+	hyphens = calloc(inlen + 1, sizeof(char));
+
+	if (!lou_hyphenate(tableList, inbuf, inlen, hyphens, mode)) {
+		fprintf(stderr, "Hyphenation failed.\n");
+		retval = 1;
+		goto fail;
+	}
+	if (hyphens[0] != '0') {
+		fprintf(stderr, "Unexpected output from lou_hyphenate.\n");
+		retval = 1;
+		goto fail;
+	}
+
+	hyphenatedbuf = malloc(sizeof(widechar) * hyphenatedlen);
+	int i = 0;
+	int j = 0;
+	hyphenatedbuf[i++] = inbuf[j++];
+	for (; j < inlen; j++) {
+		if (hyphens[j] == '2')
+			hyphenatedbuf[i++] = (widechar)'|';
+		else if (hyphens[j] != '0')
+			hyphenatedbuf[i++] = (widechar)'-';
+		hyphenatedbuf[i++] = inbuf[j];
+	}
+
+#ifdef WIDECHARS_ARE_UCS4
+	hyphenated = u32_to_u8(hyphenatedbuf, i, NULL, &hyphenatedlen);
+#else
+	hyphenated = u16_to_u8(hyphenatedbuf, i, NULL, &hyphenatedlen);
+#endif
+
+	if (!hyphenated) {
+		fprintf(stderr, "Unexpected error during UTF-8 encoding\n");
+		free(hyphenatedbuf);
+		retval = 2;
+		goto fail;
+	}
+
+	if (strlen(expected) != hyphenatedlen ||
+			strncmp(expected, (const char *)hyphenated, hyphenatedlen)) {
+		fprintf(stderr, "Input:    '%s'\n", str);
+		fprintf(stderr, "Expected: '%s'\n", expected);
+		fprintf(stderr, "Received: '%.*s'\n", (int)hyphenatedlen, hyphenated);
+		retval = 1;
+	}
+
+	free(hyphenatedbuf);
+	free(hyphenated);
 
 fail:
 	free(inbuf);

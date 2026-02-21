@@ -7,10 +7,11 @@ are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved. This file is offered as-is,
 without any warranty. */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "config.h"
 #include <unistd.h>
 #include "liblouis.h"
 
@@ -21,7 +22,7 @@ log_and_count_errors(logLevels level, const char *message)
 {
   switch(level)
     {
-    case LOG_ERROR:
+    case LOU_LOG_ERROR:
       errorCount++;
       printf("\n  ERROR >> %s\n", message);
       break;
@@ -34,7 +35,7 @@ int
 main(int argc, char **argv)
 {
   lou_registerLogCallback(log_and_count_errors);
-  lou_setLogLevel(LOG_DEBUG);
+  lou_setLogLevel(LOU_LOG_DEBUG);
   char table_path[2048];
   const char *abs_top_srcdir = getenv ("LOUIS_TABLEPATH");
   sprintf (table_path, "%s/tables", abs_top_srcdir);

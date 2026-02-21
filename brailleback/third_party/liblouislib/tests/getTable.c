@@ -7,6 +7,8 @@ are permitted in any medium without royalty provided the copyright
 notice and this notice are preserved. This file is offered as-is,
 without any warranty. */
 
+#include <config.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -17,7 +19,7 @@ main(int argc, char **argv)
 {
   const char* goodTable = "tables/en-us-g1.ctb";
   const char* badTable = "tests/tables/bad.ctb";
-  void* table = NULL;
+  const void* table = NULL;
   int result = 0;
 
   table = lou_getTable(goodTable);

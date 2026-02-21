@@ -1,4 +1,4 @@
-SUBDIRS = louis
+SUBDIRS = louis tests examples
 
-EXTRA_DIST = setup.py README
+EXTRA_DIST = pyproject.toml README.md
 

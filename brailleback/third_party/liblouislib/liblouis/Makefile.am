@@ -1,8 +1,5 @@
 liblouisincludedir = $(includedir)/liblouis
 
-liblouisinclude_HEADERS = \
-	internal.h
-
 # Don't include liblouis.h in dist, this will break subdir builds
 # when dist is configured with a different ucs-option than the build,
 # i.e. ucs2 dist and ucs4 build and vice versa.
@@ -12,15 +9,30 @@ nodist_liblouisinclude_HEADERS = \
 lib_LTLIBRARIES = liblouis.la
 
 AM_CPPFLAGS = 						\
+	$(WARN_CFLAGS)					\
 	-DTABLESDIR=\""$(datadir)"/liblouis/tables\"	\
 	-I$(top_srcdir)/gnulib				\
 	-I$(top_builddir)/gnulib
+
+if USE_COVERAGE
+AM_CPPFLAGS += -fprofile-instr-generate -fcoverage-mapping
+endif
 
 liblouis_la_LIBADD = $(top_builddir)/gnulib/libgnu.la
 
 liblouis_la_LDFLAGS =	\
 	-version-info $(LIBLOUIS_CURRENT):$(LIBLOUIS_REVISION):$(LIBLOUIS_AGE) -no-undefined \
 	$(LTLIBINTL)
+
+# Pass x86_64 and/or arm64 in compiler and linker flags if asked
+if CLANG_ARCH_X86_64
+AM_CPPFLAGS += -arch x86_64
+liblouis_la_LDFLAGS += -arch x86_64
+endif
+if CLANG_ARCH_ARM64
+AM_CPPFLAGS += -arch arm64
+liblouis_la_LDFLAGS += -arch arm64
+endif
 
 if HAVE_LD_OUTPUT_DEF
 liblouis_la_LDFLAGS += -Wl,--output-def,liblouis-$(DLL_VERSION).def
