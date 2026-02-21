@@ -84,7 +84,7 @@
          locale="nl"
          dots="6"
          grade="1"
-         fileName="nl-NL-g0.utb" />
+         fileName="nl-comp8.utb" />
 
     <!-- English -->
     <table
@@ -154,7 +154,7 @@
          locale="fr_CA"
          dots="6"
          grade="1"
-         fileName="fr-ca-g1.utb" />
+         fileName="fr-bfu-comp6.utb" />
     <table
          id="fr-CA-g2"
          locale="fr_CA"
@@ -166,7 +166,7 @@
          locale="fr_FR"
          dots="6"
          grade="1"
-         fileName="fr-fr-g1.utb" />
+         fileName="fr-bfu-comp6.utb" />
     <table
          id="fr-FR-g2"
          locale="fr_FR"
@@ -403,8 +403,8 @@
          id="ro-g0"
          locale="ro"
          dots="6"
-         grade="1"
-         fileName="ro2.ctb" />
+         grade="0"
+         fileName="ro-g0.utb" />
 
     <!-- Russian -->
     <table
@@ -417,7 +417,7 @@
          locale="ru"
          dots="6"
          grade="1"
-         fileName="ru-ru-g1.utb" />
+         fileName="ru-litbrl.ctb" />
 
     <!-- Serbian -->
     <table
@@ -460,7 +460,7 @@
          locale="es"
          dots="6"
          grade="1"
-         fileName="Es-Es-g1.utb" />
+         fileName="es-g1.ctb" />
 
     <!-- Swedish -->
     <table
@@ -473,7 +473,7 @@
          locale="sv"
          dots="6"
          grade="1"
-         fileName="Se-Se-g1.utb" />
+         fileName="sv-g1.ctb" />
 
     <!-- Turkish -->
     <table
@@ -492,8 +492,8 @@
          id="vi-g1"
          locale="vi"
          dots="6"
-	 grade="1"
-         fileName="vi-g1.ctb" />
+         grade="1"
+         fileName="vi-vn-g1.ctb" />
     <!-- Chinese -->
     <table
          id="zh-comp8"
