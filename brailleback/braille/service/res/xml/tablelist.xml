@@ -61,6 +61,14 @@
          dots="8"
          fileName="bg.ctb" />
 
+    <!-- Bengali -->
+    <table
+         id="bn-g1"
+         locale="bn"
+         dots="6"
+         grade="1"
+         fileName="be-in-g1.utb" />
+
     <!-- Catalan -->
     <table
          id="ca-g1"
