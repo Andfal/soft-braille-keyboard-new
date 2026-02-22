@@ -286,7 +286,13 @@
          id="he-comp8"
          locale="he"
          dots="8"
-         fileName="he.ctb" />
+         fileName="he-IL-comp8.utb" />
+    <table
+         id="he-g1"
+         locale="he"
+         dots="6"
+         grade="1"
+         fileName="he-IL.utb" />
 
     <!-- Biblical Hebrew -->
     <table
