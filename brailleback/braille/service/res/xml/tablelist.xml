@@ -75,6 +75,12 @@
          locale="hr"
          dots="8"
          fileName="hr-g1.ctb" />
+    <table
+         id="hr-g1"
+         locale="hr"
+         dots="6"
+         grade="1"
+         fileName="hr-g1.ctb" />
 
     <!-- Czech -->
     <table
