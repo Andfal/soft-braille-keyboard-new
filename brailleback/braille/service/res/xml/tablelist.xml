@@ -21,6 +21,20 @@
 
 <table-list>
 
+    <!-- Afrikaans -->
+    <table
+         id="afr-za-g1"
+         locale="afr"
+         dots="6"
+         grade="1"
+         fileName="afr-za-g1.ctb" />
+    <table
+         id="afr-za-g2"
+         locale="afr"
+         dots="6"
+         grade="2"
+         fileName="afr-za-g2.ctb" />
+
     <!-- Arabic -->
     <table
          id="ar-g1"
@@ -136,12 +150,28 @@
          grade="2"
          fileName="en-us-g2.ctb" />
 
+    <!-- Esperanto -->
+    <table
+         id="eo-g1"
+         locale="eo"
+         dots="6"
+         grade="1"
+         fileName="eo-g1.ctb" />
+
     <!-- Estonian -->
     <table
          id="et-comp8"
          locale="et"
          dots="8"
          fileName="et-g0.utb" />
+
+    <!-- Ethiopic -->
+    <table
+         id="ethio-g1"
+         locale="am"
+         dots="6"
+         grade="1"
+         fileName="ethio-g1.ctb" />
 
     <!-- French -->
     <table
@@ -282,6 +312,14 @@
          grade="1"
          fileName="it-it-comp6.utb" />
 
+    <!-- Japanese -->
+    <table
+         id="ja-g1"
+         locale="ja"
+         dots="6"
+         grade="1"
+         fileName="ja-kantenji.utb" />
+
     <!-- Korean -->
     <table
          id="ko-g1"
@@ -295,6 +333,14 @@
          dots="6"
          grade="2"
          fileName="ko-g2.ctb" />
+
+    <!-- Kurdish -->
+    <table
+         id="ckb-g1"
+         locale="ckb"
+         dots="6"
+         grade="1"
+         fileName="ckb-g1.ctb" />
 
     <!-- Latvian -->
     <table
@@ -419,6 +465,14 @@
          grade="1"
          fileName="ru-litbrl.ctb" />
 
+    <!-- Scottish Gaelic -->
+    <table
+         id="gd-g1"
+         locale="gd"
+         dots="6"
+         grade="1"
+         fileName="gd.ctb" />
+
     <!-- Serbian -->
     <table
          id="sr-g1"
@@ -462,6 +516,14 @@
          grade="1"
          fileName="es-g1.ctb" />
 
+    <!-- Swahili -->
+    <table
+         id="sw-ke-g1"
+         locale="sw"
+         dots="6"
+         grade="1"
+         fileName="sw-ke-g1.utb" />
+
     <!-- Swedish -->
     <table
          id="sv-comp8"
@@ -474,6 +536,30 @@
          dots="6"
          grade="1"
          fileName="sv-g1.ctb" />
+
+    <!-- Tamil -->
+    <table
+         id="ta-g1"
+         locale="ta"
+         dots="6"
+         grade="1"
+         fileName="ta-ta-g1.ctb" />
+
+    <!-- Telugu -->
+    <table
+         id="te-g1"
+         locale="te"
+         dots="6"
+         grade="1"
+         fileName="te-in-g1.utb" />
+
+    <!-- Thai -->
+    <table
+         id="th-g1"
+         locale="th"
+         dots="6"
+         grade="1"
+         fileName="th-g1.utb" />
 
     <!-- Turkish -->
     <table
@@ -494,6 +580,14 @@
          grade="2"
          fileName="tr-g2.ctb" />
 
+    <!-- Urdu -->
+    <table
+         id="ur-g1"
+         locale="ur"
+         dots="6"
+         grade="1"
+         fileName="ur-pk-g1.utb" />
+
     <!-- Vietnamese -->
     <table
          id="vi-comp8"
@@ -506,6 +600,15 @@
          dots="6"
          grade="1"
          fileName="vi-vn-g1.ctb" />
+
+    <!-- Zulu -->
+    <table
+         id="zu-za-g1"
+         locale="zu"
+         dots="6"
+         grade="1"
+         fileName="zu-za-g1.utb" />
+
     <!-- Chinese -->
     <table
          id="zh-comp8"

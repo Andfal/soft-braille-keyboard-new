@@ -2,9 +2,14 @@
 <resources>
     <string-array
         name="braille_tables">
+        <item>afr-za-g1</item>
+        <item>afr-za-g2</item>
+        <item>ar-g1</item>
+        <item>ckb-g1</item>
         <item>cs-g1</item>
         <item>da-comp8</item>
         <item>da-g1</item>
+        <item>da-g2</item>
         <item>de-comp8</item>
         <item>de-DE-g1</item>
         <item>el-g1</item>
@@ -13,15 +18,19 @@
         <item>en-US-comp8</item>
         <item>en-US-g1</item>
         <item>en-US-g2</item>
+        <item>eo-g1</item>
         <item>es-comp8</item>
         <item>es-g1</item>
+        <item>ethio-g1</item>
         <item>fi-comp8</item>
         <item>fr-CA-g1</item>
         <item>fr-comp8</item>
         <item>fr-FR-g1</item>
+        <item>gd-g1</item>
         <item>hr-comp8</item>
         <item>it-comp8</item>
         <item>it-g1</item>
+        <item>ja-g1</item>
         <item>nl-g1</item>
         <item>pl-comp</item>
         <item>pl-g1</item>
@@ -35,12 +44,18 @@
         <item>sk-g1</item>
         <item>sv-comp8</item>
         <item>sv-g1</item>
+        <item>sw-ke-g1</item>
+        <item>ta-g1</item>
+        <item>te-g1</item>
+        <item>th-g1</item>
         <item>tr-comp8</item>
         <item>tr-g1</item>
         <item>tr-g2</item>
+        <item>ur-g1</item>
         <item>vi-g1</item>
         <item>zh-comp8</item>
         <item>zh-TW-comp8</item>
+        <item>zu-za-g1</item>
     </string-array>
     <string-array
         name="braille_types">
