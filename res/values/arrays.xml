@@ -5,6 +5,8 @@
         <item>afr-za-g1</item>
         <item>afr-za-g2</item>
         <item>ar-g1</item>
+        <item>ar-g2</item>
+        <item>ar-comp8</item>
         <item>ckb-g1</item>
         <item>cs-g1</item>
         <item>da-comp8</item>
@@ -12,6 +14,7 @@
         <item>da-g2</item>
         <item>de-comp8</item>
         <item>de-DE-g1</item>
+        <item>de-DE-g2</item>
         <item>el-g1</item>
         <item>en-UEB-g1</item>
         <item>en-UEB-g2</item>
@@ -24,8 +27,10 @@
         <item>ethio-g1</item>
         <item>fi-comp8</item>
         <item>fr-CA-g1</item>
+        <item>fr-CA-g2</item>
         <item>fr-comp8</item>
         <item>fr-FR-g1</item>
+        <item>fr-FR-g2</item>
         <item>gd-g1</item>
         <item>hbo-g1</item>
         <item>hbo-cantillated-g1</item>
@@ -39,8 +44,10 @@
         <item>pl-g1</item>
         <item>pt-BR-comp8</item>
         <item>pt-BR-g1</item>
+        <item>pt-BR-g2</item>
         <item>pt-comp8</item>
         <item>pt-g1</item>
+        <item>pt-g2</item>
         <item>ro-comp8</item>
         <item>ro-g0</item>
         <item>ru-g1</item>
@@ -55,6 +62,7 @@
         <item>tr-g1</item>
         <item>tr-g2</item>
         <item>ur-g1</item>
+        <item>ur-g2</item>
         <item>vi-g1</item>
         <item>zh-comp8</item>
         <item>zh-TW-comp8</item>

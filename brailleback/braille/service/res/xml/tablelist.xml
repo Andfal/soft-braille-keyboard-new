@@ -42,6 +42,17 @@
          dots="6"
          grade="1"
          fileName="ar-ar-g1.utb" />
+    <table
+         id="ar-g2"
+         locale="ar"
+         dots="6"
+         grade="2"
+         fileName="ar-ar-g2.ctb" />
+    <table
+         id="ar-comp8"
+         locale="ar"
+         dots="8"
+         fileName="ar-ar-comp8.utb" />
 
     <!-- Bulgarian -->
     <table
@@ -610,6 +621,12 @@
          dots="6"
          grade="1"
          fileName="ur-pk-g1.utb" />
+    <table
+         id="ur-g2"
+         locale="ur"
+         dots="6"
+         grade="2"
+         fileName="ur-pk-g2.ctb" />
 
     <!-- Vietnamese -->
     <table
