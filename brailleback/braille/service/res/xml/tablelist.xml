@@ -481,6 +481,12 @@
          locale="tr"
          dots="8"
          fileName="tr.ctb" />
+    <table
+         id="tr-g1"
+         locale="tr"
+         dots="6"
+         grade="1"
+         fileName="tr-g1.ctb" />
 
     <!-- Vietnamese -->
     <table
