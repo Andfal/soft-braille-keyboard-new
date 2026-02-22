@@ -2,6 +2,8 @@
 <resources>
     <string-array
         name="braille_tables">
+        <item>af-g2</item>
+        <item>af-g1</item>
         <item>afr-za-g1</item>
         <item>afr-za-g2</item>
         <item>ar-comp8</item>
@@ -199,3 +201,4 @@
                 <item>100</item>
             </string-array>        <string-array name="empty_array"/>
 </resources>
+
