@@ -424,7 +424,7 @@ public class BrailleParser {
             return true;
         }
 
-        if (brailleType == BrailleType.LITERARY && table.getGrade() > 0) {
+        if (brailleType == BrailleType.LITERARY && !table.isEightDot()) {
             return true;
         } else if (table.isEightDot() && brailleType == BrailleType.COMPUTER) {
             return true;
