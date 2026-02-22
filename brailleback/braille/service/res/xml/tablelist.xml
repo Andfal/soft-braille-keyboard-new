@@ -271,6 +271,21 @@
          dots="8"
          fileName="he.ctb" />
 
+    <!-- Biblical Hebrew -->
+    <table
+         id="hbo-g1"
+         locale="hbo"
+         dots="6"
+         grade="1"
+         fileName="hbo.utb" />
+    <table
+         id="hbo-cantillated-g1"
+         locale="hbo"
+         dots="6"
+         grade="1"
+         variant="cantillated"
+         fileName="hbo-cantillated.utb" />
+
     <!-- Hindi -->
     <table
          id="hi-g1"
@@ -298,6 +313,14 @@
          locale="is"
          dots="8"
          fileName="is.ctb" />
+
+    <!-- IPA -->
+    <table
+         id="ipa"
+         locale="und-fonipa"
+         dots="6"
+         grade="1"
+         fileName="IPA.utb" />
 
     <!-- Italian -->
     <table
