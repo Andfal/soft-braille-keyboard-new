@@ -249,6 +249,14 @@
          grade="1"
          fileName="ethio-g1.ctb" />
 
+        <!-- Filipino -->
+    <table
+         id="fil-g2"
+         locale="fil"
+         dots="6"
+         grade="2"
+         fileName="fil-g2.ctb" />
+
     <!-- French -->
     <table
          id="fr-comp8"
@@ -697,6 +705,7 @@
          dots="8"
          fileName="zh-tw.ctb" />
 </table-list>
+
 
 
 
