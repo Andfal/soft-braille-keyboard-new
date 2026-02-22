@@ -289,13 +289,6 @@
          dots="6"
          grade="1"
          fileName="hbo.utb" />
-    <table
-         id="hbo-cantillated-g1"
-         locale="hbo"
-         dots="6"
-         grade="1"
-         variant="cantillated"
-         fileName="hbo-cantillated.utb" />
 
     <!-- Hindi -->
     <table
