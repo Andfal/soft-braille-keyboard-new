@@ -1,7 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accessibilityEventTypes="typeWindowsChanged|typeWindowContentChanged"
+    android:accessibilityEventTypes=""
     android:accessibilityFeedbackType="feedbackGeneric"
-    android:accessibilityFlags="flagDefault|flagRetrieveInteractiveWindows|flagIncludeNotImportantViews|flagRequestTouchExplorationMode"
-    android:canRetrieveWindowContent="true"
+    android:accessibilityFlags="flagDefault"
+    android:canRetrieveWindowContent="false"
+    android:canRequestTouchExplorationMode="true"
+    android:packageNames="com.dalton.braillekeyboard"
     android:description="@string/accessibility_service_description" />
