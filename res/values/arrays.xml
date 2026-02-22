@@ -2,11 +2,10 @@
 <resources>
     <string-array
         name="braille_tables">
-        <item>af-g2</item>
-        <item>af-g1</item>
         <item>afr-za-g1</item>
         <item>afr-za-g2</item>
         <item>ar-comp8</item>
+
         <item>ar-g1</item>
         <item>ar-g2</item>
         <item>be-comp8</item>

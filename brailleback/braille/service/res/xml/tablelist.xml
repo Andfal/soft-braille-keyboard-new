@@ -23,13 +23,13 @@
 
     <!-- Afrikaans -->
     <table
-         id="af-g1"`n         locale="af"`n         dots="6"`n         grade="1"`n         fileName="afr-za-g1.ctb" />`n    <table`n         id="afr-za-g1"
+         id="afr-za-g1"
          locale="afr"
          dots="6"
          grade="1"
          fileName="afr-za-g1.ctb" />
     <table
-         id="af-g2"`n         locale="af"`n         dots="6"`n         grade="2"`n         fileName="afr-za-g2.ctb" />`n    <table`n         id="afr-za-g2"
+         id="afr-za-g2"
          locale="afr"
          dots="6"
          grade="2"
@@ -251,7 +251,10 @@
 
     <!-- French -->
     <table
-         id="fr-comp8"`n         locale="fr"`n         dots="8"`n         fileName="fr-bfu-comp8.utb" />
+         id="fr-comp8"
+         locale="fr"
+         dots="8"
+         fileName="fr-bfu-comp8.utb" />
     <table
          id="fr-CA-g1"
          locale="fr_CA"
@@ -259,7 +262,11 @@
          grade="1"
          fileName="fr-bfu-comp6.utb" />
     <table
-         id="fr-CA-g2"`n         locale="fr_CA"`n         dots="6"`n         grade="2"`n         fileName="fr-bfu-g2.ctb" />
+         id="fr-CA-g2"
+         locale="fr_CA"
+         dots="6"
+         grade="2"
+         fileName="fr-bfu-g2.ctb" />
     <table
          id="fr-FR-g1"
          locale="fr_FR"
@@ -267,7 +274,11 @@
          grade="1"
          fileName="fr-bfu-comp6.utb" />
     <table
-         id="fr-FR-g2"`n         locale="fr_FR"`n         dots="6"`n         grade="2"`n         fileName="fr-bfu-g2.ctb" />
+         id="fr-FR-g2"
+         locale="fr_FR"
+         dots="6"
+         grade="2"
+         fileName="fr-bfu-g2.ctb" />
 
     <!-- Finnish -->
     <!-- liblouis contains a few variants of this table, all being 8 dot
@@ -526,7 +537,7 @@
          grade="2"
          fileName="pt-pt-g2.ctb" />
 
-    <!-- Romainan -->
+    <!-- Romanian -->
     <table
          id="ro-comp8"
          locale="ro"
@@ -541,7 +552,10 @@
 
     <!-- Russian -->
     <table
-         id="ru-comp8"`n         locale="ru"`n         dots="8"`n         fileName="ru-comp8.utb" />
+         id="ru-comp8"
+         locale="ru"
+         dots="8"
+         fileName="ru-comp8.utb" />
     <table
          id="ru-g1"
          locale="ru"
@@ -680,7 +694,10 @@
 
     <!-- Vietnamese -->
     <table
-         id="vi-comp8"`n         locale="vi"`n         dots="8"`n         fileName="vi-cb8.utb" />
+         id="vi-comp8"
+         locale="vi"
+         dots="8"
+         fileName="vi-cb8.utb" />
     <table
          id="vi-g1"
          locale="vi"
@@ -708,4 +725,6 @@
          dots="8"
          fileName="zh-tw.ctb" />
 </table-list>
+
+
 

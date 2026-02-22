@@ -172,14 +172,15 @@ public class PreferenceIME extends PreferenceActivity {
                 String country = table.getLocale().getDisplayCountry();
                 text += (country.equals("") ? "" : " (" + country + ")");
                 if (verbose) {
-                    String grade = getActivity().getString(
-                            R.string.grade_computer);
-                    if (table.getGrade() > 0) {
-                        grade = String.format(
+                    String label;
+                    if (table.isEightDot()) {
+                        label = getActivity().getString(R.string.grade_computer);
+                    } else {
+                        label = String.format(
                                 getActivity().getString(R.string.grade_table),
                                 table.getGrade());
                     }
-                    text += ": " + grade;
+                    text += ": " + label;
                 }
                 entries.add(text);
                 if (table.getId().equals(defaultId)) {
