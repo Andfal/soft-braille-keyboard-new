@@ -180,6 +180,16 @@ public class PreferenceIME extends PreferenceActivity {
                                 getActivity().getString(R.string.grade_table),
                                 table.getGrade());
                     }
+                    
+                    String variant = table.getVariant();
+                    if (variant != null && !variant.isEmpty()) {
+                        if (variant.equalsIgnoreCase("Unofficial")) {
+                            label += " (" + getActivity().getString(R.string.table_variant_unofficial) + ")";
+                        } else {
+                            label += " (" + variant + ")";
+                        }
+                    }
+                    
                     text += ": " + label;
                 }
                 entries.add(text);

@@ -73,6 +73,7 @@ public class TranslatorService extends Service {
 
     private void extractDataFiles() {
         File tablesDir = getDir("translator", MODE_PRIVATE);
+        clearDirectory(tablesDir);
         LibLouisWrapper.setTablesDir(tablesDir.getPath());
         ZipResourceExtractor extractor = new ZipResourceExtractor(
             this, R.raw.translationtables, tablesDir) {
@@ -90,6 +91,20 @@ public class TranslatorService extends Service {
             }
         };
         extractor.execute();
+    }
+
+    private void clearDirectory(File dir) {
+        if (dir.exists() && dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isDirectory()) {
+                        clearDirectory(file);
+                    }
+                    file.delete();
+                }
+            }
+        }
     }
 
     private synchronized boolean checkDataFiles() {
@@ -166,7 +181,10 @@ public class TranslatorService extends Service {
                 Log.e(LOG_TAG, "Unknown table id in checkTable: " + tableId);
                 return false;
             }
-            return LibLouisWrapper.checkTable(tableName);
+            // Use absolute path to ensure Liblouis finds the table and its dependencies
+            File tablesDir = getDir("translator", MODE_PRIVATE);
+            File tableFile = new File(tablesDir, tableName);
+            return LibLouisWrapper.checkTable(tableFile.getAbsolutePath());
         }
 
         @Override
@@ -188,7 +206,9 @@ public class TranslatorService extends Service {
                 Log.e(LOG_TAG, "Unknown table id in translate: " + tableId);
                 return null;
             }
-            return LibLouisWrapper.translate(text, tableName, cursorPosition,
+            File tablesDir = getDir("translator", MODE_PRIVATE);
+            File tableFile = new File(tablesDir, tableName);
+            return LibLouisWrapper.translate(text, tableFile.getAbsolutePath(), cursorPosition,
                     computerBrailleAtCursor);
         }
 
@@ -211,7 +231,9 @@ public class TranslatorService extends Service {
                         + tableId);
                 return null;
             }
-            return LibLouisWrapper.backTranslate(cells, tableName);
+            File tablesDir = getDir("translator", MODE_PRIVATE);
+            File tableFile = new File(tablesDir, tableName);
+            return LibLouisWrapper.backTranslate(cells, tableFile.getAbsolutePath());
         }
     }
 }

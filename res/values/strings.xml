@@ -106,6 +106,7 @@
     <string name="grade">Default Braille grade</string>
     <string name="grade_literary">Literary Braille</string>
     <string name="grade_table">Grade %s</string>
+    <string name="table_variant_unofficial">Unofficial</string>
     <string name="hide_keyboard">Hiding the keyboard.</string>
     <string name="high">High</string>
     <string name="info_url">https://docs.google.com/document/d/1OX6yFjkK61VfROdU9uQNxjEZ_QNWxiMnUY_1ECnIyRQ/pub</string>

@@ -304,17 +304,41 @@
          dots="8"
          fileName="de-de-comp8.ctb" />
     <table
-         id="de-CH-g0"`n         locale="de_CH"`n         dots="6"`n         grade="0"`n         fileName="de-g0.utb" />
+         id="de-CH-g0"
+         locale="de_CH"
+         dots="6"
+         grade="0"
+         fileName="de-g0.utb" />
     <table
-         id="de-CH-g1"`n         locale="de_CH"`n         dots="6"`n         grade="1"`n         fileName="de-g1.ctb" />
+         id="de-CH-g1"
+         locale="de_CH"
+         dots="6"
+         grade="1"
+         fileName="de-g1.ctb" />
     <table
-         id="de-CH-g2"`n         locale="de_CH"`n         dots="6"`n         grade="2"`n         fileName="de-g2.ctb" />
+         id="de-CH-g2"
+         locale="de_CH"
+         dots="6"
+         grade="2"
+         fileName="de-g2.ctb" />
     <table
-         id="de-DE-g0"`n         locale="de_DE"`n         dots="6"`n         grade="0"`n         fileName="de-g0.utb" />
+         id="de-DE-g0"
+         locale="de_DE"
+         dots="6"
+         grade="0"
+         fileName="de-g0.utb" />
     <table
-         id="de-DE-g1"`n         locale="de_DE"`n         dots="6"`n         grade="1"`n         fileName="de-g1.ctb" />
+         id="de-DE-g1"
+         locale="de_DE"
+         dots="6"
+         grade="1"
+         fileName="de-g1.ctb" />
     <table
-         id="de-DE-g2"`n         locale="de_DE"`n         dots="6"`n         grade="2"`n         fileName="de-g2.ctb" />
+         id="de-DE-g2"
+         locale="de_DE"
+         dots="6"
+         grade="2"
+         fileName="de-g2.ctb" />
 
     <!-- Greek -->
     <table
@@ -392,6 +416,7 @@
          locale="it"
          dots="6"
          grade="1"
+         variant="Unofficial"
          fileName="it-it-comp6.utb" />
 
     <!-- Japanese -->
@@ -438,6 +463,15 @@
          locale="lt"
          dots="8"
          fileName="lt.ctb" />
+
+    <!-- Nepali -->
+    <table
+         id="ne-g1"
+         locale="ne"
+         dots="6"
+         grade="1"
+         variant="Unofficial"
+         fileName="np-in-g1.utb" />
 
     <!-- Norwegian (bokmal) -->
     <table
@@ -528,10 +562,10 @@
          dots="8"
          fileName="ro.ctb" />
     <table
-         id="ro-g0"
+         id="ro-g1"
          locale="ro"
          dots="6"
-         grade="0"
+         grade="1"
          fileName="ro-g0.utb" />
 
     <!-- Russian -->
@@ -683,7 +717,11 @@
          dots="8"
          fileName="vi-cb8.utb" />
     <table
-         id="vi-g1"`n         locale="vi"`n         dots="6"`n         grade="1"`n         fileName="vi-g1.ctb" />
+         id="vi-g1"
+         locale="vi"
+         dots="6"
+         grade="1"
+         fileName="vi-vn-g1.ctb" />
 
     <!-- Zulu -->
     <table
@@ -704,9 +742,12 @@
          locale="zh_TW"
          dots="8"
          fileName="zh-tw.ctb" />
+
+    <!-- Braille Unicode -->
+    <table
+         id="unicode-braille-comp8"
+         locale="und"
+         dots="8"
+         variant="Unicode"
+         fileName="unicode-braille.utb" />
 </table-list>
-
-
-
-
-
