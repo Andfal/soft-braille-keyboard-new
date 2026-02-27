@@ -38,16 +38,14 @@ public class TableCreatorActivity extends Activity {
     private List<Mapping> mMappings = new ArrayList<>();
     private int mEditingIndex = -1;
 
+    // PROFESSIONAL LIBLOUIS OPCODES
     private final String[] OPCODES = {
-        "char", "punctuation", "digit", "math", "sign", "space", 
+        "always", "lowercase", "uppercase", "punctuation", "digit", "math", "sign", "space", 
         "numsign", "capsletter", "begcaps", "endcaps", 
-        "openpunc", "closepunc", "begital", "endital"
+        "begcapsword", "endcapsword",
+        "openpunc", "closepunc"
     };
-    private final String[] OPCODE_LABELS = {
-        "Standard Char", "Punctuation", "Digit (0-9)", "Math", "Sign", "Space", 
-        "Number Sign (3456)", "Capital Sign (6)", "Begin All Caps", "End All Caps",
-        "Opening Punc", "Closing Punc", "Start Italics", "End Italics"
-    };
+    private String[] OPCODE_LABELS;
 
     private static class Mapping {
         String opcode; String character; List<Integer> patterns = new ArrayList<>();
@@ -62,13 +60,23 @@ public class TableCreatorActivity extends Activity {
 
     private final List<PresetCategory> mPresetCategories = new ArrayList<>();
     private static class PresetCategory {
-        String name; List<Preset> presets = new ArrayList<>();
-        PresetCategory(String n) { name = n; }
+        String name; String defaultOpcode; List<Preset> presets = new ArrayList<>();
+        PresetCategory(String n, String op) { name = n; defaultOpcode = op; }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        OPCODE_LABELS = new String[] {
+            getString(R.string.opcode_always), getString(R.string.opcode_lowercase), getString(R.string.opcode_uppercase),
+            getString(R.string.opcode_punctuation), getString(R.string.opcode_digit), getString(R.string.opcode_math),
+            getString(R.string.opcode_sign), getString(R.string.opcode_space), getString(R.string.opcode_numsign),
+            getString(R.string.opcode_capsletter), getString(R.string.opcode_begcaps), getString(R.string.opcode_endcaps),
+            getString(R.string.opcode_begcapsword), getString(R.string.opcode_endcapsword),
+            getString(R.string.opcode_openpunc), getString(R.string.opcode_closepunc)
+        };
+
         initPresets();
 
         ScrollView scroll = new ScrollView(this);
@@ -186,7 +194,7 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void initPresets() {
-        PresetCategory catIt = new PresetCategory("Italian Accents");
+        PresetCategory catIt = new PresetCategory(getString(R.string.preset_cat_it_accents), "lowercase");
         catIt.presets.add(new Preset("a grave", "à", new int[][]{{1,2,3,5,6}}));
         catIt.presets.add(new Preset("e grave", "è", new int[][]{{2,3,4,6}}));
         catIt.presets.add(new Preset("e acute", "é", new int[][]{{1,2,3,4,5,6}}));
@@ -195,7 +203,7 @@ public class TableCreatorActivity extends Activity {
         catIt.presets.add(new Preset("u grave", "ù", new int[][]{{2,3,4,5,6}}));
         mPresetCategories.add(catIt);
 
-        PresetCategory catAcute = new PresetCategory("Acute/Spanish (á, ñ...)");
+        PresetCategory catAcute = new PresetCategory(getString(R.string.preset_cat_acute), "lowercase");
         catAcute.presets.add(new Preset("a acute", "á", new int[][]{{1,2,3,5,6}}));
         catAcute.presets.add(new Preset("i acute", "í", new int[][]{{3,4}}));
         catAcute.presets.add(new Preset("o acute", "ó", new int[][]{{3,4,6}}));
@@ -203,7 +211,7 @@ public class TableCreatorActivity extends Activity {
         catAcute.presets.add(new Preset("n tilde (ñ)", "ñ", new int[][]{{1,2,4,5,6}}));
         mPresetCategories.add(catAcute);
 
-        PresetCategory catCirc = new PresetCategory("Circumflex/French (â, œ...)");
+        PresetCategory catCirc = new PresetCategory(getString(R.string.preset_cat_circ), "lowercase");
         catCirc.presets.add(new Preset("a circumflex", "â", new int[][]{{1,6}}));
         catCirc.presets.add(new Preset("e circumflex", "ê", new int[][]{{1,2,6}}));
         catCirc.presets.add(new Preset("oe ligature (œ)", "œ", new int[][]{{2,4,6}}));
@@ -212,7 +220,7 @@ public class TableCreatorActivity extends Activity {
         catCirc.presets.add(new Preset("u circumflex", "û", new int[][]{{1,5,6}}));
         mPresetCategories.add(catCirc);
 
-        PresetCategory catDier = new PresetCategory("Diaeresis (ä, ë...)");
+        PresetCategory catDier = new PresetCategory(getString(R.string.preset_cat_dier), "lowercase");
         catDier.presets.add(new Preset("a diaeresis", "ä", new int[][]{{3,4,5}}));
         catDier.presets.add(new Preset("e diaeresis", "ë", new int[][]{{1,2,4,6}}));
         catDier.presets.add(new Preset("i diaeresis", "ï", new int[][]{{1,2,4,5,6}}));
@@ -220,7 +228,7 @@ public class TableCreatorActivity extends Activity {
         catDier.presets.add(new Preset("u diaeresis", "ü", new int[][]{{1,2,5,6}}));
         mPresetCategories.add(catDier);
 
-        PresetCategory catPunc = new PresetCategory("Punctuation (Standard/Literary)");
+        PresetCategory catPunc = new PresetCategory(getString(R.string.preset_cat_punc), "punctuation");
         catPunc.presets.add(new Preset("Full stop .", ".", new int[][]{{2,5,6}}));
         catPunc.presets.add(new Preset("Comma ,", ",", new int[][]{{2}}));
         catPunc.presets.add(new Preset("Semicolon ;", ";", new int[][]{{2,3}}));
@@ -232,13 +240,11 @@ public class TableCreatorActivity extends Activity {
         catPunc.presets.add(new Preset("Inv. Excl. ¡", "¡", new int[][]{{2,3,5,6}}));
         catPunc.presets.add(new Preset("Open Paren (", "(", new int[][]{{2,3,5,6}}));
         catPunc.presets.add(new Preset("Close Paren )", ")", new int[][]{{2,3,5,6}}));
-        catPunc.presets.add(new Preset("Open Bracket [", "[", new int[][]{{2,3,5,6}, {2,3,5,6}}));
-        catPunc.presets.add(new Preset("Close Bracket ]", "]", new int[][]{{2,3,5,6}, {2,3,5,6}}));
         catPunc.presets.add(new Preset("Slash /", "/", new int[][]{{2,5,6}}));
         catPunc.presets.add(new Preset("At sign @", "@", new int[][]{{4}, {1}}));
         mPresetCategories.add(catPunc);
         
-        PresetCategory catMath = new PresetCategory("Math & Symbols (+, €, ...)");
+        PresetCategory catMath = new PresetCategory(getString(R.string.preset_cat_math), "math");
         catMath.presets.add(new Preset("Plus +", "+", new int[][]{{2,3,5}}));
         catMath.presets.add(new Preset("Minus -", "-", new int[][]{{3,6}}));
         catMath.presets.add(new Preset("Asterisk *", "*", new int[][]{{3,5}}));
@@ -247,6 +253,7 @@ public class TableCreatorActivity extends Activity {
         catMath.presets.add(new Preset("Section §", "§", new int[][]{{4,5}, {1,2,3}}));
         mPresetCategories.add(catMath);
     }
+
 
     private void showPresetPicker() {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
@@ -257,23 +264,54 @@ public class TableCreatorActivity extends Activity {
         b.show();
     }
 
-    private void showPresetItems(PresetCategory cat) {
+    private void showPresetItems(final PresetCategory cat) {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle(cat.name);
         String[] items = new String[cat.presets.size()];
         for (int i=0; i<cat.presets.size(); i++) items[i] = cat.presets.get(i).toString();
+        
         b.setItems(items, (d, w) -> {
-            Preset p = cat.presets.get(w);
-            mCharEdit.setText(p.character);
-            mCurrentPatterns.clear();
+            final Preset p = cat.presets.get(w);
+            
+            final List<Integer> pPatterns = new ArrayList<>();
             for (int[] cellDots : p.cells) {
                 int pattern = 0;
                 for (int dot : cellDots) pattern |= (1 << (dot-1));
-                mCurrentPatterns.add(pattern);
+                pPatterns.add(pattern);
             }
-            updateDotsDisplay();
+
+            AlertDialog.Builder choice = new AlertDialog.Builder(TableCreatorActivity.this);
+            choice.setTitle("Add " + p.character + "?");
+            choice.setMessage("Dots: " + patternsToString(pPatterns));
+            choice.setPositiveButton("Add Directly", (d2, w2) -> {
+                mMappings.add(new Mapping(cat.defaultOpcode, p.character, pPatterns));
+                refreshSpinner();
+                Toast.makeText(TableCreatorActivity.this, "Added: " + p.label, Toast.LENGTH_SHORT).show();
+            });
+            choice.setNeutralButton("Edit Dots", (d2, w2) -> {
+                mCharEdit.setText(p.character);
+                mCurrentPatterns.clear();
+                mCurrentPatterns.addAll(pPatterns);
+                for (int i=0; i<OPCODES.length; i++) {
+                    if (OPCODES[i].equals(cat.defaultOpcode)) {
+                        mOpcodeSpinner.setSelection(i);
+                        break;
+                    }
+                }
+                updateDotsDisplay();
+            });
+            choice.show();
         });
         b.show();
+    }
+
+    private String patternsToString(List<Integer> patterns) {
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<patterns.size(); i++) {
+            if (i > 0) sb.append("-");
+            sb.append(patternToDotsString(patterns.get(i)));
+        }
+        return sb.toString();
     }
 
     private void updateDotsDisplay() {
@@ -374,14 +412,27 @@ public class TableCreatorActivity extends Activity {
         if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show(); return; }
         if (!name.endsWith(".ctb")) name += ".ctb";
 
-        // ORDER IS CRITICAL FOR LIBLOUIS:
-        // 1. Core definitions must be FIRST (to define what 'char' means)
-        // 2. User rules must be MIDDLE (to have priority in back-translation)
-        // 3. System fallbacks must be LAST
-        
         StringBuilder sb = new StringBuilder("# Custom Table for Soft Braille Keyboard\n\n");
+        
+        // 1. START: Visual mapping and basic character attributes
+        sb.append("include unicode.dis\n");
+        sb.append(mEightDotCheck.isChecked() ? "include latinLetterDef8Dots.uti\n" : "include latinLetterDef6Dots.uti\n");
+        
+        // Basic definitions to avoid "undefined" errors
+        sb.append("\n# Base definitions\n");
+        sb.append("space \\x0020 0\n");
+        sb.append("space \\x00a0 0\n");
+        
+        // 2. MIDDLE: System fallbacks
+        if (mInclude6DotDigits.isChecked()) sb.append("include litdigits6Dots.uti\n");
+        if (mInclude8DotDigits.isChecked()) sb.append("include digits8Dots.uti\n\n");
+
+        // 3. CLOSURE: Fallback visual patterns
+        sb.append("\n# Final fallback visual patterns\n");
         sb.append("include braille-patterns.cti\n\n");
 
+        // 4. ABSOLUTE FINAL: Custom rules (Highest priority override - European Style)
+        sb.append("# Custom Mappings (User Overrides)\n");
         for (Mapping m : mMappings) {
             StringBuilder dots = new StringBuilder();
             for (int i=0; i<m.patterns.size(); i++) {
@@ -395,23 +446,30 @@ public class TableCreatorActivity extends Activity {
                 sb.append(m.opcode).append(" ").append(dots).append("\n");
             } else {
                 if (m.character == null || m.character.isEmpty()) continue;
-                // Use 'always' for characters to ensure they work both ways (forward/back)
-                // Use \uXXXX format for Unicode characters (standard in Liblouis)
-                String op = m.opcode.equals("char") ? "always" : m.opcode;
-                sb.append(op).append(" ").append(String.format("\\u%04x", (int)m.character.charAt(0))).append(" ").append(dots).append("\n");
+                // Use \xXXXX format (Liblouis standard) and the specific opcode chosen (like lowercase, punctuation)
+                sb.append(m.opcode).append(" ").append(String.format("\\x%04x", (int)m.character.charAt(0))).append(" ").append(dots).append("\n");
             }
         }
-        
-        sb.append("\n# Fallback includes\n");
-        sb.append(mEightDotCheck.isChecked() ? "include latinLetterDef8Dots.uti\n" : "include latinLetterDef6Dots.uti\n");
-        if (mInclude6DotDigits.isChecked()) sb.append("include litdigits6Dots.uti\n");
-        if (mInclude8DotDigits.isChecked()) sb.append("include digits8Dots.uti\n");
 
         try {
-            File f = new CustomTableManager(this).getCustomTableFile(name);
-            try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(sb.toString().getBytes(StandardCharsets.UTF_8)); }
-            Toast.makeText(this, R.string.msg_table_saved, Toast.LENGTH_SHORT).show();
-            finish();
-        } catch (Exception e) { Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show(); }
+            CustomTableManager manager = new CustomTableManager(this);
+            File dir = manager.getCustomDir();
+            if (!dir.exists()) dir.mkdirs();
+            File f = manager.getCustomTableFile(name);
+            Log.i(TAG, "Saving European-style table to: " + f.getAbsolutePath());
+            
+            try (FileOutputStream fos = new FileOutputStream(f)) { 
+                fos.write(sb.toString().getBytes(StandardCharsets.UTF_8)); 
+                fos.flush();
+            }
+            
+            if (f.exists()) {
+                Toast.makeText(this, R.string.msg_table_saved, Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        } catch (Exception e) { 
+            Log.e(TAG, "Failed to save table", e);
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show(); 
+        }
     }
 }

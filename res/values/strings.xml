@@ -340,6 +340,32 @@
     <string name="error_no_name">Please enter a table name</string>
     <string name="custom_table_label_prefix">Custom:</string>
 
+    <!-- Opcodes -->
+    <string name="opcode_always">Override (Always)</string>
+    <string name="opcode_lowercase">Lowercase Letter</string>
+    <string name="opcode_uppercase">Uppercase Letter</string>
+    <string name="opcode_punctuation">Punctuation</string>
+    <string name="opcode_digit">Digit (0-9)</string>
+    <string name="opcode_math">Math</string>
+    <string name="opcode_sign">Sign</string>
+    <string name="opcode_space">Space</string>
+    <string name="opcode_numsign">Number Sign (3456)</string>
+    <string name="opcode_capsletter">Capital Sign (6)</string>
+    <string name="opcode_begcaps">Begin All Caps</string>
+    <string name="opcode_endcaps">End All Caps</string>
+    <string name="opcode_begcapsword">Begin Capitalized Word</string>
+    <string name="opcode_endcapsword">End Capitalized Word</string>
+    <string name="opcode_openpunc">Opening Punc</string>
+    <string name="opcode_closepunc">Closing Punc</string>
+
+    <!-- Preset Categories -->
+    <string name="preset_cat_it_accents">Italian Accents</string>
+    <string name="preset_cat_acute">Acute/Spanish (á, ñ...)</string>
+    <string name="preset_cat_circ">Circumflex/French (â, œ...)</string>
+    <string name="preset_cat_dier">Diaeresis (ä, ë...)</string>
+    <string name="preset_cat_punc">Punctuation (Standard/Literary)</string>
+    <string name="preset_cat_math">Math &amp; Symbols (+, €, ...)</string>
+
     <string name="accessibility_service_description">Consente alla tastiera Soft Braille di funzionare correttamente quando TalkBack è attivo, creando un\'area in cui i tocchi non vengono intercettati dallo screen reader.</string>
     <string name="accessibility_service_label">Soft Braille Keyboard Accessibility</string>
 </resources>

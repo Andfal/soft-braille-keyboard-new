@@ -208,11 +208,15 @@ public class PreferenceIME extends PreferenceActivity {
                 try {
                     String text = "";
                     if (table.getId().startsWith("custom:")) {
-                        text = context.getString(R.string.custom_table_label_prefix) + " " + (table.getVariant() != null ? table.getVariant() : "table");
+                        String name = table.getVariant();
+                        if (name == null || name.isEmpty()) name = "table";
+                        text = context.getString(R.string.custom_table_label_prefix) + " " + name;
                     } else {
                         text = table.getLocale().getDisplayLanguage();
                         String country = table.getLocale().getDisplayCountry();
-                        text += (country.equals("") ? "" : " (" + country + ")");
+                        if (country != null && !country.isEmpty()) {
+                            text += " (" + country + ")";
+                        }
                     }
 
                     if (verbose) {

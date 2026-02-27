@@ -256,6 +256,33 @@
     <string name="msg_table_saved">Tabella salvata con successo!</string>
     <string name="error_no_name">Inserisci un nome per la tabella</string>
     <string name="custom_table_label_prefix">Personale:</string>
+
+    <!-- Opcodes (Amichevoli per Italiani) -->
+    <string name="opcode_always">Sostituzione forzata (Sempre)</string>
+    <string name="opcode_lowercase">Lettera minuscola</string>
+    <string name="opcode_uppercase">Lettera maiuscola</string>
+    <string name="opcode_punctuation">Punteggiatura</string>
+    <string name="opcode_digit">Cifra numerica (0-9)</string>
+    <string name="opcode_math">Simbolo matematico</string>
+    <string name="opcode_sign">Segno generico</string>
+    <string name="opcode_space">Spazio</string>
+    <string name="opcode_numsign">Segna numero (3456)</string>
+    <string name="opcode_capsletter">Segna maiuscola (6)</string>
+    <string name="opcode_begcaps">Inizio tutto maiuscolo</string>
+    <string name="opcode_endcaps">Fine tutto maiuscolo</string>
+    <string name="opcode_begcapsword">Inizio parola maiuscola</string>
+    <string name="opcode_endcapsword">Fine parola maiuscola</string>
+    <string name="opcode_openpunc">Punteggiatura aperta</string>
+    <string name="opcode_closepunc">Punteggiatura chiusa</string>
+
+    <!-- Preset Categories -->
+    <string name="preset_cat_it_accents">Accenti Italiani</string>
+    <string name="preset_cat_acute">Accento Acuto/Spagnolo (á, ñ...)</string>
+    <string name="preset_cat_circ">Circonflesso/Francese (â, œ...)</string>
+    <string name="preset_cat_dier">Dieresi (ä, ë...)</string>
+    <string name="preset_cat_punc">Punteggiatura (Standard/Letteraria)</string>
+    <string name="preset_cat_math">Matematica e Simboli (+, €, ...)</string>
+
 </resources>
 
        
