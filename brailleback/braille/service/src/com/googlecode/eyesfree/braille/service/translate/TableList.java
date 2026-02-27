@@ -34,6 +34,8 @@ import java.util.regex.Pattern;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.content.Context;
+
 /**
  * Loads and keeps the list of supported braille tables from xml resources.
  */
@@ -56,20 +58,29 @@ public class TableList {
     private final List<TableInfo> mTableInfos = new ArrayList<TableInfo>();
     private final Map<String, String> mTableFileNames =
             new HashMap<String, String>();
+    private final CustomTableManager mCustomTableManager;
 
-    public TableList(Resources res) {
-        parseResource(res);
+    public TableList(Context context) {
+        mCustomTableManager = new CustomTableManager(context);
+        parseResource(context.getResources());
     }
 
     /** Returns all loaded tables. */
     public List<TableInfo> getTables() {
-        return Collections.unmodifiableList(mTableInfos);
+        mCustomTableManager.scanFiles();
+        List<TableInfo> allTables = new ArrayList<TableInfo>(mTableInfos);
+        allTables.addAll(mCustomTableManager.getTables());
+        return Collections.unmodifiableList(allTables);
     }
 
     /**
      * Returns the file name to pass to liblouis for this table.
      */
     public String getFileName(String tableId) {
+        if (tableId != null && tableId.startsWith(CustomTableManager.CUSTOM_PREFIX)) {
+            mCustomTableManager.scanFiles();
+            return mCustomTableManager.getFileName(tableId);
+        }
         return mTableFileNames.get(tableId);
     }
 

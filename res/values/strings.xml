@@ -312,6 +312,34 @@
       Description: This is spoken to the user. [CHAR LIMIT="NONE"]
     -->
     <string name="punctuation_right_brace">Right brace</string>
+    <string name="pref_category_custom_tables_title">Custom Braille Tables</string>
+    <string name="pref_manage_tables_title">Manage/Create Braille Tables</string>
+    <string name="pref_manage_tables_summary">Import, delete or create your own braille tables.</string>
+    
+    <!-- Table Manager -->
+    <string name="btn_import_table">Import existing table file</string>
+    <string name="btn_create_table">Create new table from scratch</string>
+    <string name="label_long_press_delete">List of custom tables. Long press an item to delete it.</string>
+    <string name="confirm_delete_title">Delete Table</string>
+    <string name="confirm_delete_msg">Do you want to delete %s?</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_cancel">Cancel</string>
+
+    <!-- Table Creator -->
+    <string name="hint_table_name">Enter table name (e.g. my_table)</string>
+    <string name="label_use_8_dots">Use 8 dots (Computer Braille)</string>
+    <string name="btn_add_mapping">Add new character mapping</string>
+    <string name="btn_save_table">Save Table</string>
+    <string name="hint_char">Char</string>
+    <string name="btn_add_cell">Add Braille cell</string>
+    <string name="btn_add_cell_description">Add another braille cell for this character</string>
+    <string name="btn_remove_mapping">Remove this mapping</string>
+    <string name="label_dots_dialog">Select dots for this cell</string>
+    <string name="label_dot">Dot %d</string>
+    <string name="msg_table_saved">Table Saved Successfully!</string>
+    <string name="error_no_name">Please enter a table name</string>
+    <string name="custom_table_label_prefix">Custom:</string>
+
     <string name="accessibility_service_description">Consente alla tastiera Soft Braille di funzionare correttamente quando TalkBack è attivo, creando un\'area in cui i tocchi non vengono intercettati dallo screen reader.</string>
     <string name="accessibility_service_label">Soft Braille Keyboard Accessibility</string>
 </resources>

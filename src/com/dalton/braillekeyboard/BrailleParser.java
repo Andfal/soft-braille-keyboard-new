@@ -234,16 +234,21 @@ public class BrailleParser {
         id = id.equals(context.getString(R.string.pref_braille_table_auto)) ? defaultId
                 : id;
 
+        android.util.Log.i("BrailleParser", "Requesting table ID: " + id + " for type " + brailleType);
+
         List<TableInfo> tables = getTables(brailleType);
         if (tables == null) {
+            android.util.Log.e("BrailleParser", "Tables list is NULL in getTable");
             return null;
         }
 
         for (TableInfo table : tables) {
             if (table.getId().equals(id)) {
+                android.util.Log.i("BrailleParser", "Table found: " + table.getId() + " (8dot=" + table.isEightDot() + ")");
                 return table;
             }
         }
+        android.util.Log.w("BrailleParser", "Table ID NOT FOUND in current list: " + id + ". Available tables: " + tables.size());
         return null;
     }
 
@@ -258,21 +263,46 @@ public class BrailleParser {
      * @return The list of tables.
      */
     public List<TableInfo> getTables(BrailleType brailleType) {
+        // Refresh tables from client if available to show newly created tables
+        if (client != null) {
+            List<TableInfo> freshTables = client.getTables();
+            if (freshTables != null) {
+                tables = freshTables;
+            }
+        }
+
         // Compare tables by locale in alphabetical order.
         Comparator<TableInfo> comparator = new Comparator<TableInfo>() {
             @Override
             public int compare(TableInfo o1, TableInfo o2) {
-                String table1 = o1.getLocale().getDisplayLanguage() + " "
-                        + o1.getLocale().getDisplayCountry().trim();
-                String table2 = o2.getLocale().getDisplayLanguage() + " "
-                        + o2.getLocale().getDisplayCountry().trim();
+                if (o1 == null || o2 == null) return 0;
+                Locale l1 = o1.getLocale();
+                Locale l2 = o2.getLocale();
+                if (l1 == null || l2 == null) return 0;
+                
+                String table1 = l1.getDisplayLanguage() + " "
+                        + l1.getDisplayCountry().trim();
+                String table2 = l2.getDisplayLanguage() + " "
+                        + l2.getDisplayCountry().trim();
+                
+                // For custom tables with same locale, sort by variant (filename)
+                if (table1.equals(table2)) {
+                    String v1 = o1.getVariant() != null ? o1.getVariant() : "";
+                    String v2 = o2.getVariant() != null ? o2.getVariant() : "";
+                    return v1.compareTo(v2);
+                }
+                
                 return table1.compareTo(table2);
             }
         };
 
         if (tables != null) {
             List<TableInfo> filteredTables = filterTables(tables, brailleType);
-            Collections.sort(tables, comparator);
+            try {
+                Collections.sort(filteredTables, comparator);
+            } catch (Exception e) {
+                android.util.Log.e("BrailleParser", "Error sorting tables", e);
+            }
             return filteredTables;
         }
         return null;
@@ -394,10 +424,16 @@ public class BrailleParser {
 
     // Called when the BrailleTranslator becomes ready.
     private void ready(Context context, int translatorClientStatus) {
+        android.util.Log.i("BrailleParser", "Translator ready status: " + translatorClientStatus);
         if (client != null
                 && translatorClientStatus == MyTranslatorClient.SUCCESS) {
             status = STATUS_OK;
             tables = client.getTables();
+            if (tables != null) {
+                android.util.Log.i("BrailleParser", "Received " + tables.size() + " tables from client");
+            } else {
+                android.util.Log.e("BrailleParser", "Tables list is NULL from client");
+            }
             setTranslator(context);
         } else {
             status = STATUS_ERROR;
@@ -410,11 +446,62 @@ public class BrailleParser {
         TableInfo table = getTable(context);
         if (table != null
                 && (status == STATUS_OK || status == STATUS_TABLE_ERROR)) {
-            translator = client.getTranslator(table.getId());
-            status = translator == null ? STATUS_TABLE_ERROR : STATUS_OK;
-            return true;
+            BrailleTranslator newTranslator = client.getTranslator(table.getId());
+            
+            // Fallback for custom tables if official client fails to find it in its list
+            if (newTranslator == null && table.getId().startsWith("custom:")) {
+                android.util.Log.w("BrailleParser", "Official client failed for custom table, attempting fallback for: " + table.getId());
+                newTranslator = new CustomBrailleTranslator(client, table);
+                android.util.Log.i("BrailleParser", "Real custom translator created for: " + table.getId());
+            }
+
+            if (newTranslator != null) {
+                translator = newTranslator;
+                status = STATUS_OK;
+                android.util.Log.i("BrailleParser", "Translator successfully updated to: " + table.getId());
+                return true;
+            } else {
+                android.util.Log.e("BrailleParser", "Failed to get translator for: " + table.getId());
+                status = STATUS_TABLE_ERROR;
+            }
         }
         return false;
+    }
+
+    /**
+     * A real BrailleTranslator implementation for custom tables that speaks directly to the service.
+     */
+    private static class CustomBrailleTranslator implements BrailleTranslator {
+        private final MyTranslatorClient client;
+        private final TableInfo tableInfo;
+
+        public CustomBrailleTranslator(MyTranslatorClient client, TableInfo tableInfo) {
+            this.client = client;
+            this.tableInfo = tableInfo;
+        }
+
+        @Override
+        public com.googlecode.eyesfree.braille.translate.TranslationResult translate(String text, int cursorPosition, boolean computerBrailleAtCursor) {
+            // MyTranslatorClient doesn't expose the translate method directly, 
+            // but we can use the tables list to get any translator and hope the service is stateless? No.
+            // We need a better way. Let's use the fact that MyTranslatorClient is in our package.
+            return client.translate(text, tableInfo.getId(), cursorPosition, computerBrailleAtCursor);
+        }
+
+        @Override
+        public com.googlecode.eyesfree.braille.translate.TranslationResult translate(String text, int cursorPosition) {
+            return translate(text, cursorPosition, false);
+        }
+
+        @Override
+        public String backTranslate(byte[] cells) {
+            return client.backTranslate(cells, tableInfo.getId());
+        }
+
+        @Override
+        public TableInfo getTableInfo() {
+            return tableInfo;
+        }
     }
 
     // Checks if a given Braille table matches the given BrailleType filter.
@@ -434,18 +521,22 @@ public class BrailleParser {
 
     // Filter a list of tables and return the filtered list.
     // Tables must be declared in the arrays.xml file in the braille_tables
-    // array.
+    // array, OR they must be custom tables starting with "custom:".
     // tables must match the specified BrailleType.
     private List<TableInfo> filterTables(List<TableInfo> tables,
             BrailleType brailleType) {
         List<TableInfo> list = new ArrayList<TableInfo>();
+        android.util.Log.i("BrailleParser", "Filtering " + tables.size() + " tables. Allowed IDs in list: " + tableIds.size());
 
         for (TableInfo table : tables) {
-            if (tableIds.contains(table.getId())
-                    && matchesBrailleType(table, brailleType)) {
+            String id = table.getId();
+            boolean isAllowed = tableIds.contains(id) || (id != null && id.startsWith("custom:"));
+            
+            if (isAllowed && matchesBrailleType(table, brailleType)) {
                 list.add(table);
             }
         }
+        android.util.Log.i("BrailleParser", "Filter complete. Remaining tables: " + list.size());
         return list;
     }
 
@@ -502,6 +593,9 @@ public class BrailleParser {
     // These are of the form \dotpattern/ eg. \12/ if dots 12 is unknown.
     private String handleUnknownPatterns(Context context, String text,
             byte[] cells) {
+        if (text == null) {
+            return null;
+        }
         for (byte cell : cells) {
             String value = "\\" + computeCellValue(cell) + "/";
             if (text.contains(value)) {

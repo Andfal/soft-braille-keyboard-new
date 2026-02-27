@@ -22,6 +22,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -79,6 +80,18 @@ public class PreferenceIME extends PreferenceActivity {
             addOptions(keyboardEcho, KeyboardEcho.ALL);
             addTTSList(textToSpeechPreference);
 
+            Preference importTable = findPreference("pref_import_table_key");
+            if (importTable != null) {
+                importTable.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(getActivity(), TableManagerActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+            }
+
             Preference preference = findPreference(getActivity().getString(
                     R.string.pref_app_version_key));
             try {
@@ -103,6 +116,14 @@ public class PreferenceIME extends PreferenceActivity {
         }
 
         @Override
+        public void onResume() {
+            super.onResume();
+            if (brailleParser != null) {
+                addTables(BrailleParser.STATUS_OK);
+            }
+        }
+
+        @Override
         public void onDestroy() {
             super.onDestroy();
             if (brailleParser != null) {
@@ -111,6 +132,7 @@ public class PreferenceIME extends PreferenceActivity {
         }
 
         private void addTables(int status) {
+            android.util.Log.i("PreferenceIME", "addTables called with status: " + status);
             List<String> entries = new ArrayList<String>();
             List<String> entryValues = new ArrayList<String>();
 
@@ -119,40 +141,50 @@ public class PreferenceIME extends PreferenceActivity {
             MultiSelectListPreference switchPref = (MultiSelectListPreference) findPreference(getActivity()
                     .getString(R.string.pref_switch_tables_key));
 
-            List<TableInfo> tables = new ArrayList<TableInfo>();
-            if (status == BrailleParser.STATUS_OK) {
+            List<TableInfo> tables = null;
+            if (status == BrailleParser.STATUS_OK || status == BrailleParser.STATUS_TABLE_ERROR) {
                 tables = brailleParser.getTables(BrailleType.ALL);
             }
+            
+            if (tables == null) {
+                android.util.Log.w("PreferenceIME", "Tables list is NULL, skipping population");
+                return;
+            }
+
+            android.util.Log.i("PreferenceIME", "Populating switchPref with " + tables.size() + " tables");
             populateWithTables(tables, entries, entryValues, true, null);
-            switchPref.setEntries(entries.toArray(new String[entries.size()]));
-            switchPref.setEntryValues(entryValues
-                    .toArray(new String[entryValues.size()]));
+            if (switchPref != null) {
+                switchPref.setEntries(entries.toArray(new String[entries.size()]));
+                switchPref.setEntryValues(entryValues.toArray(new String[entryValues.size()]));
+            }
 
             resetLists(entries, entryValues);
-            if (status == BrailleParser.STATUS_OK) {
-                tables = brailleParser.getTables(BrailleType.LITERARY);
-            }
+            tables = brailleParser.getTables(BrailleType.LITERARY);
+            android.util.Log.i("PreferenceIME", "Populating literaryBraille with " + (tables != null ? tables.size() : 0) + " tables");
             populateWithTables(tables, entries, entryValues, true,
                     brailleParser.getDefaultId(getActivity(),
                             BrailleType.LITERARY));
-            literaryBraille.setEntries(entries.toArray(new String[entries
-                    .size()]));
-            literaryBraille.setEntryValues(entryValues
-                    .toArray(new String[entryValues.size()]));
+            if (literaryBraille != null) {
+                literaryBraille.setEntries(entries.toArray(new String[entries.size()]));
+                literaryBraille.setEntryValues(entryValues.toArray(new String[entryValues.size()]));
+                literaryBraille.setEnabled(true);
+            }
 
             resetLists(entries, entryValues);
-            if (status == BrailleParser.STATUS_OK) {
-                tables = brailleParser.getTables(BrailleType.COMPUTER);
-            }
+            tables = brailleParser.getTables(BrailleType.COMPUTER);
+            android.util.Log.i("PreferenceIME", "Populating compBraille with " + (tables != null ? tables.size() : 0) + " tables");
             populateWithTables(tables, entries, entryValues, false,
                     brailleParser.getDefaultId(getActivity(),
                             BrailleType.COMPUTER));
-            compBraille.setEntries(entries.toArray(new String[entries.size()]));
-            compBraille.setEntryValues(entryValues
-                    .toArray(new String[entryValues.size()]));
+            if (compBraille != null) {
+                compBraille.setEntries(entries.toArray(new String[entries.size()]));
+                compBraille.setEntryValues(entryValues.toArray(new String[entryValues.size()]));
+                compBraille.setEnabled(true);
+            }
         }
 
         private void addOptions(ListPreference pref, OptionList option) {
+            if (pref == null) return;
             OptionList[] types = option.getValues();
             CharSequence[] entries = new CharSequence[types.length];
             CharSequence[] entryValues = new CharSequence[entries.length];
@@ -167,37 +199,51 @@ public class PreferenceIME extends PreferenceActivity {
         private void populateWithTables(List<TableInfo> tables,
                 List<String> entries, List<String> entryValues,
                 boolean verbose, String defaultId) {
+            if (tables == null) return;
+            
+            Context context = getActivity();
+            if (context == null) return;
+
             for (TableInfo table : tables) {
-                String text = table.getLocale().getDisplayLanguage();
-                String country = table.getLocale().getDisplayCountry();
-                text += (country.equals("") ? "" : " (" + country + ")");
-                if (verbose) {
-                    String label;
-                    if (table.isEightDot()) {
-                        label = getActivity().getString(R.string.grade_computer);
+                try {
+                    String text = "";
+                    if (table.getId().startsWith("custom:")) {
+                        text = context.getString(R.string.custom_table_label_prefix) + " " + (table.getVariant() != null ? table.getVariant() : "table");
                     } else {
-                        label = String.format(
-                                getActivity().getString(R.string.grade_table),
-                                table.getGrade());
+                        text = table.getLocale().getDisplayLanguage();
+                        String country = table.getLocale().getDisplayCountry();
+                        text += (country.equals("") ? "" : " (" + country + ")");
                     }
-                    
-                    String variant = table.getVariant();
-                    if (variant != null && !variant.isEmpty()) {
-                        if (variant.equalsIgnoreCase("Unofficial")) {
-                            label += " (" + getActivity().getString(R.string.table_variant_unofficial) + ")";
+
+                    if (verbose) {
+                        String label;
+                        if (table.isEightDot()) {
+                            label = context.getString(R.string.grade_computer);
                         } else {
-                            label += " (" + variant + ")";
+                            label = String.format(
+                                    context.getString(R.string.grade_table),
+                                    table.getGrade());
                         }
+                        
+                        String variant = table.getVariant();
+                        if (variant != null && !variant.isEmpty() && !table.getId().startsWith("custom:")) {
+                            if (variant.equalsIgnoreCase("Unofficial")) {
+                                label += " (" + context.getString(R.string.table_variant_unofficial) + ")";
+                            } else {
+                                label += " (" + variant + ")";
+                            }
+                        }
+                        
+                        text += ": " + label;
                     }
-                    
-                    text += ": " + label;
-                }
-                entries.add(text);
-                if (table.getId().equals(defaultId)) {
-                    entryValues.add(getActivity().getString(
-                            R.string.pref_braille_table_auto));
-                } else {
-                    entryValues.add(table.getId());
+                    entries.add(text);
+                    if (table.getId().equals(defaultId)) {
+                        entryValues.add(context.getString(R.string.pref_braille_table_auto));
+                    } else {
+                        entryValues.add(table.getId());
+                    }
+                } catch (Exception e) {
+                    android.util.Log.e("PreferenceIME", "Error populating table: " + table.getId(), e);
                 }
             }
         }

@@ -56,7 +56,7 @@ public class TranslatorService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mTableList = new TableList(getResources());
+        mTableList = new TableList(this);
         extractDataFiles();
     }
 
@@ -73,6 +73,8 @@ public class TranslatorService extends Service {
 
     private void extractDataFiles() {
         File tablesDir = getDir("translator", MODE_PRIVATE);
+        // Do not clear directory every time if we want to preserve files, 
+        // but here it's for system tables extracted from APK.
         clearDirectory(tablesDir);
         LibLouisWrapper.setTablesDir(tablesDir.getPath());
         ZipResourceExtractor extractor = new ZipResourceExtractor(
@@ -150,6 +152,43 @@ public class TranslatorService extends Service {
         }
     }
 
+    private String getTablePath(String tableName) {
+        File tablesDir = getDir("translator", MODE_PRIVATE);
+        if (tableName.startsWith("/")) {
+            // It's a custom table path. To allow Liblouis to find includes (UTIs)
+            // which are in the translator directory, we copy the custom table 
+            // to the translator directory first if it doesn't exist or is older.
+            File customFile = new File(tableName);
+            if (!customFile.exists()) {
+                Log.e(LOG_TAG, "Custom table file not found: " + tableName);
+                return tableName;
+            }
+            File targetFile = new File(tablesDir, customFile.getName());
+            
+            // Optimization: Only copy if the target doesn't exist or custom file is newer
+            if (!targetFile.exists() || customFile.lastModified() > targetFile.lastModified()) {
+                try {
+                    copyFile(customFile, targetFile);
+                    Log.i(LOG_TAG, "Updated custom table in translator dir: " + targetFile.getAbsolutePath());
+                } catch (Exception e) {
+                    Log.e(LOG_TAG, "Failed to copy custom table, using original path", e);
+                    return tableName;
+                }
+            }
+            return targetFile.getAbsolutePath();
+        }
+        // It's a system table
+        File tableFile = new File(tablesDir, tableName);
+        return tableFile.getAbsolutePath();
+    }
+
+    private void copyFile(File sourceFile, File destFile) throws java.io.IOException {
+        try (java.nio.channels.FileChannel source = new java.io.FileInputStream(sourceFile).getChannel();
+             java.nio.channels.FileChannel dest = new java.io.FileOutputStream(destFile).getChannel()) {
+            dest.transferFrom(source, 0, source.size());
+        }
+    }
+
     private class ServiceImpl extends ITranslatorService.Stub {
 
         @Override
@@ -164,6 +203,10 @@ public class TranslatorService extends Service {
         @Override
         public TableInfo[] getTableInfos() {
             List<TableInfo> l = mTableList.getTables();
+            Log.i(LOG_TAG, "Sending " + l.size() + " tables to client");
+            for (TableInfo t : l) {
+                Log.d(LOG_TAG, "Table: " + t.getId() + " (" + t.getVariant() + ")");
+            }
             return l.toArray(new TableInfo[l.size()]);
         }
 
@@ -181,10 +224,7 @@ public class TranslatorService extends Service {
                 Log.e(LOG_TAG, "Unknown table id in checkTable: " + tableId);
                 return false;
             }
-            // Use absolute path to ensure Liblouis finds the table and its dependencies
-            File tablesDir = getDir("translator", MODE_PRIVATE);
-            File tableFile = new File(tablesDir, tableName);
-            return LibLouisWrapper.checkTable(tableFile.getAbsolutePath());
+            return LibLouisWrapper.checkTable(getTablePath(tableName));
         }
 
         @Override
@@ -206,9 +246,7 @@ public class TranslatorService extends Service {
                 Log.e(LOG_TAG, "Unknown table id in translate: " + tableId);
                 return null;
             }
-            File tablesDir = getDir("translator", MODE_PRIVATE);
-            File tableFile = new File(tablesDir, tableName);
-            return LibLouisWrapper.translate(text, tableFile.getAbsolutePath(), cursorPosition,
+            return LibLouisWrapper.translate(text, getTablePath(tableName), cursorPosition,
                     computerBrailleAtCursor);
         }
 
@@ -219,7 +257,7 @@ public class TranslatorService extends Service {
                 return null;
             }
             if (tableId == null) {
-                Log.e(LOG_TAG, "Received null table name in translate");
+                Log.e(LOG_TAG, "Received null table name in backTranslate");
                 return null;
             }
             if (!checkDataFiles()) {
@@ -231,9 +269,9 @@ public class TranslatorService extends Service {
                         + tableId);
                 return null;
             }
-            File tablesDir = getDir("translator", MODE_PRIVATE);
-            File tableFile = new File(tablesDir, tableName);
-            return LibLouisWrapper.backTranslate(cells, tableFile.getAbsolutePath());
+            String tablePath = getTablePath(tableName);
+            Log.i(LOG_TAG, "Performing backTranslate with table: " + tableId + " -> " + tablePath);
+            return LibLouisWrapper.backTranslate(cells, tablePath);
         }
     }
 }

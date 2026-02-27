@@ -94,6 +94,14 @@
               android:defaultValue="@array/empty_array"/>
          </PreferenceScreen>
          <PreferenceScreen
+         android:key="custom_tables_category"
+         android:title="@string/pref_category_custom_tables_title" >
+         <Preference
+             android:key="pref_import_table_key"
+             android:title="@string/pref_manage_tables_title"
+             android:summary="@string/pref_manage_tables_summary" />
+         </PreferenceScreen>
+         <PreferenceScreen
          android:key="@string/pref_category_feedback_key"
          android:title="@string/pref_category_feedback_title" >
          <ListPreference

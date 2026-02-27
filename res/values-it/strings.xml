@@ -229,6 +229,33 @@
       Description: This is spoken to the user. [CHAR LIMIT="NONE"]
     -->
     <string name="punctuation_right_brace">Chiusa Parentesi graffa</string>
+    <string name="pref_category_custom_tables_title">Tabelle Braille Personali</string>
+    <string name="pref_manage_tables_title">Gestisci/Crea Tabelle Braille</string>
+    <string name="pref_manage_tables_summary">Importa, elimina o crea le tue tabelle braille personalizzate.</string>
+    
+    <!-- Table Manager -->
+    <string name="btn_import_table">Importa file tabella esistente</string>
+    <string name="btn_create_table">Crea nuova tabella da zero</string>
+    <string name="label_long_press_delete">Lista tabelle personali. Premi a lungo su un elemento per eliminarlo.</string>
+    <string name="confirm_delete_title">Elimina Tabella</string>
+    <string name="confirm_delete_msg">Vuoi eliminare %s?</string>
+    <string name="btn_delete">Elimina</string>
+    <string name="btn_cancel">Annulla</string>
+
+    <!-- Table Creator -->
+    <string name="hint_table_name">Inserisci nome tabella (es. mia_tabella)</string>
+    <string name="label_use_8_dots">Usa 8 punti (Braille Computer)</string>
+    <string name="btn_add_mapping">Aggiungi nuova mappatura caratteri</string>
+    <string name="btn_save_table">Salva Tabella</string>
+    <string name="hint_char">Carattere</string>
+    <string name="btn_add_cell">Aggiungi cella Braille</string>
+    <string name="btn_add_cell_description">Aggiungi un\'altra cella braille per questo carattere</string>
+    <string name="btn_remove_mapping">Rimuovi questa mappatura</string>
+    <string name="label_dots_dialog">Seleziona i punti per questa cella</string>
+    <string name="label_dot">Punto %d</string>
+    <string name="msg_table_saved">Tabella salvata con successo!</string>
+    <string name="error_no_name">Inserisci un nome per la tabella</string>
+    <string name="custom_table_label_prefix">Personale:</string>
 </resources>
 
        

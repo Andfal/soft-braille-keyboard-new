@@ -34,6 +34,50 @@ public class MyTranslatorClient extends TranslatorClient {
         doBindService();
     }
 
+    public com.googlecode.eyesfree.braille.translate.TranslationResult translate(String text, String tableId,
+            int cursorPosition, boolean computerBrailleAtCursor) {
+        com.googlecode.eyesfree.braille.translate.ITranslatorService localService = getTranslatorService();
+        if (localService != null) {
+            try {
+                return localService.translate(text, tableId,
+                        cursorPosition, computerBrailleAtCursor);
+            } catch (android.os.RemoteException ex) {
+                android.util.Log.e("MyTranslatorClient", "Error in translate", ex);
+            }
+        }
+        return null;
+    }
+
+    public String backTranslate(byte[] cells, String tableId) {
+        com.googlecode.eyesfree.braille.translate.ITranslatorService localService = getTranslatorService();
+        if (localService != null) {
+            try {
+                return localService.backTranslate(cells, tableId);
+            } catch (android.os.RemoteException ex) {
+                android.util.Log.e("MyTranslatorClient", "Error in backTranslate", ex);
+            }
+        }
+        return null;
+    }
+
+    private com.googlecode.eyesfree.braille.translate.ITranslatorService getTranslatorService() {        
+        if (mConnection != null) {
+            try {
+                // TranslatorClient has a private 'mConnection' field, and inside that,
+                // there is a field that holds the service.
+                java.lang.reflect.Field field = TranslatorClient.Connection.class.getDeclaredField("mService");
+                field.setAccessible(true);
+                Object service = field.get(mConnection);
+                if (service instanceof com.googlecode.eyesfree.braille.translate.ITranslatorService) {
+                    return (com.googlecode.eyesfree.braille.translate.ITranslatorService) service;
+                }
+            } catch (Exception e) {
+                android.util.Log.e("MyTranslatorClient", "Reflection error getting service", e);
+            }
+        }
+        android.util.Log.w("MyTranslatorClient", "TranslatorService not yet available via reflection");
+        return null;
+    }
     private void doBindService() {
         Connection localConnection = new Connection();
         if (!mContext.bindService(mServiceIntent, localConnection,
