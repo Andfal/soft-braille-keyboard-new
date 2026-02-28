@@ -320,6 +320,7 @@
     <string name="btn_import_table">Import existing table file</string>
     <string name="btn_create_table">Create new table from scratch</string>
     <string name="label_long_press_delete">List of custom tables. Long press an item to delete it.</string>
+    <string name="label_tap_to_edit">Tap to edit, long press to delete</string>
     <string name="confirm_delete_title">Delete Table</string>
     <string name="confirm_delete_msg">Do you want to delete %s?</string>
     <string name="btn_delete">Delete</string>
