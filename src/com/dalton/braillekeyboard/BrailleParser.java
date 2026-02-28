@@ -536,6 +536,32 @@ public class BrailleParser {
                 list.add(table);
             }
         }
+
+        // Filter out Grade 2 tables if Grade 1 is not present for that language.
+        // It makes no sense to have contracted Braille if uncontracted is not available.
+        if (brailleType == BrailleType.LITERARY || brailleType == BrailleType.ALL) {
+            Set<String> languagesWithG1 = new HashSet<String>();
+            for (TableInfo table : list) {
+                if (table.getLocale() != null && (table.getGrade() == 1 || table.getGrade() == 0)) {
+                    languagesWithG1.add(table.getLocale().getLanguage());
+                }
+            }
+            
+            List<TableInfo> filteredList = new ArrayList<TableInfo>();
+            for (TableInfo table : list) {
+                if (table.getGrade() == 2) {
+                    if (table.getLocale() != null && languagesWithG1.contains(table.getLocale().getLanguage())) {
+                        filteredList.add(table);
+                    } else {
+                        android.util.Log.i("BrailleParser", "Excluding Grade 2 table without Grade 1: " + table.getId());
+                    }
+                } else {
+                    filteredList.add(table);
+                }
+            }
+            list = filteredList;
+        }
+
         android.util.Log.i("BrailleParser", "Filter complete. Remaining tables: " + list.size());
         return list;
     }

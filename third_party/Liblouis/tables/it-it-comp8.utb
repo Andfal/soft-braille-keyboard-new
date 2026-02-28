@@ -6,6 +6,7 @@
 #
 #+language:it
 #+type:computer
+#+variant:unofficial
 #+dots:8
 # Marked as "direction:both" by Bue Vester-Andersen
 # as it is a computer Braille table.
@@ -180,7 +181,6 @@ uppercase	\x00D3  2568    #O with acute
 uppercase \x00D4  14567   #O with circumflex
 uppercase \x00D5  267   #O with tilde
 uppercase \x00D6  358   #O with diaeresis
-math \x00D7  23468   #Multiplication sign \x00d7
 uppercase \x00D8  2467    #O with stroke
 uppercase \x00D9 35678    #U with grave above
 uppercase \x00DA 268    #U with acute above
@@ -221,6 +221,9 @@ lowercase \x00FC  12568   #u with diaeresis
 lowercase \x00FD  24568   #y with acute
 lowercase \x00FE  12348   #thorn
 lowercase \x00FF  134568    #y with diaeresis
+
+math \x00D7  23468   #Multiplication sign \x00d7
+math \x00F7 125678    #division sign x00f7
 
 #--- Unicode Multilingual
 uppercase \x0100    1678    #A with macron

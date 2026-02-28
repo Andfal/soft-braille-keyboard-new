@@ -1,0 +1,15 @@
+# Custom Table for Soft Braille Keyboard
+
+
+include unicode.dis
+include latinLetterDef6Dots.uti
+
+# Base definitions
+space \x0020 0
+space \x00a0 0
+
+# Final fallback visual patterns
+include braille-patterns.cti
+
+# Custom Mappings (User Overrides)
+always \x00e0 12356

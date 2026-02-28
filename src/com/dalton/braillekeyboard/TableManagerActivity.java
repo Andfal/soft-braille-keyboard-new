@@ -64,17 +64,28 @@ public class TableManagerActivity extends Activity {
         layout.addView(createButton);
         
         android.widget.TextView tv = new android.widget.TextView(this);
-        tv.setText(R.string.label_long_press_delete);
+        tv.setText(R.string.label_tap_to_edit);
         tv.setPadding(0, 20, 0, 10);
         layout.addView(tv);
         
         mListView = new ListView(this);
         mListView.setId(View.generateViewId());
-        mListView.setContentDescription(getString(R.string.label_long_press_delete));
+        mListView.setContentDescription(getString(R.string.label_tap_to_edit));
         layout.addView(mListView);
         
         setContentView(layout);
         refreshList();
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                TableInfo table = mTables.get(position);
+                Intent intent = new Intent(TableManagerActivity.this, TableCreatorActivity.class);
+                // Pass the table ID/fileName to the creator for loading
+                intent.putExtra("table_id", table.getId());
+                startActivity(intent);
+            }
+        });
 
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override

@@ -43,3 +43,32 @@
 
 ## Technical Notes
 - **Input Compatibility:** Avoiding `setComposingText` and `deleteSurroundingText` for standard appends maximizes compatibility with non-standard Android UI frameworks.
+
+# Gemini CLI Session Summary - February 27, 2026
+
+## Accomplishments
+
+### 1. Table Creator Improvements
+- **Friendly Opcodes:** Localized Liblouis opcodes for Italian (e.g., "Segna numero", "Segna maiuscola") and improved English descriptions.
+- **Menu Reorganization:** Moved the custom table management ("Manage/Create Braille Tables") into the "Braille Table Settings" category for better logic.
+- **Capitalization Support:** Added support for `begcapsword` and `endcapsword` (Inizio/Fine parola maiuscola) and passage-level `begcaps`/`endcaps`.
+- **Italics Removal:** Removed italics opcodes as they were deemed unnecessary for the current scope.
+- **Labeling:** Custom tables in the selection list now use a clear "Personale: [nome]" or "Custom: [name]" prefix.
+
+### 2. Table Analysis
+- **Structure Validation:** Verified the syntax of custom tables (like `sergio.ctb`) using `lou_checktable`. Confirmed the "European Style" (header -> fallbacks -> custom overrides) is robust.
+
+## Technical Notes
+- **Cyrillic/International Support:** The Table Creator is designed to be script-agnostic. To support Cyrillic/Russian:
+    1. Add a new `PresetCategory` for Cyrillic characters in `initPresets()`.
+    2. Add a selector in the UI to change the "Base Script" (the `include` of `latinLetterDef6Dots.uti` vs `ru-ru-g1.utb`).
+    3. The Unicode handling is already in place to convert characters to `\uXXXX` format.
+- **Table Priority:** User-defined rules are written at the end of the `.ctb` file to ensure they have the highest priority over system includes.
+
+## Roadmap / Upcoming Tasks (Next Session)
+- **Automatic Opcode Detection in Table Creator:**
+    1.  Implement a listener on the character input field (`mCharEdit`).
+    2.  If a single digit (0-9) is typed, automatically select the `digit` opcode.
+    3.  If a letter (a-z, A-Z) is typed, select `lowercase` or `uppercase`.
+    4.  If a standard symbol is typed, select `punctuation`.
+    5.  Allow manual override by the user after the auto-selection.
