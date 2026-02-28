@@ -358,6 +358,18 @@
     <string name="opcode_endcapsword">End Capitalized Word</string>
     <string name="opcode_openpunc">Opening Punc</string>
     <string name="opcode_closepunc">Closing Punc</string>
+    <string name="opcode_word">Full Word (Contraction)</string>
+    <string name="opcode_partword">Part of Word</string>
+    <string name="opcode_letsign">Letter Sign (5)</string>
+    <string name="opcode_letter">Generic Letter</string>
+    <string name="opcode_litdigit">Literary Digit</string>
+
+    <string name="label_base_table">Inherit from system table (Optional):</string>
+    <string name="label_number_system">Numbering System:</string>
+    <string name="num_sys_classic">Classic (3456 + a-j)</string>
+    <string name="num_sys_antoine">Antoine (Dot 6 + high cells)</string>
+    <string name="num_sys_none">None / Manual mappings</string>
+    <string name="none_selected">--- None ---</string>
 
     <!-- Preset Categories -->
     <string name="preset_cat_it_accents">Italian Accents</string>

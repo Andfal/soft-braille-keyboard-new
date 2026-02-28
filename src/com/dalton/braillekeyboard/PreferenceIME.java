@@ -173,7 +173,7 @@ public class PreferenceIME extends PreferenceActivity {
             resetLists(entries, entryValues);
             tables = brailleParser.getTables(BrailleType.COMPUTER);
             android.util.Log.i("PreferenceIME", "Populating compBraille with " + (tables != null ? tables.size() : 0) + " tables");
-            populateWithTables(tables, entries, entryValues, false,
+            populateWithTables(tables, entries, entryValues, true,
                     brailleParser.getDefaultId(getActivity(),
                             BrailleType.COMPUTER));
             if (compBraille != null) {

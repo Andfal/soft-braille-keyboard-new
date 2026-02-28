@@ -274,6 +274,18 @@
     <string name="opcode_endcapsword">Fine parola maiuscola</string>
     <string name="opcode_openpunc">Punteggiatura aperta</string>
     <string name="opcode_closepunc">Punteggiatura chiusa</string>
+    <string name="opcode_word">Parola intera (Contrazione)</string>
+    <string name="opcode_partword">Parte di parola</string>
+    <string name="opcode_letsign">Segna lettera (5)</string>
+    <string name="opcode_letter">Lettera generica</string>
+    <string name="opcode_litdigit">Cifra letteraria</string>
+
+    <string name="label_base_table">Eredita da tabella di sistema (Opzionale):</string>
+    <string name="label_number_system">Sistema Numerico:</string>
+    <string name="num_sys_classic">Classico (3456 + a-j)</string>
+    <string name="num_sys_antoine">Antoine (Punto 6 + cifre alte)</string>
+    <string name="num_sys_none">Nessuno / Mappature manuali</string>
+    <string name="none_selected">--- Nessuna ---</string>
 
     <!-- Preset Categories -->
     <string name="preset_cat_it_accents">Accenti Italiani</string>

@@ -60,17 +60,15 @@ public class CustomTableManager {
         try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                if (line.contains("latinLetterDef8Dots.uti")) {
-                    return true;
-                }
-                if (line.contains("latinLetterDef6Dots.uti")) {
-                    return false;
-                }
+                if (line.contains("# Dots: 8")) return true;
+                if (line.contains("# Dots: 6")) return false;
+                if (line.contains("latinLetterDef8Dots.uti")) return true;
+                if (line.contains("latinLetterDef6Dots.uti")) return false;
             }
         } catch (java.io.IOException e) {
             Log.e(TAG, "Error reading table header", e);
         }
-        return true; // Default
+        return false; // Default to 6-dot literary if unsure
     }
 
     public List<TableInfo> getTables() {
