@@ -307,19 +307,29 @@ public class TableCreatorActivity extends Activity {
         mSystemTableLabels.add(getString(R.string.none_selected));
 
         TableList tableList = new TableList(this);
+        // This already returns a deduplicated and filtered list based on the user preference!
         List<TableInfo> tables = new ArrayList<>(tableList.getTables());
         
         for (int i = tables.size() - 1; i >= 0; i--) {
             if (tables.get(i).getId().startsWith("custom:")) tables.remove(i);
         }
 
-        Collections.sort(tables, (t1, t2) -> t1.getLocale().getDisplayName().compareTo(t2.getLocale().getDisplayName()));
+        // Sort by display name
+        Collections.sort(tables, (t1, t2) -> {
+            String n1 = t1.getLocale().getDisplayName() + (t1.getVariant() != null ? t1.getVariant() : "");
+            String n2 = t2.getLocale().getDisplayName() + (t2.getVariant() != null ? t2.getVariant() : "");
+            return n1.compareTo(n2);
+        });
 
         for (TableInfo info : tables) {
             String fileName = tableList.getFileName(info.getId());
-            if (fileName != null && !mSystemTableFiles.contains(fileName)) {
+            if (fileName != null) {
                 mSystemTableFiles.add(fileName);
-                mSystemTableLabels.add(info.getLocale().getDisplayName() + " (" + fileName + ")");
+                String label = info.getLocale().getDisplayName();
+                if (info.getVariant() != null && !info.getVariant().isEmpty()) {
+                    label += " " + info.getVariant();
+                }
+                mSystemTableLabels.add(label);
             }
         }
     }

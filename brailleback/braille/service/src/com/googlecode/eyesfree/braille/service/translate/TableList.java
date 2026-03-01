@@ -63,6 +63,75 @@ public class TableList {
     public TableList(Context context) {
         mCustomTableManager = new CustomTableManager(context);
         parseResource(context.getResources());
+        loadLiblouisFiles(context);
+    }
+
+    private static final java.util.Set<String> GOOGLE_LANGS = new java.util.HashSet<>(java.util.Arrays.asList(
+        "ar", "bg", "ca", "ckb", "cs", "cy", "da", "de", "el", "en", "es", "et", "fi", "fr", 
+        "grc", "gu", "hi", "he", "hr", "hu", "is", "it", "ja", "km", "ko", "kn", "lt", "lv", 
+        "ml", "mr", "ne", "nl", "no", "pa", "pl", "pt", "ro", "ru", "sd", "se", "si", "sk", 
+        "sr", "sv", "ta", "te", "tr", "uk", "ur", "vi", "yue", "zh"
+    ));
+
+    private void loadLiblouisFiles(Context context) {
+        try {
+            java.io.InputStream is = context.getAssets().open("liblouis_files.txt");
+            if (is != null) {
+                java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(is));
+                String line;
+                java.util.List<String> allLines = new java.util.ArrayList<>();
+                while ((line = reader.readLine()) != null) {
+                    allLines.add(line.trim());
+                }
+                reader.close();
+
+                // First pass: Load all .tbl files (Master tables)
+                for (String file : allLines) {
+                    if (file.endsWith(".tbl")) {
+                        processDynamicTable(file, true);
+                    }
+                }
+
+                // Second pass: Load .utb/.ctb only if not redundant
+                for (String file : allLines) {
+                    if ((file.endsWith(".utb") || file.endsWith(".ctb")) && 
+                        !file.endsWith("-chardefs.uti") && !file.contains("latinLetterDef")) {
+                        processDynamicTable(file, false);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "Error loading liblouis_files.txt", e);
+        }
+    }
+
+    private void processDynamicTable(String fileName, boolean isMaster) {
+        String langCode = fileName.contains("-") ? fileName.split("-")[0] : 
+                         (fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf('.')) : fileName);
+        
+        // Handle cases like en_US.tbl
+        if (langCode.contains("_")) langCode = langCode.split("_")[0];
+
+        int grade = fileName.contains("g2") ? 2 : 1;
+        boolean eightDot = fileName.contains("comp8") || fileName.contains("8dot");
+
+        // Deduplication
+        for (TableInfo existing : mTableInfos) {
+            if (existing.getLocale().getLanguage().equals(langCode) && 
+                existing.getGrade() == grade && 
+                existing.isEightDot() == eightDot) {
+                return; // Already covered
+            }
+        }
+
+        String id = "liblouis:" + fileName;
+        String variant = "(" + fileName + ")";
+        if (!GOOGLE_LANGS.contains(langCode)) {
+            variant = "[Ext] " + variant;
+        }
+
+        mTableInfos.add(new TableInfo(new Locale(langCode), eightDot, grade, id, variant));
+        mTableFileNames.put(id, fileName);
     }
 
     /** Returns all loaded tables. */

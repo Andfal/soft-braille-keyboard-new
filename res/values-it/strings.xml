@@ -103,6 +103,10 @@
     <string name="pref_use_eight_dots_summary">Se abilitato mostra i punti 7 e 8.</string>
     <string name="pref_use_eight_dots_title">Mostra Tastiera a otto punti</string>
     <string name="pref_vibrate_on_exit_title">Vibrazione alla chiusura della tastiera</string>
+    <string name="pref_show_ext_tables_key">SHOW_EXT_TABLES</string>
+    <string name="pref_show_ext_tables_title">Mostra tabelle Liblouis estese</string>
+    <string name="pref_show_ext_tables_summary">Mostra tutte le tabelle Liblouis disponibili, incluse quelle non supportate ufficialmente da Google.</string>
+    <string name="pref_show_ext_tables_default">false</string>
     <string name="pref_voice_shortcut_summary">Se attivato tocca due volte e tieni premuto per iniziare la dettatura vocale con TalkBack attivo.</string> 
     <string name="pref_voice_shortcut_title">Scorciatoia per dettatura vocale</string>
     <string name="privacy_disabled">Schermo Privacy disattivato</string>

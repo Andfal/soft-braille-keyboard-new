@@ -151,6 +151,7 @@ public class BrailleParser {
     private final SharedPreferences sharedPref;
     private final BrailleParserListener listener;
     private final List<String> tableIds;
+    private final Context context;
 
     private BrailleTranslator translator;
     private List<TableInfo> tables;
@@ -167,6 +168,7 @@ public class BrailleParser {
      *            state.
      */
     public BrailleParser(final Context context, BrailleParserListener listener) {
+        this.context = context;
         this.listener = listener;
         sharedPref = Options.getSharedPreferences(context);
         String[] ids = context.getResources().getStringArray(
@@ -526,17 +528,20 @@ public class BrailleParser {
     private List<TableInfo> filterTables(List<TableInfo> tables,
             BrailleType brailleType) {
         List<TableInfo> list = new ArrayList<TableInfo>();
-        android.util.Log.i("BrailleParser", "Filtering " + tables.size() + " tables. Allowed IDs in list: " + tableIds.size());
+        
+        boolean showExt = Options.getBooleanPreference(context, R.string.pref_show_ext_tables_key, false);
+        android.util.Log.i("BrailleParser", "Filtering " + tables.size() + " tables. ShowExt: " + showExt);
 
         for (TableInfo table : tables) {
-            String id = table.getId();
-            boolean isAllowed = tableIds.contains(id) || (id != null && id.startsWith("custom:"));
-            
-            if (isAllowed && matchesBrailleType(table, brailleType)) {
+            // Filter by extended preference
+            if (!showExt && table.getVariant() != null && table.getVariant().startsWith("[Ext]")) {
+                continue;
+            }
+
+            if (matchesBrailleType(table, brailleType)) {
                 list.add(table);
             }
         }
-
         // Filter out Grade 2 tables if Grade 1 is not present for that language.
         // It makes no sense to have contracted Braille if uncontracted is not available.
         if (brailleType == BrailleType.LITERARY || brailleType == BrailleType.ALL) {
@@ -549,7 +554,7 @@ public class BrailleParser {
             
             List<TableInfo> filteredList = new ArrayList<TableInfo>();
             for (TableInfo table : list) {
-                if (table.getGrade() == 2) {
+                if (table.getGrade() == 2 && !table.getId().startsWith("liblouis:")) {
                     if (table.getLocale() != null && languagesWithG1.contains(table.getLocale().getLanguage())) {
                         filteredList.add(table);
                     } else {

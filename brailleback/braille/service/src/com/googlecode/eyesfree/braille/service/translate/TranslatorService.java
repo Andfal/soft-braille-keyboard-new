@@ -217,6 +217,7 @@ public class TranslatorService extends Service {
                 return false;
             }
             if (!checkDataFiles()) {
+                Log.w(LOG_TAG, "Data files not yet extracted for checkTable: " + tableId);
                 return false;
             }
             String tableName = mTableList.getFileName(tableId);
@@ -224,7 +225,11 @@ public class TranslatorService extends Service {
                 Log.e(LOG_TAG, "Unknown table id in checkTable: " + tableId);
                 return false;
             }
-            return LibLouisWrapper.checkTable(getTablePath(tableName));
+            String path = getTablePath(tableName);
+            boolean exists = new File(path).exists();
+            boolean result = LibLouisWrapper.checkTable(path);
+            Log.i(LOG_TAG, "checkTable ID: " + tableId + " | File: " + tableName + " | Path: " + path + " | Exists: " + exists + " | Native result: " + result);
+            return result;
         }
 
         @Override
@@ -246,7 +251,9 @@ public class TranslatorService extends Service {
                 Log.e(LOG_TAG, "Unknown table id in translate: " + tableId);
                 return null;
             }
-            return LibLouisWrapper.translate(text, getTablePath(tableName), cursorPosition,
+            String path = getTablePath(tableName);
+            Log.d(LOG_TAG, "Translating with table ID: " + tableId + " | Path: " + path);
+            return LibLouisWrapper.translate(text, path, cursorPosition,
                     computerBrailleAtCursor);
         }
 
@@ -269,9 +276,9 @@ public class TranslatorService extends Service {
                         + tableId);
                 return null;
             }
-            String tablePath = getTablePath(tableName);
-            Log.i(LOG_TAG, "Performing backTranslate with table: " + tableId + " -> " + tablePath);
-            return LibLouisWrapper.backTranslate(cells, tablePath);
+            String path = getTablePath(tableName);
+            Log.i(LOG_TAG, "Back-translating with table ID: " + tableId + " | Path: " + path);
+            return LibLouisWrapper.backTranslate(cells, path);
         }
     }
 }

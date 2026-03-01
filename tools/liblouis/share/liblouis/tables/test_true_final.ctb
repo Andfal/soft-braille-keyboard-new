@@ -1,3 +1,0 @@
-include latinLetterDef6Dots.uti
-include unicode.dis
-always \x00e0 12356

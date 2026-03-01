@@ -1,4 +1,0 @@
-# Test Table
-include unicode.dis
-include latinLetterDef6Dots.uti
-lowercase \x00e0 12356
