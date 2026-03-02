@@ -60,7 +60,8 @@ public class TableCreatorActivity extends Activity {
         "numsign", "capsletter", "begcaps", "endcaps", 
         "begcapsword", "endcapsword",
         "openpunc", "closepunc",
-        "word", "partword", "letsign", "letter", "litdigit"
+        "word", "partword", "letsign", "letter", "litdigit",
+        "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum"
     };
     private String[] OPCODE_LABELS;
 
@@ -98,7 +99,10 @@ public class TableCreatorActivity extends Activity {
             getString(R.string.opcode_begcapsword), getString(R.string.opcode_endcapsword),
             getString(R.string.opcode_openpunc), getString(R.string.opcode_closepunc),
             getString(R.string.opcode_word), getString(R.string.opcode_partword), getString(R.string.opcode_letsign),
-            getString(R.string.opcode_letter), getString(R.string.opcode_litdigit)
+            getString(R.string.opcode_letter), getString(R.string.opcode_litdigit),
+            getString(R.string.opcode_midnum), getString(R.string.opcode_numericmodechars), 
+            getString(R.string.opcode_midendnumericmodechars), getString(R.string.opcode_begnum), 
+            getString(R.string.opcode_endnum)
         };
 
         initPresets();
@@ -183,6 +187,9 @@ public class TableCreatorActivity extends Activity {
             public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
                 String op = OPCODES[pos];
                 boolean isStand = op.equals("numsign") || op.equals("capsletter") || op.startsWith("beg") || op.startsWith("end") || op.equals("space") || op.equals("letsign");
+                // begnum and endnum can be standalone or have a character depending on usage,
+                // but usually they act as standalone indicators in simple tables.
+                // However, numericmodechars and midendnumericmodechars ALWAYS need characters.
                 mCharEdit.setVisibility(isStand ? View.GONE : View.VISIBLE);
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
@@ -216,10 +223,18 @@ public class TableCreatorActivity extends Activity {
                         suggestedOp = "openpunc";
                     } else if (")]}”»’".indexOf(c) != -1) {
                         suggestedOp = "closepunc";
-                    } else if (".,;:!?¡¿\"'\\|/_#@&§¶†‡".indexOf(c) != -1) {
+                    } else if ("+-/×÷=<>".indexOf(c) != -1) {
+                        suggestedOp = "numericmodechars";
+                    } else if ("%€$#".indexOf(c) != -1) {
+                        suggestedOp = "midendnumericmodechars";
+                    } else if (",.:-".indexOf(c) != -1) {
+                        suggestedOp = "midnum";
+                    } else if ("!?¡¿\"'\\|/_@&§¶†‡".indexOf(c) != -1) {
                         suggestedOp = "punctuation";
-                    } else if ("+-*×/÷=<>±%^~≈≠≤≥∞√¬".indexOf(c) != -1) {
+                    } else if ("±^~≈≠≤≥∞√¬".indexOf(c) != -1) {
                         suggestedOp = "math";
+                    } else if ("*".indexOf(c) != -1) {
+                        suggestedOp = "midnum";
                     }
                     
                     for (int i = 0; i < OPCODES.length; i++) {
@@ -709,7 +724,46 @@ public class TableCreatorActivity extends Activity {
 
         sb.append("include braille-patterns.cti\n\n# Custom Mappings\n");
         
+        // Build numeric indicators lists
+        StringBuilder numericModeChars = new StringBuilder();
+        StringBuilder midEndNumericModeChars = new StringBuilder();
+
         for (Mapping m : mMappings) {
+            if (m.opcode.equals("numericmodechars") && m.character.length() == 1) {
+                numericModeChars.append(m.character);
+            } else if (m.opcode.equals("midendnumericmodechars") && m.character.length() == 1) {
+                midEndNumericModeChars.append(m.character);
+            }
+        }
+
+        if (numericModeChars.length() > 0) {
+            sb.append("numericmodechars ").append(numericModeChars).append("\n");
+        }
+        if (midEndNumericModeChars.length() > 0) {
+            sb.append("midendnumericmodechars ").append(midEndNumericModeChars).append("\n");
+        }
+
+        for (Mapping m : mMappings) {
+            // Already handled these as aggregate indicators
+            if (m.opcode.equals("numericmodechars") || m.opcode.equals("midendnumericmodechars")) {
+                // We still write the base mapping (math or punctuation) for these
+                if (m.character == null || m.character.isEmpty()) continue;
+                String cPart = m.character;
+                if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
+                
+                StringBuilder dots = new StringBuilder();
+                for (int i=0; i<m.patterns.size(); i++) {
+                    if (i > 0) dots.append("-");
+                    dots.append(patternToDotsString(m.patterns.get(i)));
+                }
+                
+                // Automatic fallback: if it's a math-like symbol, define it as math too
+                String fallbackOp = "+-/×÷=<>±^~≈≠≤≥∞√¬*".indexOf(m.character) != -1 ? "math" : "punctuation";
+                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
+                sb.append(fallbackOp).append(" ").append(cPart).append(" ").append(dots).append("\n");
+                continue;
+            }
+
             StringBuilder dots = new StringBuilder();
             for (int i=0; i<m.patterns.size(); i++) {
                 if (i > 0) dots.append("-");
@@ -725,6 +779,13 @@ public class TableCreatorActivity extends Activity {
                     cPart = String.format("\\x%04x", (int)cPart.charAt(0));
                 }
                 sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
+                
+                // For midnum, also add a fallback definition
+                if (m.opcode.equals("midnum") && m.character.length() == 1) {
+                    String fallbackOp = "+-/×÷=<>±^~≈≠≤≥∞√¬*".indexOf(m.character) != -1 ? "math" : "punctuation";
+                    sb.append(fallbackOp).append(" ").append(cPart).append(" ").append(dots).append("\n");
+                }
+
                 if (!mEightDotCheck.isChecked() && m.opcode.equals("lowercase") && m.character.length() == 1) {
                     char c = m.character.charAt(0);
                     char upper = Character.toUpperCase(c);

@@ -85,8 +85,7 @@
          dots="6"
          grade="1"
          variant="table_variant_unofficial"
-         fileName="it-it-comp6.utb" />
-    <table
+         fileName="it_definitiva_funzionante.ctb" />    <table
          id="it-comp8"
          locale="it"
          dots="8"

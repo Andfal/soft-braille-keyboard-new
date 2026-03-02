@@ -1,10 +1,6 @@
-# liblouis: Italiano Ibrida (Definitiva)
+# liblouis: Italian grade1 unofficial
 include unicode.dis
 include text_nabcc.dis
-
-# Tabella IBRIDA Italiana v21 (OMNIA - 100%)
-
-
 include latinLetterDef6Dots.uti
 
 # Italian standard accented
@@ -150,11 +146,35 @@ litdigit 8 125
 litdigit 9 24
 litdigit 0 245
 
-midnum \x002C 2
-midnum \x002E 256
-midnum \x003A 25
-midnum \x002D 36
-numericmodechars ,.:-
+# --- Gestione Avanzata Modalità Numerica ---
+
+# Caratteri che mantengono la modalità (in mezzo all'operazione)
+midnum \x002C 2        # ,
+midnum \x002E 256      # .
+midnum \x003A 25       # :
+midnum \x002D 36       # -
+midnum \x002F 5-256    # /
+midnum \x002B 5-235    # +
+midnum \x002A 35       # *
+midnum \x003D 2356     # =
+midnum \x00D7 46-236   # ×
+midnum \x00F7 46-256   # ÷
+midnum \x003C 56       # <
+midnum \x003E 45       # >
+
+# Caratteri che possono stare alla fine di un numero (es. percentuali e valute)
+endnum \x0025 5-123456 # %
+endnum \x20AC 5-15     # €
+endnum \x0024 5-46     # $
+
+# Attiva il segnanumero PRIMA del carattere se segue una cifra (es. +39 -> #+39)
+# E mantiene la modalità attiva durante la sequenza.
+numericmodechars ,.:-/+×÷=<>
+
+# Mantiene la modalità attiva se il carattere è in mezzo o alla fine
+# ma NON attiva il segnanumero se il carattere è all'inizio.
+# Incluso l'asterisco per gli elenchi puntati e il cancelletto.
+midendnumericmodechars %€$#*
 
 punctuation \x0031 16
 punctuation \x0032 126
@@ -165,7 +185,6 @@ punctuation \x0036 1246
 punctuation \x0037 12456
 punctuation \x0038 1256
 punctuation \x0039 246
-always \x0030 6-3456
 
 capsletter 46
 begcapsword 46-46

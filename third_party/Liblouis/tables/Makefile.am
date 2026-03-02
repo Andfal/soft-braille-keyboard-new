@@ -236,7 +236,7 @@ table_files = \
 	is-chardefs8.cti \
 	is.ctb \
 	is.tbl \
-	it-it-comp6.utb \
+	it_definitiva_funzionante.ctb \
 	it-it-comp8.utb \
 	it.tbl \
 	iu-ca-g1.ctb \

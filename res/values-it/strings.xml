@@ -283,6 +283,11 @@
     <string name="opcode_letsign">Segna lettera (5)</string>
     <string name="opcode_letter">Lettera generica</string>
     <string name="opcode_litdigit">Cifra letteraria</string>
+    <string name="opcode_midnum">Carattere interno ai numeri</string>
+    <string name="opcode_numericmodechars">Attivatore modalità numerica</string>
+    <string name="opcode_midendnumericmodechars">Suffisso/Interno numerico</string>
+    <string name="opcode_begnum">Prefisso numerico</string>
+    <string name="opcode_endnum">Fine modalità numerica</string>
 
     <string name="label_base_table">Eredita da tabella di sistema (Opzionale):</string>
     <string name="label_number_system">Sistema Numerico:</string>

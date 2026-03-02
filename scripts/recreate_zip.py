@@ -11,4 +11,4 @@ def create_zip(src_dir, zip_path):
                 zipf.write(abs_path, rel_path)
 
 if __name__ == '__main__':
-    create_zip('temp_zip', 'brailleback/braille/service/res/raw/translationtables.zip')
+    create_zip('temp_zip', 'res/raw/translationtables.zip')

@@ -367,6 +367,11 @@
     <string name="opcode_letsign">Letter Sign (5)</string>
     <string name="opcode_letter">Generic Letter</string>
     <string name="opcode_litdigit">Literary Digit</string>
+    <string name="opcode_midnum">Character inside numbers</string>
+    <string name="opcode_numericmodechars">Numeric mode trigger</string>
+    <string name="opcode_midendnumericmodechars">Suffix/Internal numeric</string>
+    <string name="opcode_begnum">Numeric prefix</string>
+    <string name="opcode_endnum">End numeric mode</string>
 
     <string name="label_base_table">Inherit from system table (Optional):</string>
     <string name="label_number_system">Numbering System:</string>

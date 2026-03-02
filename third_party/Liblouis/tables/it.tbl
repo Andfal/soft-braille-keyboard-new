@@ -14,5 +14,5 @@
 # the implemented braille code. Preferably submit the documents
 # to https://github.com/liblouis/braille-specs.
 
-include it-it-comp6.utb
+include it_definitiva_funzionante.ctb
 include braille-patterns.cti
