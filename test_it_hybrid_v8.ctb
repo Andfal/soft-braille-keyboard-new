@@ -1,0 +1,40 @@
+# Tabella IBRIDA Italiana v8 (Completa + Gestione Decimali)
+# Dots: 6
+
+include unicode.dis
+include braille-patterns.cti
+
+# 1. Carichiamo tutta la base italiana (lettere, accenti, punteggiatura)
+include it-it-comp6.utb
+
+# 2. SISTEMA SEGNANUMERO (3456)
+numsign 3456
+digit 1 1
+digit 2 12
+digit 3 14
+digit 4 145
+digit 5 15
+digit 6 124
+digit 7 1245
+digit 8 125
+digit 9 24
+digit 0 245
+
+# 3. GESTIONE NUMERI DECIMALI (12,3)
+# La virgola e il punto devono essere midnum per rimanere in modalità numerica
+midnum , 2
+midnum . 256
+
+# 4. SISTEMA 6DOTPLUS (Digitazione diretta con punto 6)
+always \x0031 16
+always \x0032 126
+always \x0033 146
+always \x0034 1456
+always \x0035 156
+always \x0036 1246
+always \x0037 12456
+always \x0038 1256
+always \x0039 246
+
+# 5. ZERO SPECIALE (punto 6 + 3456)
+always \x0030 6-3456

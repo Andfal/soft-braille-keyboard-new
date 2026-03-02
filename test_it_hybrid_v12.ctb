@@ -1,0 +1,61 @@
+# Tabella IBRIDA Italiana v12 (Forzatura Modalità Numerica)
+# Dots: 6
+
+include unicode.dis
+include braille-patterns.cti
+
+# 1. SISTEMA SEGNANUMERO
+numsign 3456
+# Mappatura standard cifre
+digit 1 1
+digit 2 12
+digit 3 14
+digit 4 145
+digit 5 15
+digit 6 124
+digit 7 1245
+digit 8 125
+digit 9 24
+digit 0 245
+
+# Forziamo Liblouis a restare in modalità numerica dopo il segnanumero
+# includendo i punti delle lettere a-j e i separatori
+midnum , 2
+midnum . 256
+midnum - 36
+midnum : 25
+midnum / 34
+
+# 2. SISTEMA PLUS6 (Priorità Massima)
+always \x0031 16
+always \x0032 126
+always \x0033 146
+always \x0034 1456
+always \x0035 156
+always \x0036 1246
+always \x0037 12456
+always \x0038 1256
+always \x0039 246
+
+# 3. ZERO SPECIALE (6 + 3456)
+always \x0030 6-3456
+
+# 4. LETTERE E ACCENTI (Definiti DOPO per la retro-traduzione)
+# Usiamo l'opcode 'base' per le lettere a-j per differenziarle dai digit
+base lowercase a 1
+base lowercase b 12
+base lowercase c 14
+base lowercase d 145
+base lowercase e 15
+base lowercase f 124
+base lowercase g 1245
+base lowercase h 125
+base lowercase i 24
+base lowercase j 245
+lowercase \x00F2 346
+
+include it-it-comp6.utb
+
+# Spazio
+space \x0020 0
+space \x00a0 0

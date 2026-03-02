@@ -120,7 +120,7 @@
     <table id="mr-g1" locale="mr" dots="6" grade="1" fileName="mr.tbl" />
 
     <!-- Nepali -->
-    <table id="ne-g1" locale="ne" dots="6" grade="1" variant="table_variant_unofficial" fileName="np-in-g1-test3.ctb" />
+    <table id="ne-g1" locale="ne" dots="6" grade="1" variant="table_variant_unofficial" fileName="np-in-g1.utb" />
 
     <!-- Dutch -->
     <table id="nl-g1" locale="nl" dots="6" grade="1" fileName="nl.tbl" />

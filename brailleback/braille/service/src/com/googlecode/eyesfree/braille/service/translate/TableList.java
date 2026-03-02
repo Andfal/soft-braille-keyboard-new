@@ -106,39 +106,75 @@ public class TableList {
     }
 
     private void processDynamicTable(String fileName, boolean isMaster) {
-        String langCode = fileName.contains("-") ? fileName.split("-")[0] : 
-                         (fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf('.')) : fileName);
+        String baseName = fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf('.')) : fileName;
+        String[] parts = baseName.split("-");
         
-        // Handle cases like en_US.tbl
-        if (langCode.contains("_")) langCode = langCode.split("_")[0];
+        String langPart = parts[0];
+        String country = "";
+        
+        // Handle cases like en_US
+        if (langPart.contains("_")) {
+            String[] locParts = langPart.split("_");
+            langPart = locParts[0];
+            if (locParts.length > 1) country = locParts[1];
+        }
 
         int grade = fileName.contains("g2") ? 2 : 1;
         boolean eightDot = fileName.contains("comp8") || fileName.contains("8dot");
 
-        // Deduplication
+        boolean isAlreadyInXml = false;
+        // Check if this specific configuration is already covered by the official XML
         for (TableInfo existing : mTableInfos) {
-            if (existing.getLocale().getLanguage().equals(langCode) && 
+            if (existing.getLocale().getLanguage().equals(langPart) && 
+                existing.getLocale().getCountry().equals(country) &&
                 existing.getGrade() == grade && 
                 existing.isEightDot() == eightDot) {
-                return; // Already covered
+                // If it's already in XML, we don't need to add it dynamically 
+                // unless it's a different file and we want to allow it as [Ext]
+                isAlreadyInXml = true;
+                break;
             }
         }
 
         String id = "liblouis:" + fileName;
         String variant = "(" + fileName + ")";
-        if (!GOOGLE_LANGS.contains(langCode)) {
+        
+        // If it's NOT in XML, it's a dynamic candidate.
+        // We mark it as [Ext] if the language is already officially supported 
+        // (meaning it's likely a redundant variant) OR if it's explicitly not a Google lang.
+        if (isAlreadyInXml || GOOGLE_LANGS.contains(langPart)) {
             variant = "[Ext] " + variant;
         }
 
-        mTableInfos.add(new TableInfo(new Locale(langCode), eightDot, grade, id, variant));
-        mTableFileNames.put(id, fileName);
+        // Only add if not already present with the EXACT same ID
+        if (!mTableFileNames.containsKey(id)) {
+            mTableInfos.add(new TableInfo(new Locale(langPart, country), eightDot, grade, id, variant));
+            mTableFileNames.put(id, fileName);
+        }
     }
 
     /** Returns all loaded tables. */
     public List<TableInfo> getTables() {
         mCustomTableManager.scanFiles();
-        List<TableInfo> allTables = new ArrayList<TableInfo>(mTableInfos);
-        allTables.addAll(mCustomTableManager.getTables());
+        List<TableInfo> customTables = mCustomTableManager.getTables();
+        List<TableInfo> systemTables = new ArrayList<TableInfo>(mTableInfos);
+        
+        // Final deduplication: if a custom table exists for a locale/dots/grade,
+        // remove the corresponding system table to avoid clutter.
+        for (TableInfo custom : customTables) {
+            for (int i = systemTables.size() - 1; i >= 0; i--) {
+                TableInfo system = systemTables.get(i);
+                if (system.getLocale().equals(custom.getLocale()) &&
+                    system.isEightDot() == custom.isEightDot() &&
+                    system.getGrade() == custom.getGrade()) {
+                    systemTables.remove(i);
+                }
+            }
+        }
+
+        List<TableInfo> allTables = new ArrayList<TableInfo>();
+        allTables.addAll(systemTables);
+        allTables.addAll(customTables);
         return Collections.unmodifiableList(allTables);
     }
 

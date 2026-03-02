@@ -203,11 +203,24 @@ public class TableCreatorActivity extends Activity {
                 if (s.length() == 1) {
                     char c = s.charAt(0);
                     String suggestedOp = "sign";
-                    if (Character.isDigit(c)) suggestedOp = "digit";
-                    else if (Character.isLowerCase(c)) suggestedOp = "lowercase";
-                    else if (Character.isUpperCase(c)) suggestedOp = "uppercase";
-                    else if (".,;:!?¡¿\"'()[]{}“”«»".indexOf(c) != -1) suggestedOp = "punctuation";
-                    else if ("+-*×/÷=<>±%^".indexOf(c) != -1) suggestedOp = "math";
+                    
+                    if (Character.isDigit(c)) {
+                        suggestedOp = "digit";
+                    } else if (Character.isLowerCase(c)) {
+                        suggestedOp = "lowercase";
+                    } else if (Character.isUpperCase(c)) {
+                        suggestedOp = "uppercase";
+                    } else if (c == ' ' || c == '\u00a0') {
+                        suggestedOp = "space";
+                    } else if ("([{“«‘".indexOf(c) != -1) {
+                        suggestedOp = "openpunc";
+                    } else if (")]}”»’".indexOf(c) != -1) {
+                        suggestedOp = "closepunc";
+                    } else if (".,;:!?¡¿\"'\\|/_#@&§¶†‡".indexOf(c) != -1) {
+                        suggestedOp = "punctuation";
+                    } else if ("+-*×/÷=<>±%^~≈≠≤≥∞√¬".indexOf(c) != -1) {
+                        suggestedOp = "math";
+                    }
                     
                     for (int i = 0; i < OPCODES.length; i++) {
                         if (OPCODES[i].equals(suggestedOp)) {

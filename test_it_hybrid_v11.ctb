@@ -1,0 +1,60 @@
+# Tabella IBRIDA Italiana v11 (Completa + Continuità Numerica)
+# Dots: 6
+
+include unicode.dis
+include braille-patterns.cti
+
+# 1. Protezione Lettere Standard e ò (346)
+lowercase a 1
+lowercase b 12
+lowercase c 14
+lowercase d 145
+lowercase e 15
+lowercase f 124
+lowercase g 1245
+lowercase h 125
+lowercase i 24
+lowercase j 245
+lowercase \x00F2 346
+
+# 2. Carichiamo la base italiana ufficiale
+include it-it-comp6.utb
+
+# 3. SISTEMA SEGNANUMERO (3456)
+numsign 3456
+digit 1 1
+digit 2 12
+digit 3 14
+digit 4 145
+digit 5 15
+digit 6 124
+digit 7 1245
+digit 8 125
+digit 9 24
+digit 0 245
+
+# 4. CONTINUITÀ MODALITÀ NUMERICA (midnum)
+# Impedisce che 12,3 diventi 12,c
+midnum , 2
+midnum . 256
+midnum - 36
+midnum : 25
+midnum / 5-256
+
+# 5. SISTEMA PLUS6 (Digitazione diretta con punto 6)
+always \x0031 16
+always \x0032 126
+always \x0033 146
+always \x0034 1456
+always \x0035 156
+always \x0036 1246
+always \x0037 12456
+always \x0038 1256
+always \x0039 246
+
+# 6. ZERO SPECIALE (punto 6 + 3456)
+always \x0030 6-3456
+
+# Spazio
+space \x0020 0
+space \x00a0 0

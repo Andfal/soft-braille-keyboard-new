@@ -1,0 +1,31 @@
+# Custom Test Table for Italian Number System
+# Dots: 6
+# Description: Testing coexistence of Number Sign and Antoine Plus6 system
+
+include unicode.dis
+include latinLetterDef6Dots.uti
+include braille-patterns.cti
+
+# 1. Standard Number Sign system
+numsign 3456
+include digits6Dots.uti
+
+# 2. Custom 0 with prefix 6
+# (We put it before the Antoine always rules to be sure)
+digit 0 6-3456
+
+# 3. Antoine / Plus6 Coexistence system for 1-9
+# Using 'always' ensures these are recognized even without numsign.
+always \x0031 16
+always \x0032 126
+always \x0033 146
+always \x0034 1456
+always \x0035 156
+always \x0036 1246
+always \x0037 12456
+always \x0038 1256
+always \x0039 246
+
+# Default space
+space \x0020 0
+space \x00a0 0
