@@ -377,8 +377,28 @@
     <string name="label_number_system">Numbering System:</string>
     <string name="num_sys_classic">Classic (3456 + a-j)</string>
     <string name="num_sys_antoine">Antoine (Dot 6 + high cells)</string>
+    <string name="num_sys_dropped">Dropped Numbers (Nemeth/Low)</string>
+    <string name="num_sys_8dot">Computer Braille (8-dot)</string>
     <string name="num_sys_none">None / Manual mappings</string>
-    <string name="none_selected">--- None ---</string>
+    <string name="label_base_script">Base Alphabet / Script:</string>
+    <string name="script_latin">Latin (European)</string>
+    <string name="script_cyrillic">Cyrillic (Russian/Slavic)</string>
+    <string name="script_greek">Greek</string>
+    <string name="script_arabic">Arabic</string>
+    <string name="script_hebrew">Hebrew</string>
+    <string name="script_hindi">Indian (Devanagari)</string>
+    <string name="script_korean">Korean (Hangul)</string>
+    <string name="script_vietnamese">Vietnamese</string>
+    <string name="script_thai">Thai</string>
+    <string name="script_unicode">Symbols Only (Unicode)</string>
+    <string name="msg_duplicate_dots">Combination %1$s is already used for \'%2$s\'.</string>
+    <string name="btn_overwrite">Overwrite / Proceed</string>
+    <string name="btn_insert_before">Insert before (Low priority)</string>
+    <string name="btn_add_anyway">Add to end (High priority)</string>
+    <string name="btn_add_prefix">Add prefix...</string>
+    <string name="title_select_prefix">Select prefix (e.g. dot 4, 5 or 6)</string>
+    <string name="hint_enter_dots">Enter dots (e.g. 123)</string>
+    <string name="none_selected">--- None selected ---</string>
 
     <!-- Preset Categories -->
     <string name="preset_cat_it_accents">Italian Accents</string>

@@ -293,8 +293,26 @@
     <string name="label_number_system">Sistema Numerico:</string>
     <string name="num_sys_classic">Classico (3456 + a-j)</string>
     <string name="num_sys_antoine">Antoine (Punto 6 + cifre alte)</string>
+    <string name="num_sys_dropped">Numeri Ribassati (Nemeth/Bassi)</string>
+    <string name="num_sys_8dot">Computer Braille (8-punti)</string>
     <string name="num_sys_none">Nessuno / Mappature manuali</string>
-    <string name="none_selected">--- Nessuna ---</string>
+    <string name="label_base_script">Alfabeto / Script di base:</string>
+    <string name="script_latin">Latino (Europeo)</string>
+    <string name="script_cyrillic">Cirillico (Russo/Slavo)</string>
+    <string name="script_greek">Greco</string>
+    <string name="script_arabic">Arabo</string>
+    <string name="script_hebrew">Ebraico</string>
+    <string name="script_hindi">Indiano (Devanagari)</string>
+    <string name="script_korean">Coreano (Hangul)</string>
+    <string name="script_vietnamese">Vietnamita</string>
+    <string name="script_thai">Thailandese</string>
+    <string name="script_unicode">Solo Simboli (Unicode)</string>
+    <string name="btn_overwrite">Sovrascrivi / Procedi</string>
+    <string name="btn_insert_before">Inserisci prima (Priorità bassa)</string>
+    <string name="btn_add_anyway">Aggiungi in coda (Priorità alta)</string>
+    <string name="btn_add_prefix">Aggiungi prefisso...</string>
+    <string name="title_select_prefix">Scegli prefisso (es. punto 4, 5 o 6)</string>
+    <string name="hint_enter_dots">Digita i punti (es. 123)</string>
 
     <!-- Preset Categories -->
     <string name="preset_cat_it_accents">Accenti Italiani</string>

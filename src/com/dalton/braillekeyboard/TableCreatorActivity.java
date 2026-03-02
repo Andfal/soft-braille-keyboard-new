@@ -38,10 +38,38 @@ public class TableCreatorActivity extends Activity {
     private List<String> mSystemTableFiles = new ArrayList<>();
     private List<String> mSystemTableLabels = new ArrayList<>();
 
-    private RadioGroup mNumSystemGroup;
+    private Spinner mNumSystemSpinner;
     private static final int NUM_CLASSIC = 0;
     private static final int NUM_ANTOINE = 1;
-    private static final int NUM_NONE = 2;
+    private static final int NUM_DROPPED = 2;
+    private static final int NUM_8DOT = 3;
+    private static final int NUM_NONE = 4;
+
+    private Spinner mScriptSpinner;
+    private static final String[][] SCRIPTS_6 = {
+        {"Latino", "latinLetterDef6Dots.uti"},
+        {"Cirillico", "ru-comp6.utb"},
+        {"Greco", "grc-international-en.utb"},
+        {"Arabo", "ar-ar-g1.utb"},
+        {"Ebraico", "he-IL.utb"},
+        {"Hindi", "hi-in-g1.utb"},
+        {"Coreano", "ko-g1.ctb"},
+        {"Vietnamita", "vi-vn-g0.utb"},
+        {"Thailandese", "th-g0.utb"},
+        {"Unicode", "unicode-braille.utb"}
+    };
+    private static final String[][] SCRIPTS_8 = {
+        {"Latino", "latinLetterDef8Dots.uti"},
+        {"Cirillico", "ru-comp8.utb"},
+        {"Greco", "gr-pl-comp8.utb"},
+        {"Arabo", "ar-ar-comp8.utb"},
+        {"Ebraico", "he-IL-comp8.utb"},
+        {"Hindi", "hi-in-g1.utb"},
+        {"Coreano", "ko-g1.ctb"},
+        {"Vietnamita", "vi-cb8.utb"},
+        {"Thailandese", "th-comp8-backward.utb"},
+        {"Unicode", "unicode-braille.utb"}
+    };
     
     private Spinner mOpcodeSpinner;
     private EditText mCharEdit;
@@ -127,6 +155,7 @@ public class TableCreatorActivity extends Activity {
 
         mEightDotCheck = new CheckBox(this);
         mEightDotCheck.setText(R.string.label_use_8_dots);
+        mEightDotCheck.setOnCheckedChangeListener((buttonView, isChecked) -> updateScriptSpinner(isChecked));
         root.addView(mEightDotCheck);
 
         // --- Base Table Selector ---
@@ -142,30 +171,34 @@ public class TableCreatorActivity extends Activity {
         mBaseTableSpinner.setAdapter(baseAdapter);
         root.addView(mBaseTableSpinner);
 
+        // --- Base Script Selector ---
+        TextView scriptLabel = new TextView(this);
+        scriptLabel.setText(R.string.label_base_script);
+        scriptLabel.setPadding(0, 20, 0, 0);
+        root.addView(scriptLabel);
+
+        mScriptSpinner = new Spinner(this);
+        mScriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { initPresets(); }
+            @Override public void onNothingSelected(AdapterView<?> p) {}
+        });
+        updateScriptSpinner(false);
+        root.addView(mScriptSpinner);
+
         // --- Number System Selector ---
         TextView numLabel = new TextView(this);
         numLabel.setText(R.string.label_number_system);
         numLabel.setPadding(0, 20, 0, 0);
         root.addView(numLabel);
 
-        mNumSystemGroup = new RadioGroup(this);
-        RadioButton rbClassic = new RadioButton(this);
-        rbClassic.setText(R.string.num_sys_classic);
-        rbClassic.setId(NUM_CLASSIC);
-        mNumSystemGroup.addView(rbClassic);
-
-        RadioButton rbAntoine = new RadioButton(this);
-        rbAntoine.setText(R.string.num_sys_antoine);
-        rbAntoine.setId(NUM_ANTOINE);
-        mNumSystemGroup.addView(rbAntoine);
-
-        RadioButton rbNone = new RadioButton(this);
-        rbNone.setText(R.string.num_sys_none);
-        rbNone.setId(NUM_NONE);
-        mNumSystemGroup.addView(rbNone);
-
-        mNumSystemGroup.check(NUM_CLASSIC);
-        root.addView(mNumSystemGroup);
+        mNumSystemSpinner = new Spinner(this);
+        String[] numSystems = {
+            getString(R.string.num_sys_classic), getString(R.string.num_sys_antoine),
+            getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot),
+            getString(R.string.num_sys_none)
+        };
+        mNumSystemSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numSystems));
+        root.addView(mNumSystemSpinner);
 
         // --- Mapping Editor ---
         TextView editorTitle = new TextView(this);
@@ -376,6 +409,27 @@ public class TableCreatorActivity extends Activity {
         return patterns;
     }
 
+    private void updateScriptSpinner(boolean is8dot) {
+        String[][] scripts = is8dot ? SCRIPTS_8 : SCRIPTS_6;
+        String[] labels = new String[scripts.length];
+        for (int i = 0; i < scripts.length; i++) {
+            // Localize if possible
+            if (scripts[i][0].equals("Latino")) labels[i] = getString(R.string.script_latin);
+            else if (scripts[i][0].equals("Cirillico")) labels[i] = getString(R.string.script_cyrillic);
+            else if (scripts[i][0].equals("Greco")) labels[i] = getString(R.string.script_greek);
+            else if (scripts[i][0].equals("Arabo")) labels[i] = getString(R.string.script_arabic);
+            else if (scripts[i][0].equals("Ebraico")) labels[i] = getString(R.string.script_hebrew);
+            else if (scripts[i][0].equals("Unicode")) labels[i] = getString(R.string.script_unicode);
+            else labels[i] = scripts[i][0];
+        }
+        
+        int currentPos = mScriptSpinner != null ? mScriptSpinner.getSelectedItemPosition() : 0;
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, labels);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mScriptSpinner.setAdapter(adapter);
+        if (currentPos < labels.length) mScriptSpinner.setSelection(currentPos);
+    }
+
     private void loadTableData(String tableId) {
         try {
             CustomTableManager manager = new CustomTableManager(this);
@@ -386,7 +440,7 @@ public class TableCreatorActivity extends Activity {
 
             mTableNameEdit.setText(fileName);
             mMappings.clear();
-            mNumSystemGroup.check(NUM_NONE);
+            mNumSystemSpinner.setSelection(NUM_NONE);
 
             Scanner scanner = new Scanner(f, "UTF-8");
             while (scanner.hasNextLine()) {
@@ -401,20 +455,43 @@ public class TableCreatorActivity extends Activity {
 
                 if (line.startsWith("include ")) {
                     String included = line.substring(8).trim();
-                    if (included.equals("latinLetterDef8Dots.uti")) mEightDotCheck.setChecked(true);
-                    else if (included.equals("digits6Dots.uti")) mNumSystemGroup.check(NUM_CLASSIC);
-                    else if (included.equals("digits6DotsPlusDot6.uti")) mNumSystemGroup.check(NUM_ANTOINE);
+                    if (included.equals("latinLetterDef8Dots.uti")) {
+                        mEightDotCheck.setChecked(true);
+                        mScriptSpinner.setSelection(0);
+                    }
+                    else if (included.equals("latinLetterDef6Dots.uti")) {
+                        mEightDotCheck.setChecked(false);
+                        mScriptSpinner.setSelection(0);
+                    }
+                    else if (included.equals("digits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_CLASSIC);
+                    else if (included.equals("digits6DotsPlusDot6.uti")) mNumSystemSpinner.setSelection(NUM_ANTOINE);
+                    else if (included.equals("litdigits6Dots.uti") && mNumSystemSpinner.getSelectedItemPosition() != NUM_CLASSIC && mNumSystemSpinner.getSelectedItemPosition() != NUM_ANTOINE) {
+                        mNumSystemSpinner.setSelection(NUM_DROPPED);
+                    }
+                    else if (included.equals("digits8Dots.uti")) mNumSystemSpinner.setSelection(NUM_8DOT);
                     else if (included.endsWith(".utb") || included.endsWith(".ctb")) {
-                        int idx = mSystemTableFiles.indexOf(included);
-                        if (idx != -1) mBaseTableSpinner.setSelection(idx);
+                        // Check if it's one of our base scripts
+                        boolean foundScript = false;
+                        String[][] s6 = SCRIPTS_6;
+                        String[][] s8 = SCRIPTS_8;
+                        for (int i=0; i<s6.length; i++) if (s6[i][1].equals(included)) { mScriptSpinner.setSelection(i); foundScript = true; break; }
+                        if (!foundScript) for (int i=0; i<s8.length; i++) if (s8[i][1].equals(included)) { mScriptSpinner.setSelection(i); foundScript = true; break; }
+                        
+                        if (!foundScript) {
+                            int idx = mSystemTableFiles.indexOf(included);
+                            if (idx != -1) mBaseTableSpinner.setSelection(idx);
+                        }
                     }
                     continue;
                 }
                 
                 if (line.startsWith("numsign ")) {
                     String dots = line.substring(8).trim();
-                    if (dots.equals("3456")) mNumSystemGroup.check(NUM_CLASSIC);
-                    else if (dots.equals("6")) mNumSystemGroup.check(NUM_ANTOINE);
+                    if (dots.equals("3456")) {
+                        if (mNumSystemSpinner.getSelectedItemPosition() == NUM_NONE) mNumSystemSpinner.setSelection(NUM_CLASSIC);
+                    } else if (dots.equals("6")) {
+                        mNumSystemSpinner.setSelection(NUM_ANTOINE);
+                    }
                 }
 
                 String[] parts = line.split("\\s+");
@@ -458,46 +535,10 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void initPresets() {
-        PresetCategory catFr = new PresetCategory("French Symbols", "lowercase");
-        catFr.presets.add(new Preset("é (e acute)", "é", new int[][]{{1,2,3,4,5,6}}));
-        catFr.presets.add(new Preset("à (a grave)", "à", new int[][]{{1,2,3,5,6}}));
-        catFr.presets.add(new Preset("è (e grave)", "è", new int[][]{{2,3,4,6}}));
-        catFr.presets.add(new Preset("ù (u grave)", "ù", new int[][]{{2,3,4,5,6}}));
-        catFr.presets.add(new Preset("â (a circum)", "â", new int[][]{{1,6}}));
-        catFr.presets.add(new Preset("ê (e circum)", "ê", new int[][]{{1,2,6}}));
-        catFr.presets.add(new Preset("î (i circum)", "î", new int[][]{{1,4,6}}));
-        catFr.presets.add(new Preset("ô (o circum)", "ô", new int[][]{{1,4,5,6}}));
-        catFr.presets.add(new Preset("û (u circum)", "û", new int[][]{{1,5,6}}));
-        catFr.presets.add(new Preset("ç (c cedilla)", "ç", new int[][]{{1,2,3,4,6}}));
-        catFr.presets.add(new Preset("œ (oe ligature)", "œ", new int[][]{{2,4,6}}));
-        mPresetCategories.add(catFr);
-
-        PresetCategory catIt = new PresetCategory(getString(R.string.preset_cat_it_accents), "lowercase");
-        catIt.presets.add(new Preset("a grave", "à", new int[][]{{1,2,3,5,6}}, new int[][]{{1,2,3,5,6,8}}));
-        catIt.presets.add(new Preset("e grave", "è", new int[][]{{2,3,4,6}},   new int[][]{{2,3,4,6,8}}));
-        catIt.presets.add(new Preset("e acute", "é", new int[][]{{1,2,3,4,5,6}}, new int[][]{{1,2,3,4,5,6,8}}));
-        catIt.presets.add(new Preset("i grave", "ì", new int[][]{{3,4}},     new int[][]{{3,4,8}}));
-        catIt.presets.add(new Preset("o grave", "ò", new int[][]{{3,4,6}},   new int[][]{{3,4,6,8}}));
-        catIt.presets.add(new Preset("u grave", "ù", new int[][]{{2,3,4,5,6}}, new int[][]{{2,3,4,5,6,8}}));
-        mPresetCategories.add(catIt);
-
-        PresetCategory catItCap = new PresetCategory("Accenti ITA (Maiusc.)", "uppercase");
-        catItCap.presets.add(new Preset("A grave", "À", new int[][]{{4,6}, {1,2,3,5,6}}, new int[][]{{2,3,6,7,8}}));
-        catItCap.presets.add(new Preset("E grave", "È", new int[][]{{4,6}, {2,3,4,6}},   new int[][]{{3,5,7,8}}));
-        catItCap.presets.add(new Preset("E acute", "É", new int[][]{{4,6}, {1,2,3,4,5,6}}, new int[][]{{1,2,3,4,5,6,7}}));
-        catItCap.presets.add(new Preset("I grave", "Ì", new int[][]{{4,6}, {3,4}},     new int[][]{{5,7}}));
-        catItCap.presets.add(new Preset("O grave", "Ò", new int[][]{{4,6}, {3,4,6}},   new int[][]{{5,7,8}}));
-        catItCap.presets.add(new Preset("U grave", "Ù", new int[][]{{4,6}, {2,3,4,5,6}}, new int[][]{{3,5,6,7,8}}));
-        mPresetCategories.add(catItCap);
-
-        PresetCategory catAcute = new PresetCategory(getString(R.string.preset_cat_acute), "lowercase");
-        catAcute.presets.add(new Preset("a acute", "á", new int[][]{{1,2,3,5,6}}, new int[][]{{1,6,8}}));
-        catAcute.presets.add(new Preset("i acute", "í", new int[][]{{3,4}},     new int[][]{{1,4,6,8}}));
-        catAcute.presets.add(new Preset("o acute", "ó", new int[][]{{3,4,6}},   new int[][]{{1,4,5,6,8}}));
-        catAcute.presets.add(new Preset("u acute", "ú", new int[][]{{2,3,4,5,6}}, new int[][]{{1,5,6,8}}));
-        catAcute.presets.add(new Preset("n tilde (ñ)", "ñ", new int[][]{{1,2,4,5,6}}, new int[][]{{1,3,4,5,8}}));
-        mPresetCategories.add(catAcute);
-
+        mPresetCategories.clear();
+        int scriptIndex = mScriptSpinner != null ? mScriptSpinner.getSelectedItemPosition() : 0;
+        
+        // --- Categorie Universali ---
         PresetCategory catPunc = new PresetCategory(getString(R.string.preset_cat_punc), "punctuation");
         catPunc.presets.add(new Preset("Full stop .", ".", new int[][]{{2,5,6}}, new int[][]{{3}}));
         catPunc.presets.add(new Preset("Comma ,", ",", new int[][]{{2}}));
@@ -507,12 +548,8 @@ public class TableCreatorActivity extends Activity {
         catPunc.presets.add(new Preset("Exclamation !", "!", new int[][]{{2,3,5}}));
         catPunc.presets.add(new Preset("Apostrophe '", "'", new int[][]{{3}}, new int[][]{{6}}));
         catPunc.presets.add(new Preset("Quotes \"", "\"", new int[][]{{4}}, new int[][]{{4}}));
-        catPunc.presets.add(new Preset("Open Quote “", "“", new int[][]{{6}, {2,3,6}}, new int[][]{{2,3,6}}));
-        catPunc.presets.add(new Preset("Close Quote ”", "”", new int[][]{{6}, {3,5,6}}, new int[][]{{3,5,6}}));
         catPunc.presets.add(new Preset("Open Paren (", "(", new int[][]{{2,3,5,6}}, new int[][]{{2,3,6}}));
         catPunc.presets.add(new Preset("Close Paren )", ")", new int[][]{{2,3,5,6}}, new int[][]{{3,5,6}}));
-        catPunc.presets.add(new Preset("Slash /", "/", new int[][]{{2,5,6}}, new int[][]{{2,5,6}}));
-        catPunc.presets.add(new Preset("At sign @", "@", new int[][]{{4}, {1}}, new int[][]{{3,4,5}}));
         mPresetCategories.add(catPunc);
 
         PresetCategory catMath = new PresetCategory(getString(R.string.preset_cat_math), "math");
@@ -520,12 +557,268 @@ public class TableCreatorActivity extends Activity {
         catMath.presets.add(new Preset("Minus -", "-", new int[][]{{3,6}},   new int[][]{{3,6}}));
         catMath.presets.add(new Preset("Multiplication x", "×", new int[][]{{2,3,6}}, new int[][]{{2,3,4,6,8}}));
         catMath.presets.add(new Preset("Division /", "÷", new int[][]{{2,5,6}}, new int[][]{{1,2,5,6,7,8}}));
-        catMath.presets.add(new Preset("Less than <", "<", new int[][]{{5,6}}, new int[][]{{5,6}}));
-        catMath.presets.add(new Preset("Greater than >", ">", new int[][]{{4,5}}, new int[][]{{4,5}}));
         catMath.presets.add(new Preset("Euro €", "€", new int[][]{{4}, {1,5}}, new int[][]{{4,5,7}}));
         mPresetCategories.add(catMath);
 
-        PresetCategory catControl = new PresetCategory("Segni di Controllo (6-pt)", "capsletter");
+        // --- Categorie Specifiche per Script ---
+        if (scriptIndex == 0) { // LATINO
+            PresetCategory catBase = new PresetCategory("Alfabeto Base (a-z)", "lowercase");
+            catBase.presets.add(new Preset("a", "a", new int[][]{{1}}));
+            catBase.presets.add(new Preset("b", "b", new int[][]{{1,2}}));
+            catBase.presets.add(new Preset("c", "c", new int[][]{{1,4}}));
+            catBase.presets.add(new Preset("d", "d", new int[][]{{1,4,5}}));
+            catBase.presets.add(new Preset("e", "e", new int[][]{{1,5}}));
+            catBase.presets.add(new Preset("f", "f", new int[][]{{1,2,4}}));
+            catBase.presets.add(new Preset("g", "g", new int[][]{{1,2,4,5}}));
+            catBase.presets.add(new Preset("h", "h", new int[][]{{1,2,5}}));
+            catBase.presets.add(new Preset("i", "i", new int[][]{{2,4}}));
+            catBase.presets.add(new Preset("j", "j", new int[][]{{2,4,5}}));
+            catBase.presets.add(new Preset("k", "k", new int[][]{{1,3}}));
+            catBase.presets.add(new Preset("l", "l", new int[][]{{1,2,3}}));
+            catBase.presets.add(new Preset("m", "m", new int[][]{{1,3,4}}));
+            catBase.presets.add(new Preset("n", "n", new int[][]{{1,3,4,5}}));
+            catBase.presets.add(new Preset("o", "o", new int[][]{{1,3,5}}));
+            catBase.presets.add(new Preset("p", "p", new int[][]{{1,2,3,4}}));
+            catBase.presets.add(new Preset("q", "q", new int[][]{{1,2,3,4,5}}));
+            catBase.presets.add(new Preset("r", "r", new int[][]{{1,2,3,5}}));
+            catBase.presets.add(new Preset("s", "s", new int[][]{{2,3,4}}));
+            catBase.presets.add(new Preset("t", "t", new int[][]{{2,3,4,5}}));
+            catBase.presets.add(new Preset("u", "u", new int[][]{{1,3,6}}));
+            catBase.presets.add(new Preset("v", "v", new int[][]{{1,2,3,6}}));
+            catBase.presets.add(new Preset("w", "w", new int[][]{{2,4,5,6}}));
+            catBase.presets.add(new Preset("x", "x", new int[][]{{1,3,4,6}}));
+            catBase.presets.add(new Preset("y", "y", new int[][]{{1,3,4,5,6}}));
+            catBase.presets.add(new Preset("z", "z", new int[][]{{1,3,5,6}}));
+            mPresetCategories.add(catBase);
+
+            PresetCategory catIt = new PresetCategory(getString(R.string.preset_cat_it_accents), "lowercase");
+            catIt.presets.add(new Preset("a grave", "à", new int[][]{{1,2,3,5,6}}));
+            catIt.presets.add(new Preset("e grave", "è", new int[][]{{2,3,4,6}}));
+            catIt.presets.add(new Preset("e acute", "é", new int[][]{{1,2,3,4,5,6}}));
+            catIt.presets.add(new Preset("i grave", "ì", new int[][]{{3,4}}));
+            catIt.presets.add(new Preset("o grave", "ò", new int[][]{{3,4,6}}));
+            catIt.presets.add(new Preset("u grave", "ù", new int[][]{{2,3,4,5,6}}));
+            mPresetCategories.add(catIt);
+
+            PresetCategory catFr = new PresetCategory("French (â, œ...)", "lowercase");
+            catFr.presets.add(new Preset("â (a circum)", "â", new int[][]{{1,6}}));
+            catFr.presets.add(new Preset("ê (e circum)", "ê", new int[][]{{1,2,6}}));
+            catFr.presets.add(new Preset("î (i circum)", "î", new int[][]{{1,4,6}}));
+            catFr.presets.add(new Preset("ô (o circum)", "ô", new int[][]{{1,4,5,6}}));
+            catFr.presets.add(new Preset("û (u circum)", "û", new int[][]{{1,5,6}}));
+            catFr.presets.add(new Preset("ç (c cedilla)", "ç", new int[][]{{1,2,3,4,6}}));
+            catFr.presets.add(new Preset("œ (oe ligature)", "œ", new int[][]{{2,4,6}}));
+            mPresetCategories.add(catFr);
+        } 
+        else if (scriptIndex == 1) { // CIRILLICO
+            PresetCategory catRu = new PresetCategory("Lettere Cirilliche", "lowercase");
+            catRu.presets.add(new Preset("а (a)", "а", new int[][]{{1}}));
+            catRu.presets.add(new Preset("б (b)", "б", new int[][]{{1,2}}));
+            catRu.presets.add(new Preset("в (v)", "в", new int[][]{{2,4,5,6}}));
+            catRu.presets.add(new Preset("г (g)", "г", new int[][]{{1,2,4,5}}));
+            catRu.presets.add(new Preset("д (d)", "д", new int[][]{{1,4,5}}));
+            catRu.presets.add(new Preset("е (e)", "е", new int[][]{{1,5}}));
+            catRu.presets.add(new Preset("ж (zh)", "ж", new int[][]{{2,4,5}}));
+            catRu.presets.add(new Preset("з (z)", "з", new int[][]{{1,3,5,6}}));
+            catRu.presets.add(new Preset("и (i)", "и", new int[][]{{2,4}}));
+            catRu.presets.add(new Preset("к (k)", "к", new int[][]{{1,3}}));
+            catRu.presets.add(new Preset("л (l)", "л", new int[][]{{1,2,3}}));
+            catRu.presets.add(new Preset("м (m)", "м", new int[][]{{1,3,4}}));
+            catRu.presets.add(new Preset("н (n)", "н", new int[][]{{1,3,4,5}}));
+            catRu.presets.add(new Preset("о (o)", "о", new int[][]{{1,3,5}}));
+            catRu.presets.add(new Preset("п (p)", "п", new int[][]{{1,2,3,4}}));
+            catRu.presets.add(new Preset("р (r)", "р", new int[][]{{1,2,3,5}}));
+            catRu.presets.add(new Preset("с (s)", "с", new int[][]{{2,3,4}}));
+            catRu.presets.add(new Preset("т (t)", "т", new int[][]{{2,3,4,5}}));
+            catRu.presets.add(new Preset("у (u)", "у", new int[][]{{1,3,6}}));
+            catRu.presets.add(new Preset("ф (f)", "ф", new int[][]{{1,2,4}}));
+            catRu.presets.add(new Preset("х (kh)", "х", new int[][]{{1,2,5}}));
+            catRu.presets.add(new Preset("ц (ts)", "ц", new int[][]{{1,4}}));
+            catRu.presets.add(new Preset("ч (ch)", "ч", new int[][]{{1,2,3,4,5}}));
+            catRu.presets.add(new Preset("ш (sh)", "ш", new int[][]{{1,5,6}}));
+            catRu.presets.add(new Preset("щ (shch)", "щ", new int[][]{{1,3,4,6}}));
+            catRu.presets.add(new Preset("ы (y)", "ы", new int[][]{{2,3,4,6}}));
+            catRu.presets.add(new Preset("э (e)", "э", new int[][]{{2,4,6}}));
+            catRu.presets.add(new Preset("ю (yu)", "ю", new int[][]{{1,2,5,6}}));
+            catRu.presets.add(new Preset("я (ya)", "я", new int[][]{{1,2,4,6}}));
+            mPresetCategories.add(catRu);
+        }
+        else if (scriptIndex == 2) { // GRECO
+            PresetCategory catEl = new PresetCategory("Lettere Greche", "lowercase");
+            catEl.presets.add(new Preset("alpha α", "α", new int[][]{{1}}));
+            catEl.presets.add(new Preset("beta β", "β", new int[][]{{1,2}}));
+            catEl.presets.add(new Preset("gamma γ", "γ", new int[][]{{1,2,4,5}}));
+            catEl.presets.add(new Preset("delta δ", "δ", new int[][]{{1,4,5}}));
+            catEl.presets.add(new Preset("epsilon ε", "ε", new int[][]{{1,5}}));
+            catEl.presets.add(new Preset("zeta ζ", "ζ", new int[][]{{1,3,5,6}}));
+            catEl.presets.add(new Preset("eta η", "η", new int[][]{{1,5,6}}));
+            catEl.presets.add(new Preset("theta θ", "θ", new int[][]{{1,4,5,6}}));
+            catEl.presets.add(new Preset("iota ι", "ι", new int[][]{{2,4}}));
+            catEl.presets.add(new Preset("kappa κ", "κ", new int[][]{{1,3}}));
+            catEl.presets.add(new Preset("lambda λ", "λ", new int[][]{{1,2,3}}));
+            catEl.presets.add(new Preset("mu μ", "μ", new int[][]{{1,3,4}}));
+            catEl.presets.add(new Preset("nu ν", "ν", new int[][]{{1,3,4,5}}));
+            catEl.presets.add(new Preset("xi ξ", "ξ", new int[][]{{1,3,4,6}}));
+            catEl.presets.add(new Preset("omicron ο", "ο", new int[][]{{1,3,5}}));
+            catEl.presets.add(new Preset("pi π", "π", new int[][]{{1,2,3,4}}));
+            catEl.presets.add(new Preset("rho ρ", "ρ", new int[][]{{1,2,3,5}}));
+            catEl.presets.add(new Preset("sigma σ", "σ", new int[][]{{2,3,4}}));
+            catEl.presets.add(new Preset("tau τ", "τ", new int[][]{{2,3,4,5}}));
+            catEl.presets.add(new Preset("upsilon υ", "υ", new int[][]{{1,3,6}}));
+            catEl.presets.add(new Preset("phi φ", "φ", new int[][]{{1,2,4}}));
+            catEl.presets.add(new Preset("chi χ", "χ", new int[][]{{1,2,3,4,6}}));
+            catEl.presets.add(new Preset("psi ψ", "ψ", new int[][]{{1,2,3,4,5}}));
+            catEl.presets.add(new Preset("omega ω", "ω", new int[][]{{2,4,5,6}}));
+            mPresetCategories.add(catEl);
+        }
+        else if (scriptIndex == 3) { // ARABO
+            PresetCategory catAr = new PresetCategory("Lettere Arabe", "lowercase");
+            catAr.presets.add(new Preset("alif ا", "ا", new int[][]{{1}}));
+            catAr.presets.add(new Preset("ba ب", "ب", new int[][]{{1,2}}));
+            catAr.presets.add(new Preset("ta ت", "ت", new int[][]{{2,3,4,5}}));
+            catAr.presets.add(new Preset("tha ث", "ث", new int[][]{{1,4,5,6}}));
+            catAr.presets.add(new Preset("jim ج", "ج", new int[][]{{2,4,5}}));
+            catAr.presets.add(new Preset("ha ح", "ح", new int[][]{{1,5,6}}));
+            catAr.presets.add(new Preset("kha خ", "خ", new int[][]{{1,3,4,6}}));
+            catAr.presets.add(new Preset("dal د", "د", new int[][]{{1,4,5}}));
+            catAr.presets.add(new Preset("dhal ذ", "ذ", new int[][]{{2,3,4,6}}));
+            catAr.presets.add(new Preset("ra ر", "ر", new int[][]{{1,2,3,5}}));
+            catAr.presets.add(new Preset("zain ز", "ز", new int[][]{{1,3,5,6}}));
+            catAr.presets.add(new Preset("sin س", "س", new int[][]{{2,3,4}}));
+            catAr.presets.add(new Preset("shin ش", "ش", new int[][]{{1,4,6}}));
+            catAr.presets.add(new Preset("sad ص", "ص", new int[][]{{1,2,3,4,6}}));
+            catAr.presets.add(new Preset("dad ض", "ض", new int[][]{{1,2,4,6}}));
+            catAr.presets.add(new Preset("ta ط", "ط", new int[][]{{2,3,4,5,6}}));
+            catAr.presets.add(new Preset("za ظ", "ظ", new int[][]{{1,2,3,4,5,6}}));
+            catAr.presets.add(new Preset("ain ع", "ع", new int[][]{{1,2,3,5,6}}));
+            catAr.presets.add(new Preset("ghain غ", "غ", new int[][]{{1,2,6}}));
+            catAr.presets.add(new Preset("fa ف", "ف", new int[][]{{1,2,4}}));
+            catAr.presets.add(new Preset("qaf ق", "ق", new int[][]{{1,2,3,4,5}}));
+            catAr.presets.add(new Preset("kaf ك", "ك", new int[][]{{1,3}}));
+            catAr.presets.add(new Preset("lam ل", "ل", new int[][]{{1,2,3}}));
+            catAr.presets.add(new Preset("mim م", "م", new int[][]{{1,3,4}}));
+            catAr.presets.add(new Preset("nun ن", "ن", new int[][]{{1,3,4,5}}));
+            catAr.presets.add(new Preset("ha ه", "ه", new int[][]{{1,2,5}}));
+            catAr.presets.add(new Preset("waw و", "و", new int[][]{{2,4,5,6}}));
+            catAr.presets.add(new Preset("ya ي", "ي", new int[][]{{2,4}}));
+            mPresetCategories.add(catAr);
+        }
+        else if (scriptIndex == 4) { // EBRAICO
+            PresetCategory catHe = new PresetCategory("Lettere Ebraiche", "lowercase");
+            catHe.presets.add(new Preset("alef א", "א", new int[][]{{1}}));
+            catHe.presets.add(new Preset("bet ב", "ב", new int[][]{{1,2}}));
+            catHe.presets.add(new Preset("gimel ג", "ג", new int[][]{{1,2,4,5}}));
+            catHe.presets.add(new Preset("dalet ד", "ד", new int[][]{{1,4,5}}));
+            catHe.presets.add(new Preset("he ה", "ה", new int[][]{{1,2,5}}));
+            catHe.presets.add(new Preset("vav ו", "ו", new int[][]{{2,4,5,6}}));
+            catHe.presets.add(new Preset("zayin ז", "ז", new int[][]{{1,3,5,6}}));
+            catHe.presets.add(new Preset("het ח", "ח", new int[][]{{1,3,4,6}}));
+            catHe.presets.add(new Preset("tet ט", "ט", new int[][]{{2,3,4,5,6}}));
+            catHe.presets.add(new Preset("yod י", "י", new int[][]{{2,4}}));
+            catHe.presets.add(new Preset("kaf כ", "כ", new int[][]{{1,3}}));
+            catHe.presets.add(new Preset("lamed ל", "ל", new int[][]{{1,2,3}}));
+            catHe.presets.add(new Preset("mem מ", "מ", new int[][]{{1,3,4}}));
+            catHe.presets.add(new Preset("nun נ", "נ", new int[][]{{1,3,4,5}}));
+            catHe.presets.add(new Preset("samekh ס", "ס", new int[][]{{2,3,4}}));
+            catHe.presets.add(new Preset("ayin ע", "ע", new int[][]{{1,2,3,5,6}}));
+            catHe.presets.add(new Preset("pe פ", "פ", new int[][]{{1,2,4}}));
+            catHe.presets.add(new Preset("tsadi צ", "צ", new int[][]{{1,2,3,4,6}}));
+            catHe.presets.add(new Preset("qof ק", "ק", new int[][]{{1,2,3,4,5}}));
+            catHe.presets.add(new Preset("resh ר", "ר", new int[][]{{1,2,3,5}}));
+            catHe.presets.add(new Preset("shin ש", "ש", new int[][]{{1,4,6}}));
+            catHe.presets.add(new Preset("tav ת", "ת", new int[][]{{2,3,4,5}}));
+            mPresetCategories.add(catHe);
+        }
+        else if (scriptIndex == 5) { // HINDI (DEVANAGARI)
+            PresetCategory catHi = new PresetCategory("Lettere Devanagari", "lowercase");
+            catHi.presets.add(new Preset("a अ", "अ", new int[][]{{1}}));
+            catHi.presets.add(new Preset("aa आ", "आ", new int[][]{{3,4,5}}));
+            catHi.presets.add(new Preset("i इ", "इ", new int[][]{{2,4}}));
+            catHi.presets.add(new Preset("ii ई", "ई", new int[][]{{3,5}}));
+            catHi.presets.add(new Preset("u उ", "उ", new int[][]{{1,3,6}}));
+            catHi.presets.add(new Preset("uu ऊ", "ऊ", new int[][]{{1,2,5,6}}));
+            catHi.presets.add(new Preset("ka क", "क", new int[][]{{1,3}}));
+            catHi.presets.add(new Preset("kha ख", "ख", new int[][]{{4,6}}));
+            catHi.presets.add(new Preset("ga ग", "ग", new int[][]{{1,2,4,5}}));
+            catHi.presets.add(new Preset("gha घ", "घ", new int[][]{{1,2,6}}));
+            catHi.presets.add(new Preset("ca च", "च", new int[][]{{1,4}}));
+            catHi.presets.add(new Preset("cha छ", "छ", new int[][]{{1,6}}));
+            catHi.presets.add(new Preset("ja ज", "ज", new int[][]{{2,4,5}}));
+            catHi.presets.add(new Preset("jha झ", "झ", new int[][]{{3,5,6}}));
+            catHi.presets.add(new Preset("ta ट", "ट", new int[][]{{2,3,4,5,6}}));
+            catHi.presets.add(new Preset("tha ठ", "ठ", new int[][]{{2,4,5,6}}));
+            catHi.presets.add(new Preset("da ड", "ड", new int[][]{{1,2,4,6}}));
+            catHi.presets.add(new Preset("dha ढ", "ढ", new int[][]{{1,2,3,4,5,6}}));
+            catHi.presets.add(new Preset("ta त", "त", new int[][]{{2,3,4,5}}));
+            catHi.presets.add(new Preset("tha थ", "थ", new int[][]{{1,4,5,6}}));
+            catHi.presets.add(new Preset("da द", "द", new int[][]{{1,4,5}}));
+            catHi.presets.add(new Preset("dha ध", "ध", new int[][]{{2,3,4,6}}));
+            catHi.presets.add(new Preset("na न", "न", new int[][]{{1,3,4,5}}));
+            catHi.presets.add(new Preset("pa प", "प", new int[][]{{1,2,3,4}}));
+            catHi.presets.add(new Preset("pha फ", "फ", new int[][]{{2,3,5}}));
+            catHi.presets.add(new Preset("ba ब", "ब", new int[][]{{1,2}}));
+            catHi.presets.add(new Preset("bha भ", "भ", new int[][]{{4,5}}));
+            catHi.presets.add(new Preset("ma म", "म", new int[][]{{1,3,4}}));
+            catHi.presets.add(new Preset("ya य", "य", new int[][]{{1,3,4,5,6}}));
+            catHi.presets.add(new Preset("ra र", "र", new int[][]{{1,2,3,5}}));
+            catHi.presets.add(new Preset("la ल", "ल", new int[][]{{1,2,3}}));
+            catHi.presets.add(new Preset("va व", "व", new int[][]{{1,2,3,6}}));
+            mPresetCategories.add(catHi);
+        }
+        else if (scriptIndex == 6) { // COREANO
+            PresetCategory catKo = new PresetCategory("Lettere Hangul (Jamo)", "lowercase");
+            catKo.presets.add(new Preset("ㄱ (k/g)", "ㄱ", new int[][]{{4}}));
+            catKo.presets.add(new Preset("ㄴ (n)", "ㄴ", new int[][]{{1,4}}));
+            catKo.presets.add(new Preset("ㄷ (t/d)", "ㄷ", new int[][]{{2,4}}));
+            catKo.presets.add(new Preset("ㄹ (r/l)", "ㄹ", new int[][]{{2}}));
+            catKo.presets.add(new Preset("ㅁ (m)", "ㅁ", new int[][]{{1,5}}));
+            catKo.presets.add(new Preset("ㅂ (p/b)", "ㅂ", new int[][]{{4,5}}));
+            catKo.presets.add(new Preset("ㅅ (s)", "ㅅ", new int[][]{{6}}));
+            catKo.presets.add(new Preset("ㅇ (ng)", "ㅇ", new int[][]{{1,2,4,5}}));
+            catKo.presets.add(new Preset("ㅈ (ch/j)", "ㅈ", new int[][]{{4,6}}));
+            catKo.presets.add(new Preset("ㅎ (h)", "ㅎ", new int[][]{{2,4,5}}));
+            catKo.presets.add(new Preset("ㅏ (a)", "ㅏ", new int[][]{{1,2,6}}));
+            catKo.presets.add(new Preset("ㅓ (eo)", "ㅓ", new int[][]{{2,3,4}}));
+            catKo.presets.add(new Preset("ㅗ (o)", "ㅗ", new int[][]{{1,3,6}}));
+            catKo.presets.add(new Preset("ㅜ (u)", "ㅜ", new int[][]{{1,2,3,4}}));
+            mPresetCategories.add(catKo);
+        }
+        else if (scriptIndex == 7) { // VIETNAMITA
+            PresetCategory catVi = new PresetCategory("Lettere Vietnamite", "lowercase");
+            catVi.presets.add(new Preset("ă (a breve)", "ă", new int[][]{{3,4,5,6}}));
+            catVi.presets.add(new Preset("â (a circum)", "â", new int[][]{{1,2,3,5,6}}));
+            catVi.presets.add(new Preset("đ (d bar)", "đ", new int[][]{{2,3,4,5,6}}));
+            catVi.presets.add(new Preset("ê (e circum)", "ê", new int[][]{{1,2,6}}));
+            catVi.presets.add(new Preset("ô (o circum)", "ô", new int[][]{{1,4,5}}));
+            catVi.presets.add(new Preset("ơ (o horn)", "ơ", new int[][]{{2,4,6}}));
+            catVi.presets.add(new Preset("ư (u horn)", "ư", new int[][]{{1,2,3,4,6}}));
+            mPresetCategories.add(catVi);
+        }
+        else if (scriptIndex == 8) { // THAILANDESE
+            PresetCategory catTh = new PresetCategory("Lettere Thai", "lowercase");
+            catTh.presets.add(new Preset("ko kai ก", "ก", new int[][]{{1,2,4,5}}));
+            catTh.presets.add(new Preset("kho khai ข", "ข", new int[][]{{1,3}}));
+            catTh.presets.add(new Preset("kho khwai ค", "ค", new int[][]{{1,2,3,5}}));
+            catTh.presets.add(new Preset("ngo ngu ง", "ง", new int[][]{{3,4,5}}));
+            catTh.presets.add(new Preset("cho chan จ", "จ", new int[][]{{1,4}}));
+            catTh.presets.add(new Preset("yo yak ย", "ย", new int[][]{{1,3,4,5,6}}));
+            catTh.presets.add(new Preset("ro ruea ร", "ร", new int[][]{{1,2,3,5}}));
+            catTh.presets.add(new Preset("lo ling ล", "ล", new int[][]{{1,2,3}}));
+            catTh.presets.add(new Preset("wo waen ว", "ว", new int[][]{{2,4,5,6}}));
+            mPresetCategories.add(catTh);
+        }
+        else if (scriptIndex == 9) { // UNICODE / SIMBOLI
+            PresetCategory catSym = new PresetCategory("Simboli Vari", "sign");
+            catSym.presets.add(new Preset("Grado °", "°", new int[][]{{4,5,6}, {2,4,5}}));
+            catSym.presets.add(new Preset("Copyright ©", "©", new int[][]{{4,5,6}, {1,4}}));
+            catSym.presets.add(new Preset("Marchio ®", "®", new int[][]{{4,5,6}, {1,2,3,5}}));
+            catSym.presets.add(new Preset("Frecce ←↑→↓", "→", new int[][]{{2,5}, {1,3,5}}));
+            catSym.presets.add(new Preset("Cuore ♥", "♥", new int[][]{{4,5,6}, {1,2,3}}));
+            mPresetCategories.add(catSym);
+        }
+
+        // --- Categorie di Controllo ---
+        PresetCategory catControl = new PresetCategory("Controllo (6-pt)", "capsletter");
         catControl.presets.add(new Preset("Segnamaiuscola", "", new int[][]{{4,6}}));
         catControl.presets.add(new Preset("Segnanumero", "", new int[][]{{3,4,5,6}}));
         catControl.presets.add(new Preset("Segnalettera", "", new int[][]{{5}}));
@@ -603,21 +896,218 @@ public class TableCreatorActivity extends Activity {
         }
     }
 
+    private void finishMappingAction() {
+        refreshSpinner();
+        mCharEdit.setText(""); mCurrentPatterns.clear(); updateDotsDisplay();
+    }
+
+    private String getDotsString(List<Integer> patterns) {
+        StringBuilder sb = new StringBuilder();
+        for (int i=0; i<patterns.size(); i++) {
+            if (i>0) sb.append("-");
+            sb.append(patternToDotsString(patterns.get(i)));
+        }
+        return sb.toString();
+    }
+
+    private int findDuplicateDots(String dots) {
+        // 1. Check current manual mappings
+        for (int i = 0; i < mMappings.size(); i++) {
+            if (getDotsString(mMappings.get(i).patterns).equals(dots)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private String findDuplicateInPresets(String dots) {
+        // 2. Check current script presets
+        for (PresetCategory cat : mPresetCategories) {
+            for (Preset p : cat.presets) {
+                if (getDotsString(patternsFromCells(p.getCells(mEightDotCheck.isChecked()))).equals(dots)) {
+                    return p.label;
+                }
+            }
+        }
+        return null;
+    }
+
+    private List<Integer> patternsFromCells(int[][] cells) {
+        List<Integer> pts = new ArrayList<>();
+        for (int[] cell : cells) {
+            int p = 0;
+            for (int d : cell) p |= (1 << (d - 1));
+            pts.add(p);
+        }
+        return pts;
+    }
+
+    private void showDuplicateDialog(final Mapping newMapping, final int existingIndex) {
+        String dots = getDotsString(newMapping.patterns);
+        String existingChar = mMappings.get(existingIndex).character;
+        showDuplicateDialogInternal(newMapping, dots, existingChar, false);
+    }
+
+    private void showDuplicateDialogInternal(final Mapping newMapping, String dots, String existingName, boolean isPreset) {
+        String msg = String.format(getString(R.string.msg_duplicate_dots), dots, existingName);
+        if (isPreset) msg += "\n\n(Carattere standard del set selezionato. La tua scelta avrà la precedenza nella scrittura.)";
+
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Combinazione Duplicata");
+        b.setMessage(msg);
+        
+        b.setNegativeButton(R.string.btn_cancel, null);
+
+        // Option 1: Overwrite / Add anyway
+        b.setPositiveButton(isPreset ? R.string.btn_overwrite : R.string.btn_add_anyway, (dialog, which) -> {
+            if (mEditingIndex != -1) {
+                mMappings.remove(mEditingIndex);
+            }
+            mMappings.add(newMapping);
+            mEditingIndex = -1;
+            mAddMappingBtn.setText("Add mapping to list");
+            finishMappingAction();
+        });
+
+        // Option 2: Add Prefix (New Feature)
+        b.setNeutralButton(R.string.btn_add_prefix, (dialog, which) -> showPrefixSelector(newMapping));
+
+        // Option 3: Insert Before (Only for manual mapping conflicts)
+        if (!isPreset) {
+            // We can't have 4 buttons, so we'll use a custom layout or just handle it via Add anyway
+            // For now, let's stick to the most useful ones. 
+            // If the user wants "Insert Before", they can use the list management.
+        }
+
+        b.show();
+    }
+
+    private void showPrefixSelector(final Mapping mapping) {
+        int dotCount = mEightDotCheck.isChecked() ? 8 : 6;
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle(R.string.title_select_prefix);
+        
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(40, 20, 40, 20);
+
+        final EditText dotEdit = new EditText(this);
+        dotEdit.setHint(R.string.hint_enter_dots);
+        dotEdit.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        layout.addView(dotEdit);
+
+        GridLayout g = new GridLayout(this);
+        g.setColumnCount(2);
+        int[] order = (dotCount == 6) ? new int[]{1, 4, 2, 5, 3, 6} : new int[]{1, 4, 2, 5, 3, 6, 7, 8};
+        CheckBox[] boxes = new CheckBox[dotCount];
+        for (int i=0; i<dotCount; i++) {
+            boxes[i] = new CheckBox(this);
+            boxes[i].setText(String.format(getString(R.string.label_dot), order[i]));
+            final int dotNum = order[i];
+            boxes[i].setOnCheckedChangeListener((buttonView, isChecked) -> {
+                String current = dotEdit.getText().toString();
+                if (isChecked) {
+                    if (!current.contains(String.valueOf(dotNum))) {
+                        List<Integer> dots = new ArrayList<>();
+                        for (char c : current.toCharArray()) dots.add(Character.getNumericValue(c));
+                        dots.add(dotNum);
+                        Collections.sort(dots);
+                        StringBuilder sb = new StringBuilder();
+                        for (int d : dots) if (d >= 1 && d <= 8) sb.append(d);
+                        dotEdit.setText(sb.toString());
+                    }
+                } else {
+                    dotEdit.setText(current.replace(String.valueOf(dotNum), ""));
+                }
+            });
+            g.addView(boxes[i]);
+        }
+        
+        dotEdit.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                String text = s.toString();
+                for (int i=0; i<dotCount; i++) {
+                    int dotNum = order[i];
+                    boxes[i].setChecked(text.contains(String.valueOf(dotNum)));
+                }
+            }
+        });
+
+        layout.addView(g);
+        b.setView(layout);
+        
+        b.setPositiveButton("OK", (d, w) -> {
+            String text = dotEdit.getText().toString();
+            int prefixPattern = 0;
+            for (char c : text.toCharArray()) {
+                int dot = Character.getNumericValue(c);
+                if (dot >= 1 && dot <= 8) prefixPattern |= (1 << (dot - 1));
+            }
+            
+            if (prefixPattern > 0) {
+                List<Integer> newPatterns = new ArrayList<>();
+                newPatterns.add(prefixPattern);
+                newPatterns.addAll(mapping.patterns);
+                
+                Mapping prefixedMapping = new Mapping(mapping.opcode, mapping.character, newPatterns);
+                if (mEditingIndex != -1) {
+                    mMappings.remove(mEditingIndex);
+                }
+                mMappings.add(prefixedMapping);
+                mEditingIndex = -1;
+                mAddMappingBtn.setText("Add mapping to list");
+                finishMappingAction();
+            }
+        });
+        b.setNegativeButton(R.string.btn_cancel, null);
+        b.show();
+    }
+
+    // Refactored addOrUpdateMapping to use the new checks
     private void addOrUpdateMapping() {
         String opcode = OPCODES[mOpcodeSpinner.getSelectedItemPosition()];
         String character = mCharEdit.getText().toString();
         if (mCurrentPatterns.isEmpty()) { Toast.makeText(this, "Please add dots first", Toast.LENGTH_SHORT).show(); return; }
         
-        Mapping m = new Mapping(opcode, character, new ArrayList<>(mCurrentPatterns));
-        if (mEditingIndex != -1) { 
-            mMappings.set(mEditingIndex, m); 
-            mEditingIndex = -1; 
-            mAddMappingBtn.setText("Add mapping to list"); 
-        } else { 
-            mMappings.add(m); 
+        Mapping newMapping = new Mapping(opcode, character, new ArrayList<>(mCurrentPatterns));
+        String newDots = getDotsString(newMapping.patterns);
+        
+        int duplicateIndex = findDuplicateDots(newDots);
+        
+        // If we are editing an existing mapping and the dots haven't changed, just update
+        if (mEditingIndex != -1 && duplicateIndex == mEditingIndex) {
+            mMappings.set(mEditingIndex, newMapping);
+            mEditingIndex = -1;
+            mAddMappingBtn.setText("Add mapping to list");
+            finishMappingAction();
+            return;
         }
-        refreshSpinner();
-        mCharEdit.setText(""); mCurrentPatterns.clear(); updateDotsDisplay();
+
+        // Check for duplicates in other manual mappings
+        if (duplicateIndex != -1) {
+            showDuplicateDialog(newMapping, duplicateIndex);
+            return;
+        } 
+        
+        // Check for duplicates in active script presets
+        String presetName = findDuplicateInPresets(newDots);
+        if (presetName != null) {
+            showDuplicateDialogInternal(newMapping, newDots, presetName, true);
+            return;
+        }
+
+        // No duplicates found, just add/update
+        if (mEditingIndex != -1) {
+            mMappings.set(mEditingIndex, newMapping);
+            mEditingIndex = -1;
+            mAddMappingBtn.setText("Add mapping to list");
+        } else {
+            mMappings.add(newMapping);
+        }
+        finishMappingAction();
     }
 
     private void loadMapping(int index) {
@@ -662,6 +1152,16 @@ public class TableCreatorActivity extends Activity {
         int dotCount = mEightDotCheck.isChecked() ? 8 : 6;
         AlertDialog.Builder b = new AlertDialog.Builder(this);
         b.setTitle(R.string.label_dots_dialog);
+        
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(40, 20, 40, 20);
+
+        final EditText dotEdit = new EditText(this);
+        dotEdit.setHint(R.string.hint_enter_dots);
+        dotEdit.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        layout.addView(dotEdit);
+
         GridLayout g = new GridLayout(this);
         g.setColumnCount(2);
         int[] order = (dotCount == 6) ? new int[]{1, 4, 2, 5, 3, 6} : new int[]{1, 4, 2, 5, 3, 6, 7, 8};
@@ -669,12 +1169,50 @@ public class TableCreatorActivity extends Activity {
         for (int i=0; i<dotCount; i++) {
             boxes[i] = new CheckBox(this);
             boxes[i].setText(String.format(getString(R.string.label_dot), order[i]));
+            final int dotNum = order[i];
+            boxes[i].setOnCheckedChangeListener((buttonView, isChecked) -> {
+                String current = dotEdit.getText().toString();
+                if (isChecked) {
+                    if (!current.contains(String.valueOf(dotNum))) {
+                        // Keep dots sorted for clarity
+                        List<Integer> dots = new ArrayList<>();
+                        for (char c : current.toCharArray()) dots.add(Character.getNumericValue(c));
+                        dots.add(dotNum);
+                        Collections.sort(dots);
+                        StringBuilder sb = new StringBuilder();
+                        for (int d : dots) if (d >= 1 && d <= 8) sb.append(d);
+                        dotEdit.setText(sb.toString());
+                    }
+                } else {
+                    dotEdit.setText(current.replace(String.valueOf(dotNum), ""));
+                }
+            });
             g.addView(boxes[i]);
         }
-        b.setView(g);
+        
+        dotEdit.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(android.text.Editable s) {
+                String text = s.toString();
+                for (int i=0; i<dotCount; i++) {
+                    int dotNum = order[i];
+                    boxes[i].setChecked(text.contains(String.valueOf(dotNum)));
+                }
+            }
+        });
+
+        layout.addView(g);
+        b.setView(layout);
+        
         b.setPositiveButton("OK", (d, w) -> {
+            String text = dotEdit.getText().toString();
             int p = 0;
-            for (int i=0; i<dotCount; i++) if (boxes[i].isChecked()) p |= (1 << (order[i]-1));
+            for (char c : text.toCharArray()) {
+                int dot = Character.getNumericValue(c);
+                if (dot >= 1 && dot <= 8) p |= (1 << (dot - 1));
+            }
             if (p > 0) {
                 if (!append) mCurrentPatterns.clear();
                 mCurrentPatterns.add(p); updateDotsDisplay();
@@ -700,31 +1238,12 @@ public class TableCreatorActivity extends Activity {
         String author = mAuthorEdit.getText().toString().trim();
         if (!author.isEmpty()) sb.append("# Author: ").append(author).append("\n");
         String desc = mDescriptionEdit.getText().toString().trim();
-        if (!desc.isEmpty()) sb.append("# Description: ").append(desc).append("\n");
-        sb.append("\ninclude unicode.dis\n");
-        
-        int basePos = mBaseTableSpinner.getSelectedItemPosition();
-        if (basePos > 0) {
-            sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
-        } else {
-            sb.append(mEightDotCheck.isChecked() ? "include latinLetterDef8Dots.uti\n" : "include latinLetterDef6Dots.uti\n");
-            sb.append("space \\x0020 0\nspace \\x00a0 0\n");
-        }
+        if (!desc.isEmpty()) sb.append("# Description: ").append(desc).append("\n\n");
 
-        int numSys = mNumSystemGroup.getCheckedRadioButtonId();
-        if (numSys == NUM_CLASSIC) {
-            sb.append("include digits6Dots.uti\n");
-            sb.append("include litdigits6Dots.uti\n");
-            sb.append("numsign 3456\n");
-        } else if (numSys == NUM_ANTOINE) {
-            sb.append("include digits6DotsPlusDot6.uti\n");
-            sb.append("include litdigits6DotsPlusDot6.uti\n");
-            sb.append("numsign 6\n");
-        }
-
-        sb.append("include braille-patterns.cti\n\n# Custom Mappings\n");
+        sb.append("# --- PRIORITY CUSTOM MAPPINGS ---\n");
+        sb.append("# (Written first to ensure back-translation priority)\n\n");
         
-        // Build numeric indicators lists
+        // Build numeric indicators lists (these stay near the top)
         StringBuilder numericModeChars = new StringBuilder();
         StringBuilder midEndNumericModeChars = new StringBuilder();
 
@@ -744,9 +1263,7 @@ public class TableCreatorActivity extends Activity {
         }
 
         for (Mapping m : mMappings) {
-            // Already handled these as aggregate indicators
             if (m.opcode.equals("numericmodechars") || m.opcode.equals("midendnumericmodechars")) {
-                // We still write the base mapping (math or punctuation) for these
                 if (m.character == null || m.character.isEmpty()) continue;
                 String cPart = m.character;
                 if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
@@ -757,10 +1274,9 @@ public class TableCreatorActivity extends Activity {
                     dots.append(patternToDotsString(m.patterns.get(i)));
                 }
                 
-                // Automatic fallback: if it's a math-like symbol, define it as math too
                 String fallbackOp = "+-/×÷=<>±^~≈≠≤≥∞√¬*".indexOf(m.character) != -1 ? "math" : "punctuation";
-                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
                 sb.append(fallbackOp).append(" ").append(cPart).append(" ").append(dots).append("\n");
+                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
                 continue;
             }
 
@@ -769,6 +1285,7 @@ public class TableCreatorActivity extends Activity {
                 if (i > 0) dots.append("-");
                 dots.append(patternToDotsString(m.patterns.get(i)));
             }
+            
             boolean stand = m.opcode.equals("numsign") || m.opcode.equals("capsletter") || m.opcode.startsWith("beg") || m.opcode.startsWith("end") || m.opcode.equals("space") || m.opcode.equals("letsign");
             if (stand) {
                 sb.append(m.opcode).append(" ").append(dots).append("\n");
@@ -778,21 +1295,59 @@ public class TableCreatorActivity extends Activity {
                 if (cPart.length() == 1) {
                     cPart = String.format("\\x%04x", (int)cPart.charAt(0));
                 }
-                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
                 
-                // For midnum, also add a fallback definition
-                if (m.opcode.equals("midnum") && m.character.length() == 1) {
-                    String fallbackOp = "+-/×÷=<>±^~≈≠≤≥∞√¬*".indexOf(m.character) != -1 ? "math" : "punctuation";
-                    sb.append(fallbackOp).append(" ").append(cPart).append(" ").append(dots).append("\n");
-                }
+                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
 
-                if (!mEightDotCheck.isChecked() && m.opcode.equals("lowercase") && m.character.length() == 1) {
-                    char c = m.character.charAt(0);
-                    char upper = Character.toUpperCase(c);
-                    if (upper != c) sb.append("base uppercase ").append(String.format("\\x%04x", (int)upper)).append(" ").append(String.format("\\x%04x", (int)c)).append("\n");
+                // AUTOMATIC UPPERCASE MAPPING:
+                // If this is a single lowercase letter, define its base relationship for Liblouis global rules.
+                if (m.character.length() == 1) {
+                    char lowChar = m.character.charAt(0);
+                    if (Character.isLowerCase(lowChar)) {
+                        char upperChar = Character.toUpperCase(lowChar);
+                        if (upperChar != lowChar) {
+                            sb.append("base uppercase ").append(String.format("\\x%04x", (int)upperChar))
+                              .append(" ").append(String.format("\\x%04x", (int)lowChar)).append("\n");
+                        }
+                    }
                 }
             }
         }
+
+        sb.append("\n# --- SYSTEM INCLUDES ---\n");
+        sb.append("include unicode.dis\n");
+        
+        int basePos = mBaseTableSpinner.getSelectedItemPosition();
+        if (basePos > 0) {
+            sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
+        }
+
+        // Include Base Script
+        boolean is8dot = mEightDotCheck.isChecked();
+        String scriptFile = is8dot ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
+        sb.append("include ").append(scriptFile).append("\n");
+        
+        if (scriptFile.contains("latinLetterDef6Dots.uti")) {
+             sb.append("space \\x0020 0\nspace \\x00a0 0\n");
+        }
+
+        int numSys = mNumSystemSpinner.getSelectedItemPosition();
+        if (numSys == NUM_CLASSIC) {
+            sb.append("include digits6Dots.uti\n");
+            sb.append("include litdigits6Dots.uti\n");
+            sb.append("numsign 3456\n");
+        } else if (numSys == NUM_ANTOINE) {
+            sb.append("include digits6DotsPlusDot6.uti\n");
+            sb.append("include litdigits6DotsPlusDot6.uti\n");
+            sb.append("numsign 6\n");
+        } else if (numSys == NUM_DROPPED) {
+            sb.append("include digits6Dots.uti\n");
+            sb.append("include litdigits6Dots.uti\n");
+            sb.append("numsign 3456\n");
+        } else if (numSys == NUM_8DOT) {
+            sb.append("include digits8Dots.uti\n");
+        }
+
+        sb.append("include braille-patterns.cti\n");
 
         try {
             CustomTableManager manager = new CustomTableManager(this);
