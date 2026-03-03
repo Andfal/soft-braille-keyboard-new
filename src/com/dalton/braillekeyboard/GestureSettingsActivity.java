@@ -30,7 +30,6 @@ public class GestureSettingsActivity extends PreferenceActivity {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 getPreferenceManager().setStorageDeviceProtected();
             }
-            getPreferenceManager().setSharedPreferencesName(Options.getSharedPreferencesName(getActivity()));
 
             PreferenceScreen screen = getPreferenceManager().createPreferenceScreen(getActivity());
             setPreferenceScreen(screen);
@@ -111,12 +110,14 @@ public class GestureSettingsActivity extends PreferenceActivity {
         }
 
         private void resetToDefaults() {
+            android.content.SharedPreferences.Editor editor = Options.getSharedPreferences(getActivity()).edit();
             for (Swipe swipe : Swipe.values()) {
                 if (swipe == Swipe.NONE || swipe == Swipe.UNKNOWN) continue;
                 String key = "pref_gesture_" + swipe.name().toLowerCase();
                 GestureAction defaultValue = GestureManager.getDefaultAction(swipe);
-                Options.writeStringPreference(getActivity(), key, defaultValue.name());
+                editor.putString(key, defaultValue.name());
             }
+            editor.commit();
             Toast.makeText(getActivity(), R.string.gestures_reset_done, Toast.LENGTH_SHORT).show();
             getFragmentManager().beginTransaction().replace(android.R.id.content, new GestureSettingsFragment()).commit();
         }

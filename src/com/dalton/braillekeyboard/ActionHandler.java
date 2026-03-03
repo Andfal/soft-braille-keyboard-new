@@ -328,11 +328,11 @@ public class ActionHandler {
         case CYCLE_FEEDBACK_MODE:
             KeyboardFeedback feedback = KeyboardFeedback.valueOf(Integer
                     .parseInt(Options.getStringPreference(context,
-                            context.getString(R.string.pref_keyboard_feedback_key),
+                            R.string.pref_keyboard_feedback_key,
                             KeyboardFeedback.ALL.getValue())));
             feedback = KeyboardFeedback.next(feedback);
             Options.writeStringPreference(context,
-                    context.getString(R.string.pref_keyboard_feedback_key), feedback.getValue());
+                    R.string.pref_keyboard_feedback_key, feedback.getValue());
             message = context.getString(feedback.resource);
             break;
         case READ_CHARACTER:
@@ -352,11 +352,11 @@ public class ActionHandler {
         case CYCLE_ECHO_MODE:
             KeyboardEcho echo = KeyboardEcho.valueOf(Integer.parseInt(Options
                     .getStringPreference(context,
-                            context.getString(R.string.pref_echo_feedback_key),
+                            R.string.pref_echo_feedback_key,
                             KeyboardEcho.CHARACTER.getValue())));
             echo = KeyboardEcho.next(echo);
             Options.writeStringPreference(context,
-                    context.getString(R.string.pref_echo_feedback_key), echo.getValue());
+                    R.string.pref_echo_feedback_key, echo.getValue());
             message = context.getString(echo.resource);
             break;
         case CLOSE_KEYBOARD:
@@ -526,137 +526,6 @@ public class ActionHandler {
         lastSwipe = value;
         return true;
     }
-                    emojiMode = false;
-                } else {
-                    message = "No emoji to insert";
-                }
-                break;
-            }
-            selectAction(context);
-            break;
-        case SIX_DOWN:
-            if (listener.getDots() == 8) {
-                setDots = true;
-                dots[1] = true;
-            } else {
-                message = context.getString(R.string.unknown_character);
-            }
-            break;
-        case EMOJI_MODE:
-            emojiMode = !emojiMode;
-            if (emojiMode) {
-                emojiSearchQuery.setLength(0);
-                emojiResults.clear();
-                emojiIndex = 0;
-                Locale locale = listener.getLocale();
-                String langName = locale != null ? locale.getDisplayLanguage() : "English";
-                message = "Emoji search mode on (" + langName + ")";
-            } else {
-                message = "Emoji search mode off";
-            }
-            break;
-        case AUTOCAPS_TOGGLE:
-            Options.switchBooleanPreference(context,
-                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
-                            .getString(R.string.pref_auto_caps_default)));
-            message = Options.getBooleanPreference(context,
-                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
-                            .getString(R.string.pref_auto_caps_default))) ? context
-                    .getString(R.string.auto_caps_enabled) : context
-                    .getString(R.string.auto_caps_disabled);
-            break;
-        case HOLD_SIX_LEFT:
-            moveLeft(context, Granularity.ALL);
-            break;
-        case HOLD_SIX_RIGHT:
-            moveRight(context, Granularity.ALL);
-            break;
-        case HOLD_SIX_DOWN:
-            boolean echoPassword = Options.switchBooleanPreference(context,
-                    R.string.pref_echo_passwords_key, false);
-            message = echoPassword ? context
-                    .getString(R.string.speak_passwords) : context
-                    .getString(R.string.no_password_echo);
-            break;
-        case HOLD_SIX_UP:
-            message = getInput(Granularity.ALL);
-            considerPassword = true;
-            break;
-        case HOLD_THREE_LEFT:
-            backspace(context, Granularity.ALL, fastDoubleSwipe);
-            break;
-        case HOLD_THREE_RIGHT:
-            int brailleType = listener.switchBrailleType();
-            message = brailleType == 8 ? context
-                    .getString(R.string.grade_computer) : context
-                    .getString(R.string.grade_literary);
-            callback.onSetLocale(listener.getLocale());
-            break;
-        case HOLD_THREE_DOWN:
-            message = listener.switchTable();
-            message = message == null ? context
-                    .getString(R.string.no_braille_table) : message;
-            callback.onSetLocale(listener.getLocale());
-            break;
-        case HOLD_THREE_UP:
-            doVoiceInput(context, fastDoubleSwipe);
-            break;
-        case HOLD_ONE_RIGHT:
-            message = context
-                    .getString(listener.toggleMark() ? R.string.set_mark
-                            : R.string.unset_mark);
-            break;
-        case HOLD_ONE_LEFT:
-            message = context.getString(R.string.keyboard_shrink);
-            callback.onShrink();
-            break;
-        case HOLD_ONE_DOWN:
-            CharSequence text = listener.getAllText().text;
-            if (text != null) {
-                message = String.format(context.getString(R.string.word_count),
-                        EditingUtilities.lineCount(text),
-                        EditingUtilities.wordCount(text),
-                        EditingUtilities.characterCount(text));
-            }
-            break;
-        case HOLD_ONE_UP:
-            break;
-        case HOLD_FOUR_LEFT:
-            doSpellCheck(context, SpellChecker.Direction.LEFT, 0,
-                    listener.getCursor());
-            break;
-        case HOLD_FOUR_RIGHT:
-            doSpellCheck(context, SpellChecker.Direction.RIGHT, 0,
-                    listener.getCursor());
-            break;
-        case HOLD_FOUR_DOWN:
-            nextSpellCheckSuggestion(context);
-            break;
-        case HOLD_FOUR_UP:
-            previousSpellCheckSuggestion(context);
-            break;
-        case NONE:
-            return false;
-        default:
-            notify = false;
-        }
-
-        // Invoke the notification callback
-        callback.onNotify(notify, notify);
-        if (message != null) {
-            // Only invoke onText callback if there is a message to send i.e. it
-            // wasn't already handled.
-            callback.onText("%s", message,
-                    considerPassword ? listener.isPasswordField() : false);
-        }
-
-        if (setDots) { // Dots 7 or 8 were triggered
-            callback.onSetDots(dots[0], dots[1]);
-        }
-
-        lastSwipe = value; // update the last swipe
-        return true;
-    }
 
     private boolean handleEmojiSwipe(Context context, Swipe value) {
         switch (value) {
@@ -705,8 +574,7 @@ public class ActionHandler {
     }
 
     /**
-     * Handle typing a Braille character into the underlying IME.
- The character
+     * Handle typing a Braille character into the underlying IME. The character
      * is delivered as a byte value representing the dot pattern and will be
      * converted and written as a standard textual character by the IME.
      * 
