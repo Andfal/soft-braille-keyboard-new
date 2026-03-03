@@ -255,12 +255,12 @@ public class TableCreatorActivity extends Activity {
         mOpcodeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
+                if (mIsUpdatingUI) return;
+                mIsUpdatingUI = true;
                 String op = OPCODES[pos];
                 boolean isStand = op.equals("numsign") || op.equals("capsletter") || op.startsWith("beg") || op.startsWith("end") || op.equals("space") || op.equals("letsign");
-                // begnum and endnum can be standalone or have a character depending on usage,
-                // but usually they act as standalone indicators in simple tables.
-                // However, numericmodechars and midendnumericmodechars ALWAYS need characters.
                 mCharEdit.setVisibility(isStand ? View.GONE : View.VISIBLE);
+                mIsUpdatingUI = false;
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
@@ -271,16 +271,18 @@ public class TableCreatorActivity extends Activity {
         mCharEdit = new EditText(this);
         mCharEdit.setHint("Char / Word");
         mCharEdit.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
-        
+
         mCharEdit.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(android.text.Editable s) {
+                if (mIsUpdatingUI) return;
+                mIsUpdatingUI = true;
                 if (s.length() == 1) {
                     char c = s.charAt(0);
                     String suggestedOp = "sign";
-                    
+
                     if (Character.isDigit(c)) {
                         suggestedOp = "digit";
                     } else if (Character.isLowerCase(c)) {
@@ -291,16 +293,16 @@ public class TableCreatorActivity extends Activity {
                         suggestedOp = "space";
                     } else if ("([{“«‘)]}”»’".indexOf(c) != -1) {
                         suggestedOp = "punctuation";
-                    } else if ("+-×÷=<>".indexOf(c) != -1) {
-                        suggestedOp = "numericmodechars";
+                    } else if ("+-*/×÷=<>".indexOf(c) != -1) {
+                        suggestedOp = "math";
                     } else if ("%€$#".indexOf(c) != -1) {
                         suggestedOp = "midendnumericmodechars";
                     } else if (",.:-/".indexOf(c) != -1) {
-                        suggestedOp = "midnum";
+                        suggestedOp = "punctuation";
                     } else if ("!?¡¿\"'\\|/_@&§¶†‡*".indexOf(c) != -1) {
                         suggestedOp = "punctuation";
                     }
-                    
+
                     for (int i = 0; i < OPCODES.length; i++) {
                         if (OPCODES[i].equals(suggestedOp)) {
                             mOpcodeSpinner.setSelection(i);
@@ -315,9 +317,9 @@ public class TableCreatorActivity extends Activity {
                         }
                     }
                 }
+                mIsUpdatingUI = false;
             }
         });
-
         Button presetBtn = new Button(this);
         presetBtn.setText("Presets");
         presetBtn.setOnClickListener(v -> showPresetPicker());
