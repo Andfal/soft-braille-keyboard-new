@@ -276,8 +276,8 @@
     <string name="opcode_endcaps">Fine tutto maiuscolo</string>
     <string name="opcode_begcapsword">Inizio parola maiuscola</string>
     <string name="opcode_endcapsword">Fine parola maiuscola</string>
-    <string name="opcode_openpunc">Punteggiatura aperta</string>
-    <string name="opcode_closepunc">Punteggiatura chiusa</string>
+    <string name="opcode_openpunc">Punteggiatura iniziale (prepunc)</string>
+    <string name="opcode_closepunc">Punteggiatura finale (postpunc)</string>
     <string name="opcode_word">Parola intera (Contrazione)</string>
     <string name="opcode_partword">Parte di parola</string>
     <string name="opcode_letsign">Segna lettera (5)</string>
@@ -326,6 +326,10 @@
     <string name="preset_cat_punc">Punteggiatura (Standard/Letteraria)</string>
     <string name="preset_cat_math">Matematica e Simboli (+, €, ...)</string>
 
+    <string name="btn_load_template">Carica Template</string>
+    <string name="title_select_template">Seleziona Template</string>
+    <string name="msg_template_applied">Template applicato con successo!</string>
+    <string name="msg_confirm_template">L\'applicazione di un template cancellerà le mappature attuali. Continuare?</string>
 </resources>
 
        

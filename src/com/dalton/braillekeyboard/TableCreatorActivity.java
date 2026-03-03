@@ -25,6 +25,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import java.io.InputStream;
 
 public class TableCreatorActivity extends Activity {
     private static final String TAG = "TableCreatorActivity";
@@ -92,7 +95,7 @@ public class TableCreatorActivity extends Activity {
         "always", "lowercase", "uppercase", "punctuation", "digit", "math", "sign", "space", 
         "numsign", "capsletter", "begcaps", "endcaps", 
         "begcapsword", "endcapsword",
-        "openpunc", "closepunc",
+        "prepunc", "postpunc",
         "word", "partword", "letsign", "letter", "litdigit",
         "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum"
     };
@@ -101,8 +104,12 @@ public class TableCreatorActivity extends Activity {
     private static class Mapping {
         String opcode; String character; List<Integer> patterns = new ArrayList<>();
         boolean isHighPriority = false;
+        boolean isFixed = false;
         Mapping(String op, String ch, List<Integer> pts, boolean high) { 
-            opcode = op; character = ch; patterns.addAll(pts); isHighPriority = high;
+            this(op, ch, pts, high, false);
+        }
+        Mapping(String op, String ch, List<Integer> pts, boolean high, boolean fixed) { 
+            opcode = op; character = ch; patterns.addAll(pts); isHighPriority = high; isFixed = fixed;
         }
     }
 
@@ -152,6 +159,11 @@ public class TableCreatorActivity extends Activity {
         mTableNameEdit = new EditText(this);
         mTableNameEdit.setHint(R.string.hint_table_name);
         root.addView(mTableNameEdit);
+
+        Button templateBtn = new Button(this);
+        templateBtn.setText(R.string.btn_load_template);
+        templateBtn.setOnClickListener(v -> showTemplatePicker());
+        root.addView(templateBtn);
 
         mAuthorEdit = new EditText(this);
         mAuthorEdit.setHint("Author (e.g. Sergio)");
@@ -277,22 +289,16 @@ public class TableCreatorActivity extends Activity {
                         suggestedOp = "uppercase";
                     } else if (c == ' ' || c == '\u00a0') {
                         suggestedOp = "space";
-                    } else if ("([{“«‘".indexOf(c) != -1) {
-                        suggestedOp = "openpunc";
-                    } else if (")]}”»’".indexOf(c) != -1) {
-                        suggestedOp = "closepunc";
-                    } else if ("+-/×÷=<>".indexOf(c) != -1) {
+                    } else if ("([{“«‘)]}”»’".indexOf(c) != -1) {
+                        suggestedOp = "punctuation";
+                    } else if ("+-×÷=<>".indexOf(c) != -1) {
                         suggestedOp = "numericmodechars";
                     } else if ("%€$#".indexOf(c) != -1) {
                         suggestedOp = "midendnumericmodechars";
-                    } else if (",.:-".indexOf(c) != -1) {
+                    } else if (",.:-/".indexOf(c) != -1) {
                         suggestedOp = "midnum";
-                    } else if ("!?¡¿\"'\\|/_@&§¶†‡".indexOf(c) != -1) {
+                    } else if ("!?¡¿\"'\\|/_@&§¶†‡*".indexOf(c) != -1) {
                         suggestedOp = "punctuation";
-                    } else if ("±^~≈≠≤≥∞√¬".indexOf(c) != -1) {
-                        suggestedOp = "math";
-                    } else if ("*".indexOf(c) != -1) {
-                        suggestedOp = "midnum";
                     }
                     
                     for (int i = 0; i < OPCODES.length; i++) {
@@ -1201,16 +1207,20 @@ public class TableCreatorActivity extends Activity {
         updateDotsDisplay();
         mAddMappingBtn.setText("Update selected mapping");
     }
-
-    private void deleteSelected() {
-        int pos = mMappedItemsSpinner.getSelectedItemPosition();
-        if (pos > 0) {
-            mMappings.remove(pos - 1); refreshSpinner();
-            mMappedItemsSpinner.setSelection(0); mEditingIndex = -1;
-            mAddMappingBtn.setText("Add mapping to list");
-            mCharEdit.setText(""); mCurrentPatterns.clear(); updateDotsDisplay();
+private void deleteSelected() {
+    int pos = mMappedItemsSpinner.getSelectedItemPosition();
+    if (pos > 0) {
+        Mapping m = mMappings.get(pos - 1);
+        if (m.isFixed) {
+            Toast.makeText(this, "This mapping is fixed and cannot be deleted", Toast.LENGTH_SHORT).show();
+            return;
         }
+        mMappings.remove(pos - 1); refreshSpinner();
+        mMappedItemsSpinner.setSelection(0); mEditingIndex = -1;
+        mAddMappingBtn.setText("Add mapping to list");
+        mCharEdit.setText(""); mCurrentPatterns.clear(); updateDotsDisplay();
     }
+}
 
     private void refreshSpinner() {
         mDisplayList.clear();
@@ -1313,6 +1323,7 @@ public class TableCreatorActivity extends Activity {
     }
 
     private String patternToDotsString(int pattern) {
+        if (pattern == 0) return "0";
         StringBuilder sb = new StringBuilder();
         for (int i=0; i<8; i++) if ((pattern & (1 << i)) != 0) sb.append(i + 1);
         return sb.toString();
@@ -1335,6 +1346,10 @@ public class TableCreatorActivity extends Activity {
             sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
         }
         sb.append("\n");
+
+        // FOUNDATIONAL INCLUDES (Patterns must come first)
+        sb.append("include braille-patterns.cti\n");
+        sb.append("include unicode.dis\n\n");
 
         sb.append("# --- HIGH PRIORITY CUSTOM MAPPINGS ---\n");
         writeCustomMappings(sb, true);
@@ -1375,8 +1390,6 @@ public class TableCreatorActivity extends Activity {
 
         sb.append("\n# --- STANDARD PRIORITY CUSTOM MAPPINGS ---\n");
         writeCustomMappings(sb, false);
-
-        sb.append("\ninclude braille-patterns.cti\n");
 
         try {
             CustomTableManager manager = new CustomTableManager(this);
@@ -1437,11 +1450,21 @@ public class TableCreatorActivity extends Activity {
                 dots.append(patternToDotsString(m.patterns.get(i)));
             }
             
-            boolean stand = m.opcode.equals("numsign") || m.opcode.equals("capsletter") || m.opcode.startsWith("beg") || m.opcode.startsWith("end") || m.opcode.equals("space") || m.opcode.equals("letsign");
+            boolean stand = m.opcode.equals("numsign") || m.opcode.equals("capsletter") || m.opcode.startsWith("beg") || m.opcode.startsWith("end") || m.opcode.equals("letsign");
+            // Note: 'space' is now handled as a character-based opcode to support \x0020 explicitly
+            
             if (stand) {
                 sb.append(m.opcode).append(" ").append(dots).append("\n");
             } else {
-                if (m.character == null || m.character.isEmpty()) continue;
+                if (m.character == null || m.character.isEmpty()) {
+                    // Fallback for opcodes that might have been saved without char but aren't 'stand'
+                    if (m.opcode.equals("space")) {
+                         sb.append("space \\x0020 ").append(dots).append("\n");
+                    } else {
+                         sb.append(m.opcode).append(" ").append(dots).append("\n");
+                    }
+                    continue;
+                }
                 
                 // AUTOMATIC LOWERCASE DEFINITION (If user maps uppercase ONLY)
                 // Now restricted to 'lowercase' or 'uppercase' opcodes to allow manual override via other opcodes
@@ -1486,6 +1509,106 @@ public class TableCreatorActivity extends Activity {
             if (s.equals(m.character)) return true;
         }
         return false;
+    }
+
+    private void showTemplatePicker() {
+        try {
+            String[] files = getAssets().list("templates");
+            if (files == null || files.length == 0) {
+                Toast.makeText(this, "No templates found", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            final List<String> templateNames = new ArrayList<>();
+            final List<String> templateFiles = new ArrayList<>();
+
+            for (String file : files) {
+                if (file.endsWith(".json")) {
+                    String json = loadTemplateFromAssets(file);
+                    JSONObject obj = new JSONObject(json);
+                    templateNames.add(obj.getString("templateName"));
+                    templateFiles.add(file);
+                }
+            }
+
+            AlertDialog.Builder b = new AlertDialog.Builder(this);
+            b.setTitle(R.string.title_select_template);
+            b.setItems(templateNames.toArray(new String[0]), (dialog, which) -> {
+                confirmTemplateApplication(templateFiles.get(which));
+            });
+            b.show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Error loading templates: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String loadTemplateFromAssets(String fileName) throws Exception {
+        InputStream is = getAssets().open("templates/" + fileName);
+        int size = is.available();
+        byte[] buffer = new byte[size];
+        is.read(buffer);
+        is.close();
+        return new String(buffer, "UTF-8");
+    }
+
+    private void confirmTemplateApplication(final String fileName) {
+        if (!mMappings.isEmpty()) {
+            new AlertDialog.Builder(this)
+                .setTitle(R.string.title_select_template)
+                .setMessage(R.string.msg_confirm_template)
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> applyTemplate(fileName))
+                .setNegativeButton(android.R.string.no, null)
+                .show();
+        } else {
+            applyTemplate(fileName);
+        }
+    }
+
+    private void applyTemplate(String fileName) {
+        try {
+            String json = loadTemplateFromAssets(fileName);
+            JSONObject obj = new JSONObject(json);
+            JSONObject settings = obj.getJSONObject("settings");
+            JSONArray mappings = obj.getJSONArray("mappings");
+
+            // Apply Settings
+            mEightDotCheck.setChecked(settings.getBoolean("is8Dot"));
+            updateScriptSpinner(mEightDotCheck.isChecked());
+            
+            String localeCode = settings.getString("locale");
+            int locIdx = mLocaleCodes.indexOf(localeCode);
+            if (locIdx != -1) mLocaleSpinner.setSelection(locIdx);
+
+            String scriptFile = settings.getString("scriptFileName");
+            String[][] scriptSet = mEightDotCheck.isChecked() ? SCRIPTS_8 : SCRIPTS_6;
+            for (int i=0; i<scriptSet.length; i++) {
+                if (scriptSet[i][1].equals(scriptFile)) {
+                    mScriptSpinner.setSelection(i);
+                    break;
+                }
+            }
+
+            mNumSystemSpinner.setSelection(settings.getInt("numSystem"));
+
+            // Apply Mappings
+            mMappings.clear();
+            for (int i = 0; i < mappings.length(); i++) {
+                JSONObject mObj = mappings.getJSONObject(i);
+                String opcode = mObj.getString("opcode");
+                String character = mObj.getString("char");
+                String dotsStr = mObj.getString("dots");
+                boolean high = mObj.getBoolean("high");
+                boolean fixed = mObj.getBoolean("fixed");
+
+                mMappings.add(new Mapping(opcode, character, parseDots(dotsStr), high, fixed));
+            }
+
+            refreshSpinner();
+            Toast.makeText(this, R.string.msg_template_applied, Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Error applying template: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void shareTable() {

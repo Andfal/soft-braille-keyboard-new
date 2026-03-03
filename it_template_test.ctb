@@ -1,0 +1,98 @@
+# Custom Table for Soft Braille Keyboard
+# Dots: 6
+#+locale: it
+
+include braille-patterns.cti
+include unicode.dis
+
+# --- HIGH PRIORITY CUSTOM MAPPINGS ---
+numsign 3456
+capsletter 46
+begcapsword 46-46
+space \x0020 0
+
+# --- SYSTEM INCLUDES ---
+include unicode.dis
+include latinLetterDef6Dots.uti
+include digits6Dots.uti
+include litdigits6Dots.uti
+numsign 3456
+
+# --- STANDARD PRIORITY CUSTOM MAPPINGS ---
+lowercase \x0061 1
+lowercase \x0062 12
+lowercase \x0063 14
+lowercase \x0064 145
+lowercase \x0065 15
+lowercase \x0066 124
+lowercase \x0067 1245
+lowercase \x0068 125
+lowercase \x0069 24
+lowercase \x006a 245
+lowercase \x006b 13
+lowercase \x006c 123
+lowercase \x006d 134
+lowercase \x006e 1345
+lowercase \x006f 135
+lowercase \x0070 1234
+lowercase \x0071 12345
+lowercase \x0072 1235
+lowercase \x0073 234
+lowercase \x0074 2345
+lowercase \x0075 136
+lowercase \x0076 1236
+lowercase \x0077 2456
+lowercase \x0078 1346
+lowercase \x0079 13456
+lowercase \x007a 1356
+lowercase \x00e0 12356
+lowercase \x00e8 2346
+lowercase \x00e9 123456
+lowercase \x00ec 34
+lowercase \x00f2 346
+lowercase \x00f9 23456
+punctuation \x002e 256
+punctuation \x002c 2
+punctuation \x003b 23
+punctuation \x003a 25
+punctuation \x0021 235
+punctuation \x003f 26
+punctuation \x0027 3
+prepunc \x0028 2356
+postpunc \x0029 2356
+
+# Base uppercase rules for this section
+base uppercase \x0041 \x0061
+base uppercase \x0042 \x0062
+base uppercase \x0043 \x0063
+base uppercase \x0044 \x0064
+base uppercase \x0045 \x0065
+base uppercase \x0046 \x0066
+base uppercase \x0047 \x0067
+base uppercase \x0048 \x0068
+base uppercase \x0049 \x0069
+base uppercase \x004a \x006a
+base uppercase \x004b \x006b
+base uppercase \x004c \x006c
+base uppercase \x004d \x006d
+base uppercase \x004e \x006e
+base uppercase \x004f \x006f
+base uppercase \x0050 \x0070
+base uppercase \x0051 \x0071
+base uppercase \x0052 \x0072
+base uppercase \x0053 \x0073
+base uppercase \x0054 \x0074
+base uppercase \x0055 \x0075
+base uppercase \x0056 \x0076
+base uppercase \x0057 \x0077
+base uppercase \x0058 \x0078
+base uppercase \x0059 \x0079
+base uppercase \x005a \x007a
+base uppercase \x00c0 \x00e0
+base uppercase \x00c8 \x00e8
+base uppercase \x00c9 \x00e9
+base uppercase \x00cc \x00ec
+base uppercase \x00d2 \x00f2
+base uppercase \x00d9 \x00f9
+
+include braille-patterns.cti

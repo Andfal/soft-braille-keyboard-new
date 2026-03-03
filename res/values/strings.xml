@@ -358,10 +358,10 @@
     <string name="opcode_capsletter">Capital Sign (6)</string>
     <string name="opcode_begcaps">Begin All Caps</string>
     <string name="opcode_endcaps">End All Caps</string>
-    <string name="opcode_begcapsword">Begin Capitalized Word</string>
-    <string name="opcode_endcapsword">End Capitalized Word</string>
-    <string name="opcode_openpunc">Opening Punc</string>
-    <string name="opcode_closepunc">Closing Punc</string>
+    <string name="opcode_begcapsword">Begin Capitalized Word (begcapsword)</string>
+    <string name="opcode_endcapsword">End Capitalized Word (endcapsword)</string>
+    <string name="opcode_openpunc">Pre-word Punctuation (prepunc)</string>
+    <string name="opcode_closepunc">Post-word Punctuation (postpunc)</string>
     <string name="opcode_word">Full Word (Contraction)</string>
     <string name="opcode_partword">Part of Word</string>
     <string name="opcode_letsign">Letter Sign (5)</string>
@@ -413,4 +413,8 @@
 
     <string name="accessibility_service_description">Consente alla tastiera Soft Braille di funzionare correttamente quando TalkBack è attivo, creando un\'area in cui i tocchi non vengono intercettati dallo screen reader.</string>
     <string name="accessibility_service_label">Soft Braille Keyboard Accessibility</string>
+    <string name="btn_load_template">Load Template</string>
+    <string name="title_select_template">Select Template</string>
+    <string name="msg_template_applied">Template applied successfully!</string>
+    <string name="msg_confirm_template">Applying a template will clear current mappings. Continue?</string>
 </resources>
