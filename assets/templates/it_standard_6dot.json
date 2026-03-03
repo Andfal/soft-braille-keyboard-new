@@ -49,7 +49,7 @@
     { "opcode": "punctuation", "char": "!", "dots": "235", "high": false, "fixed": false },
     { "opcode": "punctuation", "char": "?", "dots": "26", "high": false, "fixed": false },
     { "opcode": "punctuation", "char": "'", "dots": "3", "high": false, "fixed": false },
-    { "opcode": "punctuation", "char": "@", "dots": "4-1", "high": false, "fixed": false },
+    { "opcode": "punctuation", "char": "@", "dots": "345", "high": false, "fixed": false },
     { "opcode": "punctuation", "char": "/", "dots": "34", "high": false, "fixed": false },
     { "opcode": "prepunc", "char": "(", "dots": "2356", "high": false, "fixed": false },
     { "opcode": "postpunc", "char": ")", "dots": "2356", "high": false, "fixed": false },
