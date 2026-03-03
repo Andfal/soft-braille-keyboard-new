@@ -74,20 +74,20 @@
 - **Clean Environment Recovery:** Reset the repository to the last stable commit (`967b788`) and purged untracked files to resolve build inconsistencies reported after the crash.
 
 ### 2. Table Creator Enhancements
-- **Per-Mapping Priority:** Replaced the global priority setting with a granular per-character system. Users can now choose whether a specific mapping should override (High Priority) or extend (Standard Priority) the system alphabet.
-- **Automated Case Pairing (Liblouis Sync):** 
-    - When mapping a letter with `lowercase` or `uppercase` opcodes, the system automatically generates the `base uppercase` link.
-    - If only the uppercase is mapped, it automatically creates a corresponding `lowercase` definition to satisfy Liblouis requirements.
-    - Logic ensures the correct technical order: Lowercase -> Uppercase -> Base Rules.
-- **Locale Selector:** Added a `mLocaleSpinner` to `TableCreatorActivity` allowing users to specify the target language (locale) of their custom table.
-- **Metadata & Visual Feedback:**
-    - Updated `saveTable` to write `#+locale: [code]` and `# Author: [name]` to the table header.
-    - Mapping list now shows `[H]` prefix for high-priority items.
-- **Improved Custom Table Manager:** Updated `CustomTableManager` to parse metadata from `.ctb` files, ensuring custom tables are correctly labeled in the settings list.
+- **Professional Opcode Support:** Refined the Table Creator to handle complex Liblouis opcodes with surgical precision:
+    - **Caps Indicators:** `begcaps`, `endcaps`, `begcapsword`, and `endcapsword` now correctly serialize as standalone indicators (points only), resolving "Dots operand not specified" errors.
+    - **Numeric Indicators:** `begnum` and `endnum` now automatically include a trigger character (e.g., `#` or `%`) to satisfy Liblouis 3.36 requirements.
+    - **Punctuation Sync:** Renamed `openpunc`/`closepunc` to `prepunc`/`postpunc` to align with native Liblouis terminology.
+- **Structural Integrity:**
+    - **Foundational Includes:** Every custom table now writes foundational patterns (`braille-patterns.cti` and `unicode.dis`) at the very top, providing a consistent base for advanced opcodes.
+    - **Logical Ordering:** Moved cumulative `numericmodechars` indicators to the end of each mapping section, ensuring all referenced characters are already defined.
+- **Per-Mapping Priority:** Users can now choose whether a specific mapping should override (High Priority) or extend (Standard Priority) the system alphabet.
+- **Automated Case Pairing:** Intelligent generation of `base uppercase` rules, including automatic `lowercase` definitions when only the uppercase is mapped.
+- **Template System:** Implemented a JSON-based template engine. Created a comprehensive **Italian Standard (6-dot)** template that includes alphabet, accents, web symbols (@, /), and system indicators.
 
 ### 3. Build & Validation
-- **Successful Build:** Verified the changes with a clean build (`.\gradlew.bat assembleDebug`) using the Android Studio JBR.
-- **Stability:** Resolved all compilation errors related to constructor signature changes.
+- **Verified Compatibility:** Validated the generated tables with `lou_checktable`, achieving a "No errors found" state for all tested scenarios (Template, Manual, and Mixed priority).
+- **Successful Build:** Verified the changes with clean builds and installs.
 
 ## Technical Notes
 - **Liblouis Priority:** Reminded that for back-translation, the *first* rule wins, while for forward-translation, the *last* rule wins. The current implementation writes custom mappings at the top of the file to prioritize user choices for dots-to-text (braille input).

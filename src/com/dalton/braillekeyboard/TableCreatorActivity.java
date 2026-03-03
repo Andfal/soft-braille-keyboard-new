@@ -1415,13 +1415,6 @@ private void deleteSelected() {
             }
         }
 
-        if (numericModeChars.length() > 0) {
-            sb.append("numericmodechars ").append(numericModeChars).append("\n");
-        }
-        if (midEndNumericModeChars.length() > 0) {
-            sb.append("midendnumericmodechars ").append(midEndNumericModeChars).append("\n");
-        }
-
         StringBuilder baseRules = new StringBuilder();
 
         for (Mapping m : mMappings) {
@@ -1450,18 +1443,30 @@ private void deleteSelected() {
                 dots.append(patternToDotsString(m.patterns.get(i)));
             }
             
-            boolean stand = m.opcode.equals("numsign") || m.opcode.equals("capsletter") || m.opcode.startsWith("beg") || m.opcode.startsWith("end") || m.opcode.equals("letsign");
-            // Note: 'space' is now handled as a character-based opcode to support \x0020 explicitly
+            boolean isCapsIndicator = m.opcode.equals("begcaps") || m.opcode.equals("endcaps") || 
+                                     m.opcode.equals("begcapsword") || m.opcode.equals("endcapsword");
+            boolean isNumIndicator = m.opcode.equals("begnum") || m.opcode.equals("endnum");
+            boolean isStand = m.opcode.equals("numsign") || m.opcode.equals("capsletter") || m.opcode.equals("letsign");
             
-            if (stand) {
+            if (isCapsIndicator || isStand) {
+                // Formatting: opcode dots (No character allowed)
                 sb.append(m.opcode).append(" ").append(dots).append("\n");
+            } else if (isNumIndicator) {
+                // Formatting: opcode char dots (Character is REQUIRED)
+                String cPart = m.character;
+                if (cPart == null || cPart.isEmpty()) {
+                    cPart = m.opcode.equals("begnum") ? "#" : "%"; // Safe fallbacks
+                }
+                if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
+                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
             } else {
                 if (m.character == null || m.character.isEmpty()) {
-                    // Fallback for opcodes that might have been saved without char but aren't 'stand'
+                    // Fallback for character-based opcodes that are empty (like space)
                     if (m.opcode.equals("space")) {
                          sb.append("space \\x0020 ").append(dots).append("\n");
                     } else {
-                         sb.append(m.opcode).append(" ").append(dots).append("\n");
+                         // Default fallback to prevent syntax errors
+                         sb.append("punctuation \\x0000 ").append(dots).append("\n");
                     }
                     continue;
                 }
@@ -1496,6 +1501,15 @@ private void deleteSelected() {
                 sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
             }
         }
+
+        // Write cumulative indicators AFTER individual mappings
+        if (numericModeChars.length() > 0) {
+            sb.append("\nnumericmodechars ").append(numericModeChars).append("\n");
+        }
+        if (midEndNumericModeChars.length() > 0) {
+            sb.append("midendnumericmodechars ").append(midEndNumericModeChars).append("\n");
+        }
+
         // Write base rules at the end of the section
         if (baseRules.length() > 0) {
             sb.append("\n# Base uppercase rules for this section\n");
