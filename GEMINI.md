@@ -65,6 +65,38 @@
     3. The Unicode handling is already in place to convert characters to `\uXXXX` format.
 - **Table Priority:** User-defined rules are written at the end of the `.ctb` file to ensure they have the highest priority over system includes.
 
+# Gemini CLI Session Summary - March 3, 2026
+
+## Accomplishments
+
+### 1. Bug Fixes & Stability
+- **Fixed Infinite Loop in Table Creator:** Identified and resolved a recursive update issue between the `CheckBox` listeners and `EditText` TextWatcher in `showCellEditor` and `showPrefixSelector` dialogs. Added a `mIsUpdatingUI` guard flag to prevent re-entrant calls that were causing a `StackOverflowError` (crash).
+- **Clean Environment Recovery:** Reset the repository to the last stable commit (`967b788`) and purged untracked files to resolve build inconsistencies reported after the crash.
+
+### 2. Table Creator Enhancements
+- **Per-Mapping Priority:** Replaced the global priority setting with a granular per-character system. Users can now choose whether a specific mapping should override (High Priority) or extend (Standard Priority) the system alphabet.
+- **Automated Case Pairing (Liblouis Sync):** 
+    - When mapping a letter with `lowercase` or `uppercase` opcodes, the system automatically generates the `base uppercase` link.
+    - If only the uppercase is mapped, it automatically creates a corresponding `lowercase` definition to satisfy Liblouis requirements.
+    - Logic ensures the correct technical order: Lowercase -> Uppercase -> Base Rules.
+- **Locale Selector:** Added a `mLocaleSpinner` to `TableCreatorActivity` allowing users to specify the target language (locale) of their custom table.
+- **Metadata & Visual Feedback:**
+    - Updated `saveTable` to write `#+locale: [code]` and `# Author: [name]` to the table header.
+    - Mapping list now shows `[H]` prefix for high-priority items.
+- **Improved Custom Table Manager:** Updated `CustomTableManager` to parse metadata from `.ctb` files, ensuring custom tables are correctly labeled in the settings list.
+
+### 3. Build & Validation
+- **Successful Build:** Verified the changes with a clean build (`.\gradlew.bat assembleDebug`) using the Android Studio JBR.
+- **Stability:** Resolved all compilation errors related to constructor signature changes.
+
+## Technical Notes
+- **Liblouis Priority:** Reminded that for back-translation, the *first* rule wins, while for forward-translation, the *last* rule wins. The current implementation writes custom mappings at the top of the file to prioritize user choices for dots-to-text (braille input).
+- **JAVA_HOME:** When building on this machine, use `C:\Program Files\Android\Android Studio\jbr` as `JAVA_HOME`.
+
+## Roadmap / Upcoming Tasks
+- **Table Validation:** Add a "Check Table" button to `TableCreatorActivity` that calls `lou_checktable` (via a native bridge or local script) to verify syntax before saving.
+- **Automatic Uppercase:** Further refine the `base uppercase` generation to handle scripts other than Latin.
+
 ## Roadmap / Upcoming Tasks (Next Session)
 - **Automatic Opcode Detection in Table Creator:**
     1.  Implement a listener on the character input field (`mCharEdit`).

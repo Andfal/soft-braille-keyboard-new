@@ -398,6 +398,9 @@
     <string name="btn_add_prefix">Add prefix...</string>
     <string name="title_select_prefix">Select prefix (e.g. dot 4, 5 or 6)</string>
     <string name="hint_enter_dots">Enter dots (e.g. 123)</string>
+    <string name="label_table_locale">Table Language (Locale):</string>
+    <string name="label_high_priority">High Priority (Write BEFORE system set)</string>
+    <string name="hint_priority_desc">Enable this for each character you want to override in the standard alphabet. High priority mappings are written before the system rules, while standard ones are added after.</string>
     <string name="none_selected">--- None selected ---</string>
 
     <!-- Preset Categories -->

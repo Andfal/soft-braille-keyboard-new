@@ -313,6 +313,10 @@
     <string name="btn_add_prefix">Aggiungi prefisso...</string>
     <string name="title_select_prefix">Scegli prefisso (es. punto 4, 5 o 6)</string>
     <string name="hint_enter_dots">Digita i punti (es. 123)</string>
+    <string name="label_table_locale">Lingua Tabella (Locale):</string>
+    <string name="none_selected">--- Nessuno selezionato ---</string>
+    <string name="label_high_priority">Priorità Alta (Scrivi PRIMA del set di sistema)</string>
+    <string name="hint_priority_desc">Attiva questa opzione per ogni carattere che vuoi sovrascrivere nell\'alfabeto standard. Le mappature ad alta priorità vengono scritte prima degli \'include\' di sistema, quelle standard dopo.</string>
 
     <!-- Preset Categories -->
     <string name="preset_cat_it_accents">Accenti Italiani</string>

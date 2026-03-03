@@ -33,7 +33,12 @@ public class TableCreatorActivity extends Activity {
     private EditText mAuthorEdit;
     private EditText mDescriptionEdit;
     private CheckBox mEightDotCheck;
+    private CheckBox mMappingPriorityCheck;
     
+    private Spinner mLocaleSpinner;
+    private List<String> mLocaleCodes = new ArrayList<>();
+    private List<String> mLocaleNames = new ArrayList<>();
+
     private Spinner mBaseTableSpinner;
     private List<String> mSystemTableFiles = new ArrayList<>();
     private List<String> mSystemTableLabels = new ArrayList<>();
@@ -95,7 +100,10 @@ public class TableCreatorActivity extends Activity {
 
     private static class Mapping {
         String opcode; String character; List<Integer> patterns = new ArrayList<>();
-        Mapping(String op, String ch, List<Integer> pts) { opcode = op; character = ch; patterns.addAll(pts); }
+        boolean isHighPriority = false;
+        Mapping(String op, String ch, List<Integer> pts, boolean high) { 
+            opcode = op; character = ch; patterns.addAll(pts); isHighPriority = high;
+        }
     }
 
     private static class Preset {
@@ -152,6 +160,23 @@ public class TableCreatorActivity extends Activity {
         mDescriptionEdit = new EditText(this);
         mDescriptionEdit.setHint("Description (e.g. Personal Italian Table)");
         root.addView(mDescriptionEdit);
+
+        // --- Locale Selector ---
+        TextView localeLabel = new TextView(this);
+        localeLabel.setText(R.string.label_table_locale);
+        localeLabel.setPadding(0, 20, 0, 0);
+        root.addView(localeLabel);
+
+        mLocaleSpinner = new Spinner(this);
+        loadLocales();
+        ArrayAdapter<String> localeAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mLocaleNames);
+        localeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mLocaleSpinner.setAdapter(localeAdapter);
+        // Default to current system locale if found
+        String currentLang = java.util.Locale.getDefault().getLanguage();
+        int defaultIdx = mLocaleCodes.indexOf(currentLang);
+        if (defaultIdx != -1) mLocaleSpinner.setSelection(defaultIdx);
+        root.addView(mLocaleSpinner);
 
         mEightDotCheck = new CheckBox(this);
         mEightDotCheck.setText(R.string.label_use_8_dots);
@@ -311,6 +336,18 @@ public class TableCreatorActivity extends Activity {
         mAddMappingBtn.setText("Add mapping to list");
         mAddMappingBtn.setOnClickListener(v -> addOrUpdateMapping());
         editorBox.addView(mAddMappingBtn);
+
+        mMappingPriorityCheck = new CheckBox(this);
+        mMappingPriorityCheck.setText(R.string.label_high_priority);
+        mMappingPriorityCheck.setChecked(false);
+        editorBox.addView(mMappingPriorityCheck);
+
+        TextView priorityDesc = new TextView(this);
+        priorityDesc.setText(R.string.hint_priority_desc);
+        priorityDesc.setTextSize(12);
+        priorityDesc.setPadding(10, 0, 0, 10);
+        editorBox.addView(priorityDesc);
+
         root.addView(editorBox);
 
         // --- Mapped Items Spinner Section ---
@@ -430,6 +467,32 @@ public class TableCreatorActivity extends Activity {
         if (currentPos < labels.length) mScriptSpinner.setSelection(currentPos);
     }
 
+    private void loadLocales() {
+        mLocaleCodes.clear();
+        mLocaleNames.clear();
+        java.util.Locale[] locales = java.util.Locale.getAvailableLocales();
+        List<java.util.Locale> list = new ArrayList<>();
+        for (java.util.Locale l : locales) {
+            if (!l.getLanguage().isEmpty() && !l.getDisplayLanguage().isEmpty()) {
+                list.add(l);
+            }
+        }
+        Collections.sort(list, (l1, l2) -> l1.getDisplayName().compareTo(l2.getDisplayName()));
+        
+        // Add a "None" or "Default" option
+        mLocaleCodes.add("");
+        mLocaleNames.add(getString(R.string.none_selected));
+
+        for (java.util.Locale l : list) {
+            String code = l.getLanguage();
+            if (!l.getCountry().isEmpty()) code += "-" + l.getCountry();
+            if (!mLocaleCodes.contains(code)) {
+                mLocaleCodes.add(code);
+                mLocaleNames.add(l.getDisplayName());
+            }
+        }
+    }
+
     private void loadTableData(String tableId) {
         try {
             CustomTableManager manager = new CustomTableManager(this);
@@ -441,6 +504,7 @@ public class TableCreatorActivity extends Activity {
             mTableNameEdit.setText(fileName);
             mMappings.clear();
             mNumSystemSpinner.setSelection(NUM_NONE);
+            boolean currentlyHighPriority = true;
 
             Scanner scanner = new Scanner(f, "UTF-8");
             while (scanner.hasNextLine()) {
@@ -450,10 +514,19 @@ public class TableCreatorActivity extends Activity {
                 if (line.startsWith("#")) {
                     if (line.startsWith("# Author: ")) mAuthorEdit.setText(line.substring(10));
                     else if (line.startsWith("# Description: ")) mDescriptionEdit.setText(line.substring(15));
+                    else if (line.startsWith("#+locale: ")) {
+                        String code = line.substring(10).trim();
+                        int idx = mLocaleCodes.indexOf(code);
+                        if (idx != -1) mLocaleSpinner.setSelection(idx);
+                    }
+                    else if (line.contains("SYSTEM INCLUDES")) {
+                        currentlyHighPriority = false;
+                    }
                     continue;
                 }
 
                 if (line.startsWith("include ")) {
+                    currentlyHighPriority = false; // Anything after first include is standard priority
                     String included = line.substring(8).trim();
                     if (included.equals("latinLetterDef8Dots.uti")) {
                         mEightDotCheck.setChecked(true);
@@ -523,7 +596,7 @@ public class TableCreatorActivity extends Activity {
                 }
 
                 if (!dotsPart.isEmpty()) {
-                    mMappings.add(new Mapping(opcode, charPart, parseDots(dotsPart)));
+                    mMappings.add(new Mapping(opcode, charPart, parseDots(dotsPart), currentlyHighPriority));
                 }
             }
             scanner.close();
@@ -859,7 +932,7 @@ public class TableCreatorActivity extends Activity {
                         for (int dot : cellDots) pattern |= (1 << (dot - 1));
                         pPatterns.add(pattern);
                     }
-                    mMappings.add(new Mapping(cat.defaultOpcode, p.character, pPatterns));
+                    mMappings.add(new Mapping(cat.defaultOpcode, p.character, pPatterns, false));
                     addedCount++;
                 }
             }
@@ -982,6 +1055,8 @@ public class TableCreatorActivity extends Activity {
         b.show();
     }
 
+    private boolean mIsUpdatingUI = false;
+
     private void showPrefixSelector(final Mapping mapping) {
         int dotCount = mEightDotCheck.isChecked() ? 8 : 6;
         AlertDialog.Builder b = new AlertDialog.Builder(this);
@@ -1005,6 +1080,8 @@ public class TableCreatorActivity extends Activity {
             boxes[i].setText(String.format(getString(R.string.label_dot), order[i]));
             final int dotNum = order[i];
             boxes[i].setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (mIsUpdatingUI) return;
+                mIsUpdatingUI = true;
                 String current = dotEdit.getText().toString();
                 if (isChecked) {
                     if (!current.contains(String.valueOf(dotNum))) {
@@ -1019,6 +1096,7 @@ public class TableCreatorActivity extends Activity {
                 } else {
                     dotEdit.setText(current.replace(String.valueOf(dotNum), ""));
                 }
+                mIsUpdatingUI = false;
             });
             g.addView(boxes[i]);
         }
@@ -1028,11 +1106,14 @@ public class TableCreatorActivity extends Activity {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(android.text.Editable s) {
+                if (mIsUpdatingUI) return;
+                mIsUpdatingUI = true;
                 String text = s.toString();
                 for (int i=0; i<dotCount; i++) {
                     int dotNum = order[i];
                     boxes[i].setChecked(text.contains(String.valueOf(dotNum)));
                 }
+                mIsUpdatingUI = false;
             }
         });
 
@@ -1052,7 +1133,7 @@ public class TableCreatorActivity extends Activity {
                 newPatterns.add(prefixPattern);
                 newPatterns.addAll(mapping.patterns);
                 
-                Mapping prefixedMapping = new Mapping(mapping.opcode, mapping.character, newPatterns);
+                Mapping prefixedMapping = new Mapping(mapping.opcode, mapping.character, newPatterns, mapping.isHighPriority);
                 if (mEditingIndex != -1) {
                     mMappings.remove(mEditingIndex);
                 }
@@ -1072,7 +1153,7 @@ public class TableCreatorActivity extends Activity {
         String character = mCharEdit.getText().toString();
         if (mCurrentPatterns.isEmpty()) { Toast.makeText(this, "Please add dots first", Toast.LENGTH_SHORT).show(); return; }
         
-        Mapping newMapping = new Mapping(opcode, character, new ArrayList<>(mCurrentPatterns));
+        Mapping newMapping = new Mapping(opcode, character, new ArrayList<>(mCurrentPatterns), mMappingPriorityCheck.isChecked());
         String newDots = getDotsString(newMapping.patterns);
         
         int duplicateIndex = findDuplicateDots(newDots);
@@ -1116,6 +1197,7 @@ public class TableCreatorActivity extends Activity {
         for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { mOpcodeSpinner.setSelection(i); break; }
         mCharEdit.setText(m.character);
         mCurrentPatterns.clear(); mCurrentPatterns.addAll(m.patterns);
+        mMappingPriorityCheck.setChecked(m.isHighPriority);
         updateDotsDisplay();
         mAddMappingBtn.setText("Update selected mapping");
     }
@@ -1136,7 +1218,9 @@ public class TableCreatorActivity extends Activity {
         for (Mapping m : mMappings) {
             String friendlyOp = m.opcode;
             for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { friendlyOp = OPCODE_LABELS[i]; break; }
-            StringBuilder sb = new StringBuilder(friendlyOp);
+            StringBuilder sb = new StringBuilder();
+            if (m.isHighPriority) sb.append("[H] ");
+            sb.append(friendlyOp);
             if (m.character != null && !m.character.isEmpty()) sb.append(" '").append(m.character).append("'");
             sb.append(" -> ");
             for (int i=0; i<m.patterns.size(); i++) {
@@ -1171,6 +1255,8 @@ public class TableCreatorActivity extends Activity {
             boxes[i].setText(String.format(getString(R.string.label_dot), order[i]));
             final int dotNum = order[i];
             boxes[i].setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (mIsUpdatingUI) return;
+                mIsUpdatingUI = true;
                 String current = dotEdit.getText().toString();
                 if (isChecked) {
                     if (!current.contains(String.valueOf(dotNum))) {
@@ -1186,6 +1272,7 @@ public class TableCreatorActivity extends Activity {
                 } else {
                     dotEdit.setText(current.replace(String.valueOf(dotNum), ""));
                 }
+                mIsUpdatingUI = false;
             });
             g.addView(boxes[i]);
         }
@@ -1195,11 +1282,14 @@ public class TableCreatorActivity extends Activity {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(android.text.Editable s) {
+                if (mIsUpdatingUI) return;
+                mIsUpdatingUI = true;
                 String text = s.toString();
                 for (int i=0; i<dotCount; i++) {
                     int dotNum = order[i];
                     boxes[i].setChecked(text.contains(String.valueOf(dotNum)));
                 }
+                mIsUpdatingUI = false;
             }
         });
 
@@ -1238,80 +1328,16 @@ public class TableCreatorActivity extends Activity {
         String author = mAuthorEdit.getText().toString().trim();
         if (!author.isEmpty()) sb.append("# Author: ").append(author).append("\n");
         String desc = mDescriptionEdit.getText().toString().trim();
-        if (!desc.isEmpty()) sb.append("# Description: ").append(desc).append("\n\n");
-
-        sb.append("# --- PRIORITY CUSTOM MAPPINGS ---\n");
-        sb.append("# (Written first to ensure back-translation priority)\n\n");
+        if (!desc.isEmpty()) sb.append("# Description: ").append(desc).append("\n");
         
-        // Build numeric indicators lists (these stay near the top)
-        StringBuilder numericModeChars = new StringBuilder();
-        StringBuilder midEndNumericModeChars = new StringBuilder();
-
-        for (Mapping m : mMappings) {
-            if (m.opcode.equals("numericmodechars") && m.character.length() == 1) {
-                numericModeChars.append(m.character);
-            } else if (m.opcode.equals("midendnumericmodechars") && m.character.length() == 1) {
-                midEndNumericModeChars.append(m.character);
-            }
+        int localePos = mLocaleSpinner.getSelectedItemPosition();
+        if (localePos > 0) {
+            sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
         }
+        sb.append("\n");
 
-        if (numericModeChars.length() > 0) {
-            sb.append("numericmodechars ").append(numericModeChars).append("\n");
-        }
-        if (midEndNumericModeChars.length() > 0) {
-            sb.append("midendnumericmodechars ").append(midEndNumericModeChars).append("\n");
-        }
-
-        for (Mapping m : mMappings) {
-            if (m.opcode.equals("numericmodechars") || m.opcode.equals("midendnumericmodechars")) {
-                if (m.character == null || m.character.isEmpty()) continue;
-                String cPart = m.character;
-                if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
-                
-                StringBuilder dots = new StringBuilder();
-                for (int i=0; i<m.patterns.size(); i++) {
-                    if (i > 0) dots.append("-");
-                    dots.append(patternToDotsString(m.patterns.get(i)));
-                }
-                
-                String fallbackOp = "+-/×÷=<>±^~≈≠≤≥∞√¬*".indexOf(m.character) != -1 ? "math" : "punctuation";
-                sb.append(fallbackOp).append(" ").append(cPart).append(" ").append(dots).append("\n");
-                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
-                continue;
-            }
-
-            StringBuilder dots = new StringBuilder();
-            for (int i=0; i<m.patterns.size(); i++) {
-                if (i > 0) dots.append("-");
-                dots.append(patternToDotsString(m.patterns.get(i)));
-            }
-            
-            boolean stand = m.opcode.equals("numsign") || m.opcode.equals("capsletter") || m.opcode.startsWith("beg") || m.opcode.startsWith("end") || m.opcode.equals("space") || m.opcode.equals("letsign");
-            if (stand) {
-                sb.append(m.opcode).append(" ").append(dots).append("\n");
-            } else {
-                if (m.character == null || m.character.isEmpty()) continue;
-                String cPart = m.character;
-                if (cPart.length() == 1) {
-                    cPart = String.format("\\x%04x", (int)cPart.charAt(0));
-                }
-                
-                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
-
-                // AUTOMATIC UPPERCASE MAPPING:
-                // If this is a single lowercase letter, define its base relationship for Liblouis global rules.
-                if (m.character.length() == 1) {
-                    char lowChar = m.character.charAt(0);
-                    if (Character.isLowerCase(lowChar)) {
-                        char upperChar = Character.toUpperCase(lowChar);
-                        if (upperChar != lowChar) {
-                            sb.append("base uppercase ").append(String.format("\\x%04x", (int)upperChar))
-                              .append(" ").append(String.format("\\x%04x", (int)lowChar)).append("\n");
-                        }
-                    }
-                }
-            }
-        }
+        sb.append("# --- HIGH PRIORITY CUSTOM MAPPINGS ---\n");
+        writeCustomMappings(sb, true);
 
         sb.append("\n# --- SYSTEM INCLUDES ---\n");
         sb.append("include unicode.dis\n");
@@ -1347,7 +1373,10 @@ public class TableCreatorActivity extends Activity {
             sb.append("include digits8Dots.uti\n");
         }
 
-        sb.append("include braille-patterns.cti\n");
+        sb.append("\n# --- STANDARD PRIORITY CUSTOM MAPPINGS ---\n");
+        writeCustomMappings(sb, false);
+
+        sb.append("\ninclude braille-patterns.cti\n");
 
         try {
             CustomTableManager manager = new CustomTableManager(this);
@@ -1355,6 +1384,108 @@ public class TableCreatorActivity extends Activity {
             try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(sb.toString().getBytes(StandardCharsets.UTF_8)); }
             Toast.makeText(this, R.string.msg_table_saved, Toast.LENGTH_SHORT).show();
         } catch (Exception e) { Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show(); }
+    }
+
+    private void writeCustomMappings(StringBuilder sb, boolean highPriorityOnly) {
+        // Build numeric indicators lists
+        StringBuilder numericModeChars = new StringBuilder();
+        StringBuilder midEndNumericModeChars = new StringBuilder();
+        List<String> writtenBasePairs = new ArrayList<>();
+        List<Character> writtenAutoChars = new ArrayList<>();
+
+        for (Mapping m : mMappings) {
+            if (m.isHighPriority != highPriorityOnly) continue;
+            if (m.opcode.equals("numericmodechars") && m.character.length() == 1) {
+                numericModeChars.append(m.character);
+            } else if (m.opcode.equals("midendnumericmodechars") && m.character.length() == 1) {
+                midEndNumericModeChars.append(m.character);
+            }
+        }
+
+        if (numericModeChars.length() > 0) {
+            sb.append("numericmodechars ").append(numericModeChars).append("\n");
+        }
+        if (midEndNumericModeChars.length() > 0) {
+            sb.append("midendnumericmodechars ").append(midEndNumericModeChars).append("\n");
+        }
+
+        StringBuilder baseRules = new StringBuilder();
+
+        for (Mapping m : mMappings) {
+            if (m.isHighPriority != highPriorityOnly) continue;
+            
+            if (m.opcode.equals("numericmodechars") || m.opcode.equals("midendnumericmodechars")) {
+                if (m.character == null || m.character.isEmpty()) continue;
+                String cPart = m.character;
+                if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
+                
+                StringBuilder dots = new StringBuilder();
+                for (int i=0; i<m.patterns.size(); i++) {
+                    if (i > 0) dots.append("-");
+                    dots.append(patternToDotsString(m.patterns.get(i)));
+                }
+                
+                String fallbackOp = "+-/×÷=<>±^~≈≠≤≥∞√¬*".indexOf(m.character) != -1 ? "math" : "punctuation";
+                sb.append(fallbackOp).append(" ").append(cPart).append(" ").append(dots).append("\n");
+                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
+                continue;
+            }
+
+            StringBuilder dots = new StringBuilder();
+            for (int i=0; i<m.patterns.size(); i++) {
+                if (i > 0) dots.append("-");
+                dots.append(patternToDotsString(m.patterns.get(i)));
+            }
+            
+            boolean stand = m.opcode.equals("numsign") || m.opcode.equals("capsletter") || m.opcode.startsWith("beg") || m.opcode.startsWith("end") || m.opcode.equals("space") || m.opcode.equals("letsign");
+            if (stand) {
+                sb.append(m.opcode).append(" ").append(dots).append("\n");
+            } else {
+                if (m.character == null || m.character.isEmpty()) continue;
+                
+                // AUTOMATIC LOWERCASE DEFINITION (If user maps uppercase ONLY)
+                // Now restricted to 'lowercase' or 'uppercase' opcodes to allow manual override via other opcodes
+                if (m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) {
+                    char c = m.character.charAt(0);
+                    if (Character.isLetter(c)) {
+                        char low = Character.toLowerCase(c);
+                        char up = Character.toUpperCase(c);
+                        if (low != up) {
+                            // If this is the uppercase and lowercase is NOT mapped by user
+                            if (c == up && !isCharacterMapped(low) && !writtenAutoChars.contains(low)) {
+                                sb.append("lowercase ").append(String.format("\\x%04x", (int)low))
+                                  .append(" ").append(dots).append("\n");
+                                writtenAutoChars.add(low);
+                            }
+                            
+                            String pairKey = up + "-" + low;
+                            if (!writtenBasePairs.contains(pairKey)) {
+                                baseRules.append("base uppercase ").append(String.format("\\x%04x", (int)up))
+                                         .append(" ").append(String.format("\\x%04x", (int)low)).append("\n");
+                                writtenBasePairs.add(pairKey);
+                            }
+                        }
+                    }
+                }
+
+                String cPart = m.character;
+                if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
+                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
+            }
+        }
+        // Write base rules at the end of the section
+        if (baseRules.length() > 0) {
+            sb.append("\n# Base uppercase rules for this section\n");
+            sb.append(baseRules.toString());
+        }
+    }
+
+    private boolean isCharacterMapped(char c) {
+        String s = String.valueOf(c);
+        for (Mapping m : mMappings) {
+            if (s.equals(m.character)) return true;
+        }
+        return false;
     }
 
     private void shareTable() {

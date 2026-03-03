@@ -42,18 +42,50 @@ public class CustomTableManager {
                 String id = CUSTOM_PREFIX + name;
                 boolean isEightDot = checkIsEightDot(file);
                 
+                Locale locale = parseLocale(file);
+                String author = parseAuthor(file);
+                String label = name;
+                if (author != null) label += " (" + author + ")";
+
                 TableInfo info = new TableInfo(
-                        Locale.getDefault(),
+                        locale,
                         isEightDot,
                         0,    // grade
                         id,
-                        name
+                        label
                 );
                 mCustomTables.add(info);
                 mTableFileNames.put(id, file.getAbsolutePath());
-                Log.i(TAG, "Loaded custom table: " + id + " (8dot=" + isEightDot + ") -> " + file.getAbsolutePath());
+                Log.i(TAG, "Loaded custom table: " + id + " (8dot=" + isEightDot + ", locale=" + locale + ") -> " + file.getAbsolutePath());
             }
         }
+    }
+
+    private Locale parseLocale(File file) {
+        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("#+locale: ")) {
+                    String code = line.substring(10).trim();
+                    String[] parts = code.split("-");
+                    if (parts.length == 1) return new Locale(parts[0]);
+                    if (parts.length == 2) return new Locale(parts[0], parts[1]);
+                }
+                if (!line.startsWith("#") && !line.isEmpty()) break;
+            }
+        } catch (java.io.IOException e) {}
+        return Locale.getDefault();
+    }
+
+    private String parseAuthor(File file) {
+        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("# Author: ")) return line.substring(10).trim();
+                if (!line.startsWith("#") && !line.isEmpty()) break;
+            }
+        } catch (java.io.IOException e) {}
+        return null;
     }
 
     private boolean checkIsEightDot(File file) {
