@@ -1,0 +1,47 @@
+{
+  "templateName": "ไทย Standard (6 จุด)",
+  "description": "พยัญชนะไทย สระ และเครื่องหมายวรรคตอน.",
+  "settings": {
+    "is8Dot": false,
+    "locale": "th",
+    "scriptFileName": "th-g0.utb",
+    "numSystem": 0
+  },
+  "mappings": [
+    { "opcode": "lowercase", "char": "ก", "dots": "1", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ข", "dots": "13", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ค", "dots": "1245", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ง", "dots": "12456", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "จ", "dots": "14", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ฉ", "dots": "16", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ช", "dots": "146", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ซ", "dots": "1356", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ญ", "dots": "12346", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ด", "dots": "145", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ต", "dots": "2345", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ถ", "dots": "1456", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ท", "dots": "23456", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "น", "dots": "1345", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "บ", "dots": "12", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ป", "dots": "1234", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ผ", "dots": "124", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ฝ", "dots": "1246", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "พ", "dots": "12345", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ฟ", "dots": "1245", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ม", "dots": "134", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ย", "dots": "13456", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ร", "dots": "1235", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ล", "dots": "123", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ว", "dots": "2456", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ส", "dots": "234", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ห", "dots": "125", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "อ", "dots": "135", "high": false, "fixed": false },
+
+    { "opcode": "lowercase", "char": "ะ", "dots": "2", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "า", "dots": "345", "high": false, "fixed": false },
+
+    { "opcode": "punctuation", "char": ".", "dots": "256", "high": false, "fixed": false },
+    { "opcode": "numsign", "char": "", "dots": "3456", "high": true, "fixed": true },
+    { "opcode": "space", "char": " ", "dots": "0", "high": true, "fixed": true }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "templateName": "עברית תקנית (6 נקודות)",
+  "description": "אלפבית עברי וסימני פיסוק.",
+  "settings": {
+    "is8Dot": false,
+    "locale": "he",
+    "scriptFileName": "he-IL.utb",
+    "numSystem": 0
+  },
+  "mappings": [
+    { "opcode": "lowercase", "char": "א", "dots": "1", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ב", "dots": "12", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ג", "dots": "1245", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ד", "dots": "145", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ה", "dots": "125", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ו", "dots": "2456", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ז", "dots": "1356", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ח", "dots": "156", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ט", "dots": "23456", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "י", "dots": "24", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "כ", "dots": "13", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ל", "dots": "123", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "מ", "dots": "134", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "נ", "dots": "1345", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ס", "dots": "234", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ע", "dots": "12356", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "פ", "dots": "124", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "צ", "dots": "1346", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ק", "dots": "12345", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ר", "dots": "1235", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ש", "dots": "146", "high": false, "fixed": false },
+    { "opcode": "lowercase", "char": "ת", "dots": "2345", "high": false, "fixed": false },
+
+    { "opcode": "punctuation", "char": ".", "dots": "256", "high": false, "fixed": false },
+    { "opcode": "punctuation", "char": ",", "dots": "2", "high": false, "fixed": false },
+    { "opcode": "punctuation", "char": ";", "dots": "23", "high": false, "fixed": false },
+    { "opcode": "punctuation", "char": ":", "dots": "25", "high": false, "fixed": false },
+    { "opcode": "punctuation", "char": "!", "dots": "235", "high": false, "fixed": false },
+    { "opcode": "punctuation", "char": "?", "dots": "26", "high": false, "fixed": false },
+    { "opcode": "punctuation", "char": "-", "dots": "36", "high": false, "fixed": false },
+
+    { "opcode": "numsign", "char": "", "dots": "3456", "high": true, "fixed": true },
+    { "opcode": "space", "char": " ", "dots": "0", "high": true, "fixed": true }
+  ]
+}
