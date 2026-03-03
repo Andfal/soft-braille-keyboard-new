@@ -89,16 +89,25 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public void onWindowShown() {
         super.onWindowShown();
-        updatePassthroughRegion();
+        // Use a delay to ensure window is stable
+        if (brailleView != null) {
+            brailleView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    updatePassthroughRegion();
+                }
+            }, 500);
+        }
     }
 
     private void updatePassthroughRegion() {
-        if (android.os.Build.VERSION.SDK_INT >= 33 && brailleView != null && brailleView.isShown()) {
+        if (android.os.Build.VERSION.SDK_INT >= 30 && brailleView != null && brailleView.isShown()) {
             BrailleAccessibilityService accService = BrailleAccessibilityService.getInstance();
             if (accService != null) {
                 int[] location = new int[2];
                 brailleView.getLocationOnScreen(location);
                 if (brailleView.getWidth() > 0 && brailleView.getHeight() > 0) {
+                    android.util.Log.d("BrailleIME", "Calling updatePassthroughRegion from IME");
                     accService.updatePassthroughRegion(location[0], location[1],
                             brailleView.getWidth(), brailleView.getHeight());
                 }
@@ -109,7 +118,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public void onWindowHidden() {
         super.onWindowHidden();
-        if (android.os.Build.VERSION.SDK_INT >= 33) {
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
             BrailleAccessibilityService accService = BrailleAccessibilityService.getInstance();
             if (accService != null) {
                 accService.clearPassthroughRegion();
@@ -123,7 +132,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         brailleView = (BrailleView) getLayoutInflater().inflate(
                 R.layout.keyboard, null);
         
-        if (android.os.Build.VERSION.SDK_INT >= 33) {
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
             brailleView.removeOnLayoutChangeListener(mLayoutChangeListener);
             brailleView.addOnLayoutChangeListener(mLayoutChangeListener);
         }
@@ -161,7 +170,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         // Point 3: Check accessibility service status and notify user if needed
         if (!BrailleAccessibilityService.isServiceEnabled()) {
             android.util.Log.w("BrailleIME", "BrailleAccessibilityService is not enabled. Touch passthrough will not work.");
-            // We could add a Toast or TTS feedback here if desired.
+            android.widget.Toast.makeText(this, "Please enable Soft Braille Keyboard Accessibility in settings for TalkBack support", android.widget.Toast.LENGTH_LONG).show();
+        } else {
+            android.util.Log.i("BrailleIME", "BrailleAccessibilityService is active.");
         }
     }
 

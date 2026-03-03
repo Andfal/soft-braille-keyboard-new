@@ -104,3 +104,38 @@
     3.  If a letter (a-z, A-Z) is typed, select `lowercase` or `uppercase`.
     4.  If a standard symbol is typed, select `punctuation`.
     5.  Allow manual override by the user after the auto-selection.
+
+# Gemini CLI Session Summary - March 3, 2026 (Afternoon)
+
+## Accomplishments
+
+### 1. Universal Braille Templates
+- **Massive Template Library:** Created and validated 26 Braille templates in `assets/templates/` covering:
+    - **Latin Script:** Italian (updated), English (UEB), Spanish, French, German, Portuguese, Polish, Dutch, Turkish, Romanian, Swedish/Finnish, Danish/Norwegian, Hungarian, Serbo-Croatian, Albanian, and Esperanto.
+    - **Non-Latin Scripts:** Russian (Cyrillic), Greek, Arabic, Hebrew, Hindi (Bharati), Korean (Hangul), Vietnamese, and Thai.
+    - **Technical:** A standard 8-dot Computer Braille template for technical/programming use.
+- **Validation:** Developed `scripts/test_templates.py` to verify that all templates generate syntactically correct Liblouis `.ctb` files. All templates passed `lou_checktable`.
+
+### 2. Customizable Gesture System
+- **Restoration & Integration:** Re-imported the gesture customization system from a legacy branch (`feature/gesture-customization`).
+- **Dynamic Dispatching:** Refactored `ActionHandler.java` to use `GestureManager` for resolving swipe actions based on user preferences.
+- **Full Customization UI:** Re-enabled `GestureSettingsActivity`, allowing users to map specific actions (deletion, navigation, feedback cycling, etc.) to 30+ different swipe combinations (single finger, two fingers, holds).
+- **Emoji Compatibility:** Encapsulated Emoji mode logic into `handleEmojiSwipe` to ensure it works seamlessly alongside the new dynamic gesture system.
+
+### 3. Usability & UI Refinements
+- **Auto-Opcode Detection:** Implemented real-time character analysis in `TableCreatorActivity`. The app now automatically selects the correct Liblouis opcode (`lowercase`, `uppercase`, `digit`, `punctuation`, `math`, etc.) as the user types.
+- **Table Manager Cleanup:** Removed redundant "Tap to edit" instructions in the custom table list. The instruction now appears once at the top and is hidden when the list is empty.
+- **Repository Optimization:** Deleted all "dead" or experimental branches (`correttore-automatico`, `suggerimenti-automatici`, `feature/gesture-customization`, etc.) to keep the repository clean and focused on the `main` and `tabelle-personalizzate` branches.
+
+### 4. Build & Stability
+- **Fixed Integration Errors:** Resolved multiple Java compilation errors related to type mismatches in `Options` calls and syntax errors from manual code merging.
+- **Verified Build:** Successfully performed a full debug build (`assembleDebug`) with all new features active.
+
+## Technical Notes
+- **TalkBack Passthrough:** The current implementation uses `setTouchExplorationPassthroughRegion` (API 30+) within a dedicated Accessibility Service.
+- **Service Stability:** We added `flagRequestTouchExplorationMode` to the static XML configuration to prevent service restarts and added a 500ms delay in the IME before requesting the passthrough to ensure window stability.
+- **Future Fallback (Piano B):** If the current passthrough logic proves unstable on certain devices, consider refactoring the `BrailleView` to be hosted within a window of type `TYPE_ACCESSIBILITY_OVERLAY`. This is the strategy used by modern TalkBack/BrailleIme to ensure the keyboard sits "above" the touch-exploration layer of other services.
+
+## Upcoming Tasks
+- **Accessibility Service Comparison:** Investigate TalkBack's accessibility service implementation to improve our `BrailleAccessibilityService`, focusing on touch passthrough and focus management.
+- **Table Creator UI Redesign:** Consider a contextual UI that hides advanced properties (Priority, Script base) when using a standard template to simplify the experience for non-expert users.

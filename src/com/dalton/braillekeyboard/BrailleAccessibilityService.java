@@ -5,6 +5,7 @@ import android.accessibilityservice.AccessibilityServiceInfo;
 import android.graphics.Region;
 import android.os.Build;
 import android.util.Log;
+import android.view.Display;
 import android.view.accessibility.AccessibilityEvent;
 
 public class BrailleAccessibilityService extends AccessibilityService {
@@ -49,35 +50,21 @@ public class BrailleAccessibilityService extends AccessibilityService {
     }
 
     public void updatePassthroughRegion(int x, int y, int width, int height) {
-        if (Build.VERSION.SDK_INT >= 33) {
-            AccessibilityServiceInfo info = getServiceInfo();
-            if (info != null) {
-                // Request touch exploration mode only when we need to set a passthrough region
-                if ((info.flags & AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE) == 0) {
-                    info.flags |= AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
-                    setServiceInfo(info);
-                }
-                
-                if (width > 0 && height > 0) {
-                    Log.d(TAG, "Setting passthrough region: " + x + ", " + y + ", " + width + "x" + height);
-                    Region region = new Region(x, y, x + width, y + height);
-                    setTouchExplorationPassthroughRegion(0, region);
-                }
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
+            if (width > 0 && height > 0) {
+                Log.d(TAG, "Setting passthrough region: " + x + ", " + y + ", " + width + "x" + height);
+                Region region = new Region(x, y, x + width, y + height);
+                setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, region);
+            } else {
+                Log.w(TAG, "Invalid region requested: " + width + "x" + height);
             }
         }
     }
     
     public void clearPassthroughRegion() {
-        if (Build.VERSION.SDK_INT >= 33) {
-            Log.d(TAG, "Clearing passthrough region and releasing exploration mode");
-            setTouchExplorationPassthroughRegion(0, new Region());
-            
-            AccessibilityServiceInfo info = getServiceInfo();
-            if (info != null && (info.flags & AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE) != 0) {
-                // Release touch exploration mode so other screen readers can take full control
-                info.flags &= ~AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
-                setServiceInfo(info);
-            }
+        if (android.os.Build.VERSION.SDK_INT >= 30) {
+            Log.d(TAG, "Clearing passthrough region");
+            setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, new Region());
         }
     }
 }
