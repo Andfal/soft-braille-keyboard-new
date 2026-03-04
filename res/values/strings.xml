@@ -494,4 +494,5 @@
     <string name="points_4_6">dots 4 and 6</string>
     <string name="points_1_5">dots 1-5</string>
     <string name="points_1_4">dots 1-4</string>
+    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
 </resources>

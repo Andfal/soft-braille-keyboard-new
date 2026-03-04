@@ -24,6 +24,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 
+import android.provider.Settings;
+
 /**
  * An Activity used purely for handling intents that require a backing activity.
  * 
@@ -41,8 +43,9 @@ public class IntentActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        if (getString(R.string.action_record_audio_permission).equals(
-                intent.getAction())) {
+        String action = intent != null ? intent.getAction() : null;
+        
+        if (getString(R.string.action_record_audio_permission).equals(action)) {
             if (intent.getExtras() != null) {
                 // If the intent has extras indicating that we should show a
                 // dialog if the user declines the permission.
@@ -53,7 +56,34 @@ public class IntentActivity extends Activity {
                         getString(R.string.require_record_audio_now));
             }
             askUserForRecordAudioPermission();
+        } else if ("com.dalton.braillekeyboard.ACTION_ENABLE_ACCESSIBILITY".equals(action)) {
+            showAccessibilityDialog();
+        } else {
+            finish();
         }
+    }
+
+    private void showAccessibilityDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.accessibility_service_label);
+        builder.setMessage("To use this keyboard with TalkBack, you must enable 'Soft Braille Keyboard' in Accessibility settings. This allows the keyboard to receive your touches while TalkBack is active.");
+        builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.setCancelable(false);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     // Called when the user accepts or declines the permission using the

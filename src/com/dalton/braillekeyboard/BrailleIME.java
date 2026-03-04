@@ -89,15 +89,24 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public void onWindowShown() {
         super.onWindowShown();
-        // Use a delay to ensure window is stable
-        if (brailleView != null) {
-            brailleView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
+        // Use a more robust retry logic to ensure the region is set even if layout is delayed
+        updatePassthroughRegionWithRetry(3, 500);
+    }
+
+    private void updatePassthroughRegionWithRetry(final int retriesLeft, long delay) {
+        if (brailleView == null) return;
+        
+        brailleView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (brailleView != null && brailleView.isShown() && brailleView.getWidth() > 0) {
                     updatePassthroughRegion();
+                } else if (retriesLeft > 0) {
+                    android.util.Log.d("BrailleIME", "Layout not ready, retrying passthrough update... (" + retriesLeft + ")");
+                    updatePassthroughRegionWithRetry(retriesLeft - 1, 500);
                 }
-            }, 500);
-        }
+            }
+        }, delay);
     }
 
     private void updatePassthroughRegion() {
@@ -107,7 +116,8 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 int[] location = new int[2];
                 brailleView.getLocationOnScreen(location);
                 if (brailleView.getWidth() > 0 && brailleView.getHeight() > 0) {
-                    android.util.Log.d("BrailleIME", "Calling updatePassthroughRegion from IME");
+                    android.util.Log.d("BrailleIME", "Calling updatePassthroughRegion from IME: " + 
+                            location[0] + "," + location[1] + " " + brailleView.getWidth() + "x" + brailleView.getHeight());
                     accService.updatePassthroughRegion(location[0], location[1],
                             brailleView.getWidth(), brailleView.getHeight());
                 }
@@ -137,21 +147,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             brailleView.addOnLayoutChangeListener(mLayoutChangeListener);
         }
 
-        if (!Options.getBooleanPreference(this,
-                R.string.pref_has_asked_record_audio_key, false)) {
-            Options.switchBooleanPreference(this,
-                    R.string.pref_has_asked_record_audio_key, false);
-            // Android 6+ show a permission dialog for record audio dangerous
-            // permission.
-            // Only do this once on the very first run though.
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(this, IntentActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction(getString(R.string.action_record_audio_permission));
-                startActivity(intent);
-            }
-        }
         return brailleView;
     }
 
@@ -170,9 +165,34 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         // Point 3: Check accessibility service status and notify user if needed
         if (!BrailleAccessibilityService.isServiceEnabled()) {
             android.util.Log.w("BrailleIME", "BrailleAccessibilityService is not enabled. Touch passthrough will not work.");
-            android.widget.Toast.makeText(this, "Please enable Soft Braille Keyboard Accessibility in settings for TalkBack support", android.widget.Toast.LENGTH_LONG).show();
+            
+            // Only prompt the user once per installation for accessibility
+            boolean hasAskedAcc = Options.getBooleanPreference(this, 
+                    R.string.pref_has_asked_accessibility_service_key, false);
+            
+            if (!hasAskedAcc) {
+                Intent intent = new Intent(this, IntentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction("com.dalton.braillekeyboard.ACTION_ENABLE_ACCESSIBILITY");
+                startActivity(intent);
+                
+                Options.switchBooleanPreference(this, 
+                        R.string.pref_has_asked_accessibility_service_key, false);
+                return; // Prioritize accessibility, skip audio prompt for this turn
+            }
         } else {
             android.util.Log.i("BrailleIME", "BrailleAccessibilityService is active.");
+        }
+
+        // Point 4: Request audio permission if needed (only if accessibility is not being prompted right now)
+        if (!Options.getBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false)) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(this, IntentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(getString(R.string.action_record_audio_permission));
+                startActivity(intent);
+            }
+            Options.switchBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false);
         }
     }
 
