@@ -113,6 +113,13 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         if (android.os.Build.VERSION.SDK_INT >= 30 && brailleView != null && brailleView.isShown()) {
             BrailleAccessibilityService accService = BrailleAccessibilityService.getInstance();
             if (accService != null) {
+                if (brailleView.getShrinkKeyboard()) {
+                    // If shrunk, we MUST NOT interfere with touch exploration.
+                    // This allows screen readers like Jieshuo to regain full gesture control.
+                    android.util.Log.d("BrailleIME", "Keyboard shrunk, clearing passthrough to restore screen reader control.");
+                    accService.clearPassthroughRegion();
+                    return;
+                }
                 int[] location = new int[2];
                 brailleView.getLocationOnScreen(location);
                 if (brailleView.getWidth() > 0 && brailleView.getHeight() > 0) {
@@ -226,6 +233,24 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         if (brailleParser != null) {
             brailleParser.destroy();
             brailleParser = null;
+        }
+    }
+
+    @Override
+    public void onComputeInsets(Insets outInsets) {
+        super.onComputeInsets(outInsets);
+        if (brailleView != null) {
+            if (brailleView.getShrinkKeyboard()) {
+                // In non-fullscreen mode, we define the top insets
+                outInsets.contentTopInsets = brailleView.getTop();
+                outInsets.visibleTopInsets = brailleView.getTop();
+                outInsets.touchableInsets = Insets.TOUCHABLE_INSETS_VISIBLE;
+            } else {
+                // Full screen mode: everything is content and touchable.
+                outInsets.contentTopInsets = 0;
+                outInsets.visibleTopInsets = 0;
+                outInsets.touchableInsets = Insets.TOUCHABLE_INSETS_FRAME;
+            }
         }
     }
 

@@ -110,6 +110,11 @@ public class BrailleView extends View {
         public void onShrink() {
             setLocale(Locale.getDefault());
             shrinkKeyboard = true;
+            // Make the view focusable for accessibility ONLY when shrunk
+            if (android.os.Build.VERSION.SDK_INT >= 16) {
+                setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+                setFocusable(true);
+            }
             invalidate();
             requestLayout();
             listener.updateFullscreenMode();
@@ -647,6 +652,11 @@ public class BrailleView extends View {
                 getContext().getString(R.string.keyboard_full_screen),
                 Speech.QUEUE_FLUSH);
         shrinkKeyboard = false;
+        // Hide from accessibility again as we use passthrough for full screen
+        if (android.os.Build.VERSION.SDK_INT >= 16) {
+            setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+            setFocusable(false);
+        }
         setLocale(listener.getLocale());
         invalidate();
         requestLayout();
