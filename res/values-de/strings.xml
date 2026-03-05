@@ -18,8 +18,8 @@
     <string name="deleted">%s gelöscht</string>
     <string name="delete_selection">Auswahl löschen</string>
     <string name="end_of_text">Textende</string>
-    <string name="expand_keyboard">Hier tippen um die Tastatur auszuklappen</string>
-    <string name="expand_keyboard_talkback">Hier zwei mal tippen um die Tastatur auszuklappen</string>
+    <string name="expand_keyboard">Einmal tippen um die Tastatur auszuklappen</string>
+    <string name="expand_keyboard_talkback">Einmal tippen um die Tastatur auszuklappen</string>
     <string name="grade">Standard Braille Typ</string>
     <string name="grade_computer">Computer Braille</string>
     <string name="grade_literary">Literary Braille</string>	<!-- ANNI: Can't find any braille related translation for this -->

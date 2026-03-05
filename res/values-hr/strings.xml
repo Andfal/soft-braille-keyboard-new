@@ -18,8 +18,8 @@
     <string name="deleted">Izbrisano %s</string>
     <string name="delete_selection">Izbriši odabir</string>
     <string name="end_of_text">Kraj teksta</string>
-    <string name="expand_keyboard_talkback">Dvaput dotaknite ovdje da biste proširili tipkovnicu</string>
-    <string name="expand_keyboard">Dotaknite ovdje da biste proširili tipkovnicu</string>
+    <string name="expand_keyboard_talkback">Jedan dodir za proširenje tipkovnice</string>
+    <string name="expand_keyboard">Jedan dodir za proširenje tipkovnice</string>
     <string name="grade_computer">Kompjutorska brajica</string>
     <string name="grade">Zadani stupanj brajice</string>
     <string name="grade_literary">Literarna brajica</string>

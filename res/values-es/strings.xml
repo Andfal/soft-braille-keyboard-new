@@ -18,8 +18,8 @@
     <string name="deleted">%s borrado</string>
     <string name="delete_selection">Borrar lo seleccionado</string>
     <string name="end_of_text">Final del texto</string>
-    <string name="expand_keyboard_talkback">Tocar dos veces para ampliar el teclado</string>
-    <string name="expand_keyboard">Tocar aquí para ampliar el teclado</string>
+    <string name="expand_keyboard_talkback">Toque una sola vez para ampliar el teclado</string>
+    <string name="expand_keyboard">Toque una sola vez para ampliar el teclado</string>
     <string name="grade_computer">Braille Computarizado</string>
     <string name="grade">Grado de braille actual</string>
     <string name="grade_literary">Braille literario</string>

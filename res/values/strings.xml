@@ -104,8 +104,8 @@
     <string name="deleted">Deleted %s</string>
     <string name="delete_selection">Delete selection</string>
     <string name="end_of_text">End of text</string>
-    <string name="expand_keyboard_talkback">Double tap here to expand the keyboard</string>
-    <string name="expand_keyboard">Tap here to expand the keyboard</string>
+    <string name="expand_keyboard_talkback">Single tap here to expand the keyboard</string>
+    <string name="expand_keyboard">Single tap to expand the keyboard</string>
     <string name="grade_computer">Computer Braille</string>
     <string name="grade">Default Braille grade</string>
     <string name="grade_literary">Literary Braille</string>

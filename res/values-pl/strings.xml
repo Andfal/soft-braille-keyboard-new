@@ -18,8 +18,8 @@
     <string name="deleted">Usunięto %s</string>
     <string name="delete_selection">Usuń zaznaczenie</string>
     <string name="end_of_text">Koniec tekstu</string>
-      <string name="expand_keyboard">Stuknij tutaj, aby rozwinąć klawiaturę</string>
-        <string name="expand_keyboard_talkback">Stuknij dwukrotnie tutaj, aby rozwinąć klawiaturę</string>
+      <string name="expand_keyboard">Pojedyncze stuknięcie, aby rozwinąć klawiaturę</string>
+        <string name="expand_keyboard_talkback">Pojedyncze stuknięcie, aby rozwinąć klawiaturę</string>
     <string name="grade_computer">Brajl Komputerowy</string>
     <string name="grade">Domyślny stopień brajla</string>
         <string name="grade_literary">Brajl Literacki</string>

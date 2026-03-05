@@ -18,8 +18,8 @@
     <string name="deleted">已刪除 %s</string>
     <string name="delete_selection">移除選取</string>
     <string name="end_of_text">文字結尾</string>
-    <string name="expand_keyboard_talkback">雙點此處擴展鍵盤</string>
-    <string name="expand_keyboard">輕點此處擴展鍵盤</string>
+    <string name="expand_keyboard_talkback">單擊此處擴展鍵盤</string>
+    <string name="expand_keyboard">單擊此處擴展鍵盤</string>
     <string name="grade_computer">電腦點字</string>
     <string name="grade_literary">書面點字</string>
     <string name="grade_table">%s 級</string>

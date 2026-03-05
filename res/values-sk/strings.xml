@@ -18,8 +18,8 @@
     <string name="deleted">Vymazané %s</string>
     <string name="delete_selection">Vymazať výber</string>
     <string name="end_of_text">Koniec textu</string>
-    <string name="expand_keyboard">Klepnutím sem roztiahnete klávesnicu</string>
-    <string name="expand_keyboard_talkback">Dvojitým klepnutím sem roztiahnete klávesnicu</string>
+    <string name="expand_keyboard">Jedným klepnutím sem rozbalíte klávesnicu</string>
+    <string name="expand_keyboard_talkback">Jedným klepnutím sem rozbalíte klávesnicu</string>
     <string name="grade_computer">Počítačové Braillovo písmo</string>
     <string name="grade_literary">Literárne Braillovo písmo</string>
     <string name="grade">Predvolený typ Braillovho písma</string>

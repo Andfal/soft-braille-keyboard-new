@@ -46,8 +46,8 @@
     <string name="deleted">Đã Xóa %s</string>
     <string name="delete_selection">Xóa Vùng Chọn</string>
     <string name="end_of_text">Cuối văn bản</string>
-    <string name="expand_keyboard">Chạm Vào Đây Để Mở Rộng Bàn Phím</string>
-    <string name="expand_keyboard_talkback">Chạm Hai Lần Vào Đây Để Mở Rộng Bàn Phím</string>
+    <string name="expand_keyboard">Chạm một lần để mở rộng bàn phím</string>
+    <string name="expand_keyboard_talkback">Chạm một lần để mở rộng bàn phím</string>
     <string name="grade">Chữ Braille Cấp Mặc Định</string>
     <string name="grade_computer">Chữ Braille Máy Tính</string>
     <string name="grade_literary">Chữ Braille Văn Học</string>
