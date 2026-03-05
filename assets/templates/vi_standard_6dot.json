@@ -1,5 +1,5 @@
 {
-  "templateName": "Tiếng Việt Standard (6 chấm)",
+  "templateName": "Tiếng Việt / Vietnamese / Vietnamita",
   "description": "Bảng chữ cái tiếng Việt, dấu thanh và ký tự đặc biệt.",
   "settings": {
     "is8Dot": false,
@@ -8,40 +8,243 @@
     "numSystem": 0
   },
   "mappings": [
-    { "opcode": "lowercase", "char": "a", "dots": "1", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "ă", "dots": "345", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "â", "dots": "16", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "b", "dots": "12", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "c", "dots": "14", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "d", "dots": "145", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "đ", "dots": "1246", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "e", "dots": "15", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "ê", "dots": "126", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "g", "dots": "1245", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "h", "dots": "125", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "i", "dots": "24", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "k", "dots": "13", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "l", "dots": "123", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "m", "dots": "134", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "n", "dots": "1345", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "o", "dots": "135", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "ô", "dots": "1456", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "ơ", "dots": "246", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "p", "dots": "1234", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "q", "dots": "12345", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "r", "dots": "1235", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "s", "dots": "234", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "t", "dots": "2345", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "u", "dots": "136", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "ư", "dots": "1256", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "v", "dots": "1236", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "x", "dots": "1346", "high": false, "fixed": false },
-    { "opcode": "lowercase", "char": "y", "dots": "13456", "high": false, "fixed": false },
-
-    { "opcode": "punctuation", "char": ".", "dots": "256", "high": false, "fixed": false },
-    { "opcode": "punctuation", "char": ",", "dots": "2", "high": false, "fixed": false },
-    { "opcode": "numsign", "char": "", "dots": "3456", "high": true, "fixed": true },
-    { "opcode": "capsletter", "char": "", "dots": "46", "high": true, "fixed": true },
-    { "opcode": "space", "char": " ", "dots": "0", "high": true, "fixed": true }
+    {
+      "opcode": "lowercase",
+      "char": "a",
+      "dots": "1",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ă",
+      "dots": "345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "â",
+      "dots": "16",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "b",
+      "dots": "12",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "c",
+      "dots": "14",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "d",
+      "dots": "145",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "đ",
+      "dots": "1246",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "e",
+      "dots": "15",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ê",
+      "dots": "126",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "g",
+      "dots": "1245",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "h",
+      "dots": "125",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "i",
+      "dots": "24",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "k",
+      "dots": "13",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "l",
+      "dots": "123",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "m",
+      "dots": "134",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "n",
+      "dots": "1345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "o",
+      "dots": "135",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ô",
+      "dots": "1456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ơ",
+      "dots": "246",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "p",
+      "dots": "1234",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "q",
+      "dots": "12345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "r",
+      "dots": "1235",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "s",
+      "dots": "234",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "t",
+      "dots": "2345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "u",
+      "dots": "136",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ư",
+      "dots": "1256",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "v",
+      "dots": "1236",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "x",
+      "dots": "1346",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "y",
+      "dots": "13456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": ".",
+      "dots": "256",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": ",",
+      "dots": "2",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "numsign",
+      "char": "",
+      "dots": "3456",
+      "high": true,
+      "fixed": true
+    },
+    {
+      "opcode": "capsletter",
+      "char": "",
+      "dots": "46",
+      "high": true,
+      "fixed": true
+    },
+    {
+      "opcode": "space",
+      "char": " ",
+      "dots": "0",
+      "high": true,
+      "fixed": true
+    }
   ]
 }

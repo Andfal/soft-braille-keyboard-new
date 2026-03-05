@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -1402,12 +1403,14 @@ private void deleteSelected() {
     }
 
     private void writeCustomMappings(StringBuilder sb, boolean highPriorityOnly) {
-        // Build numeric indicators lists
-        StringBuilder numericModeChars = new StringBuilder();
-        StringBuilder midEndNumericModeChars = new StringBuilder();
+        // Lists to track automated rules
         List<String> writtenBasePairs = new ArrayList<>();
         List<Character> writtenAutoChars = new ArrayList<>();
-
+        StringBuilder baseRules = new StringBuilder();
+        
+        // Build numeric indicators lists (these are always cumulative at the end of their section)
+        StringBuilder numericModeChars = new StringBuilder();
+        StringBuilder midEndNumericModeChars = new StringBuilder();
         for (Mapping m : mMappings) {
             if (m.isHighPriority != highPriorityOnly) continue;
             if (m.opcode.equals("numericmodechars") && m.character.length() == 1) {
@@ -1417,94 +1420,26 @@ private void deleteSelected() {
             }
         }
 
-        StringBuilder baseRules = new StringBuilder();
-
-        for (Mapping m : mMappings) {
-            if (m.isHighPriority != highPriorityOnly) continue;
-            
-            if (m.opcode.equals("numericmodechars") || m.opcode.equals("midendnumericmodechars")) {
-                if (m.character == null || m.character.isEmpty()) continue;
-                String cPart = m.character;
-                if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
-                
-                StringBuilder dots = new StringBuilder();
-                for (int i=0; i<m.patterns.size(); i++) {
-                    if (i > 0) dots.append("-");
-                    dots.append(patternToDotsString(m.patterns.get(i)));
-                }
-                
-                String fallbackOp = "+-/×÷=<>±^~≈≠≤≥∞√¬*".indexOf(m.character) != -1 ? "math" : "punctuation";
-                sb.append(fallbackOp).append(" ").append(cPart).append(" ").append(dots).append("\n");
-                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
-                continue;
+        if (highPriorityOnly) {
+            // --- EXPERT MODE: High Priority block respects absolute user/template order ---
+            for (Mapping m : mMappings) {
+                if (!m.isHighPriority) continue;
+                writeSingleMapping(sb, m, writtenBasePairs, writtenAutoChars, baseRules);
             }
+        } else {
+            // --- SAFETY MODE: Standard Priority block uses smart grouping to protect alphabet ---
+            String[] group1 = {"lowercase", "uppercase", "letter", "base"};
+            String[] group2 = {"digit", "litdigit", "numsign", "capsletter", "letsign", "begnum", "endnum"};
+            String[] group3 = {"punctuation", "math", "sign", "always", "word", "partword", "space"};
+            String[] group4 = {"prepunc", "postpunc", "begcaps", "endcaps", "begcapsword", "endcapsword", "midnum"};
 
-            StringBuilder dots = new StringBuilder();
-            for (int i=0; i<m.patterns.size(); i++) {
-                if (i > 0) dots.append("-");
-                dots.append(patternToDotsString(m.patterns.get(i)));
-            }
-            
-            boolean isCapsIndicator = m.opcode.equals("begcaps") || m.opcode.equals("endcaps") || 
-                                     m.opcode.equals("begcapsword") || m.opcode.equals("endcapsword");
-            boolean isNumIndicator = m.opcode.equals("begnum") || m.opcode.equals("endnum");
-            boolean isStand = m.opcode.equals("numsign") || m.opcode.equals("capsletter") || m.opcode.equals("letsign");
-            
-            if (isCapsIndicator || isStand) {
-                // Formatting: opcode dots (No character allowed)
-                sb.append(m.opcode).append(" ").append(dots).append("\n");
-            } else if (isNumIndicator) {
-                // Formatting: opcode char dots (Character is REQUIRED)
-                String cPart = m.character;
-                if (cPart == null || cPart.isEmpty()) {
-                    cPart = m.opcode.equals("begnum") ? "#" : "%"; // Safe fallbacks
-                }
-                if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
-                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
-            } else {
-                if (m.character == null || m.character.isEmpty()) {
-                    // Fallback for character-based opcodes that are empty (like space)
-                    if (m.opcode.equals("space")) {
-                         sb.append("space \\x0020 ").append(dots).append("\n");
-                    } else {
-                         // Default fallback to prevent syntax errors
-                         sb.append("punctuation \\x0000 ").append(dots).append("\n");
-                    }
-                    continue;
-                }
-                
-                // AUTOMATIC LOWERCASE DEFINITION (If user maps uppercase ONLY)
-                // Now restricted to 'lowercase' or 'uppercase' opcodes to allow manual override via other opcodes
-                if (m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) {
-                    char c = m.character.charAt(0);
-                    if (Character.isLetter(c)) {
-                        char low = Character.toLowerCase(c);
-                        char up = Character.toUpperCase(c);
-                        if (low != up) {
-                            // If this is the uppercase and lowercase is NOT mapped by user
-                            if (c == up && !isCharacterMapped(low) && !writtenAutoChars.contains(low)) {
-                                sb.append("lowercase ").append(String.format("\\x%04x", (int)low))
-                                  .append(" ").append(dots).append("\n");
-                                writtenAutoChars.add(low);
-                            }
-                            
-                            String pairKey = up + "-" + low;
-                            if (!writtenBasePairs.contains(pairKey)) {
-                                baseRules.append("base uppercase ").append(String.format("\\x%04x", (int)up))
-                                         .append(" ").append(String.format("\\x%04x", (int)low)).append("\n");
-                                writtenBasePairs.add(pairKey);
-                            }
-                        }
-                    }
-                }
-
-                String cPart = m.character;
-                if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
-                sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
-            }
+            writeOpcodeGroup(sb, false, group1, writtenBasePairs, writtenAutoChars, baseRules);
+            writeOpcodeGroup(sb, false, group2, writtenBasePairs, writtenAutoChars, baseRules);
+            writeOpcodeGroup(sb, false, group3, writtenBasePairs, writtenAutoChars, baseRules);
+            writeOpcodeGroup(sb, false, group4, writtenBasePairs, writtenAutoChars, baseRules);
         }
 
-        // Write cumulative indicators AFTER individual mappings
+        // Write cumulative indicators AFTER individual mappings for this section
         if (numericModeChars.length() > 0) {
             sb.append("\nnumericmodechars ").append(numericModeChars).append("\n");
         }
@@ -1512,10 +1447,88 @@ private void deleteSelected() {
             sb.append("midendnumericmodechars ").append(midEndNumericModeChars).append("\n");
         }
 
-        // Write base rules at the end of the section
+        // Write base rules collected during this section
         if (baseRules.length() > 0) {
             sb.append("\n# Base uppercase rules for this section\n");
             sb.append(baseRules.toString());
+        }
+    }
+
+    private void writeOpcodeGroup(StringBuilder sb, boolean highPriorityOnly, String[] opcodes, 
+                                 List<String> writtenBasePairs, List<Character> writtenAutoChars, 
+                                 StringBuilder baseRules) {
+        List<String> groupList = Arrays.asList(opcodes);
+        for (Mapping m : mMappings) {
+            if (m.isHighPriority != highPriorityOnly) continue;
+            if (!groupList.contains(m.opcode)) continue;
+            writeSingleMapping(sb, m, writtenBasePairs, writtenAutoChars, baseRules);
+        }
+    }
+
+    private void writeSingleMapping(StringBuilder sb, Mapping m, List<String> writtenBasePairs, 
+                                   List<Character> writtenAutoChars, StringBuilder baseRules) {
+        if (m.opcode.equals("numericmodechars") || m.opcode.equals("midendnumericmodechars")) {
+            return; // Handled cumulatively
+        }
+
+        StringBuilder dots = new StringBuilder();
+        for (int i=0; i<m.patterns.size(); i++) {
+            if (i > 0) dots.append("-");
+            dots.append(patternToDotsString(m.patterns.get(i)));
+        }
+
+        boolean isCapsIndicator = m.opcode.equals("begcaps") || m.opcode.equals("endcaps") || 
+                                 m.opcode.equals("begcapsword") || m.opcode.equals("endcapsword");
+        boolean isNumIndicator = m.opcode.equals("begnum") || m.opcode.equals("endnum");
+        boolean isStand = m.opcode.equals("numsign") || m.opcode.equals("capsletter") || m.opcode.equals("letsign");
+
+        if (isCapsIndicator || isStand) {
+            sb.append(m.opcode).append(" ").append(dots).append("\n");
+        } else if (isNumIndicator) {
+            String cPart = m.character;
+            if (cPart == null || cPart.isEmpty()) {
+                cPart = m.opcode.equals("begnum") ? "#" : "%";
+            }
+            if (cPart.length() == 1) cPart = String.format("\\x%04x", (int)cPart.charAt(0));
+            sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
+        } else {
+            if (m.character == null || m.character.isEmpty()) {
+                if (m.opcode.equals("space")) {
+                     sb.append("space \\x0020 ").append(dots).append("\n");
+                }
+                return;
+            }
+
+            // AUTOMATIC LOWERCASE/BASE PAIRING LOGIC
+            if (m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) {
+                char c = m.character.charAt(0);
+                if (Character.isLetter(c)) {
+                    char low = Character.toLowerCase(c);
+                    char up = Character.toUpperCase(c);
+                    if (low != up) {
+                        if (c == up && !isCharacterMapped(low) && !writtenAutoChars.contains(low)) {
+                            sb.append("lowercase ").append(String.format("\\x%04x", (int)low))
+                              .append(" ").append(dots).append("\n");
+                            writtenAutoChars.add(low);
+                        }
+                        String pairKey = up + "-" + low;
+                        if (!writtenBasePairs.contains(pairKey)) {
+                            baseRules.append("base uppercase ").append(String.format("\\x%04x", (int)up))
+                                     .append(" ").append(String.format("\\x%04x", (int)low)).append("\n");
+                            writtenBasePairs.add(pairKey);
+                        }
+                    }
+                }
+            }
+
+            String cPart = m.character;
+            if (cPart.length() == 1) {
+                char c = cPart.charAt(0);
+                if (c == ' ') cPart = "\\s";
+                else if (c == '\t') cPart = "\\t";
+                else if (c < 33 || c > 126) cPart = String.format("\\x%04x", (int)c);
+            }
+            sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
         }
     }
 
