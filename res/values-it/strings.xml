@@ -260,6 +260,16 @@
     <string name="msg_table_saved">Tabella salvata con successo!</string>
     <string name="error_no_name">Inserisci un nome per la tabella</string>
     <string name="custom_table_label_prefix">Personale:</string>
+    <string name="label_show_visual_picker">Mostra selettore visuale celle</string>
+    <string name="btn_add">AGGIUNGI</string>
+    <string name="btn_save">SALVA</string>
+    <string name="btn_update">AGGIORNA</string>
+    <string name="label_mapped_items">Elementi Mappati</string>
+    <string name="hint_author">Autore (es. Sergio)</string>
+    <string name="hint_description">Descrizione tabella</string>
+    <string name="hint_dots_format">Punti (es. 123-45)</string>
+    <string name="msg_char_empty">Il campo carattere è vuoto</string>
+    <string name="msg_enter_dots">Inserisci i punti (es. 123-45)</string>
 
     <!-- Opcodes (Amichevoli per Italiani) -->
     <string name="opcode_always">Sostituzione forzata (Sempre)</string>

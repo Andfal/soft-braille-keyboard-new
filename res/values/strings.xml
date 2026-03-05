@@ -344,6 +344,16 @@
     <string name="msg_table_saved">Table Saved Successfully!</string>
     <string name="error_no_name">Please enter a table name</string>
     <string name="custom_table_label_prefix">Custom:</string>
+    <string name="label_show_visual_picker">Show visual cell picker</string>
+    <string name="btn_add">ADD</string>
+    <string name="btn_save">SAVE</string>
+    <string name="btn_update">UPDATE</string>
+    <string name="label_mapped_items">Mapped Items</string>
+    <string name="hint_author">Author (e.g. Sergio)</string>
+    <string name="hint_description">Table description</string>
+    <string name="hint_dots_format">Dots (e.g. 123-45)</string>
+    <string name="msg_char_empty">Character field is empty</string>
+    <string name="msg_enter_dots">Please enter dots (e.g. 123-45)</string>
 
     <!-- Opcodes -->
     <string name="opcode_always">Override (Always)</string>
