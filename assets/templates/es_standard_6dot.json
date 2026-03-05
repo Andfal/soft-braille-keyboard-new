@@ -1,5 +1,5 @@
 {
-  "templateName": "Español / Spanish / Spagnolo",
+  "templateName": "Spanish Standard (6-dot)",
   "description": "Alfabeto español, acentos, ñ, ü, puntuación básica e indicadores de sistema.",
   "settings": {
     "is8Dot": false,

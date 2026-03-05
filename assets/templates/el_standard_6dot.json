@@ -1,5 +1,5 @@
 {
-  "templateName": "Ελληνικά / Greek / Greco",
+  "templateName": "Greek Standard (6-dot)",
   "description": "Ελληνικό αλφάβητο, τονισμένα φωνήεντα και σημεία στίξης.",
   "settings": {
     "is8Dot": false,

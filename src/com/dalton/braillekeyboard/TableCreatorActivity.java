@@ -82,15 +82,24 @@ public class TableCreatorActivity extends Activity {
     
     private Spinner mOpcodeSpinner;
     private EditText mCharEdit;
+    private EditText mDotsEdit;
     private LinearLayout mCurrentCellsContainer;
     private List<Integer> mCurrentPatterns = new ArrayList<>();
     private Button mAddMappingBtn;
     
+    // Containers for toggling UI visibility
+    private LinearLayout mAdvancedSettingsLayout;
+    private LinearLayout mCellPickerButtonsLayout;
+    private TextView mBaseTableLabel;
+    private TextView mScriptLabel;
+    private TextView mNumSystemLabel;
+
     private Spinner mMappedItemsSpinner;
     private List<String> mDisplayList = new ArrayList<>();
     private ArrayAdapter<String> mAdapter;
     private List<Mapping> mMappings = new ArrayList<>();
     private int mEditingIndex = -1;
+    private boolean mIsTemplateUsed = false;
 
     private final String[] OPCODES = {
         "always", "lowercase", "uppercase", "punctuation", "digit", "math", "sign", "space", 
@@ -196,24 +205,26 @@ public class TableCreatorActivity extends Activity {
         mEightDotCheck.setOnCheckedChangeListener((buttonView, isChecked) -> updateScriptSpinner(isChecked));
         root.addView(mEightDotCheck);
 
-        // --- Base Table Selector ---
-        TextView baseLabel = new TextView(this);
-        baseLabel.setText(R.string.label_base_table);
-        baseLabel.setPadding(0, 20, 0, 0);
-        root.addView(baseLabel);
+        // --- Container for Advanced Settings (Hidden in Template Mode) ---
+        mAdvancedSettingsLayout = new LinearLayout(this);
+        mAdvancedSettingsLayout.setOrientation(LinearLayout.VERTICAL);
+
+        mBaseTableLabel = new TextView(this);
+        mBaseTableLabel.setText(R.string.label_base_table);
+        mBaseTableLabel.setPadding(0, 20, 0, 0);
+        mAdvancedSettingsLayout.addView(mBaseTableLabel);
 
         mBaseTableSpinner = new Spinner(this);
         loadSystemTables();
         ArrayAdapter<String> baseAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mSystemTableLabels);
         baseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mBaseTableSpinner.setAdapter(baseAdapter);
-        root.addView(mBaseTableSpinner);
+        mAdvancedSettingsLayout.addView(mBaseTableSpinner);
 
-        // --- Base Script Selector ---
-        TextView scriptLabel = new TextView(this);
-        scriptLabel.setText(R.string.label_base_script);
-        scriptLabel.setPadding(0, 20, 0, 0);
-        root.addView(scriptLabel);
+        mScriptLabel = new TextView(this);
+        mScriptLabel.setText(R.string.label_base_script);
+        mScriptLabel.setPadding(0, 20, 0, 0);
+        mAdvancedSettingsLayout.addView(mScriptLabel);
 
         mScriptSpinner = new Spinner(this);
         mScriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -221,13 +232,12 @@ public class TableCreatorActivity extends Activity {
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
         updateScriptSpinner(false);
-        root.addView(mScriptSpinner);
+        mAdvancedSettingsLayout.addView(mScriptSpinner);
 
-        // --- Number System Selector ---
-        TextView numLabel = new TextView(this);
-        numLabel.setText(R.string.label_number_system);
-        numLabel.setPadding(0, 20, 0, 0);
-        root.addView(numLabel);
+        mNumSystemLabel = new TextView(this);
+        mNumSystemLabel.setText(R.string.label_number_system);
+        mNumSystemLabel.setPadding(0, 20, 0, 0);
+        mAdvancedSettingsLayout.addView(mNumSystemLabel);
 
         mNumSystemSpinner = new Spinner(this);
         String[] numSystems = {
@@ -236,7 +246,9 @@ public class TableCreatorActivity extends Activity {
             getString(R.string.num_sys_none)
         };
         mNumSystemSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numSystems));
-        root.addView(mNumSystemSpinner);
+        mAdvancedSettingsLayout.addView(mNumSystemSpinner);
+
+        root.addView(mAdvancedSettingsLayout);
 
         // --- Mapping Editor ---
         TextView editorTitle = new TextView(this);
@@ -270,76 +282,60 @@ public class TableCreatorActivity extends Activity {
         LinearLayout charRow = new LinearLayout(this);
         charRow.setOrientation(LinearLayout.HORIZONTAL);
         mCharEdit = new EditText(this);
-        mCharEdit.setHint("Char / Word");
+        mCharEdit.setHint("Character or Word");
+        mCharEdit.setInputType(android.text.InputType.TYPE_CLASS_TEXT);
         mCharEdit.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
 
+        // Auto-suggest opcode with debounce
         mCharEdit.addTextChangedListener(new android.text.TextWatcher() {
+            private final android.os.Handler handler = new android.os.Handler();
+            private Runnable runnable;
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
-            public void afterTextChanged(android.text.Editable s) {
+            public void afterTextChanged(final android.text.Editable s) {
                 if (mIsUpdatingUI) return;
-                mIsUpdatingUI = true;
-                if (s.length() == 1) {
-                    char c = s.charAt(0);
-                    String suggestedOp = "sign";
-
-                    if (Character.isDigit(c)) {
-                        suggestedOp = "digit";
-                    } else if (Character.isLowerCase(c)) {
-                        suggestedOp = "lowercase";
-                    } else if (Character.isUpperCase(c)) {
-                        suggestedOp = "uppercase";
-                    } else if (c == ' ' || c == '\u00a0') {
-                        suggestedOp = "space";
-                    } else if ("([{“«‘)]}”»’".indexOf(c) != -1) {
-                        suggestedOp = "punctuation";
-                    } else if ("+-*/×÷=<>".indexOf(c) != -1) {
-                        suggestedOp = "math";
-                    } else if ("%€$#".indexOf(c) != -1) {
-                        suggestedOp = "midendnumericmodechars";
-                    } else if (",.:-/".indexOf(c) != -1) {
-                        suggestedOp = "punctuation";
-                    } else if ("!?¡¿\"'\\|/_@&§¶†‡*".indexOf(c) != -1) {
-                        suggestedOp = "punctuation";
-                    }
-
-                    for (int i = 0; i < OPCODES.length; i++) {
-                        if (OPCODES[i].equals(suggestedOp)) {
-                            mOpcodeSpinner.setSelection(i);
-                            break;
+                handler.removeCallbacks(runnable);
+                runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mCharEdit.hasFocus() && mCharEdit.getText().length() > 0) {
+                            android.util.Log.d("TableCreator", "Debounce delay finished. Triggering analysis...");
+                            suggestOpcodeFromChar();
                         }
                     }
-                } else if (s.length() > 1) {
-                    for (int i = 0; i < OPCODES.length; i++) {
-                        if (OPCODES[i].equals("word")) {
-                            mOpcodeSpinner.setSelection(i);
-                            break;
-                        }
-                    }
-                }
-                mIsUpdatingUI = false;
+                };
+                handler.postDelayed(runnable, 200); // Snappy 200ms delay for better responsiveness
             }
         });
+
         Button presetBtn = new Button(this);
         presetBtn.setText("Presets");
         presetBtn.setOnClickListener(v -> showPresetPicker());
         charRow.addView(mCharEdit); charRow.addView(presetBtn);
         editorBox.addView(charRow);
 
+        // --- NEW: Dots Input Field ---
+        mDotsEdit = new EditText(this);
+        mDotsEdit.setHint("Dots (e.g. 123-456)");
+        mDotsEdit.setInputType(android.text.InputType.TYPE_CLASS_TEXT);
+        editorBox.addView(mDotsEdit);
+
         mCurrentCellsContainer = new LinearLayout(this);
         mCurrentCellsContainer.setPadding(0, 10, 0, 10);
         editorBox.addView(mCurrentCellsContainer);
 
-        LinearLayout btnRow = new LinearLayout(this);
+        // --- Container for Cell Picker Buttons (Hidden in Template Mode) ---
+        mCellPickerButtonsLayout = new LinearLayout(this);
+        mCellPickerButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
         Button setDotsBtn = new Button(this); setDotsBtn.setText("Set Cell");
         setDotsBtn.setOnClickListener(v -> showCellEditor(false));
         Button appendDotBtn = new Button(this); appendDotBtn.setText("+ Append");
         appendDotBtn.setOnClickListener(v -> showCellEditor(true));
         Button clearDots = new Button(this); clearDots.setText("Clear");
-        clearDots.setOnClickListener(v -> { mCurrentPatterns.clear(); updateDotsDisplay(); });
-        btnRow.addView(setDotsBtn); btnRow.addView(appendDotBtn); btnRow.addView(clearDots);
-        editorBox.addView(btnRow);
+        clearDots.setOnClickListener(v -> { mCurrentPatterns.clear(); updateDotsDisplay(); mDotsEdit.setText(""); });
+        mCellPickerButtonsLayout.addView(setDotsBtn); mCellPickerButtonsLayout.addView(appendDotBtn); mCellPickerButtonsLayout.addView(clearDots);
+        editorBox.addView(mCellPickerButtonsLayout);
 
         mAddMappingBtn = new Button(this);
         mAddMappingBtn.setText("Add mapping to list");
@@ -1156,18 +1152,108 @@ public class TableCreatorActivity extends Activity {
         b.show();
     }
 
-    // Refactored addOrUpdateMapping to use the new checks
-    private void addOrUpdateMapping() {
-        String opcode = OPCODES[mOpcodeSpinner.getSelectedItemPosition()];
-        String character = mCharEdit.getText().toString();
-        if (mCurrentPatterns.isEmpty()) { Toast.makeText(this, "Please add dots first", Toast.LENGTH_SHORT).show(); return; }
+    private String sanitizeCharacter(String input) {
+        if (input == null || input.isEmpty()) return "";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            // Keep real printable chars, exclude technical placeholders like U+00A0 and Braille patterns
+            if (c != '\u00a0' && (c < 0x2800 || c > 0x28FF)) {
+                sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
+
+    private String getSuggestedOpcode(String s) {
+        if (s == null) return null;
+        s = s.trim(); // Ignore leading/trailing spaces
+        if (s.isEmpty()) return null;
         
-        Mapping newMapping = new Mapping(opcode, character, new ArrayList<>(mCurrentPatterns), mMappingPriorityCheck.isChecked());
+        char c = s.charAt(s.length() - 1);
+        
+        if (s.length() > 1) return "word";
+        if (Character.isDigit(c)) return "digit";
+        if (Character.isLowerCase(c)) return "lowercase";
+        if (Character.isUpperCase(c)) return "uppercase";
+        if (c == ' ') return "space";
+        if ("([{“«‘)]}”»’".indexOf(c) != -1) return "punctuation";
+        if ("+-*×÷=<>".indexOf(c) != -1) return "math";
+        if ("%€$#".indexOf(c) != -1) return "midendnumericmodechars";
+        if (",.:;-!?¡¿\"'\\|/_@&§¶†‡*".indexOf(c) != -1) return "punctuation";
+        
+        return null;
+    }
+
+    private void suggestOpcodeFromChar() {
+        String s = sanitizeCharacter(mCharEdit.getText().toString());
+        String suggestedOp = getSuggestedOpcode(s);
+        android.util.Log.d("TableCreator", "suggestOpcodeFromChar: sanitized='" + s + "', suggested=" + suggestedOp);
+        
+        if (suggestedOp == null) return;
+
+        int currentPos = mOpcodeSpinner.getSelectedItemPosition();
+        String currentOp = OPCODES[currentPos];
+        
+        mIsUpdatingUI = true;
+        if (mEditingIndex == -1) {
+            // Apply if current is default or if we switched from char to word or viceversa
+            if (currentOp.equals("always") || (currentOp.equals("word") && s.length() == 1) || (!currentOp.equals("word") && s.length() > 1)) {
+                updateSpinnerToOpcode(suggestedOp);
+            } else if (!currentOp.equals(suggestedOp)) {
+                // Also switch if it's a standard auto-detected category
+                List<String> autoOps = Arrays.asList("digit", "lowercase", "uppercase", "punctuation", "math", "midendnumericmodechars");
+                if (autoOps.contains(currentOp)) updateSpinnerToOpcode(suggestedOp);
+            }
+        }
+        mIsUpdatingUI = false;
+    }
+
+    private void updateSpinnerToOpcode(String opcode) {
+        for (int i = 0; i < OPCODES.length; i++) {
+            if (OPCODES[i].equals(opcode)) {
+                android.util.Log.d("TableCreator", "Updating Spinner to index " + i + " (" + opcode + ")");
+                mOpcodeSpinner.setSelection(i);
+                break;
+            }
+        }
+    }
+
+    private void addOrUpdateMapping() {
+        // 1. Clean the character input
+        String rawText = mCharEdit.getText().toString();
+        String character = sanitizeCharacter(rawText);
+        
+        // 2. Get current opcode strictly from Spinner
+        int currentOpIdx = mOpcodeSpinner.getSelectedItemPosition();
+        String opcode = OPCODES[currentOpIdx];
+        
+        android.util.Log.d("TableCreator", "addOrUpdateMapping: raw='" + rawText + "', clean='" + character + "', currentOp=" + opcode);
+
+        if (character.isEmpty()) {
+            Toast.makeText(this, "Character field is empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        List<Integer> patternsToUse;
+        String dotsInput = mDotsEdit.getText().toString().trim();
+        
+        if (mIsTemplateUsed || !dotsInput.isEmpty()) {
+            patternsToUse = parseDots(dotsInput);
+        } else {
+            patternsToUse = new ArrayList<>(mCurrentPatterns);
+        }
+
+        if (patternsToUse.isEmpty()) { 
+            Toast.makeText(this, "Please enter dots (e.g. 123-456)", Toast.LENGTH_SHORT).show(); 
+            return; 
+        }
+        
+        Mapping newMapping = new Mapping(opcode, character, patternsToUse, mMappingPriorityCheck.isChecked());
         String newDots = getDotsString(newMapping.patterns);
         
         int duplicateIndex = findDuplicateDots(newDots);
         
-        // If we are editing an existing mapping and the dots haven't changed, just update
         if (mEditingIndex != -1 && duplicateIndex == mEditingIndex) {
             mMappings.set(mEditingIndex, newMapping);
             mEditingIndex = -1;
@@ -1176,20 +1262,17 @@ public class TableCreatorActivity extends Activity {
             return;
         }
 
-        // Check for duplicates in other manual mappings
         if (duplicateIndex != -1) {
             showDuplicateDialog(newMapping, duplicateIndex);
             return;
         } 
         
-        // Check for duplicates in active script presets
         String presetName = findDuplicateInPresets(newDots);
         if (presetName != null) {
             showDuplicateDialogInternal(newMapping, newDots, presetName, true);
             return;
         }
 
-        // No duplicates found, just add/update
         if (mEditingIndex != -1) {
             mMappings.set(mEditingIndex, newMapping);
             mEditingIndex = -1;
@@ -1205,6 +1288,7 @@ public class TableCreatorActivity extends Activity {
         Mapping m = mMappings.get(index);
         for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { mOpcodeSpinner.setSelection(i); break; }
         mCharEdit.setText(m.character);
+        mDotsEdit.setText(getDotsString(m.patterns));
         mCurrentPatterns.clear(); mCurrentPatterns.addAll(m.patterns);
         mMappingPriorityCheck.setChecked(m.isHighPriority);
         updateDotsDisplay();
@@ -1633,6 +1717,14 @@ private void deleteSelected() {
             }
 
             refreshSpinner();
+            mIsTemplateUsed = true;
+            
+            // SIMPLIFY UI for Template Mode
+            mAdvancedSettingsLayout.setVisibility(View.GONE);
+            mCellPickerButtonsLayout.setVisibility(View.GONE);
+            mCurrentCellsContainer.setVisibility(View.GONE);
+            mEightDotCheck.setVisibility(View.GONE);
+            
             Toast.makeText(this, R.string.msg_template_applied, Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {

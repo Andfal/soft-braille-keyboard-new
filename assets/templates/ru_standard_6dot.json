@@ -1,5 +1,5 @@
 {
-  "templateName": "Русский / Russian / Russo",
+  "templateName": "Russian Standard (6-dot)",
   "description": "Русский алфавит, пунктуация и системные индикаторы.",
   "settings": {
     "is8Dot": false,

@@ -1,5 +1,5 @@
 {
-  "templateName": "Magyar / Hungarian / Ungherese",
+  "templateName": "Hungarian Standard (6-dot)",
   "description": "Magyar ábécé, ékezetes magánhangzók, írásjelek és indikátorok.",
   "settings": {
     "is8Dot": false,

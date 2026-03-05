@@ -1,5 +1,5 @@
 {
-  "templateName": "Čeština / Czech / Ceco",
+  "templateName": "Czech Standard (6-dot)",
   "description": "Česká a slovenská abeceda, diakritika, interpunkce a ukazatele.",
   "settings": {
     "is8Dot": false,

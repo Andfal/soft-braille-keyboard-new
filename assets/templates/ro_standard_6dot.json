@@ -1,5 +1,5 @@
 {
-  "templateName": "Română / Romanian / Rumeno",
+  "templateName": "Romanian Standard (6-dot)",
   "description": "Alfabetul român, caractere speciale (ă, â, î, ș, ț), punctuație și indicatori.",
   "settings": {
     "is8Dot": false,

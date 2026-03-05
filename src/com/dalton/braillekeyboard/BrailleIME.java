@@ -519,34 +519,32 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 // Differential update: Compare old (composingText) vs new (text).
                 String prev = composingText.toString();
                 String curr = text.toString();
+                
+                android.util.Log.d("BrailleIME", "Differential update: prev='" + prev + "', curr='" + curr + "'");
 
-                // Re-sync mechanism: If composingText is empty/out-of-sync but the editor
-                // already contains the prefix of what we are about to write, trust the editor.
-                CharSequence beforeCursor = ic.getTextBeforeCursor(curr.length(), 0);
-                if (beforeCursor != null && beforeCursor.length() > 0 && curr.startsWith(beforeCursor.toString())) {
-                    // The editor already has the prefix! Use that as 'prev' to avoid duplicating it.
-                    prev = beforeCursor.toString();
-                }
-
-                int commonLen = 0;
-                while (commonLen < prev.length() && commonLen < curr.length()
-                        && prev.charAt(commonLen) == curr.charAt(commonLen)) {
-                    commonLen++;
-                }
-
-                // 1. Delete mismatching tail of previous text
-                int deleteCount = prev.length() - commonLen;
-                if (deleteCount > 0) {
-                    for (int i = 0; i < deleteCount; i++) {
-                        keyDownUp(ic, KeyEvent.KEYCODE_DEL);
+                // Optimization: If it's a simple append (current starts with previous), just commit the suffix
+                if (!prev.isEmpty() && curr.startsWith(prev)) {
+                    CharSequence suffix = curr.subSequence(prev.length(), curr.length());
+                    ic.commitText(suffix, 1);
+                } else {
+                    // Full differential calculation
+                    int commonLen = 0;
+                    while (commonLen < prev.length() && commonLen < curr.length()
+                            && prev.charAt(commonLen) == curr.charAt(commonLen)) {
+                        commonLen++;
                     }
-                }
 
-                // 2. Append new text (the suffix)
-                if (commonLen < curr.length()) {
-                    CharSequence appendText = curr.subSequence(commonLen, curr.length());
-                    for (int i = 0; i < appendText.length(); i++) {
-                        ic.commitText(appendText.subSequence(i, i + 1), 1);
+                    // 1. Delete mismatching tail of previous text
+                    int deleteCount = prev.length() - commonLen;
+                    if (deleteCount > 0) {
+                        // Use deleteSurroundingText for efficiency if possible
+                        ic.deleteSurroundingText(deleteCount, 0);
+                    }
+
+                    // 2. Append new text (the suffix)
+                    if (commonLen < curr.length()) {
+                        CharSequence appendText = curr.subSequence(commonLen, curr.length());
+                        ic.commitText(appendText, 1);
                     }
                 }
 

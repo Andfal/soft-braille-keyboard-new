@@ -1,5 +1,5 @@
 {
-  "templateName": "Nederlands / Dutch / Olandese",
+  "templateName": "Dutch Standard (6-dot)",
   "description": "Nederlands alfabet, inclusief 'ij' ligature, interpunctie en systeemindicatoren.",
   "settings": {
     "is8Dot": false,

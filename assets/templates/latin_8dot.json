@@ -1,5 +1,5 @@
 {
-  "templateName": "8-dot Computer Braille / Braille a 8 punti",
+  "templateName": "8-dot Computer Braille",
   "description": "Standard tecnico a 8 punti: maiuscole con punto 7, numeri con punto 8. Senza segnatasti.",
   "settings": {
     "is8Dot": true,

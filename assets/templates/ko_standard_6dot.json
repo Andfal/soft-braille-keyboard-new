@@ -1,5 +1,5 @@
 {
-  "templateName": "한국어 / Korean / Coreano",
+  "templateName": "Korean (Hangul) Standard (6-dot)",
   "description": "한글 초성, 중성 및 기본 문장 부호.",
   "settings": {
     "is8Dot": false,

@@ -1,5 +1,5 @@
 {
-  "templateName": "Türkçe / Turkish / Turco",
+  "templateName": "Turkish Standard (6-dot)",
   "description": "Türk alfabesi, özel karakterler (ç, ğ, ı, ö, ş, ü), noktalama işaretleri ve göstergeler.",
   "settings": {
     "is8Dot": false,

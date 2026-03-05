@@ -1,5 +1,5 @@
 {
-  "templateName": "Deutsch / German / Tedesco",
+  "templateName": "German Standard (6-dot)",
   "description": "Deutsches Alphabet, Umlaute (ä, ö, ü), ß, Punktuation und Systemindikatoren.",
   "settings": {
     "is8Dot": false,
