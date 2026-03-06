@@ -287,14 +287,6 @@ public class ActionHandler {
         }
 
         value = normaliseSwipe(value);
-
-        // Modal state: Emoji Mode
-        if (emojiMode) {
-            if (handleEmojiSwipe(context, value)) {
-                return true;
-            }
-        }
-
         String message = null;
         boolean notify = true;
         boolean setDots = false;
@@ -303,29 +295,14 @@ public class ActionHandler {
         boolean dots[] = { false, false };
         boolean fastDoubleSwipe = fastDoubleSwipe(value, DOUBLE_TOUCH_THRESHOLD);
 
-        // DYNAMIC RESOLUTION
-        GestureAction action = GestureManager.getActionForSwipe(context, value);
-
-        switch (action) {
-        case NONE:
-            // Check for dot 7 or 8 trigger if no action assigned
-            if (value == Swipe.THREE_DOWN && listener.getDots() == 8) {
-                setDots = true;
-                dots[0] = true;
-            } else if (value == Swipe.SIX_DOWN && listener.getDots() == 8) {
-                setDots = true;
-                dots[1] = true;
-            } else {
-                return true;
-            }
-            break;
-        case MOVE_LEFT_CHARACTER:
+        switch (value) {
+        case ONE_LEFT:
             moveLeft(context, Granularity.CHARACTER);
             break;
-        case MOVE_RIGHT_CHARACTER:
+        case ONE_RIGHT:
             moveRight(context, Granularity.CHARACTER);
             break;
-        case CYCLE_FEEDBACK_MODE:
+        case ONE_DOWN:
             KeyboardFeedback feedback = KeyboardFeedback.valueOf(Integer
                     .parseInt(Options.getStringPreference(context,
                             R.string.pref_keyboard_feedback_key,
@@ -335,21 +312,22 @@ public class ActionHandler {
                     R.string.pref_keyboard_feedback_key, feedback.getValue());
             message = context.getString(feedback.resource);
             break;
-        case READ_CHARACTER:
+        case ONE_UP:
             message = getInput(Granularity.CHARACTER);
             considerPassword = true;
             break;
-        case MOVE_LEFT_WORD:
+        case TWO_LEFT:
             moveLeft(context, Granularity.WORD);
             break;
-        case MOVE_RIGHT_WORD:
+        case TWO_RIGHT:
             moveRight(context, Granularity.WORD);
             break;
-        case READ_WORD:
+        case TWO_UP:
             message = getInput(Granularity.WORD);
             considerPassword = true;
             break;
-        case CYCLE_ECHO_MODE:
+        case TWO_DOWN:
+        case TWO_FINGERS_DOWN:
             KeyboardEcho echo = KeyboardEcho.valueOf(Integer.parseInt(Options
                     .getStringPreference(context,
                             R.string.pref_echo_feedback_key,
@@ -359,25 +337,42 @@ public class ActionHandler {
                     R.string.pref_echo_feedback_key, echo.getValue());
             message = context.getString(echo.resource);
             break;
-        case CLOSE_KEYBOARD:
+        case DOTS_FOUR_SIX_RIGHT:
             message = context.getString(R.string.closing_keyboard);
             listener.closeKeyboard();
             break;
-        case MOVE_LEFT_LINE:
+        case THREE_LEFT:
             moveLeft(context, Granularity.LINE);
             break;
-        case MOVE_RIGHT_LINE:
+        case THREE_RIGHT:
             moveRight(context, Granularity.LINE);
             break;
-        case READ_LINE:
+        case THREE_UP:
             message = getInput(Granularity.LINE);
             considerPassword = true;
             break;
-        case DELETE_CHARACTER:
-            backspace(context, Granularity.CHARACTER, fastDoubleSwipe);
-            notify = false;
+        case THREE_DOWN:
+            if (listener.getDots() == 8) {
+                setDots = true;
+                dots[0] = true;
+            } else {
+                message = context.getString(R.string.unknown_character);
+            }
             break;
-        case SPACE:
+        case FOUR_LEFT:
+            if (emojiMode) {
+                if (emojiSearchQuery.length() > 0) {
+                    emojiSearchQuery.setLength(emojiSearchQuery.length() - 1);
+                    updateEmojiResults();
+                    callback.onText("%s", getEmojiSummary(), false);
+                } else {
+                    callback.onText("%s", "Emoji search query empty", false);
+                }
+                break;
+            }
+            backspace(context, Granularity.CHARACTER, fastDoubleSwipe);
+            break;
+        case FOUR_RIGHT:
             if (fastDoubleSwipe) {
                 if (handleDoubleSpace(context)) {
                     break;
@@ -385,11 +380,11 @@ public class ActionHandler {
             }
             typeCharacter(context, (int) ' ', " ");
             break;
-        case NEWLINE:
+        case FOUR_DOWN: // newline / enter
             typeCharacter(context, Keyboard.KEYCODE_DONE,
                     context.getString(R.string.newline));
             break;
-        case TOGGLE_PRIVACY_MODE:
+        case FOUR_UP:
             Options.switchBooleanPreference(context, R.string.pref_privacy_key,
                     Boolean.parseBoolean(context
                             .getString(R.string.pref_privacy_default)));
@@ -400,11 +395,10 @@ public class ActionHandler {
                     .getString(R.string.privacy_enabled) : context
                     .getString(R.string.privacy_disabled);
             break;
-        case DELETE_WORD:
+        case FIVE_LEFT:
             backspace(context, Granularity.WORD, fastDoubleSwipe);
-            notify = false;
             break;
-        case INPUT_METHOD_PICKER:
+        case FIVE_DOWN:
             if (fastDoubleSwipe) {
                 message = context.getString(R.string.show_input_switcher);
                 inputManager.showInputMethodPicker();
@@ -412,7 +406,7 @@ public class ActionHandler {
                 message = context.getString(R.string.swipe_confirm_input);
             }
             break;
-        case OPEN_SETTINGS:
+        case FIVE_UP:
             if (fastDoubleSwipe) {
                 callback.onSetLocale(Locale.getDefault());
                 message = context.getString(R.string.show_settings);
@@ -423,23 +417,59 @@ public class ActionHandler {
                 message = context.getString(R.string.swipe_confirm_settings);
             }
             break;
-        case DELETE_LINE:
+        case SIX_LEFT:
+            if (emojiMode) {
+                if (!emojiResults.isEmpty()) {
+                    emojiIndex = (emojiIndex - 1 + emojiResults.size()) % emojiResults.size();
+                    message = getEmojiSummary();
+                } else {
+                    message = "No emoji results";
+                }
+                break;
+            }
             backspace(context, Granularity.LINE, fastDoubleSwipe);
-            notify = false;
             break;
-        case NEXT_EDIT_ACTION:
+        case SIX_RIGHT:
+            if (emojiMode) {
+                if (!emojiResults.isEmpty()) {
+                    emojiIndex = (emojiIndex + 1) % emojiResults.size();
+                    message = getEmojiSummary();
+                } else {
+                    message = "No emoji results";
+                }
+                break;
+            }
             nextAction(context);
             break;
-        case PERFORM_EDIT_ACTION:
+        case SIX_UP:
+            if (emojiMode) {
+                if (!emojiResults.isEmpty()) {
+                    EmojiEntry entry = emojiResults.get(emojiIndex);
+                    listener.commitText(entry.emoji, 1);
+                    String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
+                    message = "Inserted " + displayName;
+                    emojiMode = false;
+                } else {
+                    message = "No emoji to insert";
+                }
+                break;
+            }
             selectAction(context);
             break;
-        case TOGGLE_EMOJI_MODE:
+        case SIX_DOWN:
+            if (listener.getDots() == 8) {
+                setDots = true;
+                dots[1] = true;
+            } else {
+                message = context.getString(R.string.unknown_character);
+            }
+            break;
+        case EMOJI_MODE:
             emojiMode = !emojiMode;
             if (emojiMode) {
                 emojiSearchQuery.setLength(0);
                 emojiResults.clear();
                 emojiIndex = 0;
-                // Fetch localized language name for feedback
                 Locale locale = listener.getLocale();
                 String langName = locale != null ? locale.getDisplayLanguage() : "English";
                 message = "Emoji search mode on (" + langName + ")";
@@ -447,53 +477,62 @@ public class ActionHandler {
                 message = "Emoji search mode off";
             }
             break;
-        case TOGGLE_AUTOCAPS:
-            Options.switchBooleanPreference(context, R.string.pref_auto_caps_key,
-                    Boolean.parseBoolean(context.getString(R.string.pref_auto_caps_default)));
-            message = Options.getBooleanPreference(context, R.string.pref_auto_caps_key,
-                    Boolean.parseBoolean(context.getString(R.string.pref_auto_caps_default))) 
-                    ? context.getString(R.string.auto_caps_enabled) 
-                    : context.getString(R.string.auto_caps_disabled);
+        case AUTOCAPS_TOGGLE:
+            Options.switchBooleanPreference(context,
+                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
+                            .getString(R.string.pref_auto_caps_default)));
+            message = Options.getBooleanPreference(context,
+                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
+                            .getString(R.string.pref_auto_caps_default))) ? context
+                    .getString(R.string.auto_caps_enabled) : context
+                    .getString(R.string.auto_caps_disabled);
             break;
-        case MOVE_TO_BEGINNING:
+        case HOLD_SIX_LEFT:
             moveLeft(context, Granularity.ALL);
             break;
-        case MOVE_TO_END:
+        case HOLD_SIX_RIGHT:
             moveRight(context, Granularity.ALL);
             break;
-        case TOGGLE_ECHO_PASSWORDS:
-            boolean echoPassword = Options.switchBooleanPreference(context, R.string.pref_echo_passwords_key, false);
-            message = echoPassword ? context.getString(R.string.speak_passwords) : context.getString(R.string.no_password_echo);
+        case HOLD_SIX_DOWN:
+            boolean echoPassword = Options.switchBooleanPreference(context,
+                    R.string.pref_echo_passwords_key, false);
+            message = echoPassword ? context
+                    .getString(R.string.speak_passwords) : context
+                    .getString(R.string.no_password_echo);
             break;
-        case READ_ALL:
+        case HOLD_SIX_UP:
             message = getInput(Granularity.ALL);
             considerPassword = true;
             break;
-        case DELETE_ALL:
+        case HOLD_THREE_LEFT:
             backspace(context, Granularity.ALL, fastDoubleSwipe);
-            notify = false;
             break;
-        case SWITCH_BRAILLE_TYPE:
+        case HOLD_THREE_RIGHT:
             int brailleType = listener.switchBrailleType();
-            message = brailleType == 8 ? context.getString(R.string.grade_computer) : context.getString(R.string.grade_table);
+            message = brailleType == 8 ? context
+                    .getString(R.string.grade_computer) : context
+                    .getString(R.string.grade_literary);
             callback.onSetLocale(listener.getLocale());
             break;
-        case SWITCH_TABLE:
+        case HOLD_THREE_DOWN:
             message = listener.switchTable();
-            message = message == null ? context.getString(R.string.no_braille_table) : message;
+            message = message == null ? context
+                    .getString(R.string.no_braille_table) : message;
             callback.onSetLocale(listener.getLocale());
             break;
-        case VOICE_INPUT:
+        case HOLD_THREE_UP:
             doVoiceInput(context, fastDoubleSwipe);
             break;
-        case TOGGLE_MARK:
-            message = context.getString(listener.toggleMark() ? R.string.set_mark : R.string.unset_mark); 
+        case HOLD_ONE_RIGHT:
+            message = context
+                    .getString(listener.toggleMark() ? R.string.set_mark
+                            : R.string.unset_mark);
             break;
-        case KEYBOARD_SHRINK:
+        case HOLD_ONE_LEFT:
             message = context.getString(R.string.keyboard_shrink);
             callback.onShrink();
             break;
-        case WORD_COUNT:
+        case HOLD_ONE_DOWN:
             CharSequence text = listener.getAllText().text;
             if (text != null) {
                 message = String.format(context.getString(R.string.word_count),
@@ -502,75 +541,43 @@ public class ActionHandler {
                         EditingUtilities.characterCount(text));
             }
             break;
-        case SPELL_CHECK_LEFT:
-            doSpellCheck(context, SpellChecker.Direction.LEFT, 0, listener.getCursor());
+        case HOLD_ONE_UP:
             break;
-        case SPELL_CHECK_RIGHT:
-            doSpellCheck(context, SpellChecker.Direction.RIGHT, 0, listener.getCursor());
+        case HOLD_FOUR_LEFT:
+            doSpellCheck(context, SpellChecker.Direction.LEFT, 0,
+                    listener.getCursor());
             break;
-        case SPELL_CHECK_NEXT:
+        case HOLD_FOUR_RIGHT:
+            doSpellCheck(context, SpellChecker.Direction.RIGHT, 0,
+                    listener.getCursor());
+            break;
+        case HOLD_FOUR_DOWN:
             nextSpellCheckSuggestion(context);
             break;
-        case SPELL_CHECK_PREV:
+        case HOLD_FOUR_UP:
             previousSpellCheckSuggestion(context);
             break;
+        case NONE:
+            return false;
+        default:
+            notify = false;
         }
 
+        // Invoke the notification callback
         callback.onNotify(notify, notify);
         if (message != null) {
-            callback.onText("%s", message, considerPassword ? listener.isPasswordField() : false);        
+            // Only invoke onText callback if there is a message to send i.e. it
+            // wasn't already handled.
+            callback.onText("%s", message,
+                    considerPassword ? listener.isPasswordField() : false);
         }
-        if (setDots) {
+
+        if (setDots) { // Dots 7 or 8 were triggered
             callback.onSetDots(dots[0], dots[1]);
         }
-        lastSwipe = value;
-        return true;
-    }
 
-    private boolean handleEmojiSwipe(Context context, Swipe value) {
-        switch (value) {
-            case FOUR_LEFT:
-                if (emojiSearchQuery.length() > 0) {
-                    emojiSearchQuery.setLength(emojiSearchQuery.length() - 1);
-                    updateEmojiResults();
-                    callback.onText("%s", getEmojiSummary(), false);
-                } else {
-                    callback.onText("%s", "Emoji search query empty", false);
-                }
-                callback.onNotify(true, true);
-                return true;
-            case SIX_LEFT:
-                if (!emojiResults.isEmpty()) {
-                    emojiIndex = (emojiIndex - 1 + emojiResults.size()) % emojiResults.size();
-                    callback.onText("%s", getEmojiSummary(), false);
-                } else {
-                    callback.onText("%s", "No emoji results", false);
-                }
-                callback.onNotify(true, true);
-                return true;
-            case SIX_RIGHT:
-                if (!emojiResults.isEmpty()) {
-                    emojiIndex = (emojiIndex + 1) % emojiResults.size();
-                    callback.onText("%s", getEmojiSummary(), false);
-                } else {
-                    callback.onText("%s", "No emoji results", false);
-                }
-                callback.onNotify(true, true);
-                return true;
-            case SIX_UP:
-                if (!emojiResults.isEmpty()) {
-                    EmojiEntry entry = emojiResults.get(emojiIndex);
-                    listener.commitText(entry.emoji, 1);
-                    String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
-                    callback.onText("Inserted %s", displayName, false);
-                    emojiMode = false;
-                } else {
-                    callback.onText("%s", "No emoji to insert", false);
-                }
-                callback.onNotify(true, true);
-                return true;
-        }
-        return false;
+        lastSwipe = value; // update the last swipe
+        return true;
     }
 
     /**

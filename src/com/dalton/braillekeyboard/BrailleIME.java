@@ -154,6 +154,22 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             brailleView.addOnLayoutChangeListener(mLayoutChangeListener);
         }
 
+        if (!Options.getBooleanPreference(this,
+                R.string.pref_has_asked_record_audio_key, false)) {
+            Options.switchBooleanPreference(this,
+                    R.string.pref_has_asked_record_audio_key, false);
+            // Android 6+ show a permission dialog for record audio dangerous
+            // permission.
+            // Only do this once on the very first run though.
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(this, IntentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(getString(R.string.action_record_audio_permission));
+                startActivity(intent);
+            }
+        }
+
         return brailleView;
     }
 
@@ -192,15 +208,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         }
 
         // Point 4: Request audio permission if needed (only if accessibility is not being prompted right now)
-        if (!Options.getBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false)) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(this, IntentActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction(getString(R.string.action_record_audio_permission));
-                startActivity(intent);
-            }
-            Options.switchBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false);
-        }
     }
 
     @Override
@@ -233,24 +240,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         if (brailleParser != null) {
             brailleParser.destroy();
             brailleParser = null;
-        }
-    }
-
-    @Override
-    public void onComputeInsets(Insets outInsets) {
-        super.onComputeInsets(outInsets);
-        if (brailleView != null) {
-            if (brailleView.getShrinkKeyboard()) {
-                // In non-fullscreen mode, we define the top insets
-                outInsets.contentTopInsets = brailleView.getTop();
-                outInsets.visibleTopInsets = brailleView.getTop();
-                outInsets.touchableInsets = Insets.TOUCHABLE_INSETS_VISIBLE;
-            } else {
-                // Full screen mode: everything is content and touchable.
-                outInsets.contentTopInsets = 0;
-                outInsets.visibleTopInsets = 0;
-                outInsets.touchableInsets = Insets.TOUCHABLE_INSETS_FRAME;
-            }
         }
     }
 
@@ -439,8 +428,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             // and the user typed Dot 6 (32), which should act as a capital sign
             // and break the number mode.
             // This behavior is specific to English (and potentially others where Dot 6 is Capital).
-            // For other languages, the Capital sign might be different (e.g., dots 4-6),
-            // or Dot 6 might have a different meaning in number mode.
             Locale locale = getLocale();
             boolean isEnglish = locale != null && locale.getLanguage().equals(Locale.ENGLISH.getLanguage());
 
@@ -463,28 +450,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             return text != null ? stringDifference(oldText, text) : null;
         }
         return null;
-    }
-
-    @Override
-    public int switchBrailleType() {
-        if (brailleParser != null) {
-            return brailleParser.switchBrailleType(this).dots;
-        }
-        return -1;
-    }
-
-    @Override
-    public String switchTable() {
-        if (brailleParser != null) {
-            return brailleParser.switchTable(this);
-        }
-        return null;
-    }
-
-    @Override
-    public boolean isPasswordField() {
-        int inputType = getCurrentInputEditorInfo().inputType;
-        return (inputType & InputType.TYPE_TEXT_VARIATION_PASSWORD) != 0;
     }
 
     private String compose(CharSequence text) {
@@ -519,33 +484,31 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 // Differential update: Compare old (composingText) vs new (text).
                 String prev = composingText.toString();
                 String curr = text.toString();
-                
-                android.util.Log.d("BrailleIME", "Differential update: prev='" + prev + "', curr='" + curr + "'");
 
-                // Optimization: If it's a simple append (current starts with previous), just commit the suffix
-                if (!prev.isEmpty() && curr.startsWith(prev)) {
-                    CharSequence suffix = curr.subSequence(prev.length(), curr.length());
-                    ic.commitText(suffix, 1);
-                } else {
-                    // Full differential calculation
-                    int commonLen = 0;
-                    while (commonLen < prev.length() && commonLen < curr.length()
-                            && prev.charAt(commonLen) == curr.charAt(commonLen)) {
-                        commonLen++;
-                    }
+                // Re-sync mechanism: If composingText is empty/out-of-sync but the editor
+                // already contains the prefix of what we are about to write, trust the editor.
+                CharSequence beforeCursor = ic.getTextBeforeCursor(curr.length(), 0);
+                if (beforeCursor != null && beforeCursor.length() > 0 && curr.startsWith(beforeCursor.toString())) {
+                    // The editor already has the prefix! Use that as 'prev' to avoid duplicating it.
+                    prev = beforeCursor.toString();
+                }
 
-                    // 1. Delete mismatching tail of previous text
-                    int deleteCount = prev.length() - commonLen;
-                    if (deleteCount > 0) {
-                        // Use deleteSurroundingText for efficiency if possible
-                        ic.deleteSurroundingText(deleteCount, 0);
-                    }
+                int commonLen = 0;
+                while (commonLen < prev.length() && commonLen < curr.length()
+                        && prev.charAt(commonLen) == curr.charAt(commonLen)) {
+                    commonLen++;
+                }
 
-                    // 2. Append new text (the suffix)
-                    if (commonLen < curr.length()) {
-                        CharSequence appendText = curr.subSequence(commonLen, curr.length());
-                        ic.commitText(appendText, 1);
-                    }
+                // 1. Delete mismatching tail of previous text
+                int deleteCount = prev.length() - commonLen;
+                if (deleteCount > 0) {
+                    ic.deleteSurroundingText(deleteCount, 0);
+                }
+
+                // 2. Append new text (the suffix)
+                if (commonLen < curr.length()) {
+                    CharSequence appendText = curr.subSequence(commonLen, curr.length());
+                    ic.commitText(appendText, 1);
                 }
 
                 composingText.setLength(0);
@@ -555,7 +518,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             ic.endBatchEdit();
         }
 
-        // return the new text we wrote if any.
         return text.toString();
     }
 
@@ -720,6 +682,32 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             localCells.add(dots);
             return brailleParser.backTranslate(this,
                     localCells.toArray(new Byte[localCells.size()]));
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isPasswordField() {
+        EditorInfo info = getCurrentInputEditorInfo();
+        if (info == null) return false;
+        int inputType = info.inputType;
+        return (inputType & InputType.TYPE_TEXT_VARIATION_PASSWORD) != 0
+                || (inputType & InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) != 0
+                || (inputType & InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD) != 0;
+    }
+
+    @Override
+    public int switchBrailleType() {
+        if (brailleParser != null) {
+            return brailleParser.switchBrailleType(this).dots;
+        }
+        return -1;
+    }
+
+    @Override
+    public String switchTable() {
+        if (brailleParser != null) {
+            return brailleParser.switchTable(this);
         }
         return null;
     }
