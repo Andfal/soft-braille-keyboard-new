@@ -59,7 +59,7 @@ public class BrailleAccessibilityService extends AccessibilityService {
     public void updatePassthroughRegion(int x, int y, int width, int height) {
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             if (width > 0 && height > 0) {
-                // Step 1: Request touch exploration control dynamically
+                // Request control dynamically
                 setTouchExplorationEnabled(true);
                 
                 Log.d(TAG, "Setting passthrough region: " + x + ", " + y + ", " + width + "x" + height);
@@ -81,7 +81,7 @@ public class BrailleAccessibilityService extends AccessibilityService {
             Log.d(TAG, "Clearing passthrough region");
             setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, new Region());
             
-            // Step 2: Release touch exploration control to let other screen readers work normally
+            // Release control immediately
             setTouchExplorationEnabled(false);
             isPassthroughActive = false;
         }
@@ -101,8 +101,6 @@ public class BrailleAccessibilityService extends AccessibilityService {
         if (info.flags != oldFlags) {
             Log.d(TAG, "Updating accessibility flags, Touch Exploration: " + (enabled ? "ON" : "OFF"));
             setServiceInfo(info);
-        } else {
-            Log.d(TAG, "Touch Exploration flag already in desired state: " + (enabled ? "ON" : "OFF"));
         }
     }
 
