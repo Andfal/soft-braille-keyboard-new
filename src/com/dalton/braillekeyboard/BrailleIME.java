@@ -96,9 +96,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     private void startAccessibilityTimer() {
-        EditorInfo info = getCurrentInputEditorInfo();
-        boolean isMuLauncher = info != null && "de.jrpie.android.launcher".equals(info.packageName);
-        long delay = isMuLauncher ? 400 : 150;
+        // Use 500ms globally for maximum safety margin.
+        // This ensures TalkBack always latches correctly onto the window.
+        long delay = 500;
         scheduleAccessibilityUpdate(3, delay);
     }
 
