@@ -99,6 +99,27 @@ public class TableCreatorActivity extends Activity {
     private int mEditingIndex = -1;
     private boolean mIsTemplateUsed = false;
 
+    // Custom Adapter to show "Label: Value" in the spinner itself
+    private static class LabeledSpinnerAdapter extends ArrayAdapter<String> {
+        private String label;
+        public LabeledSpinnerAdapter(Context context, String label, List<String> objects) {
+            super(context, android.R.layout.simple_spinner_item, objects);
+            this.label = label;
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        }
+        public LabeledSpinnerAdapter(Context context, String label, String[] objects) {
+            super(context, android.R.layout.simple_spinner_item, objects);
+            this.label = label;
+            setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            TextView view = (TextView) super.getView(position, convertView, parent);
+            view.setText(label + ": " + getItem(position));
+            return view;
+        }
+    }
+
     private final String[] OPCODES = {
         "always", "lowercase", "uppercase", "punctuation", "digit", "math", "sign", "space", 
         "numsign", "capsletter", "begcaps", "endcaps", 
@@ -177,6 +198,29 @@ public class TableCreatorActivity extends Activity {
         mTableNameEdit.setHint(R.string.hint_table_name);
         topContent.addView(mTableNameEdit);
 
+        // Mapped Items at the top
+        LinearLayout mappedRow = new LinearLayout(this);
+        mappedRow.setOrientation(LinearLayout.HORIZONTAL);
+        mappedRow.setGravity(Gravity.CENTER_VERTICAL);
+
+        mMappedItemsSpinner = new Spinner(this);
+        mDisplayList.add(getString(R.string.label_mapped_items));
+        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mDisplayList);
+        mMappedItemsSpinner.setAdapter(mAdapter);
+        mMappedItemsSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+        mMappedItemsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (pos > 0) loadMapping(pos - 1); }
+            @Override public void onNothingSelected(AdapterView<?> p) {}
+        });
+        
+        Button deleteMapBtn = new Button(this);
+        deleteMapBtn.setText(R.string.btn_delete);
+        deleteMapBtn.setOnClickListener(v -> deleteSelected());
+        
+        mappedRow.addView(mMappedItemsSpinner);
+        mappedRow.addView(deleteMapBtn);
+        topContent.addView(mappedRow);
+
         Button templateBtn = new Button(this);
         templateBtn.setText(R.string.btn_load_template);
         templateBtn.setOnClickListener(v -> showTemplatePicker());
@@ -192,7 +236,7 @@ public class TableCreatorActivity extends Activity {
 
         mLocaleSpinner = new Spinner(this);
         loadLocales();
-        mLocaleSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mLocaleNames));
+        mLocaleSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_locale_short), mLocaleNames));
         topContent.addView(mLocaleSpinner);
 
         mEightDotCheck = new CheckBox(this);
@@ -206,7 +250,7 @@ public class TableCreatorActivity extends Activity {
         
         mBaseTableSpinner = new Spinner(this);
         loadSystemTables();
-        mBaseTableSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mSystemTableLabels));
+        mBaseTableSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_base_table_short), mSystemTableLabels));
         mAdvancedSettingsLayout.addView(mBaseTableSpinner);
 
         mScriptSpinner = new Spinner(this);
@@ -219,7 +263,7 @@ public class TableCreatorActivity extends Activity {
             getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot),
             getString(R.string.num_sys_none)
         };
-        mNumSystemSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, numSystems));
+        mNumSystemSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_number_system_short), numSystems));
         mAdvancedSettingsLayout.addView(mNumSystemSpinner);
         topContent.addView(mAdvancedSettingsLayout);
 
@@ -239,13 +283,22 @@ public class TableCreatorActivity extends Activity {
         mCellPickerButtonsLayout = new LinearLayout(this);
         mCellPickerButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
         mCellPickerButtonsLayout.setVisibility(View.GONE);
-        Button setDotsBtn = new Button(this); setDotsBtn.setText("Set Cell");
+        
+        Button setDotsBtn = new Button(this); 
+        setDotsBtn.setText(R.string.btn_set_cell);
         setDotsBtn.setOnClickListener(v -> showCellEditor(false));
-        Button appendDotBtn = new Button(this); appendDotBtn.setText("+ Append");
+        
+        Button appendDotBtn = new Button(this); 
+        appendDotBtn.setText(R.string.btn_append_cell);
         appendDotBtn.setOnClickListener(v -> showCellEditor(true));
-        Button clearDots = new Button(this); clearDots.setText("Clear");
+        
+        Button clearDots = new Button(this); 
+        clearDots.setText(R.string.btn_clear_dots);
         clearDots.setOnClickListener(v -> { mCurrentPatterns.clear(); updateDotsDisplay(); mDotsEdit.setText(""); });
-        mCellPickerButtonsLayout.addView(setDotsBtn); mCellPickerButtonsLayout.addView(appendDotBtn); mCellPickerButtonsLayout.addView(clearDots);
+        
+        mCellPickerButtonsLayout.addView(setDotsBtn); 
+        mCellPickerButtonsLayout.addView(appendDotBtn); 
+        mCellPickerButtonsLayout.addView(clearDots);
         topContent.addView(mCellPickerButtonsLayout);
 
         mainContainer.addView(scroll);
@@ -282,11 +335,15 @@ public class TableCreatorActivity extends Activity {
         LinearLayout settingsRow = new LinearLayout(this);
         settingsRow.setOrientation(LinearLayout.HORIZONTAL);
         settingsRow.setGravity(Gravity.CENTER_VERTICAL);
+        
         mOpcodeSpinner = new Spinner(this);
-        mOpcodeSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, OPCODE_LABELS));
+        mOpcodeSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_opcode_short), OPCODE_LABELS));
         mOpcodeSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+        
         mMappingPriorityCheck = new CheckBox(this);
-        mMappingPriorityCheck.setText("H"); // High Priority short
+        mMappingPriorityCheck.setText(getString(R.string.label_priority_short)); // "H"
+        mMappingPriorityCheck.setContentDescription(getString(R.string.label_high_priority));
+        
         settingsRow.addView(mOpcodeSpinner); settingsRow.addView(mMappingPriorityCheck);
         bottomPanel.addView(settingsRow);
 
@@ -300,6 +357,7 @@ public class TableCreatorActivity extends Activity {
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mDisplayList);
         mMappedItemsSpinner.setAdapter(mAdapter);
         mMappedItemsSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+        mMappedItemsSpinner.setContentDescription(getString(R.string.label_mapped_items));
         mMappedItemsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (pos > 0) loadMapping(pos - 1); }
             @Override public void onNothingSelected(AdapterView<?> p) {}
@@ -391,19 +449,22 @@ public class TableCreatorActivity extends Activity {
         String[][] scripts = is8dot ? SCRIPTS_8 : SCRIPTS_6;
         String[] labels = new String[scripts.length];
         for (int i = 0; i < scripts.length; i++) {
-            if (scripts[i][0].equals("Latino")) labels[i] = getString(R.string.script_latin);
-            else if (scripts[i][0].equals("Cirillico")) labels[i] = getString(R.string.script_cyrillic);
-            else if (scripts[i][0].equals("Greco")) labels[i] = getString(R.string.script_greek);
-            else if (scripts[i][0].equals("Arabo")) labels[i] = getString(R.string.script_arabic);
-            else if (scripts[i][0].equals("Ebraico")) labels[i] = getString(R.string.script_hebrew);
-            else if (scripts[i][0].equals("Unicode")) labels[i] = getString(R.string.script_unicode);
-            else labels[i] = scripts[i][0];
+            String internalName = scripts[i][0];
+            if (internalName.equals("Latino")) labels[i] = getString(R.string.script_latin);
+            else if (internalName.equals("Cirillico")) labels[i] = getString(R.string.script_cyrillic);
+            else if (internalName.equals("Greco")) labels[i] = getString(R.string.script_greek);
+            else if (internalName.equals("Arabo")) labels[i] = getString(R.string.script_arabic);
+            else if (internalName.equals("Ebraico")) labels[i] = getString(R.string.script_hebrew);
+            else if (internalName.equals("Hindi")) labels[i] = getString(R.string.script_hindi);
+            else if (internalName.equals("Coreano")) labels[i] = getString(R.string.script_korean);
+            else if (internalName.equals("Vietnamita")) labels[i] = getString(R.string.script_vietnamese);
+            else if (internalName.equals("Thailandese")) labels[i] = getString(R.string.script_thai);
+            else if (internalName.equals("Unicode")) labels[i] = getString(R.string.script_unicode);
+            else labels[i] = internalName;
         }
         
         int currentPos = mScriptSpinner != null ? mScriptSpinner.getSelectedItemPosition() : 0;
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, labels);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mScriptSpinner.setAdapter(adapter);
+        mScriptSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_base_script_short), labels));
         if (currentPos < labels.length) mScriptSpinner.setSelection(currentPos);
     }
 
@@ -518,7 +579,7 @@ public class TableCreatorActivity extends Activity {
         mPresetCategories.add(catMath);
 
         if (scriptIndex == 0) {
-            PresetCategory catBase = new PresetCategory("Alfabeto Base (a-z)", "lowercase");
+            PresetCategory catBase = new PresetCategory(getString(R.string.preset_cat_base), "lowercase");
             catBase.presets.add(new Preset("a", "a", new int[][]{{1}}));
             catBase.presets.add(new Preset("b", "b", new int[][]{{1,2}}));
             catBase.presets.add(new Preset("c", "c", new int[][]{{1,4}}));
@@ -555,7 +616,7 @@ public class TableCreatorActivity extends Activity {
             catIt.presets.add(new Preset("u grave", "ù", new int[][]{{2,3,4,5,6}}));
             mPresetCategories.add(catIt);
         }
-        PresetCategory catControl = new PresetCategory("Controllo (6-pt)", "capsletter");
+        PresetCategory catControl = new PresetCategory(getString(R.string.preset_cat_control), "capsletter");
         catControl.presets.add(new Preset("Segnamaiuscola", "", new int[][]{{4,6}}));
         catControl.presets.add(new Preset("Segnanumero", "", new int[][]{{3,4,5,6}}));
         catControl.presets.add(new Preset("Segnalettera", "", new int[][]{{5}}));
@@ -564,7 +625,7 @@ public class TableCreatorActivity extends Activity {
 
     private void showPresetPicker() {
         AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle("Select Category");
+        b.setTitle(R.string.title_select_template);
         String[] cats = new String[mPresetCategories.size()];
         for (int i=0; i<mPresetCategories.size(); i++) cats[i] = mPresetCategories.get(i).name;
         b.setItems(cats, (d, w) -> showPresetItems(mPresetCategories.get(w)));
@@ -579,7 +640,7 @@ public class TableCreatorActivity extends Activity {
         String[] labels = new String[cat.presets.size()];
         for (int i = 0; i < cat.presets.size(); i++) labels[i] = cat.presets.get(i).toString();
         b.setMultiChoiceItems(labels, checked, (dialog, which, isChecked) -> checked[which] = isChecked);
-        b.setPositiveButton("Add Selected Directly", (dialog, which) -> {
+        b.setPositiveButton(R.string.btn_add_selected, (dialog, which) -> {
             boolean is8dot = mEightDotCheck.isChecked();
             for (int i = 0; i < cat.presets.size(); i++) {
                 if (checked[i]) {
@@ -641,8 +702,8 @@ public class TableCreatorActivity extends Activity {
 
     private void showDuplicateDialogInternal(final Mapping newMapping, String dots, String existingName, boolean isPreset) {
         String msg = String.format(getString(R.string.msg_duplicate_dots), dots, existingName);
-        if (isPreset) msg += "\n\n(Carattere standard del set selezionato. La tua scelta avrà la precedenza.)";
-        new AlertDialog.Builder(this).setTitle("Combinazione Duplicata").setMessage(msg)
+        if (isPreset) msg += "\n\n(" + getString(R.string.msg_standard_char_override) + ")";
+        new AlertDialog.Builder(this).setTitle(R.string.title_duplicate_combination).setMessage(msg)
             .setNegativeButton(R.string.btn_cancel, null)
             .setPositiveButton(isPreset ? R.string.btn_overwrite : R.string.btn_add_anyway, (dialog, which) -> {
                 if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
@@ -812,14 +873,15 @@ public class TableCreatorActivity extends Activity {
         int pos = mMappedItemsSpinner.getSelectedItemPosition();
         if (pos > 0) {
             Mapping m = mMappings.get(pos - 1);
-            if (m.isFixed) { Toast.makeText(this, "Fixed mapping", Toast.LENGTH_SHORT).show(); return; }
+            if (m.isFixed) { Toast.makeText(this, R.string.msg_fixed_mapping, Toast.LENGTH_SHORT).show(); return; }
             mMappings.remove(pos - 1); refreshSpinner(); mMappedItemsSpinner.setSelection(0); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add);
             mCharEdit.setText(""); mDotsEdit.setText(""); mCurrentPatterns.clear(); updateDotsDisplay();
         }
     }
 
     private void refreshSpinner() {
-        mDisplayList.clear(); mDisplayList.add(getString(R.string.label_mapped_items) + " (" + mMappings.size() + ")");
+        mDisplayList.clear();
+        mDisplayList.add(getString(R.string.none_selected));
         for (Mapping m : mMappings) {
             String friendlyOp = m.opcode;
             for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { friendlyOp = OPCODE_LABELS[i]; break; }
@@ -827,7 +889,7 @@ public class TableCreatorActivity extends Activity {
             sb.append(friendlyOp); if (m.character != null && !m.character.isEmpty()) sb.append(" '").append(m.character).append("'");
             sb.append(" -> ").append(getDotsString(m.patterns)); mDisplayList.add(sb.toString());
         }
-        mAdapter.notifyDataSetChanged();
+        mMappedItemsSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_mapped_items_short), mDisplayList));
     }
 
     private String patternToDotsString(int pattern) {
@@ -840,13 +902,13 @@ public class TableCreatorActivity extends Activity {
         String name = mTableNameEdit.getText().toString().trim();
         if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show(); mTableNameEdit.requestFocus(); return; }
         if (!name.endsWith(".ctb")) name += ".ctb";
-        StringBuilder sb = new StringBuilder("# Custom Table for Soft Braille Keyboard\n");
-        sb.append("# Author: ").append(mAuthorEdit.getText().toString().trim()).append("\n");
+        StringBuilder sb = new StringBuilder("# " + name + "\n");
+        sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
         int localePos = mLocaleSpinner.getSelectedItemPosition();
         if (localePos > 0) sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
-        sb.append("\ninclude braille-patterns.cti\ninclude unicode.dis\n\n# --- HIGH PRIORITY ---\n");
+        sb.append("\ninclude braille-patterns.cti\ninclude unicode.dis\n\n# --- ").append(getString(R.string.table_section_high)).append(" ---\n");
         writeCustomMappings(sb, true);
-        sb.append("\n# --- SYSTEM INCLUDES ---\ninclude unicode.dis\n");
+        sb.append("\n# --- ").append(getString(R.string.table_section_system)).append(" ---\ninclude unicode.dis\n");
         int basePos = mBaseTableSpinner.getSelectedItemPosition();
         if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
         String scriptFile = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
@@ -972,6 +1034,6 @@ public class TableCreatorActivity extends Activity {
     private void shareTable() {
         String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) return; if (!name.endsWith(".ctb")) name += ".ctb";
         File f = new CustomTableManager(this).getCustomTableFile(name); if (!f.exists()) return;
-        Intent intent = new Intent(Intent.ACTION_SEND); intent.setType("text/plain"); intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f)); intent.putExtra(Intent.EXTRA_SUBJECT, "Braille Table: " + name); startActivity(Intent.createChooser(intent, "Share Table"));
+        Intent intent = new Intent(Intent.ACTION_SEND); intent.setType("text/plain"); intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f)); intent.putExtra(Intent.EXTRA_SUBJECT, "Braille Table: " + name); startActivity(Intent.createChooser(intent, getString(R.string.title_share_table)));
     }
 }

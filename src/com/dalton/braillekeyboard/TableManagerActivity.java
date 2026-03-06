@@ -98,7 +98,7 @@ public class TableManagerActivity extends Activity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if (mManager.deleteTable(table.getId())) {
-                                Toast.makeText(TableManagerActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(TableManagerActivity.this, R.string.msg_deleted, Toast.LENGTH_SHORT).show();
                                 refreshList();
                             }
                         }
@@ -125,7 +125,7 @@ public class TableManagerActivity extends Activity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(Intent.createChooser(intent, "Select Braille Table"), PICK_FILE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.title_select_table_file)), PICK_FILE_REQUEST);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class TableManagerActivity extends Activity {
         try {
             String fileName = getFileName(uri);
             if (!fileName.endsWith(".ctb") && !fileName.endsWith(".utb") && !fileName.endsWith(".dis")) {
-                Toast.makeText(this, "Invalid file type. Select .ctb or .utb", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.error_invalid_file, Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -157,7 +157,7 @@ public class TableManagerActivity extends Activity {
                 }
             }
 
-            Toast.makeText(this, "Imported " + fileName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.format(getString(R.string.msg_imported), fileName), Toast.LENGTH_SHORT).show();
             refreshList();
 
         } catch (Exception e) {

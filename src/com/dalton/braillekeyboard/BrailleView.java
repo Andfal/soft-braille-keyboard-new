@@ -44,24 +44,6 @@ import com.dalton.braillekeyboard.Pad.Swipe;
 /**
  * This View facilitates displaying a Braille keyboard to the user on the entire
  * screen and handling taps and swipes by using the ActionHandler.
- * 
- * This View holds an instance to an implementation of Pad and parses all of
- * it's touch events to the Pad to resolve which dots were hit or nearest the
- * user's touch.
- * 
- * The View will then pass the appropriate swipe and dot pressed events to an
- * ActionHandler to perform the appropriate action.
- * 
- * This View also implements the OnActionListener callback and will display
- * results, send notifications or change View states appropriate to the
- * callbacks received from the ActionHandler.
- * 
- * You should register an IME listener with this View in order for the
- * ActionHandler and this View to function. See
- * onInitialiseForInput(KeyboardListener listener).
- * 
- * You should always call close() when you are done with the View to release
- * resources.
  */
 public class BrailleView extends View {
     private static final long LONG_VIBRATION = 300;
@@ -110,6 +92,15 @@ public class BrailleView extends View {
         public void onShrink() {
             setLocale(Locale.getDefault());
             shrinkKeyboard = true;
+            
+            // CRITICAL: Make the view focusable and visible to accessibility ONLY when shrunk
+            // This allows the single tap to be captured correctly by the system.
+            if (android.os.Build.VERSION.SDK_INT >= 16) {
+                setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
+                setFocusable(true);
+                setClickable(true);
+            }
+            
             invalidate();
             requestLayout();
             listener.updateFullscreenMode();
@@ -148,27 +139,15 @@ public class BrailleView extends View {
                 .getSystemService(Context.VIBRATOR_SERVICE);
     }
 
-    /**
-     * Gets the View ready to receive touch events from the user and facilitates
-     * communication with the underlying IME.
-     * 
-     * @param listener
-     *            The KeyboardListener implementation of to communicate with the
-     *            IME.
-     */
     public void onInitialiseForInput(Context context, KeyboardListener listener) {
         this.listener = listener;
 
-        // Hide this view from accessibility services like TalkBack
-        // This prevents TalkBack from trying to explore the dots and 
-        // allows standard touch events to reach the view more reliably.
         if (android.os.Build.VERSION.SDK_INT >= 16) {
             setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+            setFocusable(false);
         }
 
-        // Set up speech and announce when it's ready to the user.
         speech = new Speech(getContext(), new Speech.OnReadyListener() {
-
             @Override
             public void ttsReady() {
                 setLocale(BrailleView.this.listener.getLocale());
@@ -178,7 +157,6 @@ public class BrailleView extends View {
             }
         });
 
-        // When we launch the keyboard it should take up the full screen.
         if (shrinkKeyboard) {
             expandKeyboard();
         }
@@ -193,9 +171,6 @@ public class BrailleView extends View {
         actionHandler.setKeyboardListener(listener);
     }
 
-    /**
-     * Release resources and vibrate the device to tell the user we are closing.
-     */
     public void close() {
         if (Options.getBooleanPreference(
                 getContext(),
@@ -226,13 +201,7 @@ public class BrailleView extends View {
                         R.string.pref_show_circles_key,
                         Boolean.parseBoolean(getContext().getString(
                                 R.string.pref_show_circles_default)))) {
-            // We should show a visual representation of the view according to
-            // user preference.
             if (accessibilityManager.isTouchExplorationEnabled()) {
-                // Display a message saying that talkback needs to be disabled.
-                // canvas.drawText(
-                // getContext().getString(R.string.switch_off_talkback),
-                // displayParams.x, displayParams.y, paint);
                 setContentDescription(getContext().getString(
                         R.string.switch_off_talkback));
             } else {
@@ -240,8 +209,6 @@ public class BrailleView extends View {
             }
 
             List<Coords> keys = getKeys();
-            // For each dot draw a circle on the screen at it's position and
-            // write the corresponding dot number in the circle.
             for (int i = 0; i < keys.size(); i++) {
                 int x = displayParams.autoRotate || getWidth() >= getHeight() ? keys
                         .get(i).x : keys.get(i).y;
@@ -267,33 +234,14 @@ public class BrailleView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int SHRINK_FACTOR = 2;
-        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        int width;
-        int height;
+        int width = widthSize;
+        int height = heightSize;
 
-        int desiredWidth = widthSize;
-        int desiredHeight = heightSize;
         if (shrinkKeyboard) {
-            desiredHeight /= SHRINK_FACTOR;
-        }
-        if (widthMode == MeasureSpec.EXACTLY) {
-            width = widthSize;
-        } else if (widthMode == MeasureSpec.AT_MOST) {
-            width = Math.min(desiredWidth, widthSize);
-        } else {
-            width = desiredWidth;
-        }
-
-        if (heightMode == MeasureSpec.EXACTLY) {
-            height = heightSize;
-        } else if (heightMode == MeasureSpec.AT_MOST) {
-            height = Math.min(desiredHeight, heightSize);
-        } else {
-            height = desiredHeight;
+            height /= SHRINK_FACTOR;
         }
         setMeasuredDimension(width, height);
     }
@@ -318,27 +266,25 @@ public class BrailleView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        super.onTouchEvent(motionEvent);
-        // Get the height and width of the keyboard.
-        // If autoRotate is enabled then the standard dimenssions are correct.
-        // If autoRotate is disabled the width is the maximum of the height and
-        // the width and the height is the minimum of the two.
-        // This is because the user holds the phone in landscape mode, but the
-        // screen might be fixed to portrate mode. It makes more sense to use
-        // the keyboard in landscape mode and the user doesn't care about
-        // orientation of the screen.
+        int action = MotionEventCompat.getActionMasked(motionEvent);
+        
+        if (shrinkKeyboard) {
+            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+                android.util.Log.d("BrailleView", "Shrink mode tap detected, expanding keyboard...");
+                expandKeyboard();
+            }
+            return true;
+        }
+
         int width = displayParams.autoRotate ? getWidth() : Math.max(
                 getWidth(), getHeight());
         int height = displayParams.autoRotate ? getHeight() : Math.min(
                 getWidth(), getHeight());
-        int action = MotionEventCompat.getActionMasked(motionEvent);
         int index = MotionEventCompat.getActionIndex(motionEvent);
         int id = MotionEventCompat.getPointerId(motionEvent, index);
         int x = (int) MotionEventCompat.getX(motionEvent, index);
         int y = (int) MotionEventCompat.getY(motionEvent, index);
 
-        // Swap x and y if the view is being used perpendicular to it's intended
-        // purpose see above.
         int tempX = x;
         x = displayParams.autoRotate || getWidth() >= getHeight() ? x : y;
         y = displayParams.autoRotate || getWidth() >= getHeight() ? y : tempX;
@@ -346,22 +292,13 @@ public class BrailleView extends View {
         switch (action) {
         case MotionEvent.ACTION_DOWN:
         case MotionEvent.ACTION_POINTER_DOWN:
-            if (shrinkKeyboard) {
-                expandKeyboard();
-            } else {
-                // store the time at which the user must hold their fingers down
-                // for if they want to calibrate.
-                // Only record the time for the first touch.
-                requiredTouchTime = requiredTouchTime == 0 ? System
-                        .currentTimeMillis() + LONG_HOLD_DELAY
-                        : requiredTouchTime;
+            requiredTouchTime = requiredTouchTime == 0 ? System
+                    .currentTimeMillis() + LONG_HOLD_DELAY
+                    : requiredTouchTime;
 
-                if (!updatePointer(dotsDown, id, x, y, true)
-                        && id < dotsDown.length) {
-                    // add a new unique dot to the list of dots that were
-                    // pushed.
-                    dotsDown[id] = new Coords(id, x, y);
-                }
+            if (!updatePointer(dotsDown, id, x, y, true)
+                    && id < dotsDown.length) {
+                dotsDown[id] = new Coords(id, x, y);
             }
             break;
         case MotionEvent.ACTION_HOVER_EXIT:
@@ -370,13 +307,11 @@ public class BrailleView extends View {
                 if (pad != null && pressedDotString() != NO_DOTS) {
                     setDots();
                     if (!handledSwipe) {
-                        // single finger flicks
                         if ((swipe = handledSwipeAction(dotsDown,
                                 getHeight() > getWidth()
                                         && !displayParams.autoRotate)) != Swipe.NONE) {
                             actionHandler.handleSwipe(getContext(), swipe);
-                        } else { // all swipe attempts failed so resort to
-                            // entering character
+                        } else {
                             handleTypedCharacter();
                         }
                     }
@@ -395,7 +330,6 @@ public class BrailleView extends View {
                     R.string.pref_show_circles_key,
                     Boolean.parseBoolean(getContext().getString(
                             R.string.pref_show_circles_default)))) {
-                // redraw to show the new positions of the Braille dots.
                 invalidate();
             }
             break;
@@ -409,7 +343,6 @@ public class BrailleView extends View {
                 setDots();
                 if ((swipe = handledSwipeAction(dotsDown,
                         getHeight() > getWidth() && !displayParams.autoRotate)) != Swipe.NONE) {
-                    // Hold one finger while swiping with another
                     handledSwipe = true;
                     actionHandler.handleSwipe(getContext(), swipe);
                 }
@@ -438,7 +371,6 @@ public class BrailleView extends View {
                 if (!setTTSLocale || (setTTSLocale && speech.setLocale(locale))) {
                     conf.locale = locale;
                     resources.updateConfiguration(conf, displayMetrics);
-
                     return true;
                 }
             }
@@ -459,7 +391,6 @@ public class BrailleView extends View {
     private boolean setPad(int id, int width, int height, boolean autoRotate) {
         final int TOTAL_DOTS = 6;
         final int ONE_SIDE = 3;
-        // For whatever reason we won't be able to set a pad
         if (requiredTouchTime > System.currentTimeMillis()
                 || countDotsDown(dotsDown) != ONE_SIDE) {
             return false;
@@ -469,7 +400,6 @@ public class BrailleView extends View {
             return false;
         }
 
-        // Add the first three dots to the current dot list.
         for (int i = 0; i < lastDotList.size(); i++) {
             Coords coord = lastDotList.get(i);
             dotsDown[ONE_SIDE + i] = new Coords(ONE_SIDE + id, coord.x, coord.y);
@@ -501,8 +431,6 @@ public class BrailleView extends View {
             resetDots();
             return result;
         } else {
-            // Add the first three dots that have been tuched to a member
-            // variable for reference on the second touch of three fingers
             for (int i = 0; i < dotsDown.length; i++) {
                 if (dotsDown[i] != null) {
                     lastDotList.add(dotsDown[i]);
@@ -517,7 +445,6 @@ public class BrailleView extends View {
         }
     }
 
-    // Set the pad using a default pad.
     private boolean setDefaultPad(int w, int h, int padWidth, int padHeight) {
         boolean useEightDots = Options.getBooleanPreference(
                 getContext(),
@@ -530,13 +457,10 @@ public class BrailleView extends View {
                             && !displayParams.autoRotate, useEightDots);
             return true;
         } catch (IllegalArgumentException e) {
-            // handled below
         }
         return false;
     }
 
-    // Display a pad according to the possitioning of the fingers (user
-    // calibration)
     private boolean selectPad(Coords[] dots, int width, int height) {
         boolean useEightDots = Options.getBooleanPreference(
                 getContext(),
@@ -549,16 +473,15 @@ public class BrailleView extends View {
                     useEightDots);
             return true;
         } catch (IllegalArgumentException e) {
-            // handled below
         }
         return false;
     }
 
     private List<Coords> getKeys() {
         List<Coords> keys = new ArrayList<Coords>();
+        if (pad == null) return keys;
         List<Coords> padKeys = pad.getKeys();
         int dots = listener.getDots();
-        // should always be == dots, but handle errors cleanly
         if (dots == -1) {
             dots = padKeys.size();
         }
@@ -571,9 +494,6 @@ public class BrailleView extends View {
         if (pad == null) {
             return;
         }
-        // Sort the dots into their actual positions eg. dotsDown[0] = dot1
-        // dotsDown[1] = dot 2 etc.
-        // Previous ordering is based on the order that fingers hit the screen.
         dotsDown = pad.getBrailleDots(dotsDown, listener.getDots());
     }
 
@@ -590,7 +510,6 @@ public class BrailleView extends View {
             this.dot7 = dot7;
             this.dot8 = dot8;
         }
-
         if (dot7) {
             this.dot7 = dot7;
         }
@@ -602,19 +521,12 @@ public class BrailleView extends View {
     private byte pressedDotString() {
         byte mask = 1;
         byte value = 0;
-
-        // See what dots of the first six are pressed.
         for (int i = 0; i < dotsDown.length - 2; i++) {
             if (dotsDown[i] != null) {
-                // it's present so set the bit in the bitstring.
                 value |= mask;
             }
             mask <<= 1;
         }
-
-        // special case for setting dots 7 and 8.
-        // They can be activated by pressing them on the screen or using a swipe
-        // gesture.
         if (dot7 || dotsDown[6] != null) {
             value |= mask;
         }
@@ -647,6 +559,13 @@ public class BrailleView extends View {
                 getContext().getString(R.string.keyboard_full_screen),
                 Speech.QUEUE_FLUSH);
         shrinkKeyboard = false;
+        
+        // Reset focusability and importance when expanded
+        if (android.os.Build.VERSION.SDK_INT >= 16) {
+            setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+            setFocusable(false);
+        }
+        
         setLocale(listener.getLocale());
         invalidate();
         requestLayout();
@@ -684,8 +603,7 @@ public class BrailleView extends View {
         try {
             value = pad.getSwipe(coords, swap);
             return value;
-        } catch (NullPointerException npe) { // can be null if invalidate
-            // somehow is called
+        } catch (NullPointerException npe) {
         }
         return Swipe.NONE;
     }
@@ -767,7 +685,6 @@ public class BrailleView extends View {
         public final int textSize;
         public final int radius;
         public final boolean autoRotate;
-
         public float x;
         public float y;
 

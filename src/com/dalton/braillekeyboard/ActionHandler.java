@@ -366,7 +366,7 @@ public class ActionHandler {
                     updateEmojiResults();
                     callback.onText("%s", getEmojiSummary(), false);
                 } else {
-                    callback.onText("%s", "Emoji search query empty", false);
+                    callback.onText("%s", context.getString(R.string.emoji_search_query_empty), false);
                 }
                 break;
             }
@@ -447,10 +447,10 @@ public class ActionHandler {
                     EmojiEntry entry = emojiResults.get(emojiIndex);
                     listener.commitText(entry.emoji, 1);
                     String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
-                    message = "Inserted " + displayName;
+                    message = context.getString(R.string.emoji_inserted) + displayName;
                     emojiMode = false;
                 } else {
-                    message = "No emoji to insert";
+                    message = context.getString(R.string.emoji_no_to_insert);
                 }
                 break;
             }
@@ -472,9 +472,9 @@ public class ActionHandler {
                 emojiIndex = 0;
                 Locale locale = listener.getLocale();
                 String langName = locale != null ? locale.getDisplayLanguage() : "English";
-                message = "Emoji search mode on (" + langName + ")";
+                message = String.format(context.getString(R.string.emoji_search_mode_on), langName);
             } else {
-                message = "Emoji search mode off";
+                message = context.getString(R.string.emoji_search_mode_off);
             }
             break;
         case AUTOCAPS_TOGGLE:
@@ -1164,10 +1164,10 @@ public class ActionHandler {
 
     private String getEmojiSummary() {
         if (emojiResults.isEmpty()) {
-            return "No results for " + emojiSearchQuery.toString();
+            return String.format(context.getString(R.string.emoji_no_results_query), emojiSearchQuery.toString());
         }
         EmojiEntry entry = emojiResults.get(emojiIndex);
         String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
-        return String.format("%s, %d of %d", displayName, emojiIndex + 1, emojiResults.size());
+        return String.format(context.getString(R.string.emoji_count_summary), displayName, emojiIndex + 1, emojiResults.size());
     }
 }

@@ -33,6 +33,7 @@
     <string name="pref_echo_passwords_default">false</string>
     <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
     <string name="pref_has_asked_record_audio_key">RECORD_AUDIO</string>
+    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
     <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_invert_default">false</string>
     <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
@@ -106,9 +107,9 @@
     <string name="end_of_text">End of text</string>
     <string name="expand_keyboard_talkback">Single tap here to expand the keyboard</string>
     <string name="expand_keyboard">Single tap to expand the keyboard</string>
-    <string name="grade_computer">Computer Braille</string>
+    <string name="grade_computer">8-dot Braille (Computer)</string>
     <string name="grade">Default Braille grade</string>
-    <string name="grade_literary">Literary Braille</string>
+    <string name="grade_literary">6-dot Braille (Literary)</string>
     <string name="grade_table">Grade %s</string>
     <string name="table_variant_unofficial">Unofficial</string>
     <string name="hide_keyboard">Hiding the keyboard.</string>
@@ -211,14 +212,14 @@
     <string name="swipe_confirm_input">Swipe again to display the keyboard chooser</string>
     <string name="swipe_confirm_settings">Swipe again to show Soft Braille Keyboard settings</string>
     <string name="swipe_confirm">Swipe again to confirm</string>
-    <string name="switch_off_talkback">Please disable talkback. You can do this by performing the l gesture, swipe down and then to the right, and explore the circle to find the pause feedback option at the top left. Talkback can be restarted at any time by double pressing the power button</string>
+    <string name="switch_off_talkback">Please suspend TalkBack. You can do this by performing the L-gesture, swipe down and then to the right, then explore the circular menu to find the Suspend Feedback option at the top left. TalkBack can be reactivated at any time by double-pressing the power button.</string>
     <string name="translator_error">There is a problem with the Braille service</string>
     <string name="try_box">Try typing with the keyboard here.</string>
     <string name="unknown_character">Unknown character</string>
     <string name="unset_mark">Mark unset</string>
-    <string name="voice_input_enable">Please perform this gesture twice quickly. A dialog will be displayed use talkback to accept the permission, so that voice input will work.</string>
-    <string name="voice_input_error">An error occurred with the voice input engine, code: %d</string>
-    <string name="voice_input_is_not_available">Voice input is not available on the device.</string>
+    <string name="voice_input_enable">Please perform this gesture twice quickly. A dialog will be displayed. Use TalkBack to accept the permission to enable voice dictation.</string>
+    <string name="voice_input_error">An error occurred with the voice input engine. Code: %d</string>
+    <string name="voice_input_is_not_available">Voice input is not available on this device.</string>
     <string name="voice_input_permission_message">You need to enable the record audio permission for voice input to work.</string>
     <string name="voice_input_permission_title">Voice Input Permission</string>
     <string name="word_correction_misspelled">%s misspelled</string>
@@ -261,13 +262,13 @@
       Source: A value for announcing an opening parenthesis.
       Description: This is spoken to the user. [CHAR LIMIT="NONE"]
     -->
-    <string name="punctuation_open_paren">Open paren</string>
+    <string name="punctuation_open_paren">Open parenthesis</string>
 
     <!--
       Source: A value for announcing a closing parenthesis.
       Description: This is spoken to the user. [CHAR LIMIT="NONE"]
     -->
-    <string name="punctuation_close_paren">Close paren</string>
+    <string name="punctuation_close_paren">Close parenthesis</string>
 
     <!--
       Source: A value for announcing a double quote.
@@ -318,7 +319,7 @@
     <string name="punctuation_right_brace">Right brace</string>
     <string name="pref_category_custom_tables_title">Custom Braille Tables</string>
     <string name="pref_manage_tables_title">Manage/Create Braille Tables</string>
-    <string name="pref_manage_tables_summary">Import, delete or create your own braille tables.</string>
+    <string name="pref_manage_tables_summary">Import, delete or create your own Braille tables.</string>
     
     <!-- Table Manager -->
     <string name="btn_import_table">Import existing table file</string>
@@ -335,13 +336,13 @@
     <string name="label_use_8_dots">Use 8 dots (Computer Braille)</string>
     <string name="btn_add_mapping">Add new character mapping</string>
     <string name="btn_save_table">Save Table</string>
-    <string name="hint_char">Char</string>
+    <string name="hint_char">Character</string>
     <string name="btn_add_cell">Add Braille cell</string>
-    <string name="btn_add_cell_description">Add another braille cell for this character</string>
+    <string name="btn_add_cell_description">Add another Braille cell for this character</string>
     <string name="btn_remove_mapping">Remove this mapping</string>
     <string name="label_dots_dialog">Select dots for this cell</string>
     <string name="label_dot">Dot %d</string>
-    <string name="msg_table_saved">Table Saved Successfully!</string>
+    <string name="msg_table_saved">Table saved successfully!</string>
     <string name="error_no_name">Please enter a table name</string>
     <string name="custom_table_label_prefix">Custom:</string>
     <string name="label_show_visual_picker">Show visual cell picker</string>
@@ -352,31 +353,31 @@
     <string name="hint_author">Author (e.g. Sergio)</string>
     <string name="hint_description">Table description</string>
     <string name="hint_dots_format">Dots (e.g. 123-45)</string>
-    <string name="msg_char_empty">Character field is empty</string>
+    <string name="msg_char_empty">The character field is empty</string>
     <string name="msg_enter_dots">Please enter dots (e.g. 123-45)</string>
 
     <!-- Opcodes -->
-    <string name="opcode_always">Override (Always)</string>
+    <string name="opcode_always">Force substitution (Always)</string>
     <string name="opcode_lowercase">Lowercase Letter</string>
     <string name="opcode_uppercase">Uppercase Letter</string>
     <string name="opcode_punctuation">Punctuation</string>
-    <string name="opcode_digit">Digit (0-9)</string>
-    <string name="opcode_math">Math</string>
-    <string name="opcode_sign">Sign</string>
+    <string name="opcode_digit">Numeric digit (0-9)</string>
+    <string name="opcode_math">Math symbol</string>
+    <string name="opcode_sign">Generic sign</string>
     <string name="opcode_space">Space</string>
     <string name="opcode_numsign">Number Sign (3456)</string>
     <string name="opcode_capsletter">Capital Sign (6)</string>
     <string name="opcode_begcaps">Begin All Caps</string>
     <string name="opcode_endcaps">End All Caps</string>
-    <string name="opcode_begcapsword">Begin Capitalized Word (begcapsword)</string>
-    <string name="opcode_endcapsword">End Capitalized Word (endcapsword)</string>
-    <string name="opcode_openpunc">Pre-word Punctuation (prepunc)</string>
-    <string name="opcode_closepunc">Post-word Punctuation (postpunc)</string>
-    <string name="opcode_word">Full Word (Contraction)</string>
-    <string name="opcode_partword">Part of Word</string>
+    <string name="opcode_begcapsword">Begin capitalized word</string>
+    <string name="opcode_endcapsword">End capitalized word</string>
+    <string name="opcode_openpunc">Initial punctuation (prepunc)</string>
+    <string name="opcode_closepunc">Final punctuation (postpunc)</string>
+    <string name="opcode_word">Full word (Contraction)</string>
+    <string name="opcode_partword">Part of word</string>
     <string name="opcode_letsign">Letter Sign (5)</string>
-    <string name="opcode_letter">Generic Letter</string>
-    <string name="opcode_litdigit">Literary Digit</string>
+    <string name="opcode_letter">Generic letter</string>
+    <string name="opcode_litdigit">Literary digit</string>
     <string name="opcode_midnum">Character inside numbers</string>
     <string name="opcode_numericmodechars">Numeric mode trigger</string>
     <string name="opcode_midendnumericmodechars">Suffix/Internal numeric</string>
@@ -409,9 +410,41 @@
     <string name="title_select_prefix">Select prefix (e.g. dot 4, 5 or 6)</string>
     <string name="hint_enter_dots">Enter dots (e.g. 123)</string>
     <string name="label_table_locale">Table Language (Locale):</string>
+    <string name="label_locale_short">Language</string>
+    <string name="label_base_table_short">Inherit from</string>
+    <string name="label_base_script_short">Alphabet</string>
+    <string name="label_number_system_short">Numbers</string>
+    <string name="label_opcode_short">Rule</string>
+    <string name="label_mapped_items_short">Mappings</string>
     <string name="label_high_priority">High Priority (Write BEFORE system set)</string>
+    <string name="label_priority_short">H</string>
+    <string name="label_locale">Table Language (Locale):</string>
+    <string name="label_opcode">Liblouis Opcode:</string>
+    <string name="btn_set_cell">Set Cell</string>
+    <string name="btn_append_cell">+ Append Cell</string>
+    <string name="btn_clear_dots">Clear</string>
     <string name="hint_priority_desc">Enable this for each character you want to override in the standard alphabet. High priority mappings are written before the system rules, while standard ones are added after.</string>
     <string name="none_selected">--- None selected ---</string>
+    <string name="emoji_search_prefix">Emoji Search: </string>
+    <string name="emoji_no_results">No emoji results</string>
+    <string name="emoji_inserted">Inserted </string>
+    <string name="emoji_no_to_insert">No emoji to insert</string>
+    <string name="emoji_search_query_empty">Emoji search query empty</string>
+    <string name="emoji_search_mode_on">Emoji search mode on (%s)</string>
+    <string name="emoji_search_mode_off">Emoji search mode off</string>
+    <string name="emoji_no_results_query">No results for %s</string>
+    <string name="emoji_count_summary">%1$s, %2$d of %3$d</string>
+    <string name="msg_fixed_mapping">Fixed mapping (cannot delete)</string>
+    <string name="msg_deleted">Deleted</string>
+    <string name="title_select_table_file">Select Braille Table file</string>
+    <string name="error_invalid_file">Invalid file type. Select .ctb or .utb</string>
+    <string name="msg_imported">Imported %s</string>
+    <string name="table_header_author">Author: </string>
+    <string name="table_header_desc">Description: </string>
+    <string name="table_section_high">HIGH PRIORITY</string>
+    <string name="table_section_system">SYSTEM INCLUDES</string>
+    <string name="table_section_standard">STANDARD PRIORITY</string>
+    <string name="table_section_base">Base Rules</string>
 
     <!-- Preset Categories -->
     <string name="preset_cat_it_accents">Italian Accents</string>
@@ -421,7 +454,7 @@
     <string name="preset_cat_punc">Punctuation (Standard/Literary)</string>
     <string name="preset_cat_math">Math &amp; Symbols (+, €, ...)</string>
 
-    <string name="accessibility_service_description">Consente alla tastiera Soft Braille di funzionare correttamente quando TalkBack è attivo, creando un\'area in cui i tocchi non vengono intercettati dallo screen reader.</string>
+    <string name="accessibility_service_description">Allows the Soft Braille keyboard to work correctly when TalkBack is active by creating an area where touches are not intercepted by the screen reader.</string>
     <string name="accessibility_service_label">Soft Braille Keyboard Accessibility</string>
     <string name="btn_load_template">Load Template</string>
     <string name="title_select_template">Select Template</string>
@@ -438,7 +471,7 @@
     <string name="action_move_right_line">Move right (line)</string>
     <string name="action_move_to_beginning">Move to beginning</string>
     <string name="action_move_to_end">Move to end</string>
-    <string name="action_delete_character">Delete character</string>
+    <string name="action_delete_character">Delete character (Backspace)</string>
     <string name="action_delete_word">Delete word</string>
     <string name="action_delete_line">Delete line</string>
     <string name="action_delete_all">Delete all text</string>
@@ -450,15 +483,15 @@
     <string name="action_next_edit_action">Next edit action</string>
     <string name="action_perform_edit_action">Perform edit action</string>
     <string name="action_space">Space</string>
-    <string name="action_newline">Newline</string>
+    <string name="action_newline">Enter / New line</string>
     <string name="action_switch_table">Switch Braille table</string>
     <string name="action_switch_braille_type">Switch 6/8 dots</string>
-    <string name="action_toggle_emoji_mode">Toggle Emoji mode</string>
+    <string name="action_toggle_emoji_mode">Emoji mode</string>
     <string name="action_voice_input">Voice input</string>
     <string name="action_cycle_feedback_mode">Cycle feedback (Sounds/Vibrate)</string>
     <string name="action_cycle_echo_mode">Cycle keyboard echo</string>
-    <string name="action_toggle_privacy_mode">Toggle privacy mode</string>
-    <string name="action_toggle_autocaps">Toggle auto-capitalization</string>
+    <string name="action_toggle_privacy_mode">Privacy mode</string>
+    <string name="action_toggle_autocaps">Auto-capitalization</string>
     <string name="action_open_settings">Open settings</string>
     <string name="action_input_method_picker">System input method picker</string>
     <string name="action_close_keyboard">Close keyboard</string>
@@ -471,12 +504,14 @@
     <string name="action_read_word">Read current word</string>
     <string name="action_read_line">Read current line</string>
     <string name="action_read_all">Read all text</string>
-    <string name="action_toggle_echo_passwords">Toggle password echo</string>
-    <string name="action_keyboard_shrink">Toggle keyboard shrink</string>
+    <string name="action_toggle_echo_passwords">Password echo</string>
+    <string name="action_keyboard_shrink">Shrink keyboard</string>
+    <string name="title_duplicate_combination">Duplicate Combination</string>
+    <string name="msg_standard_char_override">Standard character of the selected set. Your choice will take precedence.</string>
 
     <!-- Gesture Settings -->
     <string name="pref_category_gestures_title">Gestures</string>
-    <string name="pref_gestures_summary">Customize actions assigned to individual dot swipes</string>     
+    <string name="pref_gestures_summary">Customize actions assigned to individual dot swipes and holds</string>
     <string name="gesture_point_1">Dot 1 Gestures (Left index)</string>
     <string name="gesture_point_2">Dot 2 Gestures (Left middle)</string>
     <string name="gesture_point_3">Dot 3 Gestures (Left ring)</string>
@@ -489,9 +524,9 @@
     <string name="swipe_left">Swipe left</string>
     <string name="swipe_right">Swipe right</string>
     <string name="pref_reset_gestures_title">Reset default gestures</string>
-    <string name="pref_reset_gestures_summary">Restore all gestures to their original scheme</string>     
-    <string name="gestures_reset_done">Gestures reset to default</string>
-    <string name="hold_prefix">Hold</string>
+    <string name="pref_reset_gestures_summary">Restore all gestures to their original scheme</string>       
+    <string name="gestures_reset_done">Gestures reset</string>
+    <string name="hold_prefix">Hold on</string>
     <string name="swipe_prefix">and swipe</string>
     <string name="point_1">Dot 1</string>
     <string name="point_2">Dot 2</string>
@@ -500,9 +535,12 @@
     <string name="point_5">Dot 5</string>
     <string name="point_6">Dot 6</string>
     <string name="two_fingers">two fingers</string>
+    <string name="btn_add_selected">Add selected directly</string>
+    <string name="title_share_table">Share Table</string>
+    <string name="preset_cat_base">Base Alphabet (a-z)</string>
+    <string name="preset_cat_control">Control Codes (6-pt)</string>
     <string name="points_1_2">dots 1 and 2</string>
     <string name="points_4_6">dots 4 and 6</string>
     <string name="points_1_5">dots 1-5</string>
     <string name="points_1_4">dots 1-4</string>
-    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
 </resources>

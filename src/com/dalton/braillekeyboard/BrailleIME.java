@@ -154,22 +154,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             brailleView.addOnLayoutChangeListener(mLayoutChangeListener);
         }
 
-        if (!Options.getBooleanPreference(this,
-                R.string.pref_has_asked_record_audio_key, false)) {
-            Options.switchBooleanPreference(this,
-                    R.string.pref_has_asked_record_audio_key, false);
-            // Android 6+ show a permission dialog for record audio dangerous
-            // permission.
-            // Only do this once on the very first run though.
-            if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(this, IntentActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction(getString(R.string.action_record_audio_permission));
-                startActivity(intent);
-            }
-        }
-
         return brailleView;
     }
 
@@ -208,6 +192,15 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         }
 
         // Point 4: Request audio permission if needed (only if accessibility is not being prompted right now)
+        if (!Options.getBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false)) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(this, IntentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(getString(R.string.action_record_audio_permission));
+                startActivity(intent);
+            }
+            Options.switchBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false);
+        }
     }
 
     @Override
@@ -240,6 +233,17 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         if (brailleParser != null) {
             brailleParser.destroy();
             brailleParser = null;
+        }
+    }
+
+    @Override
+    public void onComputeInsets(Insets outInsets) {
+        super.onComputeInsets(outInsets);
+        if (brailleView != null && brailleView.getShrinkKeyboard()) {
+            // Only define insets when shrunk to allow touches to reach the view
+            outInsets.contentTopInsets = brailleView.getTop();
+            outInsets.visibleTopInsets = brailleView.getTop();
+            outInsets.touchableInsets = Insets.TOUCHABLE_INSETS_VISIBLE;
         }
     }
 
