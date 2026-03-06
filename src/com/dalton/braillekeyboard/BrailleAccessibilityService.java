@@ -91,14 +91,19 @@ public class BrailleAccessibilityService extends AccessibilityService {
         AccessibilityServiceInfo info = getServiceInfo();
         if (info == null) return;
         
+        int oldFlags = info.flags;
         if (enabled) {
             info.flags |= AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
         } else {
             info.flags &= ~AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
         }
         
-        Log.d(TAG, "Updating accessibility flags, Touch Exploration: " + (enabled ? "ON" : "OFF"));
-        setServiceInfo(info);
+        if (info.flags != oldFlags) {
+            Log.d(TAG, "Updating accessibility flags, Touch Exploration: " + (enabled ? "ON" : "OFF"));
+            setServiceInfo(info);
+        } else {
+            Log.d(TAG, "Touch Exploration flag already in desired state: " + (enabled ? "ON" : "OFF"));
+        }
     }
 
     private void provideFeedback() {
