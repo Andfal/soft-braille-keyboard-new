@@ -93,11 +93,9 @@ public class BrailleView extends View {
             setLocale(Locale.getDefault());
             shrinkKeyboard = true;
             
-            // CRITICAL: Make the view focusable and visible to accessibility ONLY when shrunk
-            // This allows the single tap to be captured correctly by the system.
             if (android.os.Build.VERSION.SDK_INT >= 16) {
                 setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-                setFocusable(true);
+                setFocusable(false);
                 setClickable(true);
             }
             
@@ -270,7 +268,6 @@ public class BrailleView extends View {
         
         if (shrinkKeyboard) {
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
-                android.util.Log.d("BrailleView", "Shrink mode tap detected, expanding keyboard...");
                 expandKeyboard();
             }
             return true;
@@ -402,7 +399,7 @@ public class BrailleView extends View {
 
         for (int i = 0; i < lastDotList.size(); i++) {
             Coords coord = lastDotList.get(i);
-            dotsDown[ONE_SIDE + i] = new Coords(ONE_SIDE + id, coord.x, coord.y);
+            dotsDown[ONE_SIDE + id] = new Coords(ONE_SIDE + id, coord.x, coord.y);
         }
 
         if (countDotsDown(dotsDown) == TOTAL_DOTS) {

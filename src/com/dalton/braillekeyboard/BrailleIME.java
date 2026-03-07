@@ -1,14 +1,14 @@
 /*
  * Copyright (C) 2016 The Soft Braille Keyboard Authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the \"License\");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
+ * distributed under the License is distributed on an \"AS IS\" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -82,24 +82,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public void onWindowShown() {
         super.onWindowShown();
-        startAccessibilityTimer();
-    }
-
-    @Override
-    public void onStartInputView(EditorInfo info, boolean restarting) {
-        super.onStartInputView(info, restarting);
-        if (!restarting && brailleView != null) {
-            brailleView.onInitialiseForInput(this, this);
-        }
-        brailleParser.setTranslator(this);
-        startAccessibilityTimer();
-    }
-
-    private void startAccessibilityTimer() {
-        // Use 500ms globally for maximum safety margin.
-        // This ensures TalkBack always latches correctly onto the window.
-        long delay = 500;
-        scheduleAccessibilityUpdate(3, delay);
+        mIsFinishing = false;
+        // Successful retry configuration
+        scheduleAccessibilityUpdate(5, 400);
     }
 
     private void scheduleAccessibilityUpdate(final int retriesLeft, long delay) {
@@ -109,28 +94,39 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             public void run() {
                 if (brailleView != null && brailleView.isShown() && brailleView.getWidth() > 0) {
                     updatePassthroughRegion();
-                } else if (retriesLeft > 0 && isInputViewShown()) {
-                    scheduleAccessibilityUpdate(retriesLeft - 1, 300);
+                } 
+                if (retriesLeft > 0 && !mIsFinishing) {
+                    scheduleAccessibilityUpdate(retriesLeft - 1, 400);
                 }
             }
         }, delay);
     }
 
     private void updatePassthroughRegion() {
-        if (!isInputViewShown() || brailleView == null || mIsFinishing) return;
+        if (brailleView == null || !brailleView.isShown()) return;
 
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             BrailleAccessibilityService accService = BrailleAccessibilityService.getInstance();
             if (accService != null) {
                 if (brailleView.getShrinkKeyboard()) {
+                    // MUST clear passthrough in shrink mode to allow focus navigation
+                    android.util.Log.d("BrailleIME", "Shrink mode: clearing passthrough to unlock focus.");
                     accService.clearPassthroughRegion();
                     return;
                 }
+                
                 int[] location = new int[2];
                 brailleView.getLocationOnScreen(location);
                 if (brailleView.getWidth() > 0 && brailleView.getHeight() > 0) {
-                    accService.updatePassthroughRegion(location[0], location[1],
-                            brailleView.getWidth(), brailleView.getHeight());
+                    try {
+                        accService.updatePassthroughRegion(location[0], location[1],
+                                brailleView.getWidth(), brailleView.getHeight());
+                        
+                        // Wake up Mu Launcher focus (Fix 1)
+                        brailleView.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
+                    } catch (Exception e) {
+                        android.util.Log.e("BrailleIME", "Error updating passthrough", e);
+                    }
                 }
             }
         }
@@ -155,11 +151,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         mark = -1;
         predictionOn = false;
         
-        // Clean buffers to prevent text leaking between fields
         cells.clear();
         composingText.setLength(0);
         
-        // Refresh caps mode with delay to allow editor stabilization
         mAccessibilityHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -191,10 +185,22 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     @Override
+    public void onStartInputView(EditorInfo info, boolean restarting) {
+        super.onStartInputView(info, restarting);
+        mIsFinishing = false;
+        if (!restarting && brailleView != null) {
+            brailleView.onInitialiseForInput(this, this);
+        }
+        brailleParser.setTranslator(this);
+        scheduleAccessibilityUpdate(3, 400);
+    }
+
+    @Override
     public void onFinishInputView(boolean finishingInput) {
         super.onFinishInputView(finishingInput);
-        // Clear timers, but keep the view alive for rapid restarts (WhatsApp)
-        mAccessibilityHandler.removeCallbacksAndMessages(null);
+        if (brailleView != null) {
+            brailleView.close();
+        }
     }
 
     @Override
@@ -202,14 +208,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         super.onWindowHidden();
         mIsFinishing = true;
         mAccessibilityHandler.removeCallbacksAndMessages(null);
-        
-        if (brailleView != null) {
-            // Real cleanup only when the keyboard window disappears
-            if (android.os.Build.VERSION.SDK_INT >= 16) {
-                brailleView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
-            }
-            brailleView.close();
-        }
         clearAccessibilityState();
     }
 
@@ -435,7 +433,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 int commonLen = 0;
                 while (commonLen < prev.length() && commonLen < curr.length() && prev.charAt(commonLen) == curr.charAt(commonLen)) commonLen++;
                 int deleteCount = prev.length() - commonLen;
-                if (deleteCount > 0) for (int i = 0; i < deleteCount; i++) keyDownUp(ic, KeyEvent.KEYCODE_DEL);
+                if (deleteCount > 0) {
+                    ic.deleteSurroundingText(deleteCount, 0);
+                }
                 if (commonLen < curr.length()) {
                     CharSequence appendText = curr.subSequence(commonLen, curr.length());
                     ic.commitText(appendText, 1);
@@ -462,19 +462,11 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         if (ic == null) return;
         if (selectAll) { toggleMark(); selectAll = false; }
         finishComposingText();
-        
-        EditorInfo info = getCurrentInputEditorInfo();
-        
         switch (keyCode) {
         case Keyboard.KEYCODE_DELETE: keyDownUp(ic, KeyEvent.KEYCODE_DEL); break;
         case Keyboard.KEYCODE_DONE:
         case '\n':
-            // Robust Enter: Use Editor Action if available (GBoard style)
-            if (info != null && (info.imeOptions & EditorInfo.IME_MASK_ACTION) != EditorInfo.IME_ACTION_NONE) {
-                ic.performEditorAction(info.imeOptions & EditorInfo.IME_MASK_ACTION);
-            } else {
-                keyDownUp(ic, KeyEvent.KEYCODE_ENTER);
-            }
+            keyDownUp(ic, KeyEvent.KEYCODE_ENTER);
             break;
         default:
             if (keyCode >= '0' && keyCode <= '9') keyDownUp(ic, keyCode - '0' + KeyEvent.KEYCODE_0);

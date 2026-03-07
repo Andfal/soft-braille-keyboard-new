@@ -46,12 +46,14 @@ public class BrailleAccessibilityService extends AccessibilityService {
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "Accessibility Service Destroyed");
         super.onDestroy();
         instance = null;
     }
 
     @Override
     public boolean onUnbind(android.content.Intent intent) {
+        Log.d(TAG, "Accessibility Service Unbound");
         instance = null;
         return super.onUnbind(intent);
     }
@@ -62,28 +64,37 @@ public class BrailleAccessibilityService extends AccessibilityService {
                 // Request control dynamically
                 setTouchExplorationEnabled(true);
                 
-                Log.d(TAG, "Setting passthrough region: " + x + ", " + y + ", " + width + "x" + height);
+                Log.d(TAG, "Requesting passthrough: " + x + ", " + y + ", " + width + "x" + height);
                 Region region = new Region(x, y, x + width, y + height);
-                setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, region);
-                
-                if (!isPassthroughActive) {
-                    provideFeedback();
+                try {
+                    setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, region);
+                    if (!isPassthroughActive) {
+                        provideFeedback();
+                    }
+                    isPassthroughActive = true;
+                    Log.d(TAG, "Passthrough set successfully");
+                } catch (Exception e) {
+                    Log.e(TAG, "Failed to set passthrough region", e);
                 }
-                isPassthroughActive = true;
             } else {
                 Log.w(TAG, "Invalid region requested: " + width + "x" + height);
             }
         }
     }
-    
+
     public void clearPassthroughRegion() {
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             Log.d(TAG, "Clearing passthrough region");
-            setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, new Region());
-            
-            // Release control immediately
-            setTouchExplorationEnabled(false);
-            isPassthroughActive = false;
+            try {
+                setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, new Region());
+                
+                // Release control immediately
+                setTouchExplorationEnabled(false);
+                isPassthroughActive = false;
+                Log.d(TAG, "Passthrough cleared successfully");
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to clear passthrough region", e);
+            }
         }
     }
 
