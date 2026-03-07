@@ -66,8 +66,8 @@ public class IntentActivity extends Activity {
     private void showAccessibilityDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.accessibility_service_label);
-        builder.setMessage("To use this keyboard with TalkBack, you must enable 'Soft Braille Keyboard' in Accessibility settings. This allows the keyboard to receive your touches while TalkBack is active.");
-        builder.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.accessibility_service_dialog_message);
+        builder.setPositiveButton(R.string.action_settings, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
@@ -75,7 +75,7 @@ public class IntentActivity extends Activity {
                 finish();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.btn_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 finish();

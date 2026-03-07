@@ -162,7 +162,7 @@ public class TableManagerActivity extends Activity {
 
         } catch (Exception e) {
             Log.e(TAG, "Error importing table", e);
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_LONG).show();
         }
     }
 
