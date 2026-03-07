@@ -137,6 +137,16 @@ public class BrailleView extends View {
                 .getSystemService(Context.VIBRATOR_SERVICE);
     }
 
+    @Override
+    public boolean performClick() {
+        if (shrinkKeyboard) {
+            android.util.Log.d("BrailleView", "Accessibility click detected, expanding keyboard...");
+            expandKeyboard();
+            return true;
+        }
+        return super.performClick();
+    }
+
     public void onInitialiseForInput(Context context, KeyboardListener listener) {
         this.listener = listener;
 
