@@ -18,8 +18,8 @@
     <string name="deleted">Удалено %s</string>
     <string name="delete_selection">Удалить выделение</string>
     <string name="end_of_text">Конец текста</string>
-    <string name="expand_keyboard_talkback">Коснитесь один раз, чтобы развернуть клавиатуру</string>
-    <string name="expand_keyboard">Коснитесь один раз, чтобы развернуть клавиатуру</string>
+    <string name="expand_keyboard_talkback">Коснитесь один раз здесь, чтобы развернуть клавиатуру</string>
+    <string name="expand_keyboard">Коснитесь один раз здесь, чтобы развернуть клавиатуру</string>
     <string name="grade_computer">Компьютерный Брайль</string>
     <string name="grade_literary">Литературный Брайль</string>
     <string name="grade_table">Степень %s</string>

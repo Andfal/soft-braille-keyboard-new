@@ -38,15 +38,6 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity
-            android:name=".GestureSettingsActivity"
-            android:label="@string/pref_category_gestures_title"
-            android:directBootAware="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
-        </activity>
         <activity android:name=".IntentActivity" android:label="" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
