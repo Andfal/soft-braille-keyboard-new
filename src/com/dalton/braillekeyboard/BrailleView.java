@@ -398,8 +398,9 @@ public class BrailleView extends View {
     private boolean setPad(int id, int width, int height, boolean autoRotate) {
         final int TOTAL_DOTS = 6;
         final int ONE_SIDE = 3;
+        // For whatever reason we won't be able to set a pad
         if (requiredTouchTime > System.currentTimeMillis()
-                || countDotsDown(dotsDown) != ONE_SIDE) {
+                || (countDotsDown(dotsDown) != ONE_SIDE && countDotsDown(dotsDown) != TOTAL_DOTS)) {
             return false;
         }
         if (lastDotList.size() != ONE_SIDE && lastDotList.size() != 0) {
@@ -407,9 +408,11 @@ public class BrailleView extends View {
             return false;
         }
 
+        // For two phase calibration eg. < six finger multi-touch devices.
+        // Add the first three dots to the current dot list.
         for (int i = 0; i < lastDotList.size(); i++) {
             Coords coord = lastDotList.get(i);
-            dotsDown[ONE_SIDE + id] = new Coords(ONE_SIDE + id, coord.x, coord.y);
+            dotsDown[ONE_SIDE + i] = new Coords(ONE_SIDE + id, coord.x, coord.y);
         }
 
         if (countDotsDown(dotsDown) == TOTAL_DOTS) {
@@ -437,7 +440,13 @@ public class BrailleView extends View {
             lastDotList.clear();
             resetDots();
             return result;
-        } else {
+        } else if (Options.getBooleanPreference(
+                getContext(),
+                R.string.pref_two_hand_calibration_key,
+                Boolean.parseBoolean(getContext().getString(
+                        R.string.pref_two_hand_calibration_default)))) {
+            // Add the first three dots that have been tuched to a member
+            // variable for reference on the second touch of three fingers
             for (int i = 0; i < dotsDown.length; i++) {
                 if (dotsDown[i] != null) {
                     lastDotList.add(dotsDown[i]);
@@ -450,6 +459,7 @@ public class BrailleView extends View {
             vibrator.vibrate(MEDIUM_VIBRATION);
             return true;
         }
+        return false;
     }
 
     private boolean setDefaultPad(int w, int h, int padWidth, int padHeight) {
