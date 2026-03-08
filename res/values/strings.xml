@@ -80,6 +80,8 @@
     <string name="require_record_audio_now">REQUIRE_RECORD_AUDIO</string>
     <string name="txt_id_practice">TXT_PRACTICE</string>
 
+    <string name="pref_two_hand_calibration_default">true</string>
+    <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
     <string name="pref_two_hand_calibration_summary">Allow calibrating the keyboard with two separate touches.</string>
     <string name="pref_two_hand_calibration_title">Two-touch calibration</string>
     <string name="trial_buy">Buy</string>
