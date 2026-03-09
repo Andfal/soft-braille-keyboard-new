@@ -351,6 +351,8 @@
     <string name="btn_save">SAVE</string>
     <string name="btn_update">UPDATE</string>
     <string name="label_mapped_items">Mapped Items</string>
+    <string name="label_no_mapped_items">No items mapped</string>
+    <string name="label_n_mapped_items">%d items mapped (Tap to edit)</string>
     <string name="hint_author">Author (e.g. Sergio)</string>
     <string name="hint_description">Table description</string>
     <string name="hint_dots_format">Dots (e.g. 123-45)</string>

@@ -211,28 +211,6 @@ public class TableCreatorActivity extends Activity {
         mTableNameEdit.setHint(R.string.hint_table_name);
         topContent.addView(mTableNameEdit);
 
-        LinearLayout mappedRow = new LinearLayout(this);
-        mappedRow.setOrientation(LinearLayout.HORIZONTAL);
-        mappedRow.setGravity(Gravity.CENTER_VERTICAL);
-
-        mMappedItemsSpinner = new Spinner(this);
-        mDisplayList.add(getString(R.string.label_mapped_items));
-        mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mDisplayList);
-        mMappedItemsSpinner.setAdapter(mAdapter);
-        mMappedItemsSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
-        mMappedItemsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (pos > 0) loadMapping(pos - 1); }
-            @Override public void onNothingSelected(AdapterView<?> p) {}
-        });
-        
-        Button deleteMapBtn = new Button(this);
-        deleteMapBtn.setText(R.string.btn_delete);
-        deleteMapBtn.setOnClickListener(v -> deleteSelected());
-        
-        mappedRow.addView(mMappedItemsSpinner);
-        mappedRow.addView(deleteMapBtn);
-        topContent.addView(mappedRow);
-
         Button templateBtn = new Button(this);
         templateBtn.setText(R.string.btn_load_template);
         templateBtn.setOnClickListener(v -> showTemplatePicker());
@@ -249,12 +227,20 @@ public class TableCreatorActivity extends Activity {
         mLocaleSpinner = new Spinner(this);
         loadLocales();
         mLocaleSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_locale_short), mLocaleNames));
+        mLocaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateSystemTables();
+            }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
         topContent.addView(mLocaleSpinner);
 
         mEightDotCheck = new CheckBox(this);
         mEightDotCheck.setText(R.string.label_use_8_dots);
         mEightDotCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
             updateScriptSpinner(isChecked);
+            updateSystemTables();
             initPresets(); // Refresh presets when switching 6/8 dots
         });
         topContent.addView(mEightDotCheck);
@@ -263,8 +249,7 @@ public class TableCreatorActivity extends Activity {
         mAdvancedSettingsLayout.setOrientation(LinearLayout.VERTICAL);
         
         mBaseTableSpinner = new Spinner(this);
-        loadSystemTables();
-        mBaseTableSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_base_table_short), mSystemTableLabels));
+        updateSystemTables();
         mAdvancedSettingsLayout.addView(mBaseTableSpinner);
 
         mScriptSpinner = new Spinner(this);
@@ -411,7 +396,7 @@ public class TableCreatorActivity extends Activity {
         if (tableId != null) loadTableData(tableId);
     }
 
-    private void loadSystemTables() {
+    private void updateSystemTables() {
         mSystemTableFiles.clear();
         mSystemTableLabels.clear();
         mSystemTableFiles.add("");
@@ -420,11 +405,38 @@ public class TableCreatorActivity extends Activity {
         TableList tableList = new TableList(this);
         List<TableInfo> tables = new ArrayList<>(tableList.getTables());
         
+        // Remove custom tables and filter by dots
+        boolean is8DotMode = mEightDotCheck.isChecked();
         for (int i = tables.size() - 1; i >= 0; i--) {
-            if (tables.get(i).getId().startsWith("custom:")) tables.remove(i);
+            TableInfo info = tables.get(i);
+            if (info.getId().startsWith("custom:") || info.isEightDot() != is8DotMode) {
+                tables.remove(i);
+            }
         }
 
+        // Filter by "Show Extended Tables" preference
+        boolean showExtended = Options.getBooleanPreference(this, R.string.pref_show_ext_tables_key, 
+                Boolean.parseBoolean(getString(R.string.pref_show_ext_tables_default)));
+        
+        if (!showExtended) {
+            for (int i = tables.size() - 1; i >= 0; i--) {
+                if (tables.get(i).getVariant() != null && tables.get(i).getVariant().contains("[Ext]")) {
+                    tables.remove(i);
+                }
+            }
+        }
+
+        // Sorting logic
+        final String selectedLang = mLocaleSpinner.getSelectedItemPosition() > 0 ? 
+                mLocaleCodes.get(mLocaleSpinner.getSelectedItemPosition()) : "";
+
         Collections.sort(tables, (t1, t2) -> {
+            boolean t1Matches = !selectedLang.isEmpty() && t1.getLocale().getLanguage().equals(selectedLang.split("-")[0]);
+            boolean t2Matches = !selectedLang.isEmpty() && t2.getLocale().getLanguage().equals(selectedLang.split("-")[0]);
+            
+            if (t1Matches && !t2Matches) return -1;
+            if (!t1Matches && t2Matches) return 1;
+            
             String n1 = t1.getLocale().getDisplayName() + (t1.getVariant() != null ? t1.getVariant() : "");
             String n2 = t2.getLocale().getDisplayName() + (t2.getVariant() != null ? t2.getVariant() : "");
             return n1.compareTo(n2);
@@ -432,15 +444,25 @@ public class TableCreatorActivity extends Activity {
 
         for (TableInfo info : tables) {
             String fileName = tableList.getFileName(info.getId());
-            if (fileName != null) {
+            if (fileName != null && !fileName.endsWith(".tbl")) {
                 mSystemTableFiles.add(fileName);
                 String label = info.getLocale().getDisplayName();
                 if (info.getVariant() != null && !info.getVariant().isEmpty()) {
                     label += " " + info.getVariant();
                 }
+                // Add filename for clarity
+                label += " [" + fileName + "]";
                 mSystemTableLabels.add(label);
             }
         }
+        
+        int currentPos = mBaseTableSpinner.getSelectedItemPosition();
+        mBaseTableSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_base_table_short), mSystemTableLabels));
+        if (currentPos < mSystemTableLabels.size()) mBaseTableSpinner.setSelection(currentPos);
+    }
+
+    private void loadSystemTables() {
+        updateSystemTables();
     }
 
     private List<Integer> parseDots(String dotsStr) {
@@ -474,20 +496,46 @@ public class TableCreatorActivity extends Activity {
         mLocaleCodes.clear();
         mLocaleNames.clear();
         java.util.Locale[] locales = java.util.Locale.getAvailableLocales();
-        List<java.util.Locale> list = new ArrayList<>();
+        
+        // Use a TreeMap to keep names unique and sorted alphabetically
+        java.util.Map<String, String> uniqueLocales = new java.util.TreeMap<>();
+        
         for (java.util.Locale l : locales) {
-            if (!l.getLanguage().isEmpty() && !l.getDisplayLanguage().isEmpty()) list.add(l);
+            String lang = l.getLanguage();
+            if (lang.isEmpty()) continue;
+            
+            String name = l.getDisplayLanguage();
+            String code = lang;
+            
+            // Handle important variants that have different Braille/Emoji needs
+            if (lang.equals("pt") && "BR".equals(l.getCountry())) {
+                name = l.getDisplayName(); // e.g., "Portoghese (Brasile)"
+                code = "pt-BR";
+            } else if (lang.equals("zh")) {
+                name = l.getDisplayName(); // e.g., "Cinese (Semplificato)" / "Cinese (Tradizionale)"
+                code = "zh";
+                if ("TW".equals(l.getCountry()) || "HK".equals(l.getCountry())) {
+                    code = "zh-TW";
+                }
+            }
+            
+            // Ensure first letter is uppercase (standardize across Android versions)
+            if (name.length() > 0) {
+                name = name.substring(0, 1).toUpperCase() + name.substring(1);
+            }
+            
+            // If we don't have this language yet, or if it's a priority variant, add it
+            if (!uniqueLocales.containsKey(name)) {
+                uniqueLocales.put(name, code);
+            }
         }
-        Collections.sort(list, (l1, l2) -> l1.getDisplayName().compareTo(l2.getDisplayName()));
+        
         mLocaleCodes.add("");
         mLocaleNames.add(getString(R.string.none_selected));
-        for (java.util.Locale l : list) {
-            String code = l.getLanguage();
-            if (!l.getCountry().isEmpty()) code += "-" + l.getCountry();
-            if (!mLocaleCodes.contains(code)) {
-                mLocaleCodes.add(code);
-                mLocaleNames.add(l.getDisplayName());
-            }
+        
+        for (java.util.Map.Entry<String, String> entry : uniqueLocales.entrySet()) {
+            mLocaleNames.add(entry.getKey());
+            mLocaleCodes.add(entry.getValue());
         }
     }
 
@@ -881,7 +929,13 @@ public class TableCreatorActivity extends Activity {
 
     private void refreshSpinner() {
         mDisplayList.clear();
-        mDisplayList.add(getString(R.string.none_selected));
+        String title;
+        if (mMappings.isEmpty()) {
+            title = getString(R.string.label_no_mapped_items);
+        } else {
+            title = String.format(getString(R.string.label_n_mapped_items), mMappings.size());
+        }
+        mDisplayList.add(title);
         for (Mapping m : mMappings) {
             String friendlyOp = m.opcode;
             for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { friendlyOp = OPCODE_LABELS[i]; break; }
