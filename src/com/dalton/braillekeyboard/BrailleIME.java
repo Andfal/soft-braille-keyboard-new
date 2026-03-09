@@ -392,6 +392,12 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public String handleTypedCharacter(byte dots) {
         if (brailleParser != null) {
+            // If dots is 0 (space) or contains space-like behavior, finish composition
+            if (dots == 0) {
+                finishComposingText(true);
+                return " ";
+            }
+            
             Locale locale = getLocale();
             boolean isEnglish = locale != null && locale.getLanguage().equals(Locale.ENGLISH.getLanguage());
             if (isEnglish && dots == 32 && cells.contains((byte) 60)) {

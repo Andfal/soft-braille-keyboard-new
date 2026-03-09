@@ -154,6 +154,7 @@ public class BrailleParser {
     private final Context context;
 
     private BrailleTranslator translator;
+    private TableInfo mCurrentTable;
     private List<TableInfo> tables;
     private int status = STATUS_PREPARING;
 
@@ -402,22 +403,31 @@ public class BrailleParser {
      *         possible.
      */
     public String backTranslate(Context context, Byte[] cellBytes) {
-        // Convert from a Byte[] to a byte[]O
-        byte[] cells = new byte[cellBytes.length + 2];
-        // Pad the cells so that we have spaces on each size. This makes the
-        // back translation work properly.
-        cells[0] = 0;
-        cells[cells.length - 1] = 0;
-
-        for (int i = 0; i < cellBytes.length; i++) {
-            cells[i + 1] = 0;
-            if (cellBytes[i] != null) { // should never be null
-                cells[i + 1] = cellBytes[i].byteValue();
+        boolean isGrade2 = mCurrentTable != null && mCurrentTable.getGrade() == 2;
+        
+        // Convert from a Byte[] to a byte[]
+        // For Grade 2 (contracted), we DON'T pad with spaces during word composition
+        // to avoid incorrect full-word contractions.
+        // For Grade 1, we keep padding to maintain legacy behavior if needed, 
+        // though even there it might be questionable.
+        
+        byte[] cells;
+        if (isGrade2) {
+            cells = new byte[cellBytes.length];
+            for (int i = 0; i < cellBytes.length; i++) {
+                cells[i] = cellBytes[i] != null ? cellBytes[i].byteValue() : 0;
+            }
+        } else {
+            cells = new byte[cellBytes.length + 2];
+            cells[0] = 0;
+            cells[cells.length - 1] = 0;
+            for (int i = 0; i < cellBytes.length; i++) {
+                cells[i + 1] = cellBytes[i] != null ? cellBytes[i].byteValue() : 0;
             }
         }
 
         String text = null;
-        if (status == STATUS_OK) {
+        if (status == STATUS_OK && translator != null) {
             text = translator.backTranslate(cells);
             text = handleUnknownPatterns(context, text, cells);
         }
@@ -448,6 +458,7 @@ public class BrailleParser {
         TableInfo table = getTable(context);
         if (table != null
                 && (status == STATUS_OK || status == STATUS_TABLE_ERROR)) {
+            mCurrentTable = table;
             BrailleTranslator newTranslator = client.getTranslator(table.getId());
             
             // Fallback for custom tables if official client fails to find it in its list
