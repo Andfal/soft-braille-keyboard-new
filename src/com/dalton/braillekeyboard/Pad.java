@@ -385,6 +385,12 @@ public abstract class Pad {
     }
 
     public void updateKeys(boolean portrait) {
+        // If calibration is locked, we strictly skip any automatic adjustments (auto-drift)
+        // to keep the points exactly where the user placed them.
+        if (Options.getBooleanPreference(null, R.string.pref_lock_calibration_key, false)) {
+            return;
+        }
+
         XY[] newDiff = new XY[2];
         newDiff[0] = new XY(0, 0);
         newDiff[1] = new XY(0, 0);
@@ -477,11 +483,19 @@ public abstract class Pad {
         Options.writeStringSetPreference(context, prefKey, points);
     }
 
+    protected void save(Context context, int prefKey, boolean portrait, Coords[] customDots) {
+        Set<String> points = new HashSet<String>();
+        for (Coords key : customDots) {
+            points.add(savePointString(key, portrait));
+        }
+        Options.writeStringSetPreference(context, prefKey, points);
+    }
+
     public static Coords[] load(Context context, int viewWidth, int viewHeight,
             int prefKey, boolean portrait) {
         Set<String> points = Options.getStringSetPreference(context, prefKey,
                 null);
-        if (points != null) {
+        if (points != null && !points.isEmpty()) {
             int[] centre = { portrait ? viewHeight / 2 : viewWidth / 2,
                     portrait ? viewWidth / 2 : viewHeight / 2 };
             Coords[] coords = new Coords[points.size()];
@@ -489,7 +503,12 @@ public abstract class Pad {
             for (String point : points) {
                 coords[i++] = new Coords(centre, point);
             }
-            return coords;
+            // Sort by ID to ensure dot 1 is dot 1
+            java.util.List<Coords> sorted = new ArrayList<Coords>(java.util.Arrays.asList(coords));
+            java.util.Collections.sort(sorted, new java.util.Comparator<Coords>() {
+                @Override public int compare(Coords c1, Coords c2) { return c1.id - c2.id; }
+            });
+            return sorted.toArray(new Coords[0]);
         }
         return null;
     }

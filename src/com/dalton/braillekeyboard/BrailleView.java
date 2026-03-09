@@ -126,6 +126,9 @@ public class BrailleView extends View {
     private long requiredTouchTime = 0;
     private boolean shrinkKeyboard;
     private Speech speech;
+    private boolean mIsManualCalibrating = false;
+    private int mCurrentCalibrationStep = 0;
+    private List<Coords> mManualCalibrationDots = new ArrayList<Coords>();
 
     public BrailleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -151,7 +154,6 @@ public class BrailleView extends View {
         this.listener = listener;
 
         if (android.os.Build.VERSION.SDK_INT >= 16) {
-            setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
             setFocusable(false);
         }
 
@@ -170,13 +172,25 @@ public class BrailleView extends View {
         }
 
         if (displayParams != null) {
-            loadDefaultPad(getWidth(), getHeight());
+            loadInitialPad(getWidth(), getHeight());
             invalidate();
             requestLayout();
         }
         actionHandler = new ActionHandler(context);
         actionHandler.setCallback(actionListener);
         actionHandler.setKeyboardListener(listener);
+    }
+
+    private void loadInitialPad(int w, int h) {
+        boolean locked = Options.getBooleanPreference(getContext(), R.string.pref_lock_calibration_key, false);
+        if (locked) {
+            Coords[] savedDots = Pad.load(getContext(), w, h, R.string.pref_custom_dots_key, h > w && !displayParams.autoRotate);
+            if (savedDots != null && selectPad(savedDots, w, h)) {
+                android.util.Log.i("BrailleView", "Loaded locked custom layout");
+                return;
+            }
+        }
+        loadDefaultPad(w, h);
     }
 
     public void close() {
@@ -196,12 +210,17 @@ public class BrailleView extends View {
     public void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         setDisplayParams(w, h);
-        loadDefaultPad(w, h);
+        loadInitialPad(w, h);
     }
 
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (mIsManualCalibrating) {
+            paint.setTextSize(50);
+            String msg = getContext().getString(R.string.calibration_step, mCurrentCalibrationStep + 1);
+            canvas.drawText(msg, 50, 100, paint);
+        }
         if (!shrinkKeyboard
                 && displayParams != null
                 && Options.getBooleanPreference(
@@ -295,6 +314,14 @@ public class BrailleView extends View {
         int tempX = x;
         x = displayParams.autoRotate || getWidth() >= getHeight() ? x : y;
         y = displayParams.autoRotate || getWidth() >= getHeight() ? y : tempX;
+
+        if (mIsManualCalibrating) {
+            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+                handleManualCalibrationTouch(x, y);
+            }
+            return true;
+        }
+
         Swipe swipe;
         switch (action) {
         case MotionEvent.ACTION_DOWN:
@@ -328,8 +355,11 @@ public class BrailleView extends View {
             resetDots();
 
             if (pad != null) {
-                pad.updateKeys(!displayParams.autoRotate
-                        && getHeight() > getWidth());
+                boolean locked = Options.getBooleanPreference(getContext(), R.string.pref_lock_calibration_key, false);
+                if (!locked) {
+                    pad.updateKeys(!displayParams.autoRotate
+                            && getHeight() > getWidth());
+                }
             }
 
             if (Options.getBooleanPreference(
@@ -358,6 +388,43 @@ public class BrailleView extends View {
         default:
         }
         return true;
+    }
+
+    private void handleManualCalibrationTouch(int x, int y) {
+        int totalDots = listener.getDots();
+        if (totalDots == -1) totalDots = 6;
+        
+        mManualCalibrationDots.add(new Coords(mCurrentCalibrationStep, x, y));
+        vibrator.vibrate(QUICK_VIBRATION);
+        mCurrentCalibrationStep++;
+        
+        if (mCurrentCalibrationStep >= totalDots) {
+            finishManualCalibration();
+        } else {
+            speech.speak(getContext(), getContext().getString(R.string.calibration_step, mCurrentCalibrationStep + 1), Speech.QUEUE_FLUSH);
+            invalidate();
+        }
+    }
+
+    private void finishManualCalibration() {
+        mIsManualCalibrating = false;
+        int width = displayParams.autoRotate ? getWidth() : Math.max(getWidth(), getHeight());
+        int height = displayParams.autoRotate ? getHeight() : Math.min(getWidth(), getHeight());
+        
+        Coords[] dots = mManualCalibrationDots.toArray(new Coords[mManualCalibrationDots.size()]);
+        if (selectPad(dots, width, height)) {
+            // Success! Save and Lock.
+            pad.save(getContext(), R.string.pref_custom_dots_key, height > width && !displayParams.autoRotate, dots);
+            Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
+            
+            speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_FLUSH);
+            vibrator.vibrate(LONG_VIBRATION);
+        } else {
+            speech.speak(getContext(), getContext().getString(R.string.keyboard_error), Speech.QUEUE_FLUSH);
+        }
+        mManualCalibrationDots.clear();
+        resetDots();
+        invalidate();
     }
 
     public boolean getShrinkKeyboard() {
@@ -396,70 +463,67 @@ public class BrailleView extends View {
     }
 
     private boolean setPad(int id, int width, int height, boolean autoRotate) {
-        final int TOTAL_DOTS = 6;
+        int totalDots = listener.getDots();
+        if (totalDots == -1) totalDots = 6;
         final int ONE_SIDE = 3;
+        
         // For whatever reason we won't be able to set a pad
+        int dotsDownCount = countDotsDown(dotsDown);
         if (requiredTouchTime > System.currentTimeMillis()
-                || (countDotsDown(dotsDown) != ONE_SIDE && countDotsDown(dotsDown) != TOTAL_DOTS)) {
-            return false;
-        }
-        if (lastDotList.size() != ONE_SIDE && lastDotList.size() != 0) {
-            lastDotList.clear();
+                || (dotsDownCount != ONE_SIDE && dotsDownCount != totalDots)) {
             return false;
         }
 
-        // For two phase calibration eg. < six finger multi-touch devices.
-        // Add the first three dots to the current dot list.
-        for (int i = 0; i < lastDotList.size(); i++) {
-            Coords coord = lastDotList.get(i);
-            dotsDown[ONE_SIDE + i] = new Coords(ONE_SIDE + id, coord.x, coord.y);
-        }
-
-        if (countDotsDown(dotsDown) == TOTAL_DOTS) {
-            setDotsSevenEight(false, false);
-            Coords[] sixDots = new Coords[TOTAL_DOTS];
-
-            for (int i = 0, j = 0; i < dotsDown.length && j < sixDots.length; i++) {
-                if (dotsDown[i] != null) {
-                    int localX = dotsDown[i].getSecondX();
-                    int localY = dotsDown[i].getSecondY();
-                    sixDots[j++] = new Coords(localX, localY);
-                }
-            }
-            boolean result;
-            if ((result = selectPad(sixDots, width, height))) {
-                speech.speak(getContext(), getContext()
-                        .getString(pad.padString), Speech.QUEUE_FLUSH);
-                vibrator.vibrate(MEDIUM_VIBRATION);
-            } else {
-                speech.speak(getContext(),
-                        getContext().getString(R.string.keyboard_error),
-                        Speech.QUEUE_FLUSH);
-                vibrator.vibrate(QUICK_VIBRATION);
-            }
-            lastDotList.clear();
-            resetDots();
-            return result;
-        } else if (Options.getBooleanPreference(
-                getContext(),
-                R.string.pref_two_hand_calibration_key,
-                Boolean.parseBoolean(getContext().getString(
-                        R.string.pref_two_hand_calibration_default)))) {
-            // Add the first three dots that have been tuched to a member
-            // variable for reference on the second touch of three fingers
-            for (int i = 0; i < dotsDown.length; i++) {
-                if (dotsDown[i] != null) {
-                    lastDotList.add(dotsDown[i]);
-                    dotsDown[i] = null;
-                }
-            }
-            speech.speak(getContext(),
-                    getContext().getString(R.string.keyboard_next_three),
-                    Speech.QUEUE_FLUSH);
-            vibrator.vibrate(MEDIUM_VIBRATION);
+        // Trigger manual calibration mode
+        mIsManualCalibrating = true;
+        mCurrentCalibrationStep = 0;
+        mManualCalibrationDots.clear();
+        
+        // If triggered with all fingers, we can do instant calibration
+        if (dotsDownCount == totalDots) {
+            finishManualCalibrationInstant(id, width, height);
             return true;
         }
-        return false;
+
+        // Else start step-by-step
+        speech.speak(getContext(), getContext().getString(R.string.calibration_init_message), Speech.QUEUE_FLUSH);
+        speech.speak(getContext(), getContext().getString(R.string.calibration_step, 1), Speech.QUEUE_ADD);
+        vibrator.vibrate(MEDIUM_VIBRATION);
+        lastDotList.clear();
+        resetDots();
+        invalidate();
+        return true;
+    }
+
+    private void finishManualCalibrationInstant(int id, int width, int height) {
+        int totalDots = listener.getDots();
+        if (totalDots == -1) totalDots = 6;
+        
+        setDotsSevenEight(false, false);
+        Coords[] dots = new Coords[totalDots];
+
+        for (int i = 0, j = 0; i < dotsDown.length && j < dots.length; i++) {
+            if (dotsDown[i] != null) {
+                int localX = dotsDown[i].getSecondX();
+                int localY = dotsDown[i].getSecondY();
+                dots[j++] = new Coords(j, localX, localY);
+            }
+        }
+        
+        mIsManualCalibrating = false;
+        if (selectPad(dots, width, height)) {
+            pad.save(getContext(), R.string.pref_custom_dots_key, height > width && !displayParams.autoRotate, dots);
+            Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
+            speech.speak(getContext(), getContext().getString(pad.padString), Speech.QUEUE_FLUSH);
+            speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_ADD);
+            vibrator.vibrate(MEDIUM_VIBRATION);
+        } else {
+            speech.speak(getContext(), getContext().getString(R.string.keyboard_error), Speech.QUEUE_FLUSH);
+            vibrator.vibrate(QUICK_VIBRATION);
+        }
+        lastDotList.clear();
+        resetDots();
+        invalidate();
     }
 
     private boolean setDefaultPad(int w, int h, int padWidth, int padHeight) {

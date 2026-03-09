@@ -417,6 +417,15 @@
     <string name="hint_priority_desc">Enable this for each character you want to override in the standard alphabet. High priority mappings are written before the system rules, while standard ones are added after.</string>
     <string name="none_selected">--- None selected ---</string>
     <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
+    <string name="pref_lock_calibration_title">Lock dot positions</string>
+    <string name="pref_lock_calibration_summary">Prevents dots from moving while typing and keeps the custom layout</string>
+    <string name="calibration_init_message">Place 6 or 8 fingers to calibrate instantly, or touch dots one by one for manual calibration</string>
+    <string name="calibration_step">Touch dot %d</string>
+    <string name="calibration_success">Calibration saved and locked</string>
+    <string name="calibration_aborted">Calibration aborted</string>
+    <string name="pref_lock_calibration_key">LOCK_CALIBRATION</string>
+    <string name="pref_lock_calibration_default">false</string>
+    <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
 
     <!-- Build stability and features keys -->
     <string name="accessibility_service_label">Soft Braille Keyboard Accessibility</string>

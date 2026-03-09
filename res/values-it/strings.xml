@@ -327,6 +327,7 @@
     <string name="hint_enter_dots">Digita i punti (es. 123)</string>
     <string name="label_table_locale">Lingua Tabella (Locale):</string>
     <string name="none_selected">--- Nessuno selezionato ---</string>
+    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
     <string name="label_high_priority">Priorità Alta (Scrivi PRIMA del set di sistema)</string>
     <string name="hint_priority_desc">Attiva questa opzione per ogni carattere che vuoi sovrascrivere nell\'alfabeto standard. Le mappature ad alta priorità vengono scritte prima degli \'include\' di sistema, quelle standard dopo.</string>
 
@@ -410,7 +411,15 @@
     <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
     <string name="pref_echo_passwords_default">false</string>
     <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
-    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
+    <string name="pref_lock_calibration_title">Blocca posizione punti</string>
+    <string name="pref_lock_calibration_summary">Impedisce lo spostamento dei punti durante la scrittura e mantiene il layout personalizzato</string>
+    <string name="calibration_init_message">Metti 6 o 8 dita per calibrare istantaneamente, o tocca i punti uno alla volta per la calibrazione manuale</string>
+    <string name="calibration_step">Tocca il punto %d</string>
+    <string name="calibration_success">Calibrazione salvata e bloccata</string>
+    <string name="calibration_aborted">Calibrazione annullata</string>
+    <string name="pref_lock_calibration_key">LOCK_CALIBRATION</string>
+    <string name="pref_lock_calibration_default">false</string>
+    <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
     <string name="pref_has_asked_record_audio_key">RECORD_AUDIO</string>
     <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_invert_default">false</string>

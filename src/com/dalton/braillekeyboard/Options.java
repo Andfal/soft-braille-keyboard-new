@@ -164,6 +164,14 @@ public class Options {
         return !pref;
     }
 
+    public static void writeBooleanPreference(Context context, int resource,
+            boolean value) {
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(context.getString(resource), value);
+        editor.commit();
+    }
+
     public static void writeStringPreference(Context context, int resource,
             String value) {
         SharedPreferences sharedPref = getSharedPreferences(context);
