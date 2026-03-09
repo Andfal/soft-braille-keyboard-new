@@ -81,7 +81,13 @@ public class IntentActivity extends Activity {
                 finish();
             }
         });
-        builder.setCancelable(false);
+        builder.setCancelable(true);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                finish();
+            }
+        });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
