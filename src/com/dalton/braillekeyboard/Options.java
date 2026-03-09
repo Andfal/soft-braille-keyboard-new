@@ -129,34 +129,31 @@ public class Options {
     }
 
     public static SharedPreferences getSharedPreferences(Context context) {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            Context deviceContext = context.createDeviceProtectedStorageContext();
-            String prefName = context.getPackageName() + "_preferences";
-            if (!deviceContext.moveSharedPreferencesFrom(context, prefName)) {
-                // Migration failed or already done. 
-                // Note: moveSharedPreferencesFrom returns false if the source doesn't exist,
-                // which is fine (either it was already moved or it's a new install).
-            }
-            return PreferenceManager.getDefaultSharedPreferences(deviceContext);
-        }
+        if (context == null) return null;
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public static boolean getBooleanPreference(Context context, int resource,
             boolean defaultValue) {
+        if (context == null) return defaultValue;
         SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return defaultValue;
         return sharedPref.getBoolean(context.getString(resource), defaultValue);
     }
 
     public static String getStringPreference(Context context, int resource,
             String defaultValue) {
+        if (context == null) return defaultValue;
         SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return defaultValue;
         return sharedPref.getString(context.getString(resource), defaultValue);
     }
 
     public static boolean switchBooleanPreference(Context context,
             int resource, boolean defaultValue) {
+        if (context == null) return defaultValue;
         SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return defaultValue;
         boolean pref = getBooleanPreference(context, resource, defaultValue);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(context.getString(resource), !pref);
@@ -166,7 +163,9 @@ public class Options {
 
     public static void writeBooleanPreference(Context context, int resource,
             boolean value) {
+        if (context == null) return;
         SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(context.getString(resource), value);
         editor.commit();
@@ -174,7 +173,9 @@ public class Options {
 
     public static void writeStringPreference(Context context, int resource,
             String value) {
+        if (context == null) return;
         SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(context.getString(resource), value);
         editor.commit();
@@ -182,14 +183,18 @@ public class Options {
 
     public static Set<String> getStringSetPreference(Context context,
             int resource, Set<String> defaultValue) {
+        if (context == null) return defaultValue;
         SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return defaultValue;
         return sharedPref.getStringSet(context.getString(resource),
                 defaultValue);
     }
 
     public static void writeStringSetPreference(Context context, int resource,
             Set<String> value) {
+        if (context == null) return;
         SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putStringSet(context.getString(resource), value);
         editor.commit();

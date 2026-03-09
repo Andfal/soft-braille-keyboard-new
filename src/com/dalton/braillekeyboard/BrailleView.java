@@ -95,7 +95,7 @@ public class BrailleView extends View {
             
             if (android.os.Build.VERSION.SDK_INT >= 16) {
                 setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-                setFocusable(false);
+                setFocusable(true);
                 setClickable(true);
             }
             
@@ -643,7 +643,7 @@ public class BrailleView extends View {
         
         // Reset focusability and importance when expanded
         if (android.os.Build.VERSION.SDK_INT >= 16) {
-            setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO_HIDE_DESCENDANTS);
+            setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
             setFocusable(false);
         }
         
