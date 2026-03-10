@@ -1,141 +1,41 @@
-# Gemini CLI Session Summary - January 29, 2026
+# Gemini CLI Session Summary - March 10, 2026
 
 ## Accomplishments
 
-### 1. Emoji Mode Improvements
-- **Logic Fix:** Resolved a critical bug in `ActionHandler.java` where failed Braille translations during Emoji Mode would "fall through" and type raw Braille patterns into the editor. It now traps and consumes all input.
-- **CLDR Data Integration:** Created `scripts/fetch_emojis.py` to fetch localized emoji annotations (keywords and short names) for 20+ languages from Unicode/CLDR.
-- **Locale-Aware Search:** Rewrote `EmojiDictionary.java` to dynamically load JSON assets based on the active Braille table's locale.
-- **Descriptive Navigation:** Updated the search UI to prioritize the emoji's "TTS short name," making it easier to distinguish between similar emojis (e.g., different types of "kiss" emojis).
+### 1. Liblouis Table System Restoration
+- **Root Cause Analysis:** Identified a critical conflict where a redundant `res/raw/translationtables.zip` in the main app (3.4 MB, incorrect structure) was overwriting the correct library resource (1.1 MB).
+- **Structural Fix:** Removed the incorrect ZIP from the main app and synchronized the project to use exclusively `brailleback/braille/service/res/raw/translationtables.zip`.
+- **Tablelist Alignment:** Synchronized `res/xml/tablelist.xml` and `brailleback/braille/service/res/xml/tablelist.xml` to ensure consistency in table definitions (adding `variant="table_variant_unofficial"` where missing).
+- **Verified Italian Support:** Confirmed that Italian 6-dot (`it-it-g1.ctb`) and 8-dot (`it-it-comp8.utb`) tables are now correctly loaded and functional.
 
-### 2. Direct Boot Support
-- **Manifest Updates:** Marked `BrailleIME` and `TranslatorService` as `android:directBootAware="true"`.
-- **Storage Migration:** Refactored `Options.java` to use Device-Protected Storage (`createDeviceProtectedStorageContext()`) for all SharedPreferences, making the keyboard functional on the lock screen before device decryption.
-- **Settings Migration Logic:** Implemented an automatic migration in `Options.java` (`moveSharedPreferencesFrom`) to transfer existing user settings from credential-protected storage to device-protected storage, preventing data loss.
-- **Settings UI Alignment:** Updated `PreferenceIME.java` to ensure the settings activity correctly interacts with the protected storage area.
+### 2. Global Table Update & Synchronization
+- **GitHub Sync:** Successfully updated the entire Liblouis table set in `third_party/Liblouis/tables/` with the latest version from the official master branch.
+- **Data Preservation:** Implemented a backup-and-restore workflow to protect custom Italian and Nepali tables during the global update.
+- **Fat ZIP Implementation:** Updated `scripts/update_translation_tables.py` to include ALL 455+ files from Liblouis in the `translationtables.zip` (~3.4 MB). This makes the app future-proof, as adding new languages only requires an XML change in `tablelist.xml`.
+- **Cleanup:** Permanently deleted the problematic `scripts/recreate_zip.py`.
 
-### 3. Build & Environment
-- **SDK Path Fix:** Identified and fixed a build failure caused by spaces in the Android SDK path on Windows. Documented the requirement to use 8.3 short paths (e.g., `C:/Users/AMAIS1~1/...`) and forward slashes in `local.properties`.
-- **Emoji Assets:** Populated `assets/emojis/` with localized JSON files for supported languages.
-
-### 4. Bug Fixes
-- **Chrome Address Bar Duplication:** Fixed an issue where the first character typed in the Google Chrome address bar (and potentially other fields) would be duplicated. This was caused by `deleteSurroundingText(0, 0)` being called unnecessarily when `composingText` was empty; added a check to skip deletion in this case.
-- **Number Mode Exit:** Fixed an issue where typing Dot 6 (Capital Sign) while in Number Mode (after 3456) would fail to switch to Capital Mode and continue writing numbers. Added logic to detect Dot 6 input when the buffer contains a Number Sign, forcing a text commit to reset the state. **Update:** This fix is restricted to the **English locale** ("en") to avoid interfering with other languages where Dot 6 might have different meanings (e.g., as a punctuation mark in French or Spanish number modes).
-
-## Technical Notes for Future Sessions
-- **Emoji Data:** If new languages are added to `arrays.xml`, run `python scripts/fetch_emojis.py` after adding the lang code to the script's `LANGUAGES` list.
-- **Direct Boot:** All new preference access must go through `Options.getSharedPreferences(context)` to maintain compatibility with the device-protected storage used on Android 7.0+.
-- **Build Command:** Use `.\gradlew.bat assembleDebug` for testing. Ensure `local.properties` remains in the short-path format.
-
-# Gemini CLI Session Summary - February 2, 2026
-
-## Accomplishments
-
-### 1. Bug Fixes
-- **Character Duplication in Star Taxi:** Implemented a robust fix for character duplication in apps that handle input poorly (Star Taxi, Chrome address bar).
-    - **Previous Reference Commit:** `6ffb3c1bcf064e2a3487032d1020b95f378b4ea9` (Last state with legacy composition logic).
-    - **Root Cause:** The keyboard was using Android's "composing text" feature (`setComposingText`). Many apps do not handle composition spans correctly and append the entire composing buffer to the existing text on every update, instead of replacing it.
-    - **Final Solution:**
-        1. **Disabled system-level prediction/composition** globally in `BrailleIME.java`.
-        2. **Manual Differential Update + Re-sync:** The keyboard now manually calculates the difference between what's in the editor (`getTextBeforeCursor`) and what it needs to write.
-        3. **Append-Only Behavior:** For standard typing, the keyboard now only calls `commitText` for the single new character. It avoids delete/replace commands unless necessary.
-    - **Result:** Completely eliminates duplication in problematic apps by mimicking standard physical keyboard behavior.
+### 3. Direct Boot & Security Clarity
+- **Direct Boot Utility:** Confirmed that `directBootAware="true"` is essential for accessibility services to be available immediately after a reboot.
+- **OS Limitations:** Documented that Android prevents third-party IMEs from being used for initial PIN/Password entry for security reasons; the keyboard becomes available immediately after the first unlock.
 
 ## Technical Notes
-- **Input Compatibility:** Avoiding `setComposingText` and `deleteSurroundingText` for standard appends maximizes compatibility with non-standard Android UI frameworks.
 
-# Gemini CLI Session Summary - February 27, 2026
+### Table Loading Architecture
+- **Source:** `third_party/Liblouis/tables/`
+- **ZIP Path:** `brailleback/braille/service/res/raw/translationtables.zip`
+- **Internal Structure:** All files MUST be under `liblouis/tables/` inside the ZIP.
+- **Extraction:** `TranslatorService` extracts this to the app's internal `translator/` directory at runtime.
 
-## Accomplishments
+### Third-Party Components
+- **Liblouis:** Engine for Braille translation (C-based). Tables are synced with version 3.36.0+.
+- **BrailleBack:** Adaptation of Google's service for device communication and translation management.
+- **Android Support V4:** Required for backward compatibility (API 19+).
 
-### 1. Table Creator Improvements
-- **Friendly Opcodes:** Localized Liblouis opcodes for Italian (e.g., "Segna numero", "Segna maiuscola") and improved English descriptions.
-- **Menu Reorganization:** Moved the custom table management ("Manage/Create Braille Tables") into the "Braille Table Settings" category for better logic.
-- **Capitalization Support:** Added support for `begcapsword` and `endcapsword` (Inizio/Fine parola maiuscola) and passage-level `begcaps`/`endcaps`.
-- **Italics Removal:** Removed italics opcodes as they were deemed unnecessary for the current scope.
-- **Labeling:** Custom tables in the selection list now use a clear "Personale: [nome]" or "Custom: [name]" prefix.
+### Chronology
+- **2018-10-08:** Initial integration of `third_party` structure.
+- **2026-02-21:** Massive update to Liblouis 3.36.0 tables.
+- **2026-03-10:** Resolution of ZIP structural conflicts and global table refresh from GitHub.
 
-### 2. Table Analysis
-- **Structure Validation:** Verified the syntax of custom tables (like `sergio.ctb`) using `lou_checktable`. Confirmed the "European Style" (header -> fallbacks -> custom overrides) is robust.
-
-## Technical Notes
-- **Cyrillic/International Support:** The Table Creator is designed to be script-agnostic. To support Cyrillic/Russian:
-    1. Add a new `PresetCategory` for Cyrillic characters in `initPresets()`.
-    2. Add a selector in the UI to change the "Base Script" (the `include` of `latinLetterDef6Dots.uti` vs `ru-ru-g1.utb`).
-    3. The Unicode handling is already in place to convert characters to `\uXXXX` format.
-- **Table Priority:** User-defined rules are written at the end of the `.ctb` file to ensure they have the highest priority over system includes.
-
-# Gemini CLI Session Summary - March 3, 2026
-
-## Accomplishments
-
-### 1. Bug Fixes & Stability
-- **Fixed Infinite Loop in Table Creator:** Identified and resolved a recursive update issue between the `CheckBox` listeners and `EditText` TextWatcher in `showCellEditor` and `showPrefixSelector` dialogs. Added a `mIsUpdatingUI` guard flag to prevent re-entrant calls that were causing a `StackOverflowError` (crash).
-- **Clean Environment Recovery:** Reset the repository to the last stable commit (`967b788`) and purged untracked files to resolve build inconsistencies reported after the crash.
-
-### 2. Table Creator Enhancements
-- **Professional Opcode Support:** Refined the Table Creator to handle complex Liblouis opcodes with surgical precision:
-    - **Caps Indicators:** `begcaps`, `endcaps`, `begcapsword`, and `endcapsword` now correctly serialize as standalone indicators (points only), resolving "Dots operand not specified" errors.
-    - **Numeric Indicators:** `begnum` and `endnum` now automatically include a trigger character (e.g., `#` or `%`) to satisfy Liblouis 3.36 requirements.
-    - **Punctuation Sync:** Renamed `openpunc`/`closepunc` to `prepunc`/`postpunc` to align with native Liblouis terminology.
-- **Structural Integrity:**
-    - **Foundational Includes:** Every custom table now writes foundational patterns (`braille-patterns.cti` and `unicode.dis`) at the very top, providing a consistent base for advanced opcodes.
-    - **Logical Ordering:** Moved cumulative `numericmodechars` indicators to the end of each mapping section, ensuring all referenced characters are already defined.
-- **Per-Mapping Priority:** Users can now choose whether a specific mapping should override (High Priority) or extend (Standard Priority) the system alphabet.
-- **Automated Case Pairing:** Intelligent generation of `base uppercase` rules, including automatic `lowercase` definitions when only the uppercase is mapped.
-- **Template System:** Implemented a JSON-based template engine. Created a comprehensive **Italian Standard (6-dot)** template that includes alphabet, accents, web symbols (@, /), and system indicators.
-
-### 3. Build & Validation
-- **Verified Compatibility:** Validated the generated tables with `lou_checktable`, achieving a "No errors found" state for all tested scenarios (Template, Manual, and Mixed priority).
-- **Successful Build:** Verified the changes with clean builds and installs.
-
-## Technical Notes
-- **Liblouis Priority:** Reminded that for back-translation, the *first* rule wins, while for forward-translation, the *last* rule wins. The current implementation writes custom mappings at the top of the file to prioritize user choices for dots-to-text (braille input).
-- **JAVA_HOME:** When building on this machine, use `C:\Program Files\Android\Android Studio\jbr` as `JAVA_HOME`.
-
-## Roadmap / Upcoming Tasks
-- **Table Validation:** Add a "Check Table" button to `TableCreatorActivity` that calls `lou_checktable` (via a native bridge or local script) to verify syntax before saving.
-- **Automatic Uppercase:** Further refine the `base uppercase` generation to handle scripts other than Latin.
-
-## Roadmap / Upcoming Tasks (Next Session)
-- **Automatic Opcode Detection in Table Creator:**
-    1.  Implement a listener on the character input field (`mCharEdit`).
-    2.  If a single digit (0-9) is typed, automatically select the `digit` opcode.
-    3.  If a letter (a-z, A-Z) is typed, select `lowercase` or `uppercase`.
-    4.  If a standard symbol is typed, select `punctuation`.
-    5.  Allow manual override by the user after the auto-selection.
-
-# Gemini CLI Session Summary - March 3, 2026 (Afternoon)
-
-## Accomplishments
-
-### 1. Universal Braille Templates
-- **Massive Template Library:** Created and validated 26 Braille templates in `assets/templates/` covering:
-    - **Latin Script:** Italian (updated), English (UEB), Spanish, French, German, Portuguese, Polish, Dutch, Turkish, Romanian, Swedish/Finnish, Danish/Norwegian, Hungarian, Serbo-Croatian, Albanian, and Esperanto.
-    - **Non-Latin Scripts:** Russian (Cyrillic), Greek, Arabic, Hebrew, Hindi (Bharati), Korean (Hangul), Vietnamese, and Thai.
-    - **Technical:** A standard 8-dot Computer Braille template for technical/programming use.
-- **Validation:** Developed `scripts/test_templates.py` to verify that all templates generate syntactically correct Liblouis `.ctb` files. All templates passed `lou_checktable`.
-
-### 2. Customizable Gesture System
-- **Restoration & Integration:** Re-imported the gesture customization system from a legacy branch (`feature/gesture-customization`).
-- **Dynamic Dispatching:** Refactored `ActionHandler.java` to use `GestureManager` for resolving swipe actions based on user preferences.
-- **Full Customization UI:** Re-enabled `GestureSettingsActivity`, allowing users to map specific actions (deletion, navigation, feedback cycling, etc.) to 30+ different swipe combinations (single finger, two fingers, holds).
-- **Emoji Compatibility:** Encapsulated Emoji mode logic into `handleEmojiSwipe` to ensure it works seamlessly alongside the new dynamic gesture system.
-
-### 3. Usability & UI Refinements
-- **Auto-Opcode Detection:** Implemented real-time character analysis in `TableCreatorActivity`. The app now automatically selects the correct Liblouis opcode (`lowercase`, `uppercase`, `digit`, `punctuation`, `math`, etc.) as the user types.
-- **Table Manager Cleanup:** Removed redundant "Tap to edit" instructions in the custom table list. The instruction now appears once at the top and is hidden when the list is empty.
-- **Repository Optimization:** Deleted all "dead" or experimental branches (`correttore-automatico`, `suggerimenti-automatici`, `feature/gesture-customization`, etc.) to keep the repository clean and focused on the `main` and `tabelle-personalizzate` branches.
-
-### 4. Build & Stability
-- **Fixed Integration Errors:** Resolved multiple Java compilation errors related to type mismatches in `Options` calls and syntax errors from manual code merging.
-- **Verified Build:** Successfully performed a full debug build (`assembleDebug`) with all new features active.
-
-## Technical Notes
-- **TalkBack Passthrough:** The current implementation uses `setTouchExplorationPassthroughRegion` (API 30+) within a dedicated Accessibility Service.
-- **Service Stability:** We added `flagRequestTouchExplorationMode` to the static XML configuration to prevent service restarts and added a 500ms delay in the IME before requesting the passthrough to ensure window stability.
-- **Future Fallback (Piano B):** If the current passthrough logic proves unstable on certain devices, consider refactoring the `BrailleView` to be hosted within a window of type `TYPE_ACCESSIBILITY_OVERLAY`. This is the strategy used by modern TalkBack/BrailleIme to ensure the keyboard sits "above" the touch-exploration layer of other services.
-
-## Upcoming Tasks
-- **Accessibility Service Comparison:** Investigate TalkBack's accessibility service implementation to improve our `BrailleAccessibilityService`, focusing on touch passthrough and focus management.
-- **Table Creator UI Redesign:** Consider a contextual UI that hides advanced properties (Priority, Script base) when using a standard template to simplify the experience for non-expert users.
+## Future Recommendations
+- **Table Updates:** To update specific tables, copy the `.ctb` to `third_party/Liblouis/tables/` and run `scripts/update_translation_tables.py`. NEVER add ZIPs directly to the main app's `res/raw/`.
+- **JAVA_HOME:** Always use `C:\Program Files\Android\Android Studio\jbr` for builds on this machine.

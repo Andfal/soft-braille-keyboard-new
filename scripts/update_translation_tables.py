@@ -1,41 +1,32 @@
 import os
-import re
-import subprocess
 import shutil
 import zipfile
 
 def update():
     basedir = os.getcwd()
-    tablelist_path = os.path.join(basedir, 'brailleback/braille/service/res/xml/tablelist.xml')
     srcdir = os.path.join(basedir, 'third_party/Liblouis/tables')
     temp_dir = os.path.join(basedir, 'temp_zip')
     tables_dest_dir = os.path.join(temp_dir, 'liblouis/tables')
     zip_dst = os.path.join(basedir, 'brailleback/braille/service/res/raw/translationtables.zip')
-    copywithdeps_script = os.path.join(basedir, 'brailleback/braille/service/tables/copywithdeps.py')
 
+    print("Cleaning up temporary directory...")
     if os.path.exists(temp_dir):
         shutil.rmtree(temp_dir)
     os.makedirs(tables_dest_dir)
 
-    # Extract filenames from tablelist.xml
-    with open(tablelist_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    print(f"Copying ALL tables from {srcdir}...")
+    # Copy all files with relevant extensions
+    extensions = ('.ctb', '.utb', '.cti', '.uti', '.dis', '.dic', '.tbl', '.dic')
+    count = 0
+    for file in os.listdir(srcdir):
+        if file.endswith(extensions):
+            shutil.copy(os.path.join(srcdir, file), tables_dest_dir)
+            count += 1
     
-    # Simple regex to find fileName="something"
-    filenames = re.findall(r'fileName\s*=\s*"([^"]+)"', content)
-    
-    full_paths = [os.path.join(srcdir, f) for f in filenames]
-    
-    print(f"Found {len(filenames)} tables in tablelist.xml")
-
-    # Run copywithdeps.py
-    # Command: py copywithdeps.py FILE... DESTDIR
-    cmd = ['py', copywithdeps_script] + full_paths + [tables_dest_dir]
-    print("Running copywithdeps.py...")
-    subprocess.run(cmd, check=True)
+    print(f"Copied {count} files.")
 
     # Create ZIP
-    print(f"Creating zip at {zip_dst}...")
+    print(f"Creating 'fat' zip at {zip_dst}...")
     with zipfile.ZipFile(zip_dst, 'w', zipfile.ZIP_DEFLATED) as zipf:
         for root, dirs, files in os.walk(temp_dir):
             for file in files:
@@ -44,7 +35,7 @@ def update():
                 rel_path = rel_path.replace(os.sep, '/')
                 zipf.write(abs_path, rel_path)
     
-    print("Update complete!")
+    print(f"Update complete! ZIP size: {os.path.getsize(zip_dst) / 1024:.2f} KB")
 
 if __name__ == '__main__':
     update()

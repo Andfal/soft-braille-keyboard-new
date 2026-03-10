@@ -32,6 +32,13 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.EngineInfo;
+import android.widget.Toast;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
 
 import com.dalton.braillekeyboard.BrailleParser.BrailleType;
 import com.dalton.braillekeyboard.Options.KeyboardEcho;
@@ -128,6 +135,57 @@ public class PreferenceIME extends PreferenceActivity {
             super.onDestroy();
             if (brailleParser != null) {
                 brailleParser.destroy();
+            }
+        }
+
+        @Override
+        public boolean onPreferenceTreeClick(android.preference.PreferenceScreen preferenceScreen, Preference preference) {
+            String key = preference.getKey();
+            if (getString(R.string.pref_share_log_key).equals(key)) {
+                shareLog();
+                return true;
+            } else if (getString(R.string.pref_clear_log_key).equals(key)) {
+                clearLog();
+                return true;
+            }
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
+        }
+
+        private void shareLog() {
+            try {
+                File logFile = new File(getActivity().getCacheDir(), "logcat.txt");
+                Process process = Runtime.getRuntime().exec("logcat -d");
+                InputStream is = process.getInputStream();
+                FileOutputStream fos = new FileOutputStream(logFile);
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, read);
+                }
+                fos.close();
+                is.close();
+
+                Uri contentUri = FileProvider.getUriForFile(getActivity(),
+                        getActivity().getPackageName() + ".fileprovider", logFile);
+
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.pref_share_log_title)));
+            } catch (Exception e) {
+                android.util.Log.e("PreferenceIME", "Error sharing log", e);
+                Toast.makeText(getActivity(), R.string.msg_error_logs, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        private void clearLog() {
+            try {
+                Runtime.getRuntime().exec("logcat -c");
+                Toast.makeText(getActivity(), R.string.msg_logs_cleared, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                android.util.Log.e("PreferenceIME", "Error clearing log", e);
+                Toast.makeText(getActivity(), R.string.msg_error_logs, Toast.LENGTH_SHORT).show();
             }
         }
 

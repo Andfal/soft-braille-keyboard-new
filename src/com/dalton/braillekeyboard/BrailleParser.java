@@ -105,8 +105,10 @@ public class BrailleParser {
             switch (value) {
             case 0:
                 return COMPUTER;
-            default:
+            case 1:
                 return LITERARY;
+            default:
+                return COMPUTER;
             }
         }
 
@@ -204,10 +206,16 @@ public class BrailleParser {
      * @return The active BrailleType.
      */
     public BrailleType getBrailleType(Context context) {
-        int value = Integer.parseInt(sharedPref.getString(
+        // Re-read preference from sharedPref to ensure we have latest value
+        String valStr = sharedPref.getString(
                 context.getString(R.string.pref_braille_type_key),
-                context.getString(R.string.pref_braille_type_default)));
-        return BrailleType.valueOf(value);
+                context.getString(R.string.pref_braille_type_default));
+        try {
+            int value = Integer.parseInt(valStr);
+            return BrailleType.valueOf(value);
+        } catch (NumberFormatException e) {
+            return BrailleType.LITERARY;
+        }
     }
 
     /**
@@ -234,24 +242,39 @@ public class BrailleParser {
                             context.getString(R.string.pref_braille_literary_table_key),
                             defaultId);
         }
-        id = id.equals(context.getString(R.string.pref_braille_table_auto)) ? defaultId
-                : id;
+        
+        // Handle "auto" or empty id
+        if (id == null || id.isEmpty() || id.equals(context.getString(R.string.pref_braille_table_auto))) {
+            id = defaultId;
+        }
 
-        android.util.Log.i("BrailleParser", "Requesting table ID: " + id + " for type " + brailleType);
+        android.util.Log.i("BrailleParser", "Active BrailleType: " + brailleType + " | Requested ID: " + id);
 
-        List<TableInfo> tables = getTables(brailleType);
-        if (tables == null) {
+        List<TableInfo> availableTables = getTables(brailleType);
+        if (availableTables == null) {
             android.util.Log.e("BrailleParser", "Tables list is NULL in getTable");
             return null;
         }
 
-        for (TableInfo table : tables) {
+        for (TableInfo table : availableTables) {
             if (table.getId().equals(id)) {
-                android.util.Log.i("BrailleParser", "Table found: " + table.getId() + " (8dot=" + table.isEightDot() + ")");
+                // Double check: if we are in LITERARY mode, the table MUST NOT be 8-dot
+                if (brailleType == BrailleType.LITERARY && table.isEightDot()) {
+                    android.util.Log.w("BrailleParser", "Conflict: LITERARY mode but 8-dot table found (" + id + "). Searching for 6-dot alternative.");
+                    continue; 
+                }
+                android.util.Log.i("BrailleParser", "Table found and verified: " + table.getId());
                 return table;
             }
         }
-        android.util.Log.w("BrailleParser", "Table ID NOT FOUND in current list: " + id + ". Available tables: " + tables.size());
+        
+        // Final fallback: just take the first table of the correct type if the ID is missing
+        if (!availableTables.isEmpty()) {
+            TableInfo fallback = availableTables.get(0);
+            android.util.Log.w("BrailleParser", "Table ID " + id + " not found. Falling back to: " + fallback.getId());
+            return fallback;
+        }
+
         return null;
     }
 
@@ -403,27 +426,12 @@ public class BrailleParser {
      *         possible.
      */
     public String backTranslate(Context context, Byte[] cellBytes) {
-        boolean isGrade2 = mCurrentTable != null && mCurrentTable.getGrade() == 2;
-        
-        // Convert from a Byte[] to a byte[]
-        // For Grade 2 (contracted), we DON'T pad with spaces during word composition
-        // to avoid incorrect full-word contractions.
-        // For Grade 1, we keep padding to maintain legacy behavior if needed, 
-        // though even there it might be questionable.
-        
-        byte[] cells;
-        if (isGrade2) {
-            cells = new byte[cellBytes.length];
-            for (int i = 0; i < cellBytes.length; i++) {
-                cells[i] = cellBytes[i] != null ? cellBytes[i].byteValue() : 0;
-            }
-        } else {
-            cells = new byte[cellBytes.length + 2];
-            cells[0] = 0;
-            cells[cells.length - 1] = 0;
-            for (int i = 0; i < cellBytes.length; i++) {
-                cells[i + 1] = cellBytes[i] != null ? cellBytes[i].byteValue() : 0;
-            }
+        // Alignment with Vortex: Always use padding spaces for back-translation
+        byte[] cells = new byte[cellBytes.length + 2];
+        cells[0] = 0;
+        cells[cells.length - 1] = 0;
+        for (int i = 0; i < cellBytes.length; i++) {
+            cells[i + 1] = cellBytes[i] != null ? cellBytes[i].byteValue() : 0;
         }
 
         String text = null;
@@ -524,7 +532,8 @@ public class BrailleParser {
             return true;
         }
 
-        if (brailleType == BrailleType.LITERARY && !table.isEightDot()) {
+        // Vortex logic: literary mode accepts tables with grade > 0
+        if (brailleType == BrailleType.LITERARY && table.getGrade() > 0) {
             return true;
         } else if (table.isEightDot() && brailleType == BrailleType.COMPUTER) {
             return true;

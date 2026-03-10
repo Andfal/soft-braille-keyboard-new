@@ -72,18 +72,21 @@ public class TranslatorService extends Service {
     }
 
     private void extractDataFiles() {
-        File tablesDir = getDir("translator", MODE_PRIVATE);
+        File baseDir = getDir("translator", MODE_PRIVATE);
         // Do not clear directory every time if we want to preserve files, 
         // but here it's for system tables extracted from APK.
-        clearDirectory(tablesDir);
-        LibLouisWrapper.setTablesDir(tablesDir.getPath());
+        clearDirectory(baseDir);
+        
         ZipResourceExtractor extractor = new ZipResourceExtractor(
-            this, R.raw.translationtables, tablesDir) {
+            this, R.raw.translationtables, baseDir) {
             @Override
             protected void onPostExecute(Integer result) {
                 synchronized (TranslatorService.this) {
                     if (result == RESULT_OK) {
+                        File tablesDir = new File(baseDir, "liblouis/tables");
+                        LibLouisWrapper.setTablesDir(tablesDir.getPath());
                         mDataFileState = FILES_EXTRACTED;
+                        Log.i(LOG_TAG, "Tables extracted and directory set to: " + tablesDir.getPath());
                     } else {
                         Log.e(LOG_TAG, "Couldn't extract data files");
                         mDataFileState = FILES_ERROR;
@@ -153,7 +156,8 @@ public class TranslatorService extends Service {
     }
 
     private String getTablePath(String tableName) {
-        File tablesDir = getDir("translator", MODE_PRIVATE);
+        File baseDir = getDir("translator", MODE_PRIVATE);
+        File tablesDir = new File(baseDir, "liblouis/tables");
         if (tableName.startsWith("/")) {
             // It's a custom table path. To allow Liblouis to find includes (UTIs)
             // which are in the translator directory, we copy the custom table 

@@ -1,0 +1,38 @@
+# Percorso cartella corretta (copia questo):
+C:\Users\sergi\StudioProjects\soft-braille-keyboard\brailleback\braille\service\res\raw
+
+# Confronto percorsi e dimensioni translationtables.zip
+
+## Ramo Vortex
+- brailleback/braille/service/res/raw/translationtables.zip
+
+## Ramo Attuale (Main)
+- brailleback/braille/service/res/raw/translationtables.zip (Corretto: ~1.12 MB, aggiornato da GitHub + backup personalizzati)
+- res/raw/translationtables.zip (RIMOSSO)
+
+## Cronologia Acquisizione
+Il progetto ha radici storiche profonde con aggiornamenti recenti critici:
+- **Ottobre 2018:** Primo inserimento della struttura `third_party` (basata sui sorgenti Eyes-Free/BrailleBack di quel periodo).
+- **21 Febbraio 2026:** Aggiornamento massivo del sistema di tabelle. I file in `third_party/Liblouis/tables/` sono stati sincronizzati con la versione **Liblouis 3.36.0**.
+- **Marzo 2026:** Rifinitura delle tabelle italiane e del Table Creator per garantire la piena compatibilità con l'input braille a 6 e 8 punti.
+
+## File Elenco Tabelle (tablelist.xml)
+Questi file definiscono l'associazione tra ID tabella, lingua e nome del file fisico (.ctb/.utb):
+- Progetto principale: `res\xml\tablelist.xml` (Usato per le impostazioni UI)
+- Modulo di servizio: `brailleback\braille\service\res\xml\tablelist.xml`
+
+## Meccanismo di Caricamento
+Il `TranslatorService` estrae la risorsa `R.raw.translationtables` nella directory interna dell'app (`translator/`). LibLouis viene poi istruito a cercare le tabelle in `translator/liblouis/tables`.
+La versione errata da 3.4 MB in `res/raw/` dell'app principale sovrascriveva quella corretta da 1.1 MB della libreria. Non avendo la sottocartella `liblouis/tables`, rendeva le tabelle invisibili al motore di traduzione.
+
+## Librerie di Terze Parti (Third-Party)
+Il progetto si appoggia su due componenti fondamentali situati in `third_party/`:
+
+1.  **Liblouis (`third_party/Liblouis`):** 
+    È il motore open-source di traduzione braille più diffuso al mondo. 
+    - **Sorgenti Tabelle:** Le tabelle "fresche" si trovano in `third_party/Liblouis/tables/`. È da qui che vengono prelevate per creare l'archivio ZIP.
+2.  **BrailleBack (`third_party/BrailleBack`):**
+    È un'accessibilità service di Google per Android. Abbiamo integrato e adattato i suoi moduli (`client` e `service`) per permettere alla nostra tastiera di comunicare con il motore di traduzione e gestire l'input braille in modo standardizzato.
+
+In `libs/` troviamo inoltre:
+- **android-support-v4.jar:** Libreria di supporto di Android per garantire la compatibilità con le versioni più vecchie del sistema operativo (essenziale dato che il progetto supporta API 19+).

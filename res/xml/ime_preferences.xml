@@ -183,6 +183,18 @@
          android:title="@string/pref_vibrate_on_exit_title"
          android:defaultValue="@string/pref_vibrate_on_exit_default" />
          </PreferenceScreen>
+         <PreferenceScreen
+         android:key="@string/pref_category_advanced_key"
+         android:title="@string/pref_category_advanced_title" >
+         <Preference
+             android:key="@string/pref_share_log_key"
+             android:title="@string/pref_share_log_title"
+             android:summary="@string/pref_share_log_summary" />
+         <Preference
+             android:key="@string/pref_clear_log_key"
+             android:title="@string/pref_clear_log_title"
+             android:summary="@string/pref_clear_log_summary" />
+         </PreferenceScreen>
          <Preference
          android:key="@string/pref_app_version_key" />
 </PreferenceScreen>

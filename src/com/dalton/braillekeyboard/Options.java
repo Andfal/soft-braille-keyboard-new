@@ -130,7 +130,11 @@ public class Options {
 
     public static SharedPreferences getSharedPreferences(Context context) {
         if (context == null) return null;
-        return PreferenceManager.getDefaultSharedPreferences(context);
+        Context storageContext = context;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = context.createDeviceProtectedStorageContext();
+        }
+        return PreferenceManager.getDefaultSharedPreferences(storageContext);
     }
 
     public static boolean getBooleanPreference(Context context, int resource,

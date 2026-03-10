@@ -5,6 +5,16 @@
     <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
     <string name="btn_id_enable">BTN_ENABLED</string>
     <string name="default_swipe_sensitivity">50</string>
+    <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
+    <string name="pref_share_log_key">SHARE_LOG</string>
+    <string name="pref_clear_log_key">CLEAR_LOG</string>
+    <string name="pref_category_advanced_title">Advanced &amp; Logs</string>
+    <string name="pref_share_log_title">Share Logs</string>
+    <string name="pref_share_log_summary">Collect and share system logs for debugging</string>
+    <string name="pref_clear_log_title">Clear Logs</string>
+    <string name="pref_clear_log_summary">Clear existing logcat buffer</string>
+    <string name="msg_logs_cleared">Logs cleared successfully</string>
+    <string name="msg_error_logs">Error while handling logs</string>
     <string name="pref_app_version_key">APP_VERSION</string>
     <string name="pref_auto_caps_default">true</string>
     <string name="pref_auto_caps_key">AUTO_CAPS</string>
