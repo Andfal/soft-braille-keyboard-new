@@ -12,6 +12,7 @@
 - **GitHub Sync:** Successfully updated the entire Liblouis table set in `third_party/Liblouis/tables/` with the latest version from the official master branch.
 - **Data Preservation:** Implemented a backup-and-restore workflow to protect custom Italian and Nepali tables during the global update.
 - **Fat ZIP Implementation:** Updated `scripts/update_translation_tables.py` to include ALL 455+ files from Liblouis in the `translationtables.zip` (~3.4 MB). This makes the app future-proof, as adding new languages only requires an XML change in `tablelist.xml`.
+- **Index Generation:** The script now also generates `assets/liblouis_files.txt` in the service module, resolving a `FileNotFoundException` that occurred during dynamic table loading.
 - **Cleanup:** Permanently deleted the problematic `scripts/recreate_zip.py`.
 
 ### 3. Direct Boot & Security Clarity
