@@ -25,6 +25,7 @@ import java.util.Locale;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
@@ -120,6 +121,47 @@ public class PreferenceIME extends PreferenceActivity {
                             addTables(status);
                         }
                     });
+
+            final CheckBoxPreference lockCalibration = (CheckBoxPreference) findPreference(getString(R.string.pref_lock_calibration_key));
+            final CheckBoxPreference autoMatch = (CheckBoxPreference) findPreference(getString(R.string.pref_auto_match_keyboard_key));
+
+            // Initial state check: Ensure exactly one is active
+            if (lockCalibration != null && autoMatch != null) {
+                if (lockCalibration.isChecked() && autoMatch.isChecked()) {
+                    autoMatch.setChecked(false);
+                } else if (!lockCalibration.isChecked() && !autoMatch.isChecked()) {
+                    autoMatch.setChecked(true);
+                    Options.writeBooleanPreference(getActivity(), R.string.pref_auto_match_keyboard_key, true);
+                }
+            }
+
+            if (lockCalibration != null) {
+                lockCalibration.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        boolean locked = (Boolean) newValue;
+                        if (autoMatch != null) {
+                            autoMatch.setChecked(!locked);
+                            Options.writeBooleanPreference(getActivity(), R.string.pref_auto_match_keyboard_key, !locked);
+                        }
+                        return true;
+                    }
+                });
+            }
+
+            if (autoMatch != null) {
+                autoMatch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        boolean auto = (Boolean) newValue;
+                        if (lockCalibration != null) {
+                            lockCalibration.setChecked(!auto);
+                            Options.writeBooleanPreference(getActivity(), R.string.pref_lock_calibration_key, !auto);
+                        }
+                        return true;
+                    }
+                });
+            }
         }
 
         @Override

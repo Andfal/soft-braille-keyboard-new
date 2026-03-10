@@ -181,12 +181,26 @@ public class BrailleView extends View {
         actionHandler.setKeyboardListener(listener);
     }
 
+    private String getDynamicCalibrationKey(int width, int height) {
+        String baseKey = getContext().getString(R.string.pref_custom_dots_key);
+        boolean isPortrait = height > width && !displayParams.autoRotate;
+        String orientation = isPortrait ? "_PORTRAIT" : "_LANDSCAPE";
+        
+        // Calcola la larghezza minima in dip per distinguere telefono da tablet/foldable aperto
+        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+        float widthDp = Math.min(width, height) / displayMetrics.density;
+        String size = widthDp >= 600 ? "_LARGE" : "_SMALL";
+        
+        return baseKey + orientation + size;
+    }
+
     private void loadInitialPad(int w, int h) {
         boolean locked = Options.getBooleanPreference(getContext(), R.string.pref_lock_calibration_key, false);
         if (locked) {
-            Coords[] savedDots = Pad.load(getContext(), w, h, R.string.pref_custom_dots_key, h > w && !displayParams.autoRotate);
+            String dynamicKey = getDynamicCalibrationKey(w, h);
+            Coords[] savedDots = Pad.loadStringKey(getContext(), w, h, dynamicKey, h > w && !displayParams.autoRotate);
             if (savedDots != null && selectPad(savedDots, w, h)) {
-                android.util.Log.i("BrailleView", "Loaded locked custom layout");
+                android.util.Log.i("BrailleView", "Loaded locked custom layout from: " + dynamicKey);
                 return;
             }
         }
@@ -414,7 +428,8 @@ public class BrailleView extends View {
         Coords[] dots = mManualCalibrationDots.toArray(new Coords[mManualCalibrationDots.size()]);
         if (selectPad(dots, width, height)) {
             // Success! Save and Lock.
-            pad.save(getContext(), R.string.pref_custom_dots_key, height > width && !displayParams.autoRotate, dots);
+            String dynamicKey = getDynamicCalibrationKey(width, height);
+            pad.saveStringKey(getContext(), dynamicKey, height > width && !displayParams.autoRotate, dots);
             Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
             
             speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_FLUSH);
@@ -512,7 +527,8 @@ public class BrailleView extends View {
         
         mIsManualCalibrating = false;
         if (selectPad(dots, width, height)) {
-            pad.save(getContext(), R.string.pref_custom_dots_key, height > width && !displayParams.autoRotate, dots);
+            String dynamicKey = getDynamicCalibrationKey(width, height);
+            pad.saveStringKey(getContext(), dynamicKey, height > width && !displayParams.autoRotate, dots);
             Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
             speech.speak(getContext(), getContext().getString(pad.padString), Speech.QUEUE_FLUSH);
             speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_ADD);

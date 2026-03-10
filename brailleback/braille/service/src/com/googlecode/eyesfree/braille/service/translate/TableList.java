@@ -140,11 +140,8 @@ public class TableList {
         String variant = "(" + fileName + ")";
         
         // If it's NOT in XML, it's a dynamic candidate.
-        // We mark it as [Ext] if the language is already officially supported 
-        // (meaning it's likely a redundant variant) OR if it's explicitly not a Google lang.
-        if (isAlreadyInXml || GOOGLE_LANGS.contains(langPart)) {
-            variant = "[Ext] " + variant;
-        }
+        // We mark it as [Ext] so it can be filtered out if the user doesn't want extended tables.
+        variant = "[Ext] " + variant;
 
         // Only add if not already present with the EXACT same ID
         if (!mTableFileNames.containsKey(id)) {

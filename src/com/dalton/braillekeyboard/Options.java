@@ -194,6 +194,14 @@ public class Options {
                 defaultValue);
     }
 
+    public static Set<String> getStringSetPreferenceStringKey(Context context,
+            String key, Set<String> defaultValue) {
+        if (context == null) return defaultValue;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return defaultValue;
+        return sharedPref.getStringSet(key, defaultValue);
+    }
+
     public static void writeStringSetPreference(Context context, int resource,
             Set<String> value) {
         if (context == null) return;
@@ -201,6 +209,16 @@ public class Options {
         if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putStringSet(context.getString(resource), value);
+        editor.commit();
+    }
+
+    public static void writeStringSetPreferenceStringKey(Context context, String key,
+            Set<String> value) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putStringSet(key, value);
         editor.commit();
     }
 }

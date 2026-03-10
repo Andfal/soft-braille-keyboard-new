@@ -483,6 +483,14 @@ public abstract class Pad {
         Options.writeStringSetPreference(context, prefKey, points);
     }
 
+    protected void saveStringKey(Context context, String prefKey, boolean portrait) {
+        Set<String> points = new HashSet<String>();
+        for (Coords key : keys) {
+            points.add(savePointString(key, portrait));
+        }
+        Options.writeStringSetPreferenceStringKey(context, prefKey, points);
+    }
+
     protected void save(Context context, int prefKey, boolean portrait, Coords[] customDots) {
         Set<String> points = new HashSet<String>();
         for (Coords key : customDots) {
@@ -491,10 +499,29 @@ public abstract class Pad {
         Options.writeStringSetPreference(context, prefKey, points);
     }
 
+    protected void saveStringKey(Context context, String prefKey, boolean portrait, Coords[] customDots) {
+        Set<String> points = new HashSet<String>();
+        for (Coords key : customDots) {
+            points.add(savePointString(key, portrait));
+        }
+        Options.writeStringSetPreferenceStringKey(context, prefKey, points);
+    }
+
     public static Coords[] load(Context context, int viewWidth, int viewHeight,
             int prefKey, boolean portrait) {
         Set<String> points = Options.getStringSetPreference(context, prefKey,
                 null);
+        return processLoadedPoints(points, viewWidth, viewHeight, portrait);
+    }
+
+    public static Coords[] loadStringKey(Context context, int viewWidth, int viewHeight,
+            String prefKey, boolean portrait) {
+        Set<String> points = Options.getStringSetPreferenceStringKey(context, prefKey,
+                null);
+        return processLoadedPoints(points, viewWidth, viewHeight, portrait);
+    }
+
+    private static Coords[] processLoadedPoints(Set<String> points, int viewWidth, int viewHeight, boolean portrait) {
         if (points != null && !points.isEmpty()) {
             int[] centre = { portrait ? viewHeight / 2 : viewWidth / 2,
                     portrait ? viewWidth / 2 : viewHeight / 2 };
