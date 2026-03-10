@@ -183,7 +183,9 @@ public class BrailleView extends View {
 
     private String getDynamicCalibrationKey(int width, int height) {
         String baseKey = getContext().getString(R.string.pref_custom_dots_key);
-        boolean isPortrait = height > width && !displayParams.autoRotate;
+        // L'orientamento fisico determina il profilo di calibrazione da caricare (_PORTRAIT o _LANDSCAPE).
+        // Il bug precedente impediva il caricamento del profilo _PORTRAIT quando autoRotate era attivo.
+        boolean isPortrait = height > width;
         String orientation = isPortrait ? "_PORTRAIT" : "_LANDSCAPE";
         
         // Calcola la larghezza minima in dip per distinguere telefono da tablet/foldable aperto

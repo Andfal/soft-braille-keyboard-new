@@ -112,7 +112,9 @@ public class HorizontalPad extends Pad {
         if (useEightDots) {
             insertSpecialDots();
         }
-        if (portrait && !invert) {
+        if (invert) {
+            swapLeftRight();
+        } else if (portrait) {
             swapLeftRight();
         }
     }
