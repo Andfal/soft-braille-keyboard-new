@@ -285,12 +285,24 @@ public abstract class Pad {
     protected final int viewHeight;
 
     protected final boolean invert;
+    protected final boolean swapSwipeAxes;
+    protected final boolean invertHorizontalSwipes;
+    protected final boolean invertVerticalSwipes;
 
     public Pad(Context context, Coords[] coords, int width, int height,
             int padString, boolean invert) {
         SWIPE_MARGINE = Integer.parseInt(Options.getStringPreference(context,
                 R.string.pref_swipe_sensitivity_key,
                 context.getString(R.string.default_swipe_sensitivity)));
+        swapSwipeAxes = Options.getBooleanPreference(context,
+                R.string.pref_swap_swipe_axes_key, Boolean.parseBoolean(context
+                        .getString(R.string.pref_swap_swipe_axes_default)));
+        invertHorizontalSwipes = Options.getBooleanPreference(context,
+                R.string.pref_invert_horizontal_swipes_key, Boolean.parseBoolean(context
+                        .getString(R.string.pref_invert_horizontal_swipes_default)));
+        invertVerticalSwipes = Options.getBooleanPreference(context,
+                R.string.pref_invert_vertical_swipes_key, Boolean.parseBoolean(context
+                        .getString(R.string.pref_invert_vertical_swipes_default)));
         this.invert = invert;
         this.padString = padString;
         viewHeight = height;
@@ -428,7 +440,8 @@ public abstract class Pad {
             String bitString = "";
             if (coords[i] != null) {
                 bitString = Integer.toBinaryString(coords[i].swipeDirection(
-                        swipeThreshold, swipeThreshold, swap, invert));
+                        swipeThreshold, swipeThreshold, swap, invert, 
+                        swapSwipeAxes, invertHorizontalSwipes, invertVerticalSwipes));
             }
             // zero padding
             for (int j = 0; j < REQUIRED_BITS - bitString.length(); j++) {
@@ -624,8 +637,10 @@ public abstract class Pad {
         }
 
         public byte swipeDirection(int xSwipeThreshold, int ySwipeThreshold,
-                boolean swap, boolean invert) {
-            byte swipe = swipeDirection(xSwipeThreshold, ySwipeThreshold, swap);
+                boolean swap, boolean invert, boolean swapAxes, 
+                boolean invertHorizontal, boolean invertVertical) {
+            byte swipe = swipeDirection(xSwipeThreshold, ySwipeThreshold, swap, 
+                    swapAxes, invertHorizontal, invertVertical);
             if (!swap || !invert) {
                 return swipe;
             }
@@ -644,9 +659,20 @@ public abstract class Pad {
         }
 
         private byte swipeDirection(int xSwipeThreshold, int ySwipeThreshold,
-                boolean swap) {
+                boolean swap, boolean swapAxes, 
+                boolean invertHorizontal, boolean invertVertical) {
             int xDiff = x - secondX;
             int yDiff = y - secondY;
+
+            if (invertHorizontal) xDiff = -xDiff;
+            if (invertVertical) yDiff = -yDiff;
+
+            if (swapAxes) {
+                int temp = xDiff;
+                xDiff = yDiff;
+                yDiff = -temp; // Negate to match standard axis mapping (Left/Right becomes Down/Up)
+            }
+            
             if (Math.abs(xDiff) > Math.abs(yDiff)) {
                 if (xDiff > xSwipeThreshold) {
                     return swap ? DOT_LEFT : DOT_RIGHT;

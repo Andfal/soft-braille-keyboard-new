@@ -37,6 +37,13 @@
 - **2026-02-21:** Massive update to Liblouis 3.36.0 tables.
 - **2026-03-10:** Resolution of ZIP structural conflicts and global table refresh from GitHub.
 
+### Liblouis Table Insights
+- **Rule Priority:** Liblouis uses the FIRST matching rule encountered. To ensure custom mappings (like Italian accents) override base definitions, they must be placed at the top of the file, BEFORE any `include` statements.
+- **8-Dot Indicators:** 
+    - `braille-patterns.cti` is NOT a reliable indicator for 8-dot tables as it is included in both 6-dot and 8-dot tables for Unicode Braille passthrough (U+2800 to U+28FF).
+    - `latinLetterDef8Dots.uti` is a standard sub-table containing only the Latin alphabet (a-z, A-Z) with dot 7 used as the capital indicator. It does not contain accented characters.
+- **Deep Analysis:** Reliable classification of 6 vs 8 dot tables requires scanning for metadata headers (`#+ dots: 8`), specific included charsets (e.g., `latinLetterDef8Dots.uti`), or the physical presence of dots 7/8 in character definitions (outside the Unicode passthrough range).
+
 ## Future Recommendations
 - **Table Updates:** To update specific tables, copy the `.ctb` to `third_party/Liblouis/tables/` and run `scripts/update_translation_tables.py`. NEVER add ZIPs directly to the main app's `res/raw/`.
 - **JAVA_HOME:** Always use `C:\Program Files\Android\Android Studio\jbr` for builds on this machine.

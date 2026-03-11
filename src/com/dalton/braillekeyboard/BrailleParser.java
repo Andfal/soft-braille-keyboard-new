@@ -263,16 +263,16 @@ public class BrailleParser {
                     android.util.Log.w("BrailleParser", "Conflict: LITERARY mode but 8-dot table found (" + id + "). Searching for 6-dot alternative.");
                     continue; 
                 }
-                android.util.Log.i("BrailleParser", "Table found and verified: " + table.getId());
                 return table;
             }
         }
         
-        // Final fallback: just take the first table of the correct type if the ID is missing
-        if (!availableTables.isEmpty()) {
-            TableInfo fallback = availableTables.get(0);
-            android.util.Log.w("BrailleParser", "Table ID " + id + " not found. Falling back to: " + fallback.getId());
-            return fallback;
+        // If the requested ID was not found, instead of jumping to the first table,
+        // let's try to find the BEST default for the current locale.
+        TableInfo defaultTable = findDefaultTableInfo(brailleType);
+        if (defaultTable != null) {
+            android.util.Log.i("BrailleParser", "Requested table ID " + id + " not available. Using best match: " + defaultTable.getId());
+            return defaultTable;
         }
 
         return null;
@@ -532,11 +532,10 @@ public class BrailleParser {
             return true;
         }
 
-        // Vortex logic: literary mode accepts tables with grade > 0
-        if (brailleType == BrailleType.LITERARY && table.getGrade() > 0) {
-            return true;
-        } else if (table.isEightDot() && brailleType == BrailleType.COMPUTER) {
-            return true;
+        if (brailleType == BrailleType.LITERARY) {
+            return !table.isEightDot();
+        } else if (brailleType == BrailleType.COMPUTER) {
+            return table.isEightDot();
         }
         return false;
     }
@@ -672,10 +671,21 @@ public class BrailleParser {
     }
 
     private static boolean betterTable(TableInfo first, TableInfo second) {
-        Locale firstLocale = first.getLocale();
-        Locale secondLocale = second != null ? second.getLocale() : Locale.ROOT;
-        return matchRank(firstLocale, Locale.getDefault()) > matchRank(
-                secondLocale, Locale.getDefault());
+        if (second == null) return true;
+        
+        int rank1 = matchRank(first.getLocale(), Locale.getDefault());
+        int rank2 = matchRank(second.getLocale(), Locale.getDefault());
+        
+        if (rank1 > rank2) return true;
+        if (rank1 < rank2) return false;
+        
+        // If ranks are equal (same language), prefer non-extended (official) tables
+        boolean isExt1 = first.getVariant() != null && first.getVariant().startsWith("[Ext]");
+        boolean isExt2 = second.getVariant() != null && second.getVariant().startsWith("[Ext]");
+        
+        if (!isExt1 && isExt2) return true;
+        
+        return false;
     }
 
     private static int matchRank(Locale first, Locale second) {

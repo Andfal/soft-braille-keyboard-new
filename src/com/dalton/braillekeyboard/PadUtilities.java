@@ -17,6 +17,7 @@
 package com.dalton.braillekeyboard;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import android.content.Context;
@@ -68,6 +69,12 @@ public class PadUtilities {
                         context,
                         R.string.pref_default_keyboard_key,
                         context.getString(R.string.pref_default_keyboard_default))));
+
+        List<Coords> keyList = Arrays.asList(coords);
+        if (!autoSet && keyboard != KeyboardType.AUTO) {
+            validateCalibrationGeometry(keyList, keyboard, width, height);
+        }
+
         if (autoSet || keyboard == KeyboardType.AUTO) {
             List<Coords> keys = Arrays.asList(coords);
             int left = VerticalPad.getColumn(keys, VerticalPad.Column.LEFT);
@@ -93,7 +100,10 @@ public class PadUtilities {
                         portrait, invert, useEightDots);
             }
         } else {
-            if (keyboard == KeyboardType.HORIZONTAL) {
+            if (keyboard == KeyboardType.TABLETOP) {
+                pad = new TabletopPad(context, coords, width, height,
+                        portrait, invert, useEightDots);
+            } else if (keyboard == KeyboardType.HORIZONTAL) {
                 pad = new HorizontalPad(context, coords, width, height,
                         portrait, invert, useEightDots);
             } else {
@@ -104,6 +114,38 @@ public class PadUtilities {
 
         setPadStyle(context, pad);
         return pad;
+    }
+
+    public static void validateCalibrationGeometry(List<Coords> coords, KeyboardType type, int width, int height) {
+        if (coords.size() < 6) throw new IllegalArgumentException("Too few dots");
+
+        int minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE;
+        int minY = Integer.MAX_VALUE, maxY = Integer.MIN_VALUE;
+        for (Coords c : coords) {
+            minX = Math.min(minX, c.x); maxX = Math.max(maxX, c.x);
+            minY = Math.min(minY, c.y); maxY = Math.max(maxY, c.y);
+        }
+        int deltaX = maxX - minX;
+        int deltaY = maxY - minY;
+
+        if (type == KeyboardType.VERTICAL) {
+            // For vertical, height of the bounding box should be significantly larger than width
+            // Or at least not clearly horizontal.
+            if (deltaY < deltaX / 2) {
+                throw new IllegalArgumentException("Geometry mismatch: Expected vertical, got horizontal");
+            }
+        } else { // TABLETOP or HORIZONTAL
+            // For horizontal layouts, width should be significantly larger than height
+            if (deltaX < deltaY / 2) {
+                throw new IllegalArgumentException("Geometry mismatch: Expected horizontal, got vertical");
+            }
+            // Check hand separation: when sorted by X, there should be no overlap between halves
+            Collections.sort(coords, Pad.comparatorX);
+            int half = coords.size() / 2;
+            if (coords.get(half).x <= coords.get(half - 1).x) {
+                throw new IllegalArgumentException("Hands overlapping");
+            }
+        }
     }
 
     public static Pad displayDefaultPad(Context context, int width, int height,
@@ -121,7 +163,17 @@ public class PadUtilities {
                 TypedValue.COMPLEX_UNIT_DIP, MAX_SCREEN_SIZE, context
                         .getResources().getDisplayMetrics());
         int screen = (int) Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
-        if (keyboard == KeyboardType.HORIZONTAL
+        if (keyboard == KeyboardType.TABLETOP) {
+            Coords[] coords = null;
+            int prefKey = TabletopPad.getPrefKey(portrait, invert);
+            if ((coords = Pad.load(context, width, height, prefKey, portrait)) != null) {
+                pad = new TabletopPad(context, coords, width, height,
+                        portrait, invert, useEightDots);
+            } else {
+                pad = TabletopPad.displayDefaultPad(context, width, height,
+                        portrait, invert, useEightDots);
+            }
+        } else if (keyboard == KeyboardType.HORIZONTAL
                 || (screen > maxScreen && KeyboardType.AUTO == keyboard)) {
             Coords[] coords = null;
             int prefKey = HorizontalPad.getPrefKey(portrait, invert);

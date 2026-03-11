@@ -114,7 +114,7 @@ public class Options {
     }
 
     public enum KeyboardType {
-        AUTO, VERTICAL, HORIZONTAL;
+        AUTO, VERTICAL, HORIZONTAL, TABLETOP;
 
         public static KeyboardType valueOf(int value) {
             switch (value) {
@@ -122,6 +122,8 @@ public class Options {
                 return VERTICAL;
             case 2:
                 return HORIZONTAL;
+            case 3:
+                return TABLETOP;
             default:
                 return AUTO;
             }

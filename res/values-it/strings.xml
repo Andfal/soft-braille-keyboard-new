@@ -39,6 +39,7 @@
     <string name="keyboard_feedback_sound">Solo suono</string>
     <string name="keyboard_feedback_vibrate">Solo vibrazione</string>
     <string name="keyboard_full_screen">Tastiera espansa</string>
+    <string name="keyboard_tabletop">Da tavolo</string>
     <string name="keyboard_horizontal">Orizzontale</string>
     <string name="keyboard_next_three">Ora metti le altre tre dita sullo schermo.</string>
     <string name="keyboard_not_set">Metti le 6 dita sullo schermo per calibrare la tastiera Braille</string>
@@ -96,6 +97,12 @@
     <string name="pref_show_circles_title">Mostra cerchi sullo schermo?</string>
     <string name="pref_swipe_sensitivity_summary">Seleziona la sensibilità per i gesti.</string>
     <string name="pref_swipe_sensitivity_title">Sensibilità</string>
+    <string name="pref_swap_swipe_axes_title">Scambia assi di scorrimento</string>
+    <string name="pref_swap_swipe_axes_summary">Interpreta gli scorrimenti orizzontali come verticali e viceversa.</string>
+    <string name="pref_invert_horizontal_swipes_title">Inverti scorrimento orizzontale</string>
+    <string name="pref_invert_horizontal_swipes_summary">Scambia le direzioni destra e sinistra.</string>
+    <string name="pref_invert_vertical_swipes_title">Inverti scorrimento verticale</string>
+    <string name="pref_invert_vertical_swipes_summary">Scambia le direzioni su e giù.</string>
     <string name="pref_switch_tables_summary">Scegli alcune lingue che consentono il passaggio al volo dall\'una all\'altra durante la digitazione.</string>
     <string name="pref_switch_tables_title">Abilita tabelle Braille per consentire il passaggio al volo dall\'una all\'altra.</string>
     <string name="pref_text_to_speech_engine_title">Motore di sintesi vocale</string>

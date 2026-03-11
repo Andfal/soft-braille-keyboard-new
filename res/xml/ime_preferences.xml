@@ -70,6 +70,21 @@
              android:entries="@array/swipe_sensitivity_entries"
              android:entryValues="@array/swipe_sensitivity_values"
              android:defaultValue="@string/default_swipe_sensitivity" />
+         <CheckBoxPreference
+             android:key="@string/pref_swap_swipe_axes_key"
+             android:title="@string/pref_swap_swipe_axes_title"
+             android:summary="@string/pref_swap_swipe_axes_summary"
+             android:defaultValue="@string/pref_swap_swipe_axes_default" />
+         <CheckBoxPreference
+             android:key="@string/pref_invert_horizontal_swipes_key"
+             android:title="@string/pref_invert_horizontal_swipes_title"
+             android:summary="@string/pref_invert_horizontal_swipes_summary"
+             android:defaultValue="@string/pref_invert_horizontal_swipes_default" />
+         <CheckBoxPreference
+             android:key="@string/pref_invert_vertical_swipes_key"
+             android:title="@string/pref_invert_vertical_swipes_title"
+             android:summary="@string/pref_invert_vertical_swipes_summary"
+             android:defaultValue="@string/pref_invert_vertical_swipes_default" />
          </PreferenceScreen>
 
          <PreferenceScreen

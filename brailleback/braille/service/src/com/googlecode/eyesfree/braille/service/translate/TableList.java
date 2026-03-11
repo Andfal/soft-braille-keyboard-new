@@ -77,77 +77,51 @@ public class TableList {
         try {
             java.io.InputStream is = context.getAssets().open("liblouis_files.txt");
             if (is != null) {
-                java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(is));
+                java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(is, "UTF-8"));
                 String line;
-                java.util.List<String> allLines = new java.util.ArrayList<>();
                 while ((line = reader.readLine()) != null) {
-                    allLines.add(line.trim());
+                    if (line.trim().isEmpty()) continue;
+                    processCertifiedTable(line.trim());
                 }
                 reader.close();
-
-                // First pass: Load all .tbl files (Master tables)
-                for (String file : allLines) {
-                    if (file.endsWith(".tbl")) {
-                        processDynamicTable(file, true);
-                    }
-                }
-
-                // Second pass: Load .utb/.ctb only if not redundant
-                for (String file : allLines) {
-                    if ((file.endsWith(".utb") || file.endsWith(".ctb")) && 
-                        !file.endsWith("-chardefs.uti") && !file.contains("latinLetterDef")) {
-                        processDynamicTable(file, false);
-                    }
-                }
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error loading liblouis_files.txt", e);
         }
     }
 
-    private void processDynamicTable(String fileName, boolean isMaster) {
+    private void processCertifiedTable(String indexLine) {
+        // Format: fileName|dots|grade|displayName
+        String[] parts = indexLine.split("\\|");
+        if (parts.length < 3) return;
+
+        String fileName = parts[0];
+        int dots = Integer.parseInt(parts[1]);
+        int grade = Integer.parseInt(parts[2]);
+        String displayName = parts.length > 3 ? parts[3] : "";
+
+        // Deduplication: if fileName is already loaded (from XML), skip
+        if (mTableFileNames.containsValue(fileName)) {
+            return;
+        }
+
+        // Parse locale from fileName (e.g., it-it-g1.ctb -> it)
         String baseName = fileName.contains(".") ? fileName.substring(0, fileName.lastIndexOf('.')) : fileName;
-        String[] parts = baseName.split("-");
-        
-        String langPart = parts[0];
+        String[] nameParts = baseName.split("-");
+        String langPart = nameParts[0];
         String country = "";
-        
-        // Handle cases like en_US
         if (langPart.contains("_")) {
             String[] locParts = langPart.split("_");
             langPart = locParts[0];
             if (locParts.length > 1) country = locParts[1];
         }
 
-        int grade = fileName.contains("g2") ? 2 : 1;
-        boolean eightDot = fileName.contains("comp8") || fileName.contains("8dot");
-
-        boolean isAlreadyInXml = false;
-        // Check if this specific configuration is already covered by the official XML
-        for (TableInfo existing : mTableInfos) {
-            if (existing.getLocale().getLanguage().equals(langPart) && 
-                existing.getLocale().getCountry().equals(country) &&
-                existing.getGrade() == grade && 
-                existing.isEightDot() == eightDot) {
-                // If it's already in XML, we don't need to add it dynamically 
-                // unless it's a different file and we want to allow it as [Ext]
-                isAlreadyInXml = true;
-                break;
-            }
-        }
-
         String id = "liblouis:" + fileName;
-        String variant = "(" + fileName + ")";
-        
-        // If it's NOT in XML, it's a dynamic candidate.
-        // We mark it as [Ext] so it can be filtered out if the user doesn't want extended tables.
+        String variant = displayName.isEmpty() ? "(" + fileName + ")" : displayName;
         variant = "[Ext] " + variant;
 
-        // Only add if not already present with the EXACT same ID
-        if (!mTableFileNames.containsKey(id)) {
-            mTableInfos.add(new TableInfo(new Locale(langPart, country), eightDot, grade, id, variant));
-            mTableFileNames.put(id, fileName);
-        }
+        mTableInfos.add(new TableInfo(new Locale(langPart, country), dots == 8, grade, id, variant));
+        mTableFileNames.put(id, fileName);
     }
 
     /** Returns all loaded tables. */

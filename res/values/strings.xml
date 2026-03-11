@@ -50,6 +50,10 @@
     <string name="pref_keyboard_save_horizontal_landscape_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE</string>
     <string name="pref_keyboard_save_horizontal_portrait_invert_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT_INVERT</string>
     <string name="pref_keyboard_save_horizontal_portrait_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_invert_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE</string>
+    <string name="pref_keyboard_save_tabletop_portrait_invert_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_portrait_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT</string>
     <string name="pref_keyboard_save_vertical_landscape_invert_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE_INVERT</string>
     <string name="pref_keyboard_save_vertical_landscape_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE</string>
     <string name="pref_keyboard_save_vertical_portrait_invert_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT_INVERT</string>
@@ -137,6 +141,7 @@
     <string name="keyboard_feedback_sound">Sound only</string>
     <string name="keyboard_feedback_vibrate">Vibrate only</string>
     <string name="keyboard_full_screen">Keyboard expanded</string>
+    <string name="keyboard_tabletop">Tabletop</string>
     <string name="keyboard_horizontal">Horizontal</string>
     <string name="keyboard_next_three">Please hold your other three fingers on the screen now.</string>
     <string name="keyboard_not_set">Please place all 6 fingers on the screen to set the Braille keyboard</string>
@@ -155,6 +160,7 @@
     <string name="no_rotate_keyboard">Don\'t rotate keyboard</string>
     <string name="no_suggestions">No suggestions available</string>
     <string name="nothing_to_delete">Nothing to delete</string>
+    <string name="pad_tabletop">Set keyboard to tabletop layout</string>
     <string name="pad_horizontal">Set keyboard to horizontal layout</string>
     <string name="pad_vertical">Set keyboard to vertical layout</string>
     <string name="pasted">Pasted</string>
@@ -194,6 +200,18 @@
     <string name="pref_show_circles_title">Show circles on screen?</string>
     <string name="pref_swipe_sensitivity_summary">Choose the sensitivity of swipe gestures.</string>
     <string name="pref_swipe_sensitivity_title">Swipe sensitivity</string>
+    <string name="pref_swap_swipe_axes_key">SWAP_SWIPE_AXES</string>
+    <string name="pref_swap_swipe_axes_title">Swap swipe axes</string>
+    <string name="pref_swap_swipe_axes_summary">Interpret horizontal swipes as vertical and vice versa.</string>
+    <string name="pref_swap_swipe_axes_default">false</string>
+    <string name="pref_invert_horizontal_swipes_key">INVERT_HORIZONTAL_SWIPES</string>
+    <string name="pref_invert_horizontal_swipes_title">Invert horizontal swipes</string>
+    <string name="pref_invert_horizontal_swipes_summary">Swap left and right swipe directions.</string>
+    <string name="pref_invert_horizontal_swipes_default">false</string>
+    <string name="pref_invert_vertical_swipes_key">INVERT_VERTICAL_SWIPES</string>
+    <string name="pref_invert_vertical_swipes_title">Invert vertical swipes</string>
+    <string name="pref_invert_vertical_swipes_summary">Swap up and down swipe directions.</string>
+    <string name="pref_invert_vertical_swipes_default">false</string>
     <string name="pref_switch_tables_summary">Select certain languages that can be switched between on the fly while typing.</string>
     <string name="pref_switch_tables_title">Enable Braille tables for on the fly switching.</string>
     <string name="pref_text_to_speech_engine_title">Text To Speech Engine</string>
