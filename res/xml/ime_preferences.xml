@@ -113,11 +113,14 @@
              android:summary="@string/pref_show_ext_tables_summary"
              android:defaultValue="@string/pref_show_ext_tables_default" />
          <MultiSelectListPreference
-              android:dialogTitle="@string/pref_switch_tables_title"
-              android:key="@string/pref_switch_tables_key"
-              android:summary="@string/pref_switch_tables_summary"        
-              android:title="@string/pref_switch_tables_title"
-              android:defaultValue="@array/empty_array"/>
+             android:key="@string/pref_favorite_tables_key"
+             android:title="@string/pref_favorite_tables_title"
+             android:summary="@string/pref_favorite_tables_summary" />
+         <MultiSelectListPreference
+             android:key="@string/pref_switch_tables_key"
+             android:summary="@string/pref_switch_tables_summary"        
+             android:title="@string/pref_switch_tables_title"
+             android:defaultValue="@array/empty_array"/>
          <Preference
              android:key="pref_import_table_key"
              android:title="@string/pref_manage_tables_title"

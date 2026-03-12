@@ -8,7 +8,8 @@ CORE_LANGUAGES = [
     'ar', 'bg', 'ca', 'cs', 'da', 'de', 'el', 'en', 'es', 'et', 'fi', 'fr', 
     'gu', 'he', 'hi', 'hr', 'hu', 'is', 'it', 'ja', 'km', 'kn', 'ko', 'lv', 
     'lt', 'ml', 'mr', 'ne', 'nl', 'no', 'pl', 'pt', 'ro', 'ru', 'se', 'sk', 
-    'sr', 'sv', 'ta', 'te', 'tr', 'uk', 'ur', 'vi', 'yue', 'zh', 'grc', 'si'
+    'sr', 'sv', 'ta', 'te', 'tr', 'uk', 'ur', 'vi', 'yue', 'zh', 'grc', 'si',
+    'ckb', 'cy', 'pa', 'sd', 'afr'
 ]
 
 # Manual mappings for complex cases (id, dots, grade, variant, fileName)
@@ -26,6 +27,19 @@ OFFICIAL_MAPPINGS = [
     # Italian
     ('it-g1', 6, 1, 'table_variant_unofficial', 'it-it-g1.ctb'),
     ('it-comp8', 8, 0, 'table_variant_unofficial', 'it-it-comp8.utb'),
+    # Russian (ru) - Ordered: G1, G2, Comp8
+    ('ru-g1', 6, 1, '', 'ru-litbrl.ctb'),
+    ('ru-g2', 6, 2, 'Contracted', 'ru-ru-g1.ctb'),
+    ('ru-comp8', 8, 0, '', 'ru-comp8.utb'),
+    # Kurdish (ckb)
+    ('ckb-g1', 6, 1, '', 'ckb-g1.ctb'),
+    # Welsh (cy)
+    ('cy-g1', 6, 1, '', 'cy-cy-g1.utb'),
+    ('cy-g2', 6, 2, '', 'cy-cy-g2.ctb'),
+    # Punjabi (pa) - Manual because Liblouis uses 'pu-' prefix for files
+    ('pa-g1', 6, 1, '', 'pu-in-g1.utb'),
+    # Sindhi (sd) - Manual because Liblouis uses 'si-' prefix (shares with Sinhala)
+    ('sd-g1', 6, 1, '', 'si-in-g1.utb'),
     # Others
     ('grc-g1', 6, 1, '', 'grc-international-en.utb'),
     ('yue-g1', 6, 1, '', 'zh-hk.ctb'),
@@ -36,7 +50,8 @@ OFFICIAL_MAPPINGS = [
 
 def analyze_table(file_path):
     """
-    Analyzes a Liblouis table file to determine dots (6/8), grade (1/2), and display name.
+    Analyzes a Liblouis table file to determine dots (6/8), grade (1/2/3), and display name.
+    Uses metadata, include signatures, and opcode scanning.
     """
     dots = 6
     grade = 1
@@ -47,8 +62,10 @@ def analyze_table(file_path):
     # Heuristic: file names often tell the truth even if incomplete
     if "comp8" in file_name or "8dot" in file_name:
         dots = 8
-    if "g2" in file_name:
+    if "-g2" in file_name:
         grade = 2
+    elif "-g3" in file_name:
+        grade = 3
 
     try:
         with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
@@ -73,26 +90,34 @@ def analyze_table(file_path):
             meta_name = re.search(r'^#\s*liblouis:\s*(.*)', content, re.MULTILINE)
             if not meta_name:
                 meta_name = re.search(r'^#-\s*display-name:\s*(.*)', content, re.MULTILINE)
+            if not meta_name:
+                meta_name = re.search(r'^#-index-name:\s*(.*)', content, re.MULTILINE)
             
             if meta_name:
                 display_name = meta_name.group(1).strip()
 
-            # 2. Search for inclusions of known character sets
-            if 'latinLetterDef8Dots.uti' in content or 'text_nabcc.dis' in content:
+            # 2. Search for inclusions of known character sets (Signatures)
+            # 6-dot signatures have high priority for literary tables
+            if any(sig in content for sig in ['latinLetterDef6Dots.uti', 'digits6Dots.uti', 'litdigits6Dots.uti', 'en-ueb-chardefs.uti', 'de-chardefs6.cti']):
+                dots = 6
+            # 8-dot signatures
+            elif any(sig in content for sig in ['latinLetterDef8Dots.uti', 'digits8Dots.uti', 'text_nabcc.dis', 'de-chardefs8.cti']):
                 dots = 8
-            elif 'latinLetterDef6Dots.uti' in content or 'digits6Dots.uti' in content:
-                # Only set to 6 if not already forced to 8 by metadata
-                if not meta_dots or int(meta_dots.group(1)) != 8:
-                    dots = 6
+            # Only set to 8 if forced by meta
+            if meta_dots and int(meta_dots.group(1)) == 8:
+                dots = 8
+            elif meta_type and meta_type.group(1).lower() == 'computer':
+                dots = 8
 
-            # 3. Deep Scan for dot patterns (ignoring comments and braille-patterns.cti)
-            if dots == 6 and "braille-patterns.cti" not in file_name:
-                lines = content.splitlines()
-                for line in lines:
-                    clean_line = line.split('#')[0].strip()
-                    if re.search(r'\b[12345678]*[78][12345678]*\b', clean_line):
-                        dots = 8
-                        break
+            # Grade 2/3 signatures
+            if any(sig in content for sig in ['g2-core.cti', 'g2-rules.cti']):
+                if grade < 2: grade = 2
+            
+            # 3. Opcode scanning for contractions (Grade 2/3 marker)
+            if grade < 2:
+                # Require 'contraction' as the primary marker for Grade 2
+                if re.search(r'^contraction\s+', content, re.MULTILINE):
+                    grade = 2
 
     except Exception as e:
         print(f"Error analyzing {file_name}: {e}")
@@ -102,6 +127,7 @@ def analyze_table(file_path):
 def generate_tablelist_xml(index_entries):
     """
     Generates tablelist.xml based on analyzed entries and CORE_LANGUAGES.
+    Includes all available grades for each core language.
     """
     print("Generating tablelist.xml automatically...")
     xml_header = '<?xml version="1.0" encoding="utf-8"?>\n<table-list>\n'
@@ -110,8 +136,8 @@ def generate_tablelist_xml(index_entries):
     # Track which files are already handled by manual mappings
     handled_files = set(m[4] for m in OFFICIAL_MAPPINGS)
     
-    # Store candidates for each core language
-    candidates = {} # lang -> {'6': [], '8': []}
+    # Store candidates for each core language: lang -> dots -> grade -> list of files
+    candidates = {} 
     for entry in index_entries:
         fname, dots, grade, display_name = entry.split('|')
         if fname in handled_files: continue
@@ -119,8 +145,11 @@ def generate_tablelist_xml(index_entries):
         # Get language from filename (e.g. ar-ar-g1.utb -> ar)
         lang = fname.split('-')[0].split('.')[0]
         if lang in CORE_LANGUAGES:
-            if lang not in candidates: candidates[lang] = {'6': [], '8': []}
-            candidates[lang][str(dots)].append({
+            if lang not in candidates: candidates[lang] = {'6': {}, '8': {}}
+            d_str = str(dots)
+            g_str = str(grade)
+            if g_str not in candidates[lang][d_str]: candidates[lang][d_str][g_str] = []
+            candidates[lang][d_str][g_str].append({
                 'fname': fname, 'dots': dots, 'grade': grade, 'name': display_name
             })
 
@@ -131,36 +160,42 @@ def generate_tablelist_xml(index_entries):
     for tid, dots, grade, variant, fname in OFFICIAL_MAPPINGS:
         v_attr = f' variant="{variant}"' if variant else ''
         g_attr = f' grade="{grade}"' if dots == 6 else ''
-        # Determine locale from id or fname
         loc = tid.split('-')[0]
         if loc == 'unicode': loc = 'und'
-        if loc == 'en': loc = 'en' # Special case for UEB
+        if loc == 'en': loc = 'en'
         if tid == 'en-us-comp8': loc = 'en_US'
         
         tables_xml.append(f'    <table id="{tid}" locale="{loc}" dots="{dots}"{g_attr}{v_attr} fileName="{fname}" />')
 
     # 2. Add Automatic Core Tables
+    # Exclude languages already handled manually
+    EXCLUDED = ['zh', 'en', 'it', 'ne', 'grc', 'yue', 'si', 'ckb', 'cy', 'pa', 'sd', 'ru']
+    
     for lang in sorted(CORE_LANGUAGES):
-        if lang in ['zh', 'en', 'it', 'ne', 'grc', 'yue', 'si']: continue # Handled by manual
+        if lang in EXCLUDED: continue
         
         if lang in candidates:
-            # Pick best 6-dot
-            if candidates[lang]['6']:
-                # Priority: ends with -g1.ctb, then .tbl, then others
-                best6 = sorted(candidates[lang]['6'], key=lambda x: (
-                    0 if x['fname'].endswith('-g1.ctb') else 1 if x['fname'].endswith('.tbl') else 2,
+            # 6-dot: include ALL available grades
+            for grade_val in sorted(candidates[lang]['6'].keys()):
+                grade_candidates = candidates[lang]['6'][grade_val]
+                # Pick the best file for this specific grade
+                best_file = sorted(grade_candidates, key=lambda x: (
+                    0 if x['fname'].endswith(f'-g{grade_val}.ctb') else 1 if x['fname'].endswith('.tbl') else 2,
                     x['fname']
                 ))[0]
-                tables_xml.append(f'    <table id="{lang}-g1" locale="{lang}" dots="6" grade="1" fileName="{best6["fname"]}" />')
+                
+                tid = f"{lang}-g{grade_val}"
+                tables_xml.append(f'    <table id="{tid}" locale="{lang}" dots="6" grade="{grade_val}" fileName="{best_file["fname"]}" />')
             
-            # Pick best 8-dot
-            if candidates[lang]['8']:
-                # Priority: ends with -comp8.utb, then others
-                best8 = sorted(candidates[lang]['8'], key=lambda x: (
+            # 8-dot: include ALL (usually grade 0 or 1)
+            for grade_val in sorted(candidates[lang]['8'].keys()):
+                grade_candidates = candidates[lang]['8'][grade_val]
+                best_file = sorted(grade_candidates, key=lambda x: (
                     0 if x['fname'].endswith('-comp8.utb') else 1 if x['fname'].endswith('-8dot.ctb') else 2,
                     x['fname']
                 ))[0]
-                tables_xml.append(f'    <table id="{lang}-comp8" locale="{lang}" dots="8" fileName="{best8["fname"]}" />')
+                tid = f"{lang}-comp8" if grade_val in ['0', '1'] else f"{lang}-comp8-g{grade_val}"
+                tables_xml.append(f'    <table id="{tid}" locale="{lang}" dots="8" fileName="{best_file["fname"]}" />')
 
     full_xml = xml_header + '\n'.join(tables_xml) + '\n' + xml_footer
     return full_xml

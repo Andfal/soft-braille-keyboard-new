@@ -63,6 +63,17 @@ public class TableManagerActivity extends Activity {
         });
         layout.addView(createButton);
         
+        Button cloneButton = new Button(this);
+        cloneButton.setId(View.generateViewId());
+        cloneButton.setText(R.string.btn_clone_table);
+        cloneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCloneDialog();
+            }
+        });
+        layout.addView(cloneButton);
+        
         android.widget.TextView tv = new android.widget.TextView(this);
         tv.setText(R.string.label_tap_to_edit);
         tv.setPadding(0, 20, 0, 10);
@@ -91,23 +102,68 @@ public class TableManagerActivity extends Activity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 final TableInfo table = mTables.get(position);
+                String[] options = { getString(R.string.menu_share), getString(R.string.menu_delete) };
+                
                 new AlertDialog.Builder(TableManagerActivity.this)
-                    .setTitle(R.string.confirm_delete_title)
-                    .setMessage(String.format(getString(R.string.confirm_delete_msg), table.getVariant()))
-                    .setPositiveButton(R.string.btn_delete, new DialogInterface.OnClickListener() {
+                    .setTitle(table.getVariant())
+                    .setItems(options, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            if (mManager.deleteTable(table.getId())) {
-                                Toast.makeText(TableManagerActivity.this, R.string.msg_deleted, Toast.LENGTH_SHORT).show();
-                                refreshList();
+                            if (which == 0) { // Share
+                                shareTable(table);
+                            } else if (which == 1) { // Delete
+                                showDeleteConfirmation(table);
                             }
                         }
                     })
-                    .setNegativeButton(R.string.btn_cancel, null)
                     .show();
                 return true;
             }
         });
+    }
+
+    private void showDeleteConfirmation(final TableInfo table) {
+        new AlertDialog.Builder(this)
+            .setTitle(R.string.confirm_delete_title)
+            .setMessage(String.format(getString(R.string.confirm_delete_msg), table.getVariant()))
+            .setPositiveButton(R.string.btn_delete, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (mManager.deleteTable(table.getId())) {
+                        Toast.makeText(TableManagerActivity.this, R.string.msg_deleted, Toast.LENGTH_SHORT).show();
+                        refreshList();
+                    }
+                }
+            })
+            .setNegativeButton(R.string.btn_cancel, null)
+            .show();
+    }
+
+    private void shareTable(TableInfo table) {
+        try {
+            String fileName = table.getId();
+            if (fileName.startsWith("custom:")) {
+                fileName = fileName.substring(7);
+            }
+            File f = mManager.getCustomTableFile(fileName);
+            if (!f.exists()) {
+                Toast.makeText(this, "File not found", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Uri contentUri = android.support.v4.content.FileProvider.getUriForFile(this,
+                    getPackageName() + ".fileprovider", f);
+
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_STREAM, contentUri);
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Braille Table: " + table.getVariant());
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(Intent.createChooser(intent, getString(R.string.title_share_table)));
+        } catch (Exception e) {
+            Log.e(TAG, "Error sharing table", e);
+            Toast.makeText(this, "Error sharing table", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void refreshList() {
@@ -119,6 +175,111 @@ public class TableManagerActivity extends Activity {
         }
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, names);
         mListView.setAdapter(mAdapter);
+    }
+
+    private void showCloneDialog() {
+        final com.googlecode.eyesfree.braille.service.translate.TableList tableList = new com.googlecode.eyesfree.braille.service.translate.TableList(this);
+        final java.util.List<TableInfo> tables = new java.util.ArrayList<TableInfo>(tableList.getTables());
+        
+        // Remove custom tables
+        for (int i = tables.size() - 1; i >= 0; i--) {
+            if (tables.get(i).getId().startsWith("custom:")) {
+                tables.remove(i);
+            }
+        }
+        
+        java.util.Collections.sort(tables, new java.util.Comparator<TableInfo>() {
+            @Override
+            public int compare(TableInfo t1, TableInfo t2) {
+                String n1 = t1.getLocale().getDisplayName() + (t1.getVariant() != null ? t1.getVariant() : "");
+                String n2 = t2.getLocale().getDisplayName() + (t2.getVariant() != null ? t2.getVariant() : "");
+                return n1.compareTo(n2);
+            }
+        });
+
+        final String[] items = new String[tables.size()];
+        for (int i = 0; i < tables.size(); i++) {
+            TableInfo t = tables.get(i);
+            String label = t.getLocale().getDisplayName();
+            if (t.getVariant() != null && !t.getVariant().isEmpty()) {
+                label += " (" + t.getVariant() + ")";
+            }
+            if (t.isEightDot()) {
+                label += " [8-dot]";
+            } else {
+                label += " [Grade " + t.getGrade() + "]";
+            }
+            items[i] = label;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.title_clone_table);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                TableInfo selectedTable = tables.get(which);
+                final String fileName = tableList.getFileName(selectedTable.getId());
+                if (fileName == null) return;
+                
+                final android.widget.EditText input = new android.widget.EditText(TableManagerActivity.this);
+                String defaultName = fileName.replace(".ctb", "").replace(".utb", "").replace(".tbl", "") + "_copy";
+                input.setText(defaultName);
+                
+                new AlertDialog.Builder(TableManagerActivity.this)
+                    .setTitle(R.string.hint_table_name)
+                    .setView(input)
+                    .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog2, int which2) {
+                            String newName = input.getText().toString().trim();
+                            if (!newName.isEmpty()) {
+                                if (!newName.endsWith(".ctb") && !newName.endsWith(".utb")) {
+                                    newName += ".ctb";
+                                }
+                                cloneTableFile(fileName, newName);
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.btn_cancel, null)
+                    .show();
+            }
+        });
+        builder.setNegativeButton(R.string.btn_cancel, null);
+        builder.show();
+    }
+    
+    private void cloneTableFile(String sourceFileName, String destFileName) {
+        try {
+            // Source is in the extracted tables dir
+            File translatorDir = getDir("translator", MODE_PRIVATE);
+            File tablesDir = new File(translatorDir, "liblouis/tables");
+            File sourceFile = new File(tablesDir, sourceFileName);
+            
+            if (!sourceFile.exists()) {
+                Toast.makeText(this, "Source file not found", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            // Dest is in custom tables dir
+            File customDir = getDir("custom_tables", MODE_PRIVATE);
+            File destFile = new File(customDir, destFileName);
+            
+            java.io.InputStream in = new java.io.FileInputStream(sourceFile);
+            java.io.OutputStream out = new java.io.FileOutputStream(destFile);
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
+            in.close();
+            out.close();
+            
+            Toast.makeText(this, R.string.msg_table_saved, Toast.LENGTH_SHORT).show();
+            refreshList();
+        } catch (Exception e) {
+            Log.e(TAG, "Error cloning table", e);
+            Toast.makeText(this, "Error cloning table", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void pickFile() {

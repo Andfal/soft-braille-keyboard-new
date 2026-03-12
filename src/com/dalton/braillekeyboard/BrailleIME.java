@@ -350,13 +350,25 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public boolean deselect() {
         if (selectAll) return false;
-        int cursor = getCursor();
-        return setSelection(cursor, cursor);
+        ExtractedText et = getAllText();
+        if (et == null) return false;
+        int end = et.startOffset + et.selectionEnd;
+        return setSelection(end, end);
     }
 
     @Override
     public boolean setCursorToStartOfSelection() {
-        cursor = Math.min(getCursor(), mark);
+        int cursor = getCursor();
+        if (cursor == -1 || mark == -1) {
+            ExtractedText et = getAllText();
+            if (et != null && mark != -1) {
+                cursor = Math.min(et.startOffset + et.selectionStart, mark);
+            } else {
+                return false;
+            }
+        } else {
+            cursor = Math.min(cursor, mark);
+        }
         return setSelection(cursor, cursor);
     }
 
@@ -366,7 +378,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         ExtractedText text = getAllText();
         if (text != null) {
             mark = text.text.length();
-            setSelection(0, mark + 1);
+            setSelection(0, mark);
             selectAll = true;
         }
         return selectAll;
@@ -488,14 +500,23 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     private int[] getSelectionBoundaries(int cursor) {
+        if (mark == -1) return null;
         int[] array = null;
         ExtractedText text = getAllText();
         if (text != null && text.text != null) {
+            int currentCursor = cursor;
+            // Se c'è già una selezione (cursor == -1), recuperiamo la posizione reale da Android
+            if (currentCursor == -1) {
+                currentCursor = text.startOffset + text.selectionEnd;
+            }
+            
             mark = mark > text.text.length() ? text.text.length() : mark;
             array = new int[2];
-            array[0] = Math.min(cursor, mark);
-            array[1] = Math.max(cursor, mark);
-            array[1] = array[1] < text.text.length() ? array[1] + 1 : array[1];
+            array[0] = Math.min(currentCursor, mark);
+            array[1] = Math.max(currentCursor, mark);
+            
+            // Assicuriamoci che l'indice minimo non sia mai negativo (prevenzione disastro)
+            if (array[0] < 0) array[0] = 0;
         }
         return array;
     }

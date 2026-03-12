@@ -669,8 +669,8 @@ public abstract class Pad {
 
             if (swapAxes) {
                 int temp = xDiff;
-                xDiff = yDiff;
-                yDiff = -temp; // Negate to match standard axis mapping (Left/Right becomes Down/Up)
+                xDiff = -yDiff;
+                yDiff = temp; // Counter-clockwise swap
             }
             
             if (Math.abs(xDiff) > Math.abs(yDiff)) {

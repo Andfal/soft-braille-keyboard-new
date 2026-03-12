@@ -89,6 +89,9 @@
     <string name="pref_show_ext_tables_title">Show extended Liblouis tables</string>
     <string name="pref_show_ext_tables_summary">Show all available Liblouis tables, including those not officially supported by Google.</string>
     <string name="pref_show_ext_tables_default">false</string>
+    <string name="pref_favorite_tables_key">FAVORITE_TABLES</string>
+    <string name="pref_favorite_tables_title">Favorite Tables</string>
+    <string name="pref_favorite_tables_summary">Select tables to pin to the top of the selection list.</string>
     <string name="pref_voice_shortcut_default">true</string>
     <string name="pref_voice_shortcut_key">VOICE_INPUT_SHORTCUT</string>
     <string name="require_record_audio_now">REQUIRE_RECORD_AUDIO</string>
@@ -349,16 +352,21 @@
     <string name="pref_category_custom_tables_title">Custom Braille Tables</string>
     <string name="pref_manage_tables_title">Manage/Create Braille Tables</string>
     <string name="pref_manage_tables_summary">Import, delete or create your own braille tables.</string>
-    
+
     <!-- Table Manager -->
     <string name="btn_import_table">Import existing table file</string>
     <string name="btn_create_table">Create new table from scratch</string>
+    <string name="btn_clone_table">Clone system table</string>
+    <string name="title_clone_table">Select table to clone</string>
     <string name="label_long_press_delete">List of custom tables. Long press an item to delete it.</string>
+
     <string name="label_tap_to_edit">Tap to edit, long press to delete</string>
     <string name="confirm_delete_title">Delete Table</string>
     <string name="confirm_delete_msg">Do you want to delete %s?</string>
     <string name="btn_delete">Delete</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_delete">Delete</string>
 
     <!-- Table Creator -->
     <string name="hint_table_name">Enter table name (e.g. my_table)</string>

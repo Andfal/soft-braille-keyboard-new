@@ -1,9 +1,12 @@
-#-index-name: Italian
-#-display-name: Italian braille
+#-index-name: Slovenian
+#-display-name: Slovenian braille
 
-#+language:it
+#+language:sl
 #+type:literary
-#+dots:6
+#+grade:1
+# Marked as "direction:forward" by Bue Vester-Andersen
+# as tests only run forward.
+#+direction:forward
 
 # TODO: Please correct the metadata above. It is not meant to be
 # accurate nor complete. It hasn't been verified by the table
@@ -14,5 +17,4 @@
 # the implemented braille code. Preferably submit the documents
 # to https://github.com/liblouis/braille-specs.
 
-include it_definitiva_funzionante.ctb
-include braille-patterns.cti
+include sl-si-g1.utb
