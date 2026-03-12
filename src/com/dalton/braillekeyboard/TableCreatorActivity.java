@@ -174,6 +174,8 @@ public class TableCreatorActivity extends Activity {
         PresetCategory(String n, String op) { name = n; defaultOpcode = op; }
     }
 
+    private TextView mSearchResultsSummary;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -248,9 +250,23 @@ public class TableCreatorActivity extends Activity {
         mAdvancedSettingsLayout = new LinearLayout(this);
         mAdvancedSettingsLayout.setOrientation(LinearLayout.VERTICAL);
         
+        // Base Table Selection with Import Button
+        LinearLayout baseTableLayout = new LinearLayout(this);
+        baseTableLayout.setOrientation(LinearLayout.HORIZONTAL);
+        baseTableLayout.setGravity(Gravity.CENTER_VERTICAL);
+
         mBaseTableSpinner = new Spinner(this);
+        mBaseTableSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
         updateSystemTables();
-        mAdvancedSettingsLayout.addView(mBaseTableSpinner);
+        
+        Button importRulesBtn = new Button(this);
+        importRulesBtn.setText(R.string.btn_import_base_rules);
+        importRulesBtn.setTextSize(12);
+        importRulesBtn.setOnClickListener(v -> importBaseRules());
+        
+        baseTableLayout.addView(mBaseTableSpinner);
+        baseTableLayout.addView(importRulesBtn);
+        mAdvancedSettingsLayout.addView(baseTableLayout);
 
         mScriptSpinner = new Spinner(this);
         updateScriptSpinner(false);
@@ -346,6 +362,24 @@ public class TableCreatorActivity extends Activity {
         settingsRow.addView(mOpcodeSpinner); settingsRow.addView(mMappingPriorityCheck);
         bottomPanel.addView(settingsRow);
 
+        // Search Bar
+        EditText searchEdit = new EditText(this);
+        searchEdit.setHint(R.string.hint_search_rules);
+        searchEdit.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { filterMappings(s.toString()); }
+            @Override public void afterTextChanged(android.text.Editable s) {}
+        });
+        bottomPanel.addView(searchEdit);
+
+        // Dynamic Search Summary
+        mSearchResultsSummary = new TextView(this);
+        mSearchResultsSummary.setPadding(10, 5, 10, 5);
+        mSearchResultsSummary.setTextSize(12);
+        mSearchResultsSummary.setTextColor(Color.DKGRAY);
+        mSearchResultsSummary.setVisibility(View.GONE);
+        bottomPanel.addView(mSearchResultsSummary);
+
         LinearLayout actionRow = new LinearLayout(this);
         actionRow.setOrientation(LinearLayout.HORIZONTAL);
         actionRow.setGravity(Gravity.CENTER_VERTICAL);
@@ -357,7 +391,18 @@ public class TableCreatorActivity extends Activity {
         mMappedItemsSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
         mMappedItemsSpinner.setContentDescription(getString(R.string.label_mapped_items));
         mMappedItemsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { if (pos > 0) loadMapping(pos - 1); }
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { 
+                String selected = mDisplayList.get(pos);
+                if (pos > 0) {
+                    // Find actual index in mMappings by matching the display string
+                    for (int i = 0; i < mMappings.size(); i++) {
+                        if (getMappingDisplayString(mMappings.get(i)).equals(selected)) {
+                            loadMapping(i);
+                            break;
+                        }
+                    }
+                }
+            }
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
 
@@ -373,7 +418,14 @@ public class TableCreatorActivity extends Activity {
         saveBtn.setOnClickListener(v -> saveTable());
         saveBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
 
-        actionRow.addView(mMappedItemsSpinner); actionRow.addView(mAddMappingBtn); actionRow.addView(saveBtn);
+        Button exportBtn = new Button(this);
+        exportBtn.setText(R.string.btn_export_table);
+        exportBtn.setBackgroundColor(Color.parseColor("#2196F3"));
+        exportBtn.setTextColor(Color.WHITE);
+        exportBtn.setOnClickListener(v -> exportTable());
+        exportBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+
+        actionRow.addView(mMappedItemsSpinner); actionRow.addView(mAddMappingBtn); actionRow.addView(saveBtn); actionRow.addView(exportBtn);
         bottomPanel.addView(actionRow);
 
         mainContainer.addView(bottomPanel);
@@ -393,7 +445,17 @@ public class TableCreatorActivity extends Activity {
         });
 
         String tableId = getIntent().getStringExtra("table_id");
-        if (tableId != null) loadTableData(tableId);
+        if (tableId != null) {
+            loadTableData(tableId);
+        } else {
+            // New table: default to system locale (index 1) but Base Table to "None" (index 0)
+            if (mLocaleNames.size() > 1) {
+                mLocaleSpinner.setSelection(1);
+            }
+            if (mBaseTableSpinner != null && mSystemTableLabels.size() > 0) {
+                mBaseTableSpinner.setSelection(0);
+            }
+        }
     }
 
     private void updateSystemTables() {
@@ -426,13 +488,17 @@ public class TableCreatorActivity extends Activity {
             }
         }
 
-        // Sorting logic
-        final String selectedLang = mLocaleSpinner.getSelectedItemPosition() > 0 ? 
+        // Sorting logic: prioritize current selection OR system language if none selected
+        String selectedLang = mLocaleSpinner.getSelectedItemPosition() > 0 ? 
                 mLocaleCodes.get(mLocaleSpinner.getSelectedItemPosition()) : "";
+        if (selectedLang.isEmpty()) {
+            selectedLang = java.util.Locale.getDefault().getLanguage();
+        }
+        final String finalLang = selectedLang.split("-")[0];
 
         Collections.sort(tables, (t1, t2) -> {
-            boolean t1Matches = !selectedLang.isEmpty() && t1.getLocale().getLanguage().equals(selectedLang.split("-")[0]);
-            boolean t2Matches = !selectedLang.isEmpty() && t2.getLocale().getLanguage().equals(selectedLang.split("-")[0]);
+            boolean t1Matches = t1.getLocale().getLanguage().equals(finalLang);
+            boolean t2Matches = t2.getLocale().getLanguage().equals(finalLang);
             
             if (t1Matches && !t2Matches) return -1;
             if (!t1Matches && t2Matches) return 1;
@@ -447,16 +513,24 @@ public class TableCreatorActivity extends Activity {
             if (fileName != null && !fileName.endsWith(".tbl")) {
                 mSystemTableFiles.add(fileName);
                 String label = info.getLocale().getDisplayName();
+                
                 if (info.getVariant() != null && !info.getVariant().isEmpty()) {
                     label += " " + info.getVariant();
                 }
-                // Add filename for clarity
+                
+                if (info.isEightDot()) {
+                    label += " (8 punti)";
+                } else {
+                    label += " (Grado " + info.getGrade() + ")";
+                }
+                
                 label += " [" + fileName + "]";
                 mSystemTableLabels.add(label);
             }
         }
         
         int currentPos = mBaseTableSpinner.getSelectedItemPosition();
+        if (currentPos < 0) currentPos = 0; // Default to "None"
         mBaseTableSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_base_table_short), mSystemTableLabels));
         if (currentPos < mSystemTableLabels.size()) mBaseTableSpinner.setSelection(currentPos);
     }
@@ -495,9 +569,10 @@ public class TableCreatorActivity extends Activity {
     private void loadLocales() {
         mLocaleCodes.clear();
         mLocaleNames.clear();
-        java.util.Locale[] locales = java.util.Locale.getAvailableLocales();
+        java.util.Locale systemLocale = java.util.Locale.getDefault();
+        String sysLang = systemLocale.getLanguage();
         
-        // Use a TreeMap to keep names unique and sorted alphabetically
+        java.util.Locale[] locales = java.util.Locale.getAvailableLocales();
         java.util.Map<String, String> uniqueLocales = new java.util.TreeMap<>();
         
         for (java.util.Locale l : locales) {
@@ -507,24 +582,18 @@ public class TableCreatorActivity extends Activity {
             String name = l.getDisplayLanguage();
             String code = lang;
             
-            // Handle important variants that have different Braille/Emoji needs
             if (lang.equals("pt") && "BR".equals(l.getCountry())) {
-                name = l.getDisplayName(); // e.g., "Portoghese (Brasile)"
+                name = l.getDisplayName();
                 code = "pt-BR";
             } else if (lang.equals("zh")) {
-                name = l.getDisplayName(); // e.g., "Cinese (Semplificato)" / "Cinese (Tradizionale)"
+                name = l.getDisplayName();
                 code = "zh";
-                if ("TW".equals(l.getCountry()) || "HK".equals(l.getCountry())) {
-                    code = "zh-TW";
-                }
+                if ("TW".equals(l.getCountry()) || "HK".equals(l.getCountry())) code = "zh-TW";
             }
             
-            // Ensure first letter is uppercase (standardize across Android versions)
             if (name.length() > 0) {
                 name = name.substring(0, 1).toUpperCase() + name.substring(1);
             }
-            
-            // If we don't have this language yet, or if it's a priority variant, add it
             if (!uniqueLocales.containsKey(name)) {
                 uniqueLocales.put(name, code);
             }
@@ -533,9 +602,23 @@ public class TableCreatorActivity extends Activity {
         mLocaleCodes.add("");
         mLocaleNames.add(getString(R.string.none_selected));
         
+        // Find and add system language first (at index 1)
+        String sysName = null;
         for (java.util.Map.Entry<String, String> entry : uniqueLocales.entrySet()) {
-            mLocaleNames.add(entry.getKey());
-            mLocaleCodes.add(entry.getValue());
+            if (entry.getValue().equals(sysLang)) {
+                sysName = entry.getKey();
+                mLocaleNames.add(sysName);
+                mLocaleCodes.add(entry.getValue());
+                break;
+            }
+        }
+        
+        // Add the rest
+        for (java.util.Map.Entry<String, String> entry : uniqueLocales.entrySet()) {
+            if (!entry.getKey().equals(sysName)) {
+                mLocaleNames.add(entry.getKey());
+                mLocaleCodes.add(entry.getValue());
+            }
         }
     }
 
@@ -869,11 +952,13 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void loadMapping(int index) {
+        mIsUpdatingUI = true;
         mEditingIndex = index; Mapping m = mMappings.get(index);
         for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { mOpcodeSpinner.setSelection(i); break; }
         mCharEdit.setText(m.character); mDotsEdit.setText(getDotsString(m.patterns));
         mCurrentPatterns.clear(); mCurrentPatterns.addAll(m.patterns); mMappingPriorityCheck.setChecked(m.isHighPriority);
         updateDotsDisplay(); mAddMappingBtn.setText(R.string.btn_update);
+        mIsUpdatingUI = false;
     }
 
     private void showCellEditor(boolean append) {
@@ -1034,7 +1119,10 @@ public class TableCreatorActivity extends Activity {
             String cPart = m.character;
             if (cPart.length() == 1) {
                 char c = cPart.charAt(0);
-                if (c == ' ') cPart = "\\s"; else if (c == '\t') cPart = "\\t"; else if (c < 33 || c > 126) cPart = String.format("\\x%04x", (int)c);
+                if (c == ' ') cPart = "\\s"; 
+                else if (c == '\t') cPart = "\\t"; 
+                else if (c == '\\') cPart = "\\\\";
+                else if (c < 33 || c > 126) cPart = String.format("\\x%04x", (int)c);
             }
             sb.append(m.opcode).append(" ").append(cPart).append(" ").append(dots).append("\n");
         }
@@ -1083,9 +1171,252 @@ public class TableCreatorActivity extends Activity {
         } catch (Exception e) {}
     }
 
+    private static final int REQUEST_STORAGE_PERMISSION = 100;
+
     private void shareTable() {
         String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) return; if (!name.endsWith(".ctb")) name += ".ctb";
         File f = new CustomTableManager(this).getCustomTableFile(name); if (!f.exists()) return;
         Intent intent = new Intent(Intent.ACTION_SEND); intent.setType("text/plain"); intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f)); intent.putExtra(Intent.EXTRA_SUBJECT, "Braille Table: " + name); startActivity(Intent.createChooser(intent, getString(R.string.title_share_table)));
+    }
+
+    private void exportTable() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&
+            android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.P) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
+                return;
+            }
+        }
+        
+        String name = mTableNameEdit.getText().toString().trim();
+        if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show(); mTableNameEdit.requestFocus(); return; }
+        if (!name.endsWith(".ctb")) name += ".ctb";
+        
+        try {
+            File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+            File softBrailleDir = new File(downloadsDir, "soft-braille");
+            if (!softBrailleDir.exists() && !softBrailleDir.mkdirs()) {
+                Toast.makeText(this, "Failed to create directory", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            File outputFile = new File(softBrailleDir, name);
+            
+            StringBuilder sb = new StringBuilder("# " + name + "\n");
+            sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
+            int localePos = mLocaleSpinner.getSelectedItemPosition();
+            if (localePos > 0) sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
+            sb.append("\ninclude braille-patterns.cti\ninclude unicode.dis\n\n# --- ").append(getString(R.string.table_section_high)).append(" ---\n");
+            writeCustomMappings(sb, true);
+            sb.append("\n# --- ").append(getString(R.string.table_section_system)).append(" ---\ninclude unicode.dis\n");
+            int basePos = mBaseTableSpinner.getSelectedItemPosition();
+            if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
+            String scriptFile = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
+            sb.append("include ").append(scriptFile).append("\n");
+            if (scriptFile.contains("latin")) sb.append("space \\x0020 0\nspace \\x00a0 0\n");
+            int numSys = mNumSystemSpinner.getSelectedItemPosition();
+            if (numSys == NUM_CLASSIC) sb.append("include digits6Dots.uti\ninclude litdigits6Dots.uti\nnumsign 3456\n");
+            else if (numSys == NUM_ANTOINE) sb.append("include digits6DotsPlusDot6.uti\ninclude litdigits6DotsPlusDot6.uti\nnumsign 6\n");
+            else if (numSys == NUM_DROPPED) sb.append("include litdigits6Dots.uti\n");
+            else if (numSys == NUM_8DOT) sb.append("include digits8Dots.uti\n");
+            sb.append("\n# --- STANDARD PRIORITY ---\n");
+            writeCustomMappings(sb, false);
+            
+            try (FileOutputStream fos = new FileOutputStream(outputFile)) { fos.write(sb.toString().getBytes(StandardCharsets.UTF_8)); }
+            Toast.makeText(this, R.string.msg_table_exported, Toast.LENGTH_SHORT).show();
+        } catch (SecurityException e) {
+            Toast.makeText(this, "Permission denied. Please grant storage permissions.", Toast.LENGTH_LONG).show();
+        } catch (Exception e) { 
+            Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_SHORT).show(); 
+        }
+    }
+
+    private void filterMappings(String query) {
+        if (query == null || query.isEmpty()) {
+            mSearchResultsSummary.setVisibility(View.GONE);
+            refreshSpinner();
+            return;
+        }
+        
+        final String lowerQuery = query.toLowerCase().trim();
+        List<String> filteredNames = new ArrayList<>();
+        List<Integer> filteredIndices = new ArrayList<>();
+        
+        // SMART SEARCH LOGIC
+        boolean isNumeric = lowerQuery.matches("[1-8-]+");
+        boolean isSingleChar = query.length() == 1 && !isNumeric;
+
+        for (int i = 0; i < mMappings.size(); i++) {
+            Mapping m = mMappings.get(i);
+            boolean match = false;
+            
+            if (isNumeric) {
+                // Search in DOTS (exact match or partial dots string)
+                String dots = getDotsString(m.patterns);
+                if (dots.equals(lowerQuery) || dots.contains(lowerQuery)) match = true;
+            } else if (isSingleChar) {
+                // Search in CHARACTER (exact match)
+                if (m.character != null && m.character.equals(query)) match = true;
+            } else {
+                // General search in the whole display string
+                String display = getMappingDisplayString(m).toLowerCase();
+                if (display.contains(lowerQuery)) match = true;
+            }
+
+            if (match) {
+                filteredNames.add(getMappingDisplayString(m));
+                filteredIndices.add(i);
+            }
+        }
+
+        mDisplayList.clear();
+        mDisplayList.add(getString(R.string.label_mapped_items));
+        mDisplayList.addAll(filteredNames);
+        mAdapter.notifyDataSetChanged();
+
+        mSearchResultsSummary.setVisibility(View.VISIBLE);
+        if (filteredIndices.isEmpty()) {
+            mSearchResultsSummary.setText("Nessun risultato trovato");
+            mSearchResultsSummary.setTextColor(Color.RED);
+        } else if (filteredIndices.size() == 1) {
+            int index = filteredIndices.get(0);
+            mSearchResultsSummary.setText("Trovato 1 risultato (caricato): " + filteredNames.get(0));
+            mSearchResultsSummary.setTextColor(Color.parseColor("#388E3C")); // Green
+            loadMapping(index);
+        } else {
+            mSearchResultsSummary.setText("Trovati " + filteredIndices.size() + " risultati");
+            mSearchResultsSummary.setTextColor(Color.DKGRAY);
+        }
+        
+        mSearchResultsSummary.announceForAccessibility(mSearchResultsSummary.getText());
+    }
+
+    private String getMappingDisplayString(Mapping m) {
+        String friendlyOp = m.opcode;
+        for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { friendlyOp = OPCODE_LABELS[i]; break; }
+        StringBuilder sb = new StringBuilder(); if (m.isHighPriority) sb.append("[H] ");
+        sb.append(friendlyOp); if (m.character != null && !m.character.isEmpty()) sb.append(" '").append(m.character).append("'");
+        sb.append(" -> ").append(getDotsString(m.patterns));
+        return sb.toString();
+    }
+
+    private void importBaseRules() {
+        int pos = mBaseTableSpinner.getSelectedItemPosition();
+        if (pos <= 0) return; // "None" selected
+        
+        String fileName = mSystemTableFiles.get(pos);
+        File translatorDir = getDir("translator", MODE_PRIVATE);
+        File tablesDir = new File(translatorDir, "liblouis/tables");
+        File baseFile = new File(tablesDir, fileName);
+        
+        if (!baseFile.exists()) {
+            Toast.makeText(this, "System table file not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        try {
+            List<Mapping> imported = new ArrayList<>();
+            parseTableRecursive(baseFile, tablesDir, imported, 0);
+            
+            if (imported.isEmpty()) {
+                Toast.makeText(this, "No compatible rules found in this table", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Ask confirmation
+            new AlertDialog.Builder(this)
+                .setTitle(R.string.btn_import_base_rules)
+                .setMessage("Import " + imported.size() + " rules from " + fileName + "? Current mappings will be preserved.")
+                .setPositiveButton(R.string.btn_ok, (dialog, which) -> {
+                    mMappings.addAll(imported);
+                    mBaseTableSpinner.setSelection(0); // Clear inheritance since we now have the rules
+                    refreshSpinner();
+                    Toast.makeText(this, "Imported " + imported.size() + " rules", Toast.LENGTH_SHORT).show();
+                })
+                .setNegativeButton(R.string.btn_cancel, null)
+                .show();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error exploding table", e);
+            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void parseTableRecursive(File tableFile, File tablesDir, List<Mapping> output, int depth) throws Exception {
+        if (depth > 10) return; // Allow deeper nesting for complex tables
+        
+        Scanner scanner = new Scanner(tableFile, "UTF-8");
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine().trim();
+            if (line.isEmpty() || line.startsWith("#")) continue;
+            
+            if (line.startsWith("include ")) {
+                // Fix: handle comments on the same line as include
+                String includePart = line.substring(8).trim();
+                if (includePart.contains("#")) {
+                    includePart = includePart.split("#")[0].trim();
+                }
+                String includedName = includePart.split("\\s+")[0];
+                
+                // Skip only known display/infrastructure files
+                if (includedName.endsWith(".dis") || includedName.equals("braille-patterns.cti")) {
+                    continue;
+                }
+                File nextFile = new File(tablesDir, includedName);
+                if (nextFile.exists()) {
+                    parseTableRecursive(nextFile, tablesDir, output, depth + 1);
+                }
+                continue;
+            }
+            
+            String[] parts = line.split("\\s+");
+            if (parts.length < 2) continue;
+            
+            String opcode = parts[0];
+            List<String> validOps = Arrays.asList("lowercase", "uppercase", "letter", "digit", "punctuation", "math", "sign", "always", "word", "partword", "litdigit", "midnum");
+            if (!validOps.contains(opcode)) continue;
+            
+            if (parts.length < 3) continue;
+            String charPart = parts[1];
+            char c = 0;
+            if (charPart.startsWith("\\x")) { 
+                try { c = (char)Integer.parseInt(charPart.substring(2), 16); } catch (Exception e) {} 
+            } else if (charPart.equals("\\s")) {
+                c = ' ';
+            } else if (charPart.length() == 1) {
+                c = charPart.charAt(0);
+            }
+            
+            // SMART FILTER: Skip technical Braille patterns (U+2800 to U+28FF)
+            // These are infrastructure rules, not linguistic rules.
+            if (c >= 0x2800 && c <= 0x28FF) continue;
+            
+            String dotsPart = parts[2];
+            String finalChar = (c != 0) ? String.valueOf(c) : charPart;
+            
+            // Check for duplicates to maintain priority (keep the first occurrence found at the highest level)
+            boolean isDuplicate = false;
+            for (Mapping existing : output) {
+                if (existing.opcode.equals(opcode) && existing.character.equals(finalChar)) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            
+            if (!isDuplicate) {
+                output.add(new Mapping(opcode, finalChar, parseDots(dotsPart), false));
+            }
+        }
+        scanner.close();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == REQUEST_STORAGE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                exportTable();
+            } else {
+                Toast.makeText(this, "Permission denied. Cannot export table.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

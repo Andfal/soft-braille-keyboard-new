@@ -1,0 +1,19 @@
+# tabella francese.ctb
+# Autore:
+
+include braille-patterns.cti
+include unicode.dis
+
+# --- ALTA PRIORITÀ ---
+
+# --- INCLUSIONI DI SISTEMA ---
+include unicode.dis
+include fr-bfu-comp6.utb
+include latinLetterDef6Dots.uti
+space \x0020 0
+space \x00a0 0
+include digits6Dots.uti
+include litdigits6Dots.uti
+numsign 3456
+
+# --- STANDARD PRIORITY ---

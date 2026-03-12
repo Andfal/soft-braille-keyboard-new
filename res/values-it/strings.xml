@@ -114,9 +114,6 @@
     <string name="pref_show_ext_tables_title">Mostra tabelle Liblouis estese</string>
     <string name="pref_show_ext_tables_summary">Mostra tutte le tabelle Liblouis disponibili, incluse quelle non supportate ufficialmente da Google.</string>
     <string name="pref_show_ext_tables_default">false</string>
-    <string name="pref_favorite_tables_key">FAVORITE_TABLES</string>
-    <string name="pref_favorite_tables_title">Tabelle Preferite</string>
-    <string name="pref_favorite_tables_summary">Seleziona le tabelle da mostrare in cima all\'elenco.</string>
     <string name="pref_voice_shortcut_summary">Se attivato tocca due volte e tieni premuto per iniziare la dettatura vocale con TalkBack attivo.</string> 
     <string name="pref_voice_shortcut_title">Scorciatoia per dettatura vocale</string>
     <string name="privacy_disabled">Schermo Privacy disattivato</string>
@@ -250,8 +247,11 @@
     <!-- Table Manager -->
     <string name="btn_import_table">Importa file tabella esistente</string>
     <string name="btn_create_table">Crea nuova tabella da zero</string>
-    <string name="btn_clone_table">Clona tabella di sistema</string>
-    <string name="title_clone_table">Seleziona la tabella da clonare</string>
+    <string name="btn_export_table">Esporta in Download</string>
+    <string name="btn_export_system_table">Esporta Tabella di Sistema</string>
+    <string name="btn_import_base_rules">Importa tutte le regole</string>
+    <string name="hint_search_rules">Cerca carattere o punti...</string>
+    <string name="msg_table_exported">Tabella esportata in Download/soft-braille</string>
     <string name="label_long_press_delete">Elenco delle tabelle personalizzate. Tieni premuto un elemento per eliminarlo.</string>
 
     <string name="confirm_delete_title">Elimina Tabella</string>

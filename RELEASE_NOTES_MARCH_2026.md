@@ -1,47 +1,49 @@
 # Latest Updates - March 12, 2026
 
-## 1. Table Cloning & Management
-- **Cloning Feature:** Users can now clone any system table (including extended Liblouis tables) to create their own custom version. This is accessible via the new "Clone System Table" button in the Table Manager.
-- **Context Menu:** Added a long-press menu in the Table Manager to quickly **Share** or **Delete** custom tables without having to open them in the Creator.
-- **Improved Sharing:** Custom tables are shared as `.ctb` files using a secure FileProvider, making them easy to send via messaging apps or email.
+## 1. Advanced Table Management & Export
+- **System Table Export:** Users can now export any official system table directly to the public `Download/soft-braille` folder. This allows for external backup or manual editing on other devices.
+- **Improved Context Menu:** The long-press menu in the Table Manager now includes a smart deletion logic. When deleting a custom table, the app offers to optionally delete its twin file from the Download folder to keep the device clean.
+- **Safe Sharing:** Custom tables are shared as `.ctb` files using a secure FileProvider, compatible with all modern messaging and email apps.
 
-## 2. Favorite Tables System
-- **Pinned Tables:** Added a new "Favorite Tables" preference. Selected tables will always appear at the top of the selection lists (Literary, Computer, and Switch-on-the-fly).
-- **Visual Indicators:** Favorite tables are clearly marked with a star (**★**) icon in all selection menus.
-- **Integrated Sorting:** The sorting logic in `PreferenceIME` now prioritizes favorites while maintaining alphabetical order for the rest of the list.
+## 2. Professional Table Creator (Rule Explosion)
+- **Rule Explosion (Import All):** A new "Import All Rules" feature allows users to "deconstruct" any system table (e.g., Italian Grade 1). The app recursively parses all includes to extract the full alphabet, punctuation, and numbers directly into the editor.
+- **Smart Recursive Parser:** The engine follows all library includes but automatically filters out technical infrastructure rules (like Unicode Braille patterns), resulting in a clean, human-readable, and fully editable table.
+- **Autonomous Tables:** Tables created via "Rule Explosion" are entirely self-contained, meaning they no longer depend on system files and will work perfectly even if transferred to other devices.
 
-## 3. Global Table Refinement (52 Core Languages)
-- **Google Alignment:** Expanded the "Core" languages list to **52**, matching the official Google BrailleBack set. Added support for **Afrikaans, Kurdish, Welsh, Punjabi, and Sindhi**.
-- **Manual Mappings:** Implemented specific manual rules for languages with inconsistent Liblouis filenames (e.g., Punjabi `pa` -> `pu`, Sindhi `sd` -> `si`) to ensure reliability.
-- **Russian Fixed:** Corrected the Russian Grade 1 mapping to point to `ru-litbrl.ctb`, ensuring proper literary Braille with number sign (#3456) support.
-- **Multi-Grade Support:** The official list now automatically includes all available grades (1, 2, and 3) for each core language.
+## 3. Precision Search System
+- **Smart Search Bar:** Added a surgical search bar in the Table Creator. It dynamically filters rules based on the user's intent:
+    - **Single Character:** Finds the exact mapping for that character (no more generic keyword matches).
+    - **Numeric Queries:** Searches exclusively within Braille dot combinations (e.g., searching "123" finds only 'l').
+    - **Multiple Letters:** Searches across the entire rule description.
+- **Real-time Feedback:** A new summary label provides instant visual and vocal (TalkBack) feedback on the number of results found.
+- **Auto-Load Logic:** If a search yields exactly one result, the app automatically loads it into the editing fields for instant modification.
 
-## 4. Advanced Heuristics & Deduplication
-- **Refined Analysis:** Improved the `analyze_table` script to accurately distinguish between 6-dot and 8-dot tables by prioritizing primary character sets over secondary display tables.
-- **Smart Grade Detection:** Updated detection logic to require the `contraction` opcode for Grade 2, preventing false positives in Grade 1 tables that use `word` for symbols (like Italian and French).
-- **No Duplicates:** Fixed a bug that caused manually mapped languages to appear twice in the selection list.
+## 4. Seamless External Integration
+- **Download Folder Sync:** The app now automatically monitors the `Download/soft-braille` folder. Any `.ctb` or `.utb` file copied there manually will appear in the Table Manager with a `[Download]` tag.
+- **One-Tap Import:** Tapping an external file automatically imports it into the app's secure internal memory and opens the editor immediately for verification.
 
 ---
 
 # Ultimi Aggiornamenti - 12 Marzo 2026
 
-## 1. Clonazione e Gestione Tabelle
-- **Funzione Clona:** Gli utenti possono ora clonare qualsiasi tabella di sistema (comprese le tabelle Liblouis estese) per crearne una propria versione personalizzata. Funzione accessibile tramite il nuovo pulsante "Clona tabella di sistema".
-- **Menu Contestuale:** Aggiunto un menu a pressione prolungata nel Gestore Tabelle per **Condividere** o **Eliminare** rapidamente le tabelle personalizzate.
-- **Condivisione Migliorata:** Le tabelle vengono condivise come file `.ctb` tramite un FileProvider sicuro, rendendole facili da inviare via app di messaggistica o email.
+## 1. Gestione Avanzata ed Esportazione
+- **Esporta Tabella di Sistema:** Gli utenti possono ora esportare qualsiasi tabella ufficiale direttamente nella cartella pubblica `Download/soft-braille`. Questo permette backup esterni o modifiche manuali su altri dispositivi.
+- **Menu Contestuale Migliorato:** Il menu a pressione prolungata nel Gestore Tabelle ora include una logica di eliminazione intelligente. Quando si elimina una tabella, l'app offre di eliminare opzionalmente anche il file gemello nella cartella Download.
+- **Condivisione Sicura:** Le tabelle personalizzate sono condivise come file `.ctb` tramite un FileProvider sicuro, compatibile con tutte le moderne app di messaggistica ed email.
 
-## 2. Sistema Tabelle Preferite
-- **Tabelle Appuntate:** Aggiunta la preferenza "Tabelle Preferite". Le tabelle selezionate appariranno sempre in cima alle liste di selezione (Letteraria, Informatica e Cambio al volo).
-- **Indicatori Visuali:** Le tabelle preferite sono chiaramente contrassegnate da una stella (**★**) in tutti i menu di selezione.
-- **Ordinamento Integrato:** La logica di ordinamento in `PreferenceIME` ora dà priorità ai preferiti mantenendo l'ordine alfabetico per il resto della lista.
+## 2. Creatore Tabelle Professionale (Esplosione Regole)
+- **Esplosione delle Regole (Importa tutto):** Una nuova funzione "Importa tutte le regole" permette di "smontare" qualsiasi tabella di sistema (es. Italiano Grado 1). L'app scansiona ricorsivamente tutti gli include per estrarre l'alfabeto completo, la punteggiatura e i numeri direttamente nell'editor.
+- **Parser Ricorsivo Intelligente:** Il motore segue tutti gli include della libreria ma filtra automaticamente le regole tecniche di infrastruttura (come i pattern Braille Unicode), restituendo una tabella pulita, leggibile e interamente modificabile.
+- **Tabelle Autonome:** Le tabelle create tramite "Esplosione" sono interamente indipendenti, non dipendono più dai file di sistema e funzioneranno perfettamente anche se trasferite su altri dispositivi.
 
-## 3. Perfezionamento Tabelle Globali (52 Lingue Core)
-- **Allineamento Google:** Espanso l'elenco delle lingue "Core" a **52**, eguagliando il set ufficiale di Google BrailleBack. Aggiunto il supporto per **Afrikaans, Curdo, Gallese, Punjabi e Sindhi**.
-- **Mappature Manuali:** Implementate regole manuali per lingue con nomi file Liblouis incoerenti (es. Punjabi `pa` -> `pu`, Sindhi `sd` -> `si`) per garantire la massima affidabilità.
-- **Russo Corretto:** Corretta la mappatura del Russo Grado 1 verso `ru-litbrl.ctb`, garantendo il Braille letterario standard con supporto al segnanumero (#3456).
-- **Supporto Multi-Grado:** La lista ufficiale ora include automaticamente tutti i gradi disponibili (1, 2 e 3) per ogni lingua core.
+## 3. Sistema di Ricerca di Precisione
+- **Barra di Ricerca Intelligente:** Aggiunta una barra di ricerca "chirurgica" nel Creatore Tabelle. Filtra dinamicamente le regole in base all'intento dell'utente:
+    - **Carattere Singolo:** Trova la mappatura esatta per quel carattere (niente più risultati generici).
+    - **Query Numeriche:** Cerca esclusivamente tra le combinazioni di punti Braille (es. cercando "123" trova solo la 'l').
+    - **Lettere Multiple:** Cerca in tutta la descrizione della regola.
+- **Feedback in Tempo Reale:** Un'etichetta di riepilogo fornisce feedback visivo e vocale (TalkBack) istantaneo sul numero di risultati trovati.
+- **Logica di Caricamento Automatico:** Se una ricerca produce un solo risultato, l'app lo carica automaticamente nei campi di modifica per una personalizzazione istantanea.
 
-## 4. Euristiche Avanzate e Deduplicazione
-- **Analisi Affinata:** Migliorato lo script `analyze_table` per distinguere accuratamente tra tabelle a 6 e 8 punti, dando priorità ai set di caratteri primari rispetto alle tabelle di visualizzazione secondarie.
-- **Rilevamento Gradi Intelligente:** Aggiornata la logica di rilevamento che ora richiede l'opcode `contraction` per il Grado 2, evitando falsi positivi nelle tabelle di Grado 1 che usano `word` per i simboli (come Italiano e Francese).
-- **Eliminazione Duplicati:** Risolto un bug che causava la comparsa doppia delle lingue mappate manualmente nella lista di selezione.
+## 4. Integrazione Esterna Semplificata
+- **Sincronizzazione Cartella Download:** L'app ora monitora automaticamente la cartella `Download/soft-braille`. Qualsiasi file `.ctb` o `.utb` copiato lì manualmente apparirà nel Gestore Tabelle con l'etichetta `[Download]`.
+- **Importazione con un Tocco:** Toccare un file esterno lo importa automaticamente nella memoria interna sicura dell'app e apre immediatamente l'editor per la verifica.

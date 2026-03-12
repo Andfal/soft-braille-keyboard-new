@@ -240,8 +240,6 @@ public class PreferenceIME extends PreferenceActivity {
             ListPreference literaryBraille = (ListPreference) findPreference(getString(R.string.pref_braille_literary_table_key));
             MultiSelectListPreference switchPref = (MultiSelectListPreference) findPreference(getActivity()
                     .getString(R.string.pref_switch_tables_key));
-            MultiSelectListPreference favoritePref = (MultiSelectListPreference) findPreference(getActivity()
-                    .getString(R.string.pref_favorite_tables_key));
 
             List<TableInfo> tables = null;
             if (status == BrailleParser.STATUS_OK || status == BrailleParser.STATUS_TABLE_ERROR) {
@@ -253,15 +251,11 @@ public class PreferenceIME extends PreferenceActivity {
                 return;
             }
 
-            android.util.Log.i("PreferenceIME", "Populating switchPref and favoritePref with " + tables.size() + " tables");
+            android.util.Log.i("PreferenceIME", "Populating switchPref with " + tables.size() + " tables");
             populateWithTables(tables, entries, entryValues, true, null);
             if (switchPref != null) {
                 switchPref.setEntries(entries.toArray(new String[entries.size()]));
                 switchPref.setEntryValues(entryValues.toArray(new String[entryValues.size()]));
-            }
-            if (favoritePref != null) {
-                favoritePref.setEntries(entries.toArray(new String[entries.size()]));
-                favoritePref.setEntryValues(entryValues.toArray(new String[entryValues.size()]));
             }
 
             resetLists(entries, entryValues);
@@ -310,26 +304,7 @@ public class PreferenceIME extends PreferenceActivity {
             Context context = getActivity();
             if (context == null) return;
 
-            java.util.Set<String> favorites = null;
-            android.content.SharedPreferences prefs = android.preference.PreferenceManager.getDefaultSharedPreferences(context);
-            favorites = prefs.getStringSet(context.getString(R.string.pref_favorite_tables_key), null);
-
-            List<TableInfo> sortedTables = new ArrayList<TableInfo>(tables);
-            if (favorites != null && !favorites.isEmpty()) {
-                final java.util.Set<String> finalFavorites = favorites;
-                java.util.Collections.sort(sortedTables, new java.util.Comparator<TableInfo>() {
-                    @Override
-                    public int compare(TableInfo t1, TableInfo t2) {
-                        boolean isFav1 = finalFavorites.contains(t1.getId());
-                        boolean isFav2 = finalFavorites.contains(t2.getId());
-                        if (isFav1 && !isFav2) return -1;
-                        if (!isFav1 && isFav2) return 1;
-                        return 0; // Maintain original relative order
-                    }
-                });
-            }
-
-            for (TableInfo table : sortedTables) {
+            for (TableInfo table : tables) {
                 try {
                     String text = "";
                     if (table.getId().startsWith("custom:")) {
@@ -342,10 +317,6 @@ public class PreferenceIME extends PreferenceActivity {
                         if (country != null && !country.isEmpty()) {
                             text += " (" + country + ")";
                         }
-                    }
-
-                    if (favorites != null && favorites.contains(table.getId())) {
-                        text = "★ " + text;
                     }
 
                     if (verbose) {
