@@ -478,6 +478,16 @@ public class ActionHandler {
             }
             break;
         case AUTOCAPS_TOGGLE:
+        case HOLD_ONE_DOWN:
+            CharSequence text = listener.getAllText().text;
+            if (text != null) {
+                message = String.format(context.getString(R.string.word_count),
+                        EditingUtilities.lineCount(text),
+                        EditingUtilities.wordCount(text),
+                        EditingUtilities.characterCount(text));
+            }
+            break;
+        case HOLD_ONE_UP:
             Options.switchBooleanPreference(context,
                     R.string.pref_auto_caps_key, Boolean.parseBoolean(context
                             .getString(R.string.pref_auto_caps_default)));
@@ -486,6 +496,15 @@ public class ActionHandler {
                             .getString(R.string.pref_auto_caps_default))) ? context
                     .getString(R.string.auto_caps_enabled) : context
                     .getString(R.string.auto_caps_disabled);
+            break;
+        case HOLD_ONE_RIGHT:
+            message = context
+                    .getString(listener.toggleMark() ? R.string.set_mark
+                            : R.string.unset_mark);
+            break;
+        case HOLD_ONE_LEFT:
+            message = context.getString(R.string.keyboard_shrink);
+            callback.onShrink();
             break;
         case HOLD_SIX_LEFT:
             moveLeft(context, Granularity.ALL);
@@ -522,26 +541,6 @@ public class ActionHandler {
             break;
         case HOLD_THREE_UP:
             doVoiceInput(context, fastDoubleSwipe);
-            break;
-        case HOLD_ONE_RIGHT:
-            message = context
-                    .getString(listener.toggleMark() ? R.string.set_mark
-                            : R.string.unset_mark);
-            break;
-        case HOLD_ONE_LEFT:
-            message = context.getString(R.string.keyboard_shrink);
-            callback.onShrink();
-            break;
-        case HOLD_ONE_DOWN:
-            CharSequence text = listener.getAllText().text;
-            if (text != null) {
-                message = String.format(context.getString(R.string.word_count),
-                        EditingUtilities.lineCount(text),
-                        EditingUtilities.wordCount(text),
-                        EditingUtilities.characterCount(text));
-            }
-            break;
-        case HOLD_ONE_UP:
             break;
         case HOLD_FOUR_LEFT:
             doSpellCheck(context, SpellChecker.Direction.LEFT, 0,

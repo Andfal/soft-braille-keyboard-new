@@ -114,7 +114,7 @@ public abstract class Pad {
             final int VALUE_HOLD_THREE_SIX_UP = 131520;
             final int VALUE_HOLD_ONE_FOUR_UP = 2055;
             final int VALUE_HOLD_ONE_FIVE_UP = 16391;
-            final int VALUE_HOLD_ONE_SIX_UP = 131078;
+            final int VALUE_HOLD_ONE_SIX_UP = 131079;
             final int VALUE_HOLD_ONE_FOUR_DOWN = 1543;
             final int VALUE_HOLD_ONE_FIVE_DOWN = 12295;
             final int VALUE_HOLD_ONE_SIX_DOWN = 98311;
