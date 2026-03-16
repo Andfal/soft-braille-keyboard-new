@@ -327,7 +327,6 @@ public class ActionHandler {
             considerPassword = true;
             break;
         case TWO_DOWN:
-        case TWO_FINGERS_DOWN:
             KeyboardEcho echo = KeyboardEcho.valueOf(Integer.parseInt(Options
                     .getStringPreference(context,
                             R.string.pref_echo_feedback_key,
@@ -337,9 +336,11 @@ public class ActionHandler {
                     R.string.pref_echo_feedback_key, echo.getValue());
             message = context.getString(echo.resource);
             break;
-        case DOTS_FOUR_SIX_RIGHT:
+        case TWO_FINGERS_DOWN:
             message = context.getString(R.string.closing_keyboard);
             listener.closeKeyboard();
+            break;
+        case DOTS_FOUR_SIX_RIGHT:
             break;
         case THREE_LEFT:
             moveLeft(context, Granularity.LINE);
