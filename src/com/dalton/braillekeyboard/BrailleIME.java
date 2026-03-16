@@ -317,11 +317,38 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     public boolean deleteSelection() {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return false;
-        int cursor = !selectAll ? getCursor() : 0;
-        int[] positions = getSelectionBoundaries(cursor);
-        if (positions == null) return false;
-        setSelection(positions[1], positions[1]);
-        return ic.deleteSurroundingText(positions[1] - positions[0], 0);
+        
+        // Recuperiamo la posizione del cursore. Usiamo this.cursor se impostato da un gesto recente.
+        int currentCursor = (this.cursor != -1) ? this.cursor : getCursor();
+        int[] positions = getSelectionBoundaries(currentCursor);
+        
+        // Se non c'è una selezione valida, usciamo.
+        if (positions == null || positions[0] == positions[1]) return false;
+
+        int start = positions[0];
+        int end = positions[1];
+
+        // Reset dello stato interno prima dell'operazione asincrona
+        mark = -1;
+        selectAll = false;
+        this.cursor = start; // Il cursore finale sarà all'inizio della zona eliminata
+
+        // Utilizziamo un batch edit per garantire la sequenzialità dei comandi su Android
+        ic.beginBatchEdit();
+        try {
+            finishComposingText(false);
+            
+            // 1. Spostiamo il cursore alla FINE della selezione.
+            // Questo garantisce che la cancellazione avvenga "all'indietro" (before),
+            // che è il metodo più supportato dalle app Android (rispetto alla cancellazione in avanti).
+            ic.setSelection(end, end);
+            
+            // 2. Cancelliamo i caratteri tra l'inizio e la fine.
+            ic.deleteSurroundingText(end - start, 0);
+        } finally {
+            ic.endBatchEdit();
+        }
+        return true;
     }
 
     @Override
@@ -339,7 +366,8 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public int getCursor() {
         ExtractedText et = getAllText();
-        if (et != null && et.startOffset + et.selectionStart == et.startOffset + et.selectionEnd) {
+        // Restituiamo il cursore solo se non c'è una selezione attiva (start == end)
+        if (et != null && et.selectionStart == et.selectionEnd) {
             cursor = et.startOffset + et.selectionStart;
         } else {
             cursor = -1;
@@ -358,18 +386,18 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
 
     @Override
     public boolean setCursorToStartOfSelection() {
-        int cursor = getCursor();
-        if (cursor == -1 || mark == -1) {
+        int currentCursor = getCursor();
+        if (currentCursor == -1 || mark == -1) {
             ExtractedText et = getAllText();
             if (et != null && mark != -1) {
-                cursor = Math.min(et.startOffset + et.selectionStart, mark);
+                currentCursor = Math.min(et.startOffset + et.selectionStart, mark);
             } else {
                 return false;
             }
         } else {
-            cursor = Math.min(cursor, mark);
+            currentCursor = Math.min(currentCursor, mark);
         }
-        return setSelection(cursor, cursor);
+        return setSelection(currentCursor, currentCursor);
     }
 
     @Override
@@ -501,23 +529,33 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
 
     private int[] getSelectionBoundaries(int cursor) {
         if (mark == -1) return null;
-        int[] array = null;
+        
         ExtractedText text = getAllText();
-        if (text != null && text.text != null) {
-            int currentCursor = cursor;
-            // Se c'è già una selezione (cursor == -1), recuperiamo la posizione reale da Android
-            if (currentCursor == -1) {
-                currentCursor = text.startOffset + text.selectionEnd;
-            }
-            
-            mark = mark > text.text.length() ? text.text.length() : mark;
-            array = new int[2];
-            array[0] = Math.min(currentCursor, mark);
-            array[1] = Math.max(currentCursor, mark);
-            
-            // Assicuriamoci che l'indice minimo non sia mai negativo (prevenzione disastro)
-            if (array[0] < 0) array[0] = 0;
+        if (text == null || text.text == null) return null;
+
+        int currentCursor = cursor;
+        // Se c'è già una selezione (cursor == -1), recuperiamo la posizione reale da Android
+        if (currentCursor == -1) {
+            currentCursor = text.startOffset + text.selectionEnd;
         }
+        
+        // Calcoliamo la lunghezza totale disponibile nel buffer
+        int bufferLength = text.startOffset + text.text.length();
+        
+        // Assicuriamoci che marcatore e cursore siano entro i limiti del documento
+        int effectiveMark = Math.max(0, Math.min(mark, bufferLength));
+        int effectiveCursor = Math.max(0, Math.min(currentCursor, bufferLength));
+
+        int[] array = new int[2];
+        array[0] = Math.min(effectiveCursor, effectiveMark);
+        array[1] = Math.max(effectiveCursor, effectiveMark);
+        
+        // LOGICA ORIGINALE (Inclusiva): Aggiungiamo +1 alla fine della selezione
+        // per includere il carattere su cui si trova il cursore.
+        if (array[1] < bufferLength) {
+            array[1]++;
+        }
+        
         return array;
     }
 
