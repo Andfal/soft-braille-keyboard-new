@@ -26,6 +26,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Vibrator;
 import android.util.Log;
 import android.util.SparseArray;
@@ -111,7 +112,7 @@ public class FeedbackController {
                 }
             }
         });
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
 
         mResourceIdToSoundMap.clear();
         mResourceIdToVibrationPatternMap.clear();

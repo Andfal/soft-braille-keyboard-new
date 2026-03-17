@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -157,7 +158,7 @@ public class IMESetupWizardActivity extends Activity {
       super.onResume();
       // Try to call showInputMethodPicker() without button click.
       // Need delay to ensure showInputMethodPicker() receives correct UID, else it fails.
-      Handler handler = new Handler();
+      Handler handler = new Handler(Looper.getMainLooper());
       handler.postDelayed(
           new Runnable() {
             @Override
@@ -222,7 +223,7 @@ public class IMESetupWizardActivity extends Activity {
     fragmentTransaction.commit();
   }
 
-  private final Handler handler = new Handler();
+  private final Handler handler = new Handler(Looper.getMainLooper());
 
   private final ContentObserver contentObserver =
       new ContentObserver(handler) {

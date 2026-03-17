@@ -28,6 +28,7 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.os.Vibrator;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -718,11 +719,11 @@ public class BrailleView extends View {
                 R.string.pref_privacy_key,
                 Boolean.parseBoolean(getContext().getString(
                         R.string.pref_privacy_default)))) {
-            setBackgroundColor(getContext().getResources().getColor(
+            setBackgroundColor(ContextCompat.getColor(getContext(),
                     android.R.color.black));
             return true;
         } else {
-            setBackgroundColor(getContext().getResources().getColor(
+            setBackgroundColor(ContextCompat.getColor(getContext(),
                     android.R.color.transparent));
             return false;
         }
@@ -748,12 +749,12 @@ public class BrailleView extends View {
                         R.string.pref_auto_rotate_keyboard_default)));
         displayParams = new DisplayParams(strokeWidth, textSize, radius,
                 autoRotate);
-        paint.setColor(getContext().getResources().getColor(
+        paint.setColor(ContextCompat.getColor(getContext(),
                 android.R.color.black));
         paint.setTextSize(displayParams.textSize);
         paint.setAntiAlias(true);
         paint.setTextAlign(Paint.Align.CENTER);
-        circlePaint.setColor(getContext().getResources().getColor(
+        circlePaint.setColor(ContextCompat.getColor(getContext(),
                 android.R.color.black));
         circlePaint.setAntiAlias(true);
         circlePaint.setStyle(Style.STROKE);

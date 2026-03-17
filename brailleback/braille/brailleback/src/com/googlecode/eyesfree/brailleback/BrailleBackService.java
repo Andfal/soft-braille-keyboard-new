@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
@@ -94,7 +95,7 @@ public class BrailleBackService
 
   /** {@link Handler} for executing messages on the service main thread. */
   private final Handler handler =
-      new Handler() {
+      new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message message) {
           switch (message.what) {

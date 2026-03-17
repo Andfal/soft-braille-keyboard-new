@@ -297,7 +297,8 @@ public class BrailleParser {
             }
         }
 
-        // Compare tables by locale in alphabetical order.
+        // Compare tables by locale in alphabetical order, prioritizing system language.
+        final String sysLanguage = Locale.getDefault().getLanguage();
         Comparator<TableInfo> comparator = new Comparator<TableInfo>() {
             @Override
             public int compare(TableInfo o1, TableInfo o2) {
@@ -305,6 +306,15 @@ public class BrailleParser {
                 Locale l1 = o1.getLocale();
                 Locale l2 = o2.getLocale();
                 if (l1 == null || l2 == null) return 0;
+                
+                boolean o1IsSystemLang = l1.getLanguage().equals(sysLanguage);
+                boolean o2IsSystemLang = l2.getLanguage().equals(sysLanguage);
+                
+                if (o1IsSystemLang && !o2IsSystemLang) {
+                    return -1;
+                } else if (!o1IsSystemLang && o2IsSystemLang) {
+                    return 1;
+                }
                 
                 String table1 = l1.getDisplayLanguage() + " "
                         + l1.getDisplayCountry().trim();
