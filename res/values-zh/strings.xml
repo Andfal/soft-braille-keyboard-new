@@ -2,11 +2,11 @@
 <resources>
     <!-- User interface strings go below here -->
     <string name="action_settings">設定</string>
-    <string name="app_name">軟點點字鍵盤</string>
+    <string name="app_name">SBK Modern</string>
     <string name="auto_caps_disabled">不自動大寫</string>
     <string name="auto_caps_enabled">自動大寫</string>
     <string name="blank">空白</string>
-    <string name="braille_ime">軟點點字鍵盤</string>
+    <string name="braille_ime">SBK Modern</string>
     <string name="button_choose_default_keyboard">設定軟點為預設鍵盤</string>
     <string name="button_keyboard_settings">啟用軟點點字鍵盤</string>
     <string name="button_more_info">閱讀快速入門指引</string>
@@ -113,7 +113,7 @@
     <string name="select_all">全選</string>
     <string name="selected_all">全部文字都被選取</string>
     <string name="set_mark">標記設定</string>
-    <string name="settings_name">軟點設定</string>
+    <string name="settings_name">SBK Modern Settings</string>
     <string name="show_input_switcher">顯示輸入切換器</string>
     <string name="show_settings">顯示軟點設定</string>
     <string name="space">空格</string>

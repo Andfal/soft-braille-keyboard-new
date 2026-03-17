@@ -60,13 +60,13 @@ jboolean
 Java_com_googlecode_eyesfree_braille_service_translate_LibLouisWrapper_checkTableNative
 (JNIEnv* env, jclass clazz, jstring tableName) {
   jboolean ret = JNI_FALSE;
-  const jbyte *tableNameUtf8 = (*env)->GetStringUTFChars(env, tableName, NULL);
+  const char *tableNameUtf8 = (const char *)(*env)->GetStringUTFChars(env, tableName, NULL);
   if (lou_getTable(tableNameUtf8) == NULL) {
     goto out;
   }
   ret = JNI_TRUE;
  out:
-  (*env)->ReleaseStringUTFChars(env, tableName, tableNameUtf8);
+  (*env)->ReleaseStringUTFChars(env, tableName, (const jbyte *)tableNameUtf8);
   return ret;
 }
 
@@ -76,7 +76,7 @@ Java_com_googlecode_eyesfree_braille_service_translate_LibLouisWrapper_translate
  jint cursorPosition, jboolean computerBrailleAtCursor) {
   jobject ret = NULL;
   const jchar* textUtf16 = (*env)->GetStringChars(env, text, NULL);
-  const jbyte* tableNameUtf8 = (*env)->GetStringUTFChars(env, tableName, NULL);
+  const char *tableNameUtf8 = (const char *)(*env)->GetStringUTFChars(env, tableName, NULL);
 
   int inlen = (*env)->GetStringLength(env, text);
   int* outputpos = malloc(sizeof(int) * inlen); // Maps char -> cell pos.
@@ -175,7 +175,7 @@ Java_com_googlecode_eyesfree_braille_service_translate_LibLouisWrapper_translate
   free(inputpos);
   free(outputpos);
   (*env)->ReleaseStringChars(env, text, textUtf16);
-  (*env)->ReleaseStringUTFChars(env, tableName, tableNameUtf8);
+  (*env)->ReleaseStringUTFChars(env, tableName, (const jbyte *)tableNameUtf8);
   return ret;
 }
 
@@ -183,7 +183,7 @@ jstring
 Java_com_googlecode_eyesfree_braille_service_translate_LibLouisWrapper_backTranslateNative
 (JNIEnv* env, jclass clazz, jbyteArray cells, jstring tableName) {
   jstring ret = NULL;
-  const jbyte* tableNameUtf8 = (*env)->GetStringUTFChars(env, tableName, NULL);
+  const char *tableNameUtf8 = (const char *)(*env)->GetStringUTFChars(env, tableName, NULL);
   if (!tableNameUtf8) {
     goto out;
   }
@@ -246,7 +246,7 @@ Java_com_googlecode_eyesfree_braille_service_translate_LibLouisWrapper_backTrans
  freebufs:
   free(inbuf);
   free(outbuf);
-  (*env)->ReleaseStringUTFChars(env, tableName, tableNameUtf8);
+  (*env)->ReleaseStringUTFChars(env, tableName, (const jbyte *)tableNameUtf8);
  out:
   return ret;
 }
@@ -259,7 +259,7 @@ Java_com_googlecode_eyesfree_braille_service_translate_LibLouisWrapper_setTables
     LOGE("Braille table path too long");
     return;
   }
-  const jbyte* pathUtf8 = (*env)->GetStringUTFChars(env, path, NULL);
+  const char *pathUtf8 = (const char *)(*env)->GetStringUTFChars(env, path, NULL);
   if (!pathUtf8) {
     return;
   }
@@ -267,7 +267,7 @@ Java_com_googlecode_eyesfree_braille_service_translate_LibLouisWrapper_setTables
   // Cast needed to get rid of const.
   LOGV("Setting tables path to: %s", pathUtf8);
   lou_setDataPath((char*)pathUtf8);
-  (*env)->ReleaseStringUTFChars(env, path, pathUtf8);
+  (*env)->ReleaseStringUTFChars(env, path, (const jbyte *)pathUtf8);
 }
 
 void
@@ -302,3 +302,4 @@ getGlobalClassRef(JNIEnv* env, const char *name) {
   }
   return globalRef;
 }
+

@@ -16,7 +16,7 @@
 
 package com.googlecode.eyesfree.utils;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import java.util.IllegalFormatException;
 

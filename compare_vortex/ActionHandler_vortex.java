@@ -26,17 +26,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.inputmethodservice.Keyboard;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.view.inputmethod.InputMethodManager;
 
-import com.dalton.braillekeyboard.EditingUtilities.Word;
-import com.dalton.braillekeyboard.EmojiDictionary.EmojiEntry;
-import com.dalton.braillekeyboard.Options.KeyboardEcho;
+import com.dalton.braillekeyboard.modern.EditingUtilities.Word;
+import com.dalton.braillekeyboard.modern.EmojiDictionary.EmojiEntry;
+import com.dalton.braillekeyboard.modern.Options.KeyboardEcho;
 
-import com.dalton.braillekeyboard.Options.KeyboardFeedback;
-import com.dalton.braillekeyboard.Pad.Swipe;
-import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
-import com.dalton.braillekeyboard.SpellChecker.Suggestion;
+import com.dalton.braillekeyboard.modern.Options.KeyboardFeedback;
+import com.dalton.braillekeyboard.modern.Pad.Swipe;
+import com.dalton.braillekeyboard.modern.SpellChecker.SpellingSuggestionsReadyListener;
+import com.dalton.braillekeyboard.modern.SpellChecker.Suggestion;
 
 /**
  * ActionHandler handles actions from a View or other interface and performs the
@@ -327,6 +327,7 @@ public class ActionHandler {
             considerPassword = true;
             break;
         case TWO_DOWN:
+        case TWO_FINGERS_DOWN:
             KeyboardEcho echo = KeyboardEcho.valueOf(Integer.parseInt(Options
                     .getStringPreference(context,
                             R.string.pref_echo_feedback_key,
@@ -336,11 +337,9 @@ public class ActionHandler {
                     R.string.pref_echo_feedback_key, echo.getValue());
             message = context.getString(echo.resource);
             break;
-        case TWO_FINGERS_DOWN:
+        case DOTS_FOUR_SIX_RIGHT:
             message = context.getString(R.string.closing_keyboard);
             listener.closeKeyboard();
-            break;
-        case DOTS_FOUR_SIX_RIGHT:
             break;
         case THREE_LEFT:
             moveLeft(context, Granularity.LINE);
@@ -367,7 +366,7 @@ public class ActionHandler {
                     updateEmojiResults();
                     callback.onText("%s", getEmojiSummary(), false);
                 } else {
-                    callback.onText("%s", context.getString(R.string.emoji_search_query_empty), false);
+                    callback.onText("%s", "Emoji search query empty", false);
                 }
                 break;
             }
@@ -448,10 +447,10 @@ public class ActionHandler {
                     EmojiEntry entry = emojiResults.get(emojiIndex);
                     listener.commitText(entry.emoji, 1);
                     String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
-                    message = context.getString(R.string.emoji_inserted) + displayName;
+                    message = "Inserted " + displayName;
                     emojiMode = false;
                 } else {
-                    message = context.getString(R.string.emoji_no_to_insert);
+                    message = "No emoji to insert";
                 }
                 break;
             }
@@ -473,22 +472,12 @@ public class ActionHandler {
                 emojiIndex = 0;
                 Locale locale = listener.getLocale();
                 String langName = locale != null ? locale.getDisplayLanguage() : "English";
-                message = String.format(context.getString(R.string.emoji_search_mode_on), langName);
+                message = "Emoji search mode on (" + langName + ")";
             } else {
-                message = context.getString(R.string.emoji_search_mode_off);
+                message = "Emoji search mode off";
             }
             break;
         case AUTOCAPS_TOGGLE:
-        case HOLD_ONE_DOWN:
-            CharSequence text = listener.getAllText().text;
-            if (text != null) {
-                message = String.format(context.getString(R.string.word_count),
-                        EditingUtilities.lineCount(text),
-                        EditingUtilities.wordCount(text),
-                        EditingUtilities.characterCount(text));
-            }
-            break;
-        case HOLD_ONE_UP:
             Options.switchBooleanPreference(context,
                     R.string.pref_auto_caps_key, Boolean.parseBoolean(context
                             .getString(R.string.pref_auto_caps_default)));
@@ -497,15 +486,6 @@ public class ActionHandler {
                             .getString(R.string.pref_auto_caps_default))) ? context
                     .getString(R.string.auto_caps_enabled) : context
                     .getString(R.string.auto_caps_disabled);
-            break;
-        case HOLD_ONE_RIGHT:
-            message = context
-                    .getString(listener.toggleMark() ? R.string.set_mark
-                            : R.string.unset_mark);
-            break;
-        case HOLD_ONE_LEFT:
-            message = context.getString(R.string.keyboard_shrink);
-            callback.onShrink();
             break;
         case HOLD_SIX_LEFT:
             moveLeft(context, Granularity.ALL);
@@ -542,6 +522,26 @@ public class ActionHandler {
             break;
         case HOLD_THREE_UP:
             doVoiceInput(context, fastDoubleSwipe);
+            break;
+        case HOLD_ONE_RIGHT:
+            message = context
+                    .getString(listener.toggleMark() ? R.string.set_mark
+                            : R.string.unset_mark);
+            break;
+        case HOLD_ONE_LEFT:
+            message = context.getString(R.string.keyboard_shrink);
+            callback.onShrink();
+            break;
+        case HOLD_ONE_DOWN:
+            CharSequence text = listener.getAllText().text;
+            if (text != null) {
+                message = String.format(context.getString(R.string.word_count),
+                        EditingUtilities.lineCount(text),
+                        EditingUtilities.wordCount(text),
+                        EditingUtilities.characterCount(text));
+            }
+            break;
+        case HOLD_ONE_UP:
             break;
         case HOLD_FOUR_LEFT:
             doSpellCheck(context, SpellChecker.Direction.LEFT, 0,
@@ -1164,10 +1164,10 @@ public class ActionHandler {
 
     private String getEmojiSummary() {
         if (emojiResults.isEmpty()) {
-            return String.format(context.getString(R.string.emoji_no_results_query), emojiSearchQuery.toString());
+            return "No results for " + emojiSearchQuery.toString();
         }
         EmojiEntry entry = emojiResults.get(emojiIndex);
         String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
-        return String.format(context.getString(R.string.emoji_count_summary), displayName, emojiIndex + 1, emojiResults.size());
+        return String.format("%s, %d of %d", displayName, emojiIndex + 1, emojiResults.size());
     }
 }

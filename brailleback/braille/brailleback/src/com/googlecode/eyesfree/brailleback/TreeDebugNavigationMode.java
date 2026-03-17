@@ -23,7 +23,7 @@ import static com.googlecode.eyesfree.brailleback.BrailleBackService.DOT4;
 import static com.googlecode.eyesfree.brailleback.BrailleBackService.DOT5;
 
 import android.graphics.Rect;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;

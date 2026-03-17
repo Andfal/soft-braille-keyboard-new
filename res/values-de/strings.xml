@@ -2,11 +2,11 @@
 <resources>
     <!-- User interface strings go below here -->
     <string name="action_settings">Einstellungen</string>
-    <string name="app_name">Soft Braille Tastatur</string>	<!-- ANNI: Do you want to translate "keyboard"? -->
+    <string name="app_name">SBK Modern</string>	<!-- ANNI: Do you want to translate "keyboard"? -->
     <string name="auto_caps_disabled">Keine automatische Großschreibung</string>
     <string name="auto_caps_enabled">Automatische Großschreibung</string>
     <string name="blank">Leerzeichen</string>
-    <string name="braille_ime">Soft Braille Tastatur</string>
+    <string name="braille_ime">SBK Modern</string>
     <string name="button_choose_default_keyboard">Soft Braille Tastatur als Standard-Tastatur festlegen</string>
     <string name="button_keyboard_settings">Soft Braille Tastatur einschalten</string>
     <string name="button_more_info">Schnellstart-Hilfe lesen</string>
@@ -102,7 +102,7 @@
     <string name="select_all">Alles auswählen</string>
     <string name="selected_all">Alles ausgewählt</string>
     <string name="set_mark">Markierung gesetzt</string>
-    <string name="settings_name">Soft Braille Tastatur Einstellungen</string>
+    <string name="settings_name">SBK Modern Settings</string>
     <string name="show_input_switcher">Eingabe-Einstellungen werden angezeigt</string>
     <string name="show_settings">Soft Braille Tastatur Einstellungen werden angezeigt</string>
     <string name="space">Leerzeichen</string>

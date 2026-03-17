@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
-package com.dalton.braillekeyboard;
+package com.dalton.braillekeyboard.modern;
+
+import com.dalton.braillekeyboard.modern.R;
+import com.dalton.braillekeyboard.modern.Pad.Swipe;
+import com.dalton.braillekeyboard.modern.Pad.Coords;
+import com.dalton.braillekeyboard.modern.BrailleParser.BrailleType;
+import com.dalton.braillekeyboard.modern.Options.KeyboardFeedback;
+import com.dalton.braillekeyboard.modern.Options.KeyboardEcho;
+import com.dalton.braillekeyboard.modern.Options.KeyboardType;
+import com.dalton.braillekeyboard.modern.Options.OptionList;
+import com.dalton.braillekeyboard.modern.EditingUtilities.Word;
+import com.dalton.braillekeyboard.modern.EmojiDictionary.EmojiEntry;
+import com.dalton.braillekeyboard.modern.SpellChecker.Suggestion;
+import com.dalton.braillekeyboard.modern.SpellChecker.SpellingSuggestionsReadyListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +40,7 @@ import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.InputType;
 import android.view.KeyEvent;
 import android.view.View;
@@ -627,3 +640,5 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override public int switchBrailleType() { return brailleParser != null ? brailleParser.switchBrailleType(this).dots : -1; }
     @Override public String switchTable() { return brailleParser != null ? brailleParser.switchTable(this) : null; }
 }
+
+

@@ -256,8 +256,8 @@ usbSetFlowControl_CP2101 (UsbDevice *device, SerialFlowControl flow) {
     newSettings.dataFlowOptions &= ~USB_CP2101_FLOW_DFO_AUTO_RECEIVE;
   }
 
-  putLittleEndian32(&newSettings.handshakeOptions, newSettings.handshakeOptions);
-  putLittleEndian32(&newSettings.dataFlowOptions, newSettings.dataFlowOptions);
+  uint32_t ho = newSettings.handshakeOptions; putLittleEndian32(&ho, ho); newSettings.handshakeOptions = ho;
+  uint32_t dfo = newSettings.dataFlowOptions; putLittleEndian32(&dfo, dfo); newSettings.dataFlowOptions = dfo;
 
   if (flow) {
     logMessage(LOG_WARNING, "unsupported CP2101 flow control: %02X", flow);
@@ -403,3 +403,4 @@ const UsbSerialOperations usbSerialOperations_CP2101 = {
   .setRtsState = usbSetRtsState_CP2101,
   .enableAdapter = usbEnableAdapter_CP2101
 };
+

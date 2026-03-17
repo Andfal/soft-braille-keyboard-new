@@ -16,7 +16,7 @@
 
 package com.googlecode.eyesfree.compat.view.accessibility;
 
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import android.util.Log;
 
 import com.googlecode.eyesfree.compat.CompatUtils;

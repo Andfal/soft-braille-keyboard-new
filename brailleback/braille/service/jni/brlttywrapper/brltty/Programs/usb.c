@@ -229,9 +229,9 @@ usbMakeSetupPacket (
 ) {
   setup->bRequestType = direction | recipient | type;
   setup->bRequest = request;
-  putLittleEndian16(&setup->wValue, value);
-  putLittleEndian16(&setup->wIndex, index);
-  putLittleEndian16(&setup->wLength, length);
+  uint16_t v = value; putLittleEndian16(&v, value); setup->wValue = v;
+  uint16_t i = index; putLittleEndian16(&i, index); setup->wIndex = i;
+  uint16_t l = length; putLittleEndian16(&l, length); setup->wLength = l;
   usbLogSetupPacket(setup);
 }
 
@@ -1643,3 +1643,4 @@ int
 isUsbDeviceIdentifier (const char **identifier) {
   return hasQualifier(identifier, "usb");
 }
+

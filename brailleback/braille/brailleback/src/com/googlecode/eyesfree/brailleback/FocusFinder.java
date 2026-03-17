@@ -18,7 +18,7 @@ package com.googlecode.eyesfree.brailleback;
 
 import android.accessibilityservice.AccessibilityService;
 import android.content.Context;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 import com.googlecode.eyesfree.utils.AccessibilityNodeInfoUtils;

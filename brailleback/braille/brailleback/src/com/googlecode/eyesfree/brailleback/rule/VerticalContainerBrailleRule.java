@@ -17,7 +17,7 @@
 package com.googlecode.eyesfree.brailleback.rule;
 
 import android.content.Context;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import android.text.Editable;
 import android.widget.AbsListView;
 import android.widget.GridView;

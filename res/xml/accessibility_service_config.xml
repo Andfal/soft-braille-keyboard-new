@@ -5,5 +5,5 @@
     android:accessibilityFlags="flagDefault|flagIncludeNotImportantViews|flagRetrieveInteractiveWindows"
     android:canRetrieveWindowContent="true"
     android:canRequestTouchExplorationMode="true"
-    android:packageNames="com.dalton.braillekeyboard"
+    android:packageNames="com.dalton.braillekeyboard.modern"
     android:description="@string/accessibility_service_description" />

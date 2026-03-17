@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
-package com.dalton.braillekeyboard;
+package com.dalton.braillekeyboard.modern;
+
+import com.dalton.braillekeyboard.modern.R;
+import com.dalton.braillekeyboard.modern.Pad.Swipe;
+import com.dalton.braillekeyboard.modern.Pad.Coords;
+import com.dalton.braillekeyboard.modern.BrailleParser.BrailleType;
+import com.dalton.braillekeyboard.modern.Options.KeyboardFeedback;
+import com.dalton.braillekeyboard.modern.Options.KeyboardEcho;
+import com.dalton.braillekeyboard.modern.Options.KeyboardType;
+import com.dalton.braillekeyboard.modern.Options.OptionList;
+import com.dalton.braillekeyboard.modern.EditingUtilities.Word;
+import com.dalton.braillekeyboard.modern.EmojiDictionary.EmojiEntry;
+import com.dalton.braillekeyboard.modern.SpellChecker.Suggestion;
+import com.dalton.braillekeyboard.modern.SpellChecker.SpellingSuggestionsReadyListener;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,8 +36,6 @@ import java.util.List;
 import android.content.Context;
 import android.util.TypedValue;
 
-import com.dalton.braillekeyboard.Options.KeyboardType;
-import com.dalton.braillekeyboard.Pad.Coords;
 
 /**
  * Static methods to load a default pad from android settings or to calculate
@@ -200,3 +211,5 @@ public class PadUtilities {
         return pad;
     }
 }
+
+

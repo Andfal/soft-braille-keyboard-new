@@ -32,9 +32,9 @@
     <string name="word_correction_misspelled">%s misspelled</string>
     <string name="word_misspelled">Misspelled</string>
     <string name="action_settings">Cài Đặt</string>
-    <string name="app_name">Bàn Phím Chữ Braille</string>
+    <string name="app_name">SBK Modern</string>
     <string name="blank">Quãng Trắng</string>
-    <string name="braille_ime">Bàn Phím Chữ Braille</string>
+    <string name="braille_ime">SBK Modern</string>
     <string name="button_choose_default_keyboard">Chọn Bàn Phím Chữ Braille Là Bàn Phím Mặc Định</string>
     <string name="button_keyboard_settings">Bật bàn phím chữ Braille</string>
     <string name="button_more_info">Xem Phần Hướng Dẫn Nhanh</string>
@@ -126,7 +126,7 @@
     <string name="select_all">Chọn tất cả</string>
     <string name="selected_all">Đã chọn tất cả</string>
     <string name="set_mark">Đã đánh dấu</string>
-    <string name="settings_name">Cài đặt bàn phím chữ Braille</string>
+    <string name="settings_name">SBK Modern Settings</string>
     <string name="show_input_switcher">Hiện chuyển đổi nhập liệu</string>
     <string name="show_settings">Hiện Cài đặt bàn phím chữ Braille</string>
     <string name="space">Quãng trắng</string>

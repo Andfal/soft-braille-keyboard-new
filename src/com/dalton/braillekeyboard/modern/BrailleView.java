@@ -14,7 +14,20 @@
  * limitations under the License.
  */
 
-package com.dalton.braillekeyboard;
+package com.dalton.braillekeyboard.modern;
+
+import com.dalton.braillekeyboard.modern.R;
+import com.dalton.braillekeyboard.modern.Pad.Swipe;
+import com.dalton.braillekeyboard.modern.Pad.Coords;
+import com.dalton.braillekeyboard.modern.BrailleParser.BrailleType;
+import com.dalton.braillekeyboard.modern.Options.KeyboardFeedback;
+import com.dalton.braillekeyboard.modern.Options.KeyboardEcho;
+import com.dalton.braillekeyboard.modern.Options.KeyboardType;
+import com.dalton.braillekeyboard.modern.Options.OptionList;
+import com.dalton.braillekeyboard.modern.EditingUtilities.Word;
+import com.dalton.braillekeyboard.modern.EmojiDictionary.EmojiEntry;
+import com.dalton.braillekeyboard.modern.SpellChecker.Suggestion;
+import com.dalton.braillekeyboard.modern.SpellChecker.SpellingSuggestionsReadyListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +41,8 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.os.Vibrator;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MotionEventCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -38,9 +51,6 @@ import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 
-import com.dalton.braillekeyboard.Options.KeyboardFeedback;
-import com.dalton.braillekeyboard.Pad.Coords;
-import com.dalton.braillekeyboard.Pad.Swipe;
 
 /**
  * This View facilitates displaying a Braille keyboard to the user on the entire
@@ -797,3 +807,5 @@ public class BrailleView extends View {
         }
     }
 }
+
+

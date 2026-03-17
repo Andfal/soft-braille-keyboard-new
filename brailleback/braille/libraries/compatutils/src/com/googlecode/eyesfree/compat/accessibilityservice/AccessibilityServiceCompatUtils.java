@@ -18,7 +18,7 @@ package com.googlecode.eyesfree.compat.accessibilityservice;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 import com.googlecode.eyesfree.compat.CompatUtils;
 

@@ -104,11 +104,11 @@
 
     <!-- User interface strings go below here -->
     <string name="action_settings">Settings</string>
-    <string name="app_name">Soft Braille Keyboard</string>
+    <string name="app_name">SBK Modern</string>
     <string name="auto_caps_disabled">No auto-capitalisation</string>
     <string name="auto_caps_enabled">Auto-capitalisation</string>
     <string name="blank">Blank</string>
-    <string name="braille_ime">Soft Braille Keyboard</string>
+    <string name="braille_ime">SBK Modern</string>
     <string name="button_choose_default_keyboard">Set Soft Braille Keyboard as the default keyboard</string>
     <string name="button_keyboard_settings">Enable Soft Braille Keyboard</string>
     <string name="button_more_info">Read the quick start guide</string>
@@ -230,7 +230,7 @@
     <string name="select_all">Select all</string>
     <string name="selected_all">All text selected</string>
     <string name="set_mark">Mark set</string>
-    <string name="settings_name">Soft Braille Keyboard Settings</string>
+    <string name="settings_name">SBK Modern Settings</string>
     <string name="show_input_switcher">Showing the input switcher</string>
     <string name="show_settings">Showing soft braille keyboard settings</string>
     <string name="space">Space</string>
@@ -464,7 +464,7 @@
     <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
 
     <!-- Build stability and features keys -->
-    <string name="accessibility_service_label">Soft Braille Keyboard Accessibility</string>
+    <string name="accessibility_service_label">SBK Modern Service</string>
     <string name="accessibility_service_description">Allows the Soft Braille keyboard to work correctly when TalkBack is active by creating an area where touches are not intercepted by the screen reader.</string>
     <string name="label_locale_short">Language</string>
     <string name="label_base_table_short">Inherit from</string>

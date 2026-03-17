@@ -1,3 +1,5 @@
+#define _GNU_SOURCE
+#include <string.h>
 /*
  * BRLTTY - A background process providing access to the console screen (when in
  *          text mode) for a blind person using a refreshable braille display.
@@ -338,3 +340,4 @@ getJavaLocaleName (void) {
 void
 initializeSystemObject (void) {
 }
+

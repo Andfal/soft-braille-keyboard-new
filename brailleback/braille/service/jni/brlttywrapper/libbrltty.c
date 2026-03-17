@@ -24,6 +24,7 @@
 #include "prologue.h"  // NOLINT Must include first
 
 #include "libbrltty.h"
+#include <string.h>
 
 #include "async_wait.h"
 #include "brl_cmds.h"
@@ -341,7 +342,7 @@ compileKeys(const char *tablesDir) {
     brailleDisplay.keyTable = compileKeyTable(path,
                                               brailleDisplay.keyNames);
     if (brailleDisplay.keyTable != NULL) {
-      setLogKeyEventsFlag(brailleDisplay.keyTable, "");
+      setLogKeyEventsFlag(brailleDisplay.keyTable, (const unsigned char *)"");
     } else {
       logMessage(LOG_ERR, "Couldn't compile key table %s", path);
     }
@@ -472,3 +473,4 @@ findKeyName(const KeyTable *keyTable, const KeyValue *value) {
     return NULL;
   }
 }
+

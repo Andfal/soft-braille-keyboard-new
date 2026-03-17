@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "bluetooth_android.h"
 #include "libbrltty.h"
 
@@ -289,7 +290,7 @@ Java_com_googlecode_eyesfree_braille_service_display_BrlttyWrapper_writeWindowNa
   if (!bytes) {
     goto out;
   }
-  if (!brltty_writeWindow(bytes, patternLen)) {
+  if (!brltty_writeWindow((unsigned char *)bytes, patternLen)) {
     goto releasebytes;
   }
   ret = JNI_TRUE;
@@ -729,3 +730,4 @@ reportKeyBinding(int command, int keyNameCount, const char* keyNames[],
   lkd->bindings[lkd->bindingsSize++] = binding;
   return 1;
 }
+

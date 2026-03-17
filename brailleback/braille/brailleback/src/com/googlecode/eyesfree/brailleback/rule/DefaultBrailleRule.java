@@ -18,7 +18,7 @@ package com.googlecode.eyesfree.brailleback.rule;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.widget.AbsSeekBar;

@@ -130,7 +130,7 @@ usbSetLineProperties_CDC_ACM (UsbDevice *device, unsigned int baud, unsigned int
   USB_CDC_ACM_LineCoding lineCoding;
   memset(&lineCoding, 0, sizeof(lineCoding));
 
-  putLittleEndian32(&lineCoding.dwDTERate, baud);
+  uint32_t b = baud; putLittleEndian32(&b, b); lineCoding.dwDTERate = b;
 
   switch (dataBits) {
     case  5:
@@ -335,3 +335,4 @@ const UsbSerialOperations usbSerialOperations_CDC_ACM = {
   .enableAdapter = usbEnableAdapter_CDC_ACM,
   .disableAdapter = usbDisableAdapter_CDC_ACM
 };
+

@@ -16,7 +16,7 @@
 
 package com.googlecode.eyesfree.brailleback;
 
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 
 /**
  * Keeps track of the self-braille service and provides a means for querying

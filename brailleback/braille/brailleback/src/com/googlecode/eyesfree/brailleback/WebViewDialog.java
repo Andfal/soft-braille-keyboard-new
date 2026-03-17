@@ -21,7 +21,7 @@ package com.googlecode.eyesfree.brailleback;
  import android.content.Context;
  import android.content.Intent;
  import android.os.Bundle;
- import android.support.v4.app.FragmentActivity;
+ import androidx.fragment.app.FragmentActivity;
  import android.webkit.WebView;
 /**
  * Simple {@link DialogFragment} showing a {@link WebView}, using arguments

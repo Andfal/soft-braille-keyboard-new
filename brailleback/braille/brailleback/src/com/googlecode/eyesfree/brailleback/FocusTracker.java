@@ -21,7 +21,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import com.googlecode.eyesfree.braille.display.Display;
 import com.googlecode.eyesfree.compat.accessibilityservice.AccessibilityServiceCompatUtils;
 import com.googlecode.eyesfree.utils.AccessibilityNodeInfoUtils;

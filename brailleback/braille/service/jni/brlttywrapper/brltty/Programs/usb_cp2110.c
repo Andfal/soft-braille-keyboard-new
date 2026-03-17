@@ -80,7 +80,7 @@ usbSetLineConfiguration_CP2110 (UsbDevice *device, unsigned int baud, unsigned i
   report.reportIdentifier = 0X50;
 
   if ((baud >= 300) && (baud <= 500000)) {
-    putBigEndian32(&report.baudRate, baud);
+    uint32_t b = baud; putBigEndian32(&b, b); report.baudRate = b;
   } else {
     logMessage(LOG_WARNING, "unsupported CP2110 baud: %u", baud);
     errno = EINVAL;
@@ -214,3 +214,4 @@ const UsbSerialOperations usbSerialOperations_CP2110 = {
   .inputFilter = usbInputFilter_CP2110,
   .writeData = usbWriteData_CP2110
 };
+

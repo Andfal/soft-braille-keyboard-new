@@ -1076,7 +1076,7 @@ brl_readPacket (BrailleDisplay *brl, void *buffer, size_t length) {
                "Input packet buffer too small:"
                " %"PRIsize
                " < %"PRIsize,
-               length, count);
+               (unsigned int)length, (unsigned int)count);
     count = length;
   }
 
@@ -1103,7 +1103,7 @@ brl_writePacket (BrailleDisplay *brl, const void *packet, size_t length) {
                    "output packet buffer larger than necessary:"
                    " %"PRIsize
                    " > %"PRIsize,
-                   length, size);
+                   (unsigned int)length, (unsigned int)size);
       }
 
       return writePacket(brl, bytes[0], bytes[1], bytes[2], bytes[3],
@@ -1116,7 +1116,7 @@ brl_writePacket (BrailleDisplay *brl, const void *packet, size_t length) {
              "output packet buffer too small:"
              " %"PRIsize
              " < %"PRIsize,
-             length, size);
+             (unsigned int)length, (unsigned int)size);
 
   errno = EIO;
   return -1;
@@ -1126,3 +1126,4 @@ static int
 brl_reset (BrailleDisplay *brl) {
   return 0;
 }
+

@@ -2,11 +2,11 @@
 <resources>
     <!-- User interface strings go below here -->
     <string name="action_settings">Ajustes</string>
-    <string name="app_name">Teclado Soft Braille Keyboard</string>
+    <string name="app_name">SBK Modern</string>
     <string name="auto_caps_disabled">Sin mayus automáticas</string>
     <string name="auto_caps_enabled">Con mayus automáticas</string>
     <string name="blank">En blanco</string>
-    <string name="braille_ime">Teclado Soft Braille Keyboard</string>
+    <string name="braille_ime">SBK Modern</string>
     <string name="button_choose_default_keyboard">Establecer Soft Braille Keyboard como el teclado actual</string>
     <string name="button_keyboard_settings">Habilitar Soft Braille Keyboard</string>
     <string name="button_more_info">Consultar la guía de inicio rápido</string>
@@ -113,7 +113,7 @@
     <string name="select_all">Seleccionar todo</string>
     <string name="selected_all">Todo el texto seleccionado</string>
     <string name="set_mark">Marca establecida</string>
-    <string name="settings_name">Ajustes de Soft Braille Keyboard</string>
+    <string name="settings_name">SBK Modern Settings</string>
     <string name="show_input_switcher">Mostrando el conmutador de entrada</string>
     <string name="show_settings">Mostrando los ajustes de soft braille keyboard</string>
     <string name="space">Espacio</string>

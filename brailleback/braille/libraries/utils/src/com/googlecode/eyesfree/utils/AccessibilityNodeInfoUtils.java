@@ -19,7 +19,7 @@ package com.googlecode.eyesfree.utils;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction;

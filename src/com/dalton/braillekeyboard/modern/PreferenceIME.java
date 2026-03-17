@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-package com.dalton.braillekeyboard;
+package com.dalton.braillekeyboard.modern;
+
+import com.dalton.braillekeyboard.modern.R;
+import com.dalton.braillekeyboard.modern.BrailleParser.BrailleType;
+import com.dalton.braillekeyboard.modern.Options.KeyboardFeedback;
+import com.dalton.braillekeyboard.modern.Options.KeyboardEcho;
+import com.dalton.braillekeyboard.modern.Options.OptionList;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,15 +45,16 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import android.net.Uri;
-import android.support.v4.content.FileProvider;
+import androidx.core.content.FileProvider;
 
-import com.dalton.braillekeyboard.BrailleParser.BrailleType;
-import com.dalton.braillekeyboard.Options.KeyboardEcho;
-import com.dalton.braillekeyboard.Options.KeyboardFeedback;
-import com.dalton.braillekeyboard.Options.OptionList;
+import com.dalton.braillekeyboard.modern.BrailleParser.BrailleType;
+import com.dalton.braillekeyboard.modern.Options.KeyboardEcho;
+import com.dalton.braillekeyboard.modern.Options.KeyboardFeedback;
+import com.dalton.braillekeyboard.modern.Options.OptionList;
 import com.googlecode.eyesfree.braille.translate.TableInfo;
 
 // TODO fix the keyboard echo / feedback prefs
+@SuppressWarnings("deprecation")
 public class PreferenceIME extends PreferenceActivity {
     @Override
     protected boolean isValidFragment(String fragmentName) {
@@ -395,3 +402,6 @@ public class PreferenceIME extends PreferenceActivity {
         }
     }
 }
+
+
+

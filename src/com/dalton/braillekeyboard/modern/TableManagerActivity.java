@@ -1,4 +1,17 @@
-package com.dalton.braillekeyboard;
+package com.dalton.braillekeyboard.modern;
+
+import com.dalton.braillekeyboard.modern.R;
+import com.dalton.braillekeyboard.modern.Pad.Swipe;
+import com.dalton.braillekeyboard.modern.Pad.Coords;
+import com.dalton.braillekeyboard.modern.BrailleParser.BrailleType;
+import com.dalton.braillekeyboard.modern.Options.KeyboardFeedback;
+import com.dalton.braillekeyboard.modern.Options.KeyboardEcho;
+import com.dalton.braillekeyboard.modern.Options.KeyboardType;
+import com.dalton.braillekeyboard.modern.Options.OptionList;
+import com.dalton.braillekeyboard.modern.EditingUtilities.Word;
+import com.dalton.braillekeyboard.modern.EmojiDictionary.EmojiEntry;
+import com.dalton.braillekeyboard.modern.SpellChecker.Suggestion;
+import com.dalton.braillekeyboard.modern.SpellChecker.SpellingSuggestionsReadyListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -186,7 +199,7 @@ public class TableManagerActivity extends Activity {
                 return;
             }
 
-            Uri contentUri = android.support.v4.content.FileProvider.getUriForFile(this,
+            Uri contentUri = androidx.core.content.FileProvider.getUriForFile(this,
                     getPackageName() + ".fileprovider", f);
 
             Intent intent = new Intent(Intent.ACTION_SEND);
@@ -334,7 +347,7 @@ public class TableManagerActivity extends Activity {
     private void showExportSystemTableDialog() {
         final com.googlecode.eyesfree.braille.service.translate.TableList tableList = new com.googlecode.eyesfree.braille.service.translate.TableList(this);
         final List<TableInfo> tables = new ArrayList<>(tableList.getTables());
-        boolean showExtended = com.dalton.braillekeyboard.Options.getBooleanPreference(this, R.string.pref_show_ext_tables_key, 
+        boolean showExtended = Options.getBooleanPreference(this, R.string.pref_show_ext_tables_key, 
                 Boolean.parseBoolean(getString(R.string.pref_show_ext_tables_default)));
 
         for (int i = tables.size() - 1; i >= 0; i--) {
@@ -438,3 +451,5 @@ public class TableManagerActivity extends Activity {
         return "custom_table.ctb";
     }
 }
+
+

@@ -643,7 +643,7 @@ parseQuery(const char *query) {
 	if (!unicodeRange) {
 		// default value of unicode-range is determined by CHARSIZE
 		static char value[5] = "";
-		if (!*value) sprintf(value, "ucs%ld", CHARSIZE);
+		if (!*value) sprintf(value, "ucs%u", (unsigned int)CHARSIZE);
 		FeatureWithImportance *f = memcpy(malloc(sizeof(FeatureWithImportance)),
 				(&(FeatureWithImportance){
 						feat_new(strdup("unicode-range"), strdup(value),
@@ -1183,3 +1183,4 @@ lou_listTables(void) {
 	list_free(tables);
 	return tablesArray;
 }
+

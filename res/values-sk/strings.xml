@@ -2,11 +2,11 @@
 <resources>
     <!-- User interface strings go below here -->
     <string name="action_settings">Nastavenia</string>
-    <string name="app_name">Soft Braille Keyboard</string>
+    <string name="app_name">SBK Modern</string>
     <string name="auto_caps_disabled">Automatické veľké písmená vypnuté</string>
     <string name="auto_caps_enabled">Automatické veľké písmená</string>
     <string name="blank">Prázdny</string>
-    <string name="braille_ime">Soft Braille Keyboard</string>
+    <string name="braille_ime">SBK Modern</string>
     <string name="button_choose_default_keyboard">Nastaviť Soft Braille Keyboard ako predvolenú metódu vstupu</string>
     <string name="button_keyboard_settings">Povoliť Soft Braille Keyboard</string>
     <string name="button_more_info">Prečítať príručku rýchleho spustenia</string>
@@ -113,7 +113,7 @@
     <string name="select_all">Vybrať všetko</string>
     <string name="selected_all">Vybratý celý text</string>
     <string name="set_mark">Značka nastavená</string>
-    <string name="settings_name">Nastavenia Soft Braille Keyboard</string>
+    <string name="settings_name">SBK Modern Settings</string>
     <string name="show_input_switcher">Zobrazený výber metódy vstupu</string>
     <string name="show_settings">Zobrazené nastavenia soft braille keyboard</string>
     <string name="space">Medzera</string>
