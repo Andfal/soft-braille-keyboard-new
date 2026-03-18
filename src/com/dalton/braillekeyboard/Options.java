@@ -16,6 +16,7 @@
 
 package com.dalton.braillekeyboard;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import android.content.Context;
@@ -163,7 +164,7 @@ public class Options {
         boolean pref = getBooleanPreference(context, resource, defaultValue);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(context.getString(resource), !pref);
-        editor.commit();
+        editor.apply();
         return !pref;
     }
 
@@ -174,7 +175,7 @@ public class Options {
         if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(context.getString(resource), value);
-        editor.commit();
+        editor.apply();
     }
 
     public static void writeStringPreference(Context context, int resource,
@@ -184,7 +185,7 @@ public class Options {
         if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(context.getString(resource), value);
-        editor.commit();
+        editor.apply();
     }
 
     public static Set<String> getStringSetPreference(Context context,
@@ -210,8 +211,8 @@ public class Options {
         SharedPreferences sharedPref = getSharedPreferences(context);
         if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putStringSet(context.getString(resource), value);
-        editor.commit();
+        editor.putStringSet(context.getString(resource), value != null ? new HashSet<String>(value) : null);
+        editor.apply();
     }
 
     public static void writeStringSetPreferenceStringKey(Context context, String key,
@@ -220,7 +221,7 @@ public class Options {
         SharedPreferences sharedPref = getSharedPreferences(context);
         if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putStringSet(key, value);
-        editor.commit();
+        editor.putStringSet(key, value != null ? new HashSet<String>(value) : null);
+        editor.apply();
     }
 }

@@ -1,3 +1,25 @@
+# Latest Updates - March 18, 2026 (v3)
+
+## 1. Multilingual Voice Dictation Sync
+- **Context-Aware Dictation:** Voice input now automatically uses the language of the active Braille table (e.g., Italian dictation for Italian table) regardless of system language settings.
+- **Improved Accuracy:** Reduced errors in multi-language workflows by passing the dynamic Locale directly to Google's Speech-to-Text engine.
+
+## 2. Calibration Reliability & Performance
+- **Atomic Saving:** Fixed a silent Android bug in SharedPreferences that could cause calibration data loss; we now force a new HashSet instance for every save operation.
+- **UI Responsiveness:** Switched from synchronous `commit()` to asynchronous `apply()` for all configuration changes, eliminating micro-lags during typing or calibration.
+
+---
+
+# Ultimi Aggiornamenti - 18 Marzo 2026 (v3)
+
+## 1. Dettatura Vocale Multilingue Sincronizzata
+- **Sincronizzazione Lingua:** L'input vocale ora utilizza automaticamente la lingua della tabella Braille attiva (es. dettatura in italiano per tabella italiana) indipendentemente dalla lingua di sistema di Android.
+- **Precisione Migliorata:** Ridotti gli errori nei flussi di lavoro multilingua passando il Locale dinamico direttamente al motore Speech-to-Text di Google.
+
+## 2. Affidabilità Calibrazione e Prestazioni
+- **Salvataggio Atomico:** Risolto un bug silenzioso di Android nelle SharedPreferences che poteva causare la perdita dei dati di calibrazione; ora forziamo una nuova istanza di HashSet per ogni salvataggio.
+- **Reattività UI:** Passaggio da `commit()` sincrono ad `apply()` asincrono per tutti i cambiamenti di configurazione, eliminando micro-lag durante la scrittura o la calibrazione.
+
 # Latest Updates - March 16, 2026 (v2)
 
 ## 1. Professional Selection & Deletion Fixes

@@ -1,3 +1,12 @@
+# Progetto: Soft Braille Keyboard (STABILE CLASSICA)
+
+## Identità e Vincoli
+- **Stato:** Versione NON refattorizzata (Struttura originale Eyes-Free).
+- **Compatibilità:** minSdkVersion 14 (Supporta Android 4.0+).
+- **Librerie:** Utilizza `android-support-v4` e strutture JAR classiche.
+- **Package Name:** `com.dalton.braillekeyboard` (NON MODIFICARE - Fondamentale per Jieshuo).
+- **Relazione:** Gemello funzionale del progetto `soft-braille-keyboard-modern`, ma con architettura legacy per massima compatibilità.
+
 # Gemini CLI Session Summary - March 10, 2026
 
 ## Accomplishments
@@ -47,3 +56,4 @@
 ## Future Recommendations
 - **Table Updates:** To update specific tables, copy the `.ctb` to `third_party/Liblouis/tables/` and run `scripts/update_translation_tables.py`. NEVER add ZIPs directly to the main app's `res/raw/`.
 - **JAVA_HOME:** Always use `C:\Program Files\Android\Android Studio\jbr` for builds on this machine.
+- **Apktool:** L'eseguibile si trova in `C:\Users\sergi\StudioProjects\soft-braille-keyboard\apktool.jar`. Per eseguirlo usare: `& 'C:\Program Files\Android\Android Studio\jbr\bin\java.exe' -jar apktool.jar`.

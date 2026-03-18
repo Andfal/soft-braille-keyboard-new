@@ -1008,7 +1008,7 @@ public class ActionHandler {
             }
         };
 
-        if (voiceInput.start(context, textReadyListener)) {
+        if (voiceInput.start(context, textReadyListener, listener.getLocale())) {
             callback.onShutup();
         } else {
             callback.onText("%s",
