@@ -1014,7 +1014,7 @@ public class ActionHandler {
             }
         };
 
-        if (voiceInput.start(context, textReadyListener)) {
+        if (voiceInput.start(context, textReadyListener, listener.getLocale())) {
             callback.onShutup();
         } else {
             callback.onText("%s",
@@ -1177,5 +1177,6 @@ public class ActionHandler {
         return String.format(context.getString(R.string.emoji_count_summary), displayName, emojiIndex + 1, emojiResults.size());
     }
 }
+
 
 

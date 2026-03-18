@@ -1,0 +1,306 @@
+{
+  "templateName": "Hindi (Bharati) Standard (6-dot)",
+  "description": "हिन्दी वर्णमाला (भारती ब्रेल) और सामान्य विराम चिह्न।",
+  "settings": {
+    "is8Dot": false,
+    "locale": "hi",
+    "scriptFileName": "hi-in-g1.utb",
+    "numSystem": 0
+  },
+  "mappings": [
+    {
+      "opcode": "lowercase",
+      "char": "अ",
+      "dots": "1",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "आ",
+      "dots": "345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "इ",
+      "dots": "24",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ई",
+      "dots": "35",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "उ",
+      "dots": "136",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ऊ",
+      "dots": "1256",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ए",
+      "dots": "15",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ऐ",
+      "dots": "34",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ओ",
+      "dots": "135",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "औ",
+      "dots": "246",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "क",
+      "dots": "13",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ख",
+      "dots": "46",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ग",
+      "dots": "1245",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "घ",
+      "dots": "126",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "च",
+      "dots": "14",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "छ",
+      "dots": "16",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ज",
+      "dots": "245",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "झ",
+      "dots": "356",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ट",
+      "dots": "23456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ठ",
+      "dots": "2456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ड",
+      "dots": "1246",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ढ",
+      "dots": "123456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "त",
+      "dots": "2345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "थ",
+      "dots": "1456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "द",
+      "dots": "145",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ध",
+      "dots": "2346",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "न",
+      "dots": "1345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "प",
+      "dots": "1234",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "फ",
+      "dots": "235",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ब",
+      "dots": "12",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "भ",
+      "dots": "45",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "म",
+      "dots": "134",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "य",
+      "dots": "13456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "र",
+      "dots": "1235",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ल",
+      "dots": "123",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "व",
+      "dots": "1236",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "स",
+      "dots": "234",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ह",
+      "dots": "125",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": ".",
+      "dots": "256",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": ",",
+      "dots": "2",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "numsign",
+      "char": "",
+      "dots": "3456",
+      "high": true,
+      "fixed": true
+    },
+    {
+      "opcode": "space",
+      "char": " ",
+      "dots": "0",
+      "high": true,
+      "fixed": true
+    }
+  ]
+}

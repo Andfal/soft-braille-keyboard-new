@@ -1,0 +1,292 @@
+{
+  "templateName": "Arabic Standard (6-dot)",
+  "description": "الأبجدية العربية، علامات التشكيل وعلامات الترقيم.",
+  "settings": {
+    "is8Dot": false,
+    "locale": "ar",
+    "scriptFileName": "ar-ar-g1.utb",
+    "numSystem": 0
+  },
+  "mappings": [
+    {
+      "opcode": "lowercase",
+      "char": "ا",
+      "dots": "1",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ب",
+      "dots": "12",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ت",
+      "dots": "2345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ث",
+      "dots": "1456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ج",
+      "dots": "245",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ح",
+      "dots": "156",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "خ",
+      "dots": "1346",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "د",
+      "dots": "145",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ذ",
+      "dots": "2346",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ر",
+      "dots": "1235",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ز",
+      "dots": "1356",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "س",
+      "dots": "234",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ش",
+      "dots": "146",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ص",
+      "dots": "12346",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ض",
+      "dots": "1246",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ط",
+      "dots": "23456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ظ",
+      "dots": "123456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ع",
+      "dots": "12356",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "غ",
+      "dots": "126",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ف",
+      "dots": "124",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ق",
+      "dots": "12345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ك",
+      "dots": "13",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ل",
+      "dots": "123",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "م",
+      "dots": "134",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ن",
+      "dots": "1345",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ه",
+      "dots": "125",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "و",
+      "dots": "2456",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ي",
+      "dots": "24",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ة",
+      "dots": "16",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ى",
+      "dots": "135",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "lowercase",
+      "char": "ء",
+      "dots": "3",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": ".",
+      "dots": "256",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": "،",
+      "dots": "2",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": "؛",
+      "dots": "23",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": ":",
+      "dots": "25",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": "!",
+      "dots": "235",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": "؟",
+      "dots": "236",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "punctuation",
+      "char": "-",
+      "dots": "36",
+      "high": false,
+      "fixed": false
+    },
+    {
+      "opcode": "numsign",
+      "char": "",
+      "dots": "3456",
+      "high": true,
+      "fixed": true
+    },
+    {
+      "opcode": "space",
+      "char": " ",
+      "dots": "0",
+      "high": true,
+      "fixed": true
+    }
+  ]
+}

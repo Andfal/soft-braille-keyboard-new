@@ -1,0 +1,15 @@
+# Manual Test - Old Structure (Patterns at the end)
+#+locale: en
+
+include unicode.dis
+
+# Advanced opcodes used BEFORE patterns are defined
+begcapsword 6-6
+prepunc ( 2356
+postpunc ) 2356
+
+lowercase a 1
+base uppercase A a
+
+# Foundational patterns at the very end
+include braille-patterns.cti

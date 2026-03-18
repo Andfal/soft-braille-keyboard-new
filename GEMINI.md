@@ -1,3 +1,12 @@
+﻿# Progetto: Soft Braille Keyboard (MODERNA REFATTORIZZATA)
+
+## Identità e Vincoli
+- **Stato:** Versione REFATTORIZZATA (Struttura Android Studio moderna).
+- **Compatibilità:** minSdkVersion 26 (Supporta Android 8.0+).
+- **Librerie:** Migrazione completa ad AndroidX e Gradle 8.3.2.
+- **Package Name:** com.dalton.braillekeyboard (NON MODIFICARE - Fondamentale per Jieshuo).
+- **Relazione:** Gemello funzionale del progetto stabile, ma con architettura pulita e aggiornata.
+
 # Gemini CLI Session Summary - March 10, 2026
 
 ## Accomplishments
@@ -50,3 +59,4 @@
 
 - **Android ADB path:** C:\Users\sergi\AppData\Local\Android\Sdk\platform-tools\adb.exe
 - **Apktool:** C:\Users\sergi\StudioProjects\soft-braille-keyboard\apktool.jar (Richiede Java)
+

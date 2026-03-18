@@ -1,0 +1,63 @@
+﻿# Piani Futuri - Soft Braille Keyboard Modern (Refattorizzata)
+Data: 18 Marzo 2026
+
+Questo documento elenca le migliorie e le implementazioni possibili grazie all'infrastruttura moderna (SDK 26+, AndroidX) che non sono praticabili nella versione stabile legacy.
+
+## 1. Feedback Aptico Avanzato (VibrationEffect)
+- Sfruttare l'API introdotta nell'SDK 26 per creare pattern di vibrazione con intensità variabile.
+- Implementare "click" secchi per i tasti standard e vibrazioni più marcate per i tasti funzione (Invio, Backspace).
+- Rendere la sensazione tattile più simile a una tastiera fisica.
+
+## 2. Gestione dello Stato (ViewModel & Lifecycle)
+- Migrare la logica di TableCreator e TableManager a ViewModel.
+- Garantire l'integrità dei dati durante la rotazione dello schermo o il cambio di configurazione senza hack legacy.
+
+## 3. Ottimizzazione Audio (AAudio / Oboe)
+- Ridurre la latenza del feedback WAV sfruttando le pipeline audio moderne di Android 8.0+.
+- Migliorare la reattività per i dattilografi braille più veloci.
+
+## 4. Interfaccia Material 3 (M3)
+- Modernizzare le impostazioni con componenti Material You.
+- Supporto ai colori dinamici del sistema.
+
+## 5. Integrazione Autofill
+- Permettere l'inserimento rapido di password e dati salvati direttamente dalla tastiera braille usando le API di riempimento automatico (SDK 26+).
+
+## 6. Sicurezza e Archiviazione (Scoped Storage)
+- Gestire i file delle tabelle (.ctb) in modo conforme alle policy moderne di Android, eliminando la necessità di permessi di archiviazione generici e pericolosi.
+
+
+## 7. Supporto per Dispositivi Pieghevoli (Foldables)
+- Sfruttare Jetpack WindowManager per rilevare la piega dello schermo.
+- Spostare automaticamente i punti braille per evitare la cerniera fisica, garantendo comfort tattile su dispositivi come i Galaxy Fold.
+
+## 8. Input Vocale On-Device (Privacy e Velocità)
+- Utilizzare i motori di riconoscimento vocale locali (SDK 26+) per una dettatura istantanea.
+- Eliminare la latenza di rete e garantire che la voce non lasci mai il dispositivo (Privacy Totale).
+
+## 9. Supporto Avanzato per Tastiere Esterne (HID/Bluetooth)
+- Sfruttare le API moderne per l'input fisico per migliorare la compatibilità con tastiere Perkins Bluetooth o display braille esterni.
+- Permettere una transizione fluida tra input touch e digitazione fisica.
+
+10. Testo Predittivo Intelligente (Machine Learning on-device)
+- Utilizzare modelli leggeri di Machine Learning per suggerire la parola successiva in base al contesto della frase.
+- Aumentare drasticamente la velocità di scrittura braille per gli utenti esperti attraverso predizioni semantiche.
+
+## 11. Migrazione da JSON a Room Database (AndroidX)
+- Sostituire il parsing dei file JSON con un database SQLite/Room per ricerche istantanee e minor consumo di RAM.
+- Permettere ricerche cross-language e gestione delle emoji preferite/recenti.
+
+## 12. Integrazione con Emoji Metadata (EmojiCompat)
+- Sfruttare le librerie Google per ottenere descrizioni TTS ufficiali e aggiornate automaticamente.
+- Supporto nativo alle nuove emoji rilasciate annualmente (Unicode) senza aggiornamenti manuali dei file asset.
+
+## --- IMPLEMENTAZIONI COMPLETATE ---
+### [COMPLETATO] Coordinate Percentuali (Resilienza Risoluzione)
+- Migrato il sistema di salvataggio da Pixel fissi a Percentuali dello schermo.
+- Aggiunto auto-rilevamento del formato per mantenere la compatibilità con le vecchie calibrazioni.
+- La calibrazione ora rimane valida anche al cambio di DPI, risoluzione o tra schermi di dispositivi pieghevoli.
+
+### [COMPLETATO] Ottimizzazione SharedPreferences
+- Sostituito commit() con apply() per evitare lag della UI.
+- Risolto bug putStringSet usando nuove istanze di HashSet per garantire il salvataggio dei dati.
+
