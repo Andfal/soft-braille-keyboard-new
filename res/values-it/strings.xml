@@ -365,7 +365,7 @@
 
     <!-- New strings added from current res/values/strings.xml -->
     <string name="accessibility_service_description">Consente alla tastiera Soft Braille di funzionare correttamente quando TalkBack è attivo creando un\'area in cui i tocchi non vengono intercettati dal lettore di schermo.</string>
-    <string name="accessibility_service_label">SBK Modern Service</string>
+    <string name="accessibility_service_label">Accessibilità Soft Braille Keyboard</string>
     <string name="action_record_audio_permission">ACTION_RECORD_AUDIO_PERMISSION</string>
     <string name="btn_add_selected">Aggiungi selezionati direttamente</string>
     <string name="btn_append_cell">+ Aggiungi Cella</string>
@@ -504,7 +504,7 @@
     <string name="trial_expired_message">Prova scaduta.</string>
     <string name="trial_expired_title">Prova Scaduta</string>
     <string name="txt_id_practice">TXT_PRACTICE</string>
-    <string name="accessibility_service_dialog_message">Per usare questa tastiera con TalkBack, devi abilitare \'Soft Braille Keyboard\' nelle impostazioni di Accessibilità. Questo permette alla tastiera di ricevere i tocchi quando TalkBack è attivo.</string>
+    <string name="accessibility_service_dialog_message">Per usare questa tastiera con TalkBack, devi abilitare \'Accessibilità Soft Braille Keyboard\' nelle impostazioni di Accessibilità. Questo permette alla tastiera di ricevere i tocchi quando TalkBack è attivo.</string>
     <string name="label_error_prefix">Errore: %s</string>
     <string name="btn_ok">OK</string>
 

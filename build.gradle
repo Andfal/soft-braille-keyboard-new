@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.dalton.braillekeyboard.modern'
+    namespace 'com.dalton.braillekeyboard'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.dalton.braillekeyboard.modern"
+        applicationId "com.dalton.braillekeyboard"
         minSdk 26
         targetSdk 34
         versionCode 57
@@ -27,7 +27,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    
+
     lint {
         abortOnError false
     }

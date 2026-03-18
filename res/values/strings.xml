@@ -464,7 +464,7 @@
     <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
 
     <!-- Build stability and features keys -->
-    <string name="accessibility_service_label">SBK Modern Service</string>
+    <string name="accessibility_service_label">Soft Braille Keyboard Accessibility</string>
     <string name="accessibility_service_description">Allows the Soft Braille keyboard to work correctly when TalkBack is active by creating an area where touches are not intercepted by the screen reader.</string>
     <string name="label_locale_short">Language</string>
     <string name="label_base_table_short">Inherit from</string>
@@ -514,7 +514,7 @@
     <string name="title_select_template">Select Template</string>
     <string name="msg_template_applied">Template applied successfully!</string>
     <string name="msg_confirm_template">Applying a template will clear current mappings. Continue?</string>
-    <string name="accessibility_service_dialog_message">To use this keyboard with TalkBack, you must enable \'Soft Braille Keyboard\' in Accessibility settings. This allows the keyboard to receive your touches while TalkBack is active.</string>
+    <string name="accessibility_service_dialog_message">To use this keyboard with TalkBack, you must enable \'Soft Braille Keyboard Accessibility\' in Accessibility settings. This allows the keyboard to receive your touches while TalkBack is active.</string>
     <string name="label_error_prefix">Error: %s</string>
     <string name="btn_ok">OK</string>
 

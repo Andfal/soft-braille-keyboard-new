@@ -47,3 +47,6 @@
 ## Future Recommendations
 - **Table Updates:** To update specific tables, copy the `.ctb` to `third_party/Liblouis/tables/` and run `scripts/update_translation_tables.py`. NEVER add ZIPs directly to the main app's `res/raw/`.
 - **JAVA_HOME:** Always use `C:\Program Files\Android\Android Studio\jbr` for builds on this machine.
+
+- **Android ADB path:** C:\Users\sergi\AppData\Local\Android\Sdk\platform-tools\adb.exe
+- **Apktool:** C:\Users\sergi\StudioProjects\soft-braille-keyboard\apktool.jar (Richiede Java)
