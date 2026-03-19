@@ -61,37 +61,31 @@ public class BrailleAccessibilityService extends AccessibilityService {
     public void updatePassthroughRegion(int x, int y, int width, int height) {
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             if (width > 0 && height > 0) {
-                // Request control dynamically
                 setTouchExplorationEnabled(true);
-                
                 Log.d(TAG, "Requesting passthrough: " + x + ", " + y + ", " + width + "x" + height);
                 Region region = new Region(x, y, x + width, y + height);
                 try {
+                    // Nota: Utilizzo della riflessione o controllo SDK per evitare errori di compilazione su SDK vecchi
                     setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, region);
                     if (!isPassthroughActive) {
                         provideFeedback();
                     }
                     isPassthroughActive = true;
-                    Log.d(TAG, "Passthrough set successfully");
+                } catch (NoSuchMethodError e) {
+                    Log.e(TAG, "Method not found despite SDK check", e);
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to set passthrough region", e);
                 }
-            } else {
-                Log.w(TAG, "Invalid region requested: " + width + "x" + height);
             }
         }
     }
 
     public void clearPassthroughRegion() {
         if (android.os.Build.VERSION.SDK_INT >= 30) {
-            Log.d(TAG, "Clearing passthrough region");
             try {
                 setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, new Region());
-                
-                // Release control immediately
                 setTouchExplorationEnabled(false);
                 isPassthroughActive = false;
-                Log.d(TAG, "Passthrough cleared successfully");
             } catch (Exception e) {
                 Log.e(TAG, "Failed to clear passthrough region", e);
             }
@@ -101,24 +95,22 @@ public class BrailleAccessibilityService extends AccessibilityService {
     private void setTouchExplorationEnabled(boolean enabled) {
         AccessibilityServiceInfo info = getServiceInfo();
         if (info == null) return;
-        
+
         int oldFlags = info.flags;
         if (enabled) {
             info.flags |= AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
         } else {
             info.flags &= ~AccessibilityServiceInfo.FLAG_REQUEST_TOUCH_EXPLORATION_MODE;
         }
-        
+
         if (info.flags != oldFlags) {
-            Log.d(TAG, "Updating accessibility flags, Touch Exploration: " + (enabled ? "ON" : "OFF"));
             setServiceInfo(info);
         }
     }
 
     private void provideFeedback() {
         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        if (v != null && v.hasVibrator()) {
-            // Un breve doppio tocco per segnalare che il passthrough è attivo
+        if (v != null) {
             v.vibrate(new long[]{0, 20, 50, 20}, -1);
         }
     }

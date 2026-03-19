@@ -206,6 +206,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public void onWindowHidden() {
         super.onWindowHidden();
+        if (brailleView != null) {
+            brailleView.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
+        }
         mIsFinishing = true;
         mAccessibilityHandler.removeCallbacksAndMessages(null);
         clearAccessibilityState();
@@ -214,6 +217,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (brailleView != null) {
+            brailleView.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
+        }
         mIsFinishing = true;
         mAccessibilityHandler.removeCallbacksAndMessages(null);
         if (brailleParser != null) {
