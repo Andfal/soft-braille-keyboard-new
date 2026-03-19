@@ -652,14 +652,14 @@ public class BrailleView extends View {
                 && (KeyboardFeedback.VIBRATE.value & Integer.parseInt(Options
                         .getStringPreference(getContext(),
                                 R.string.pref_keyboard_feedback_key,
-                                KeyboardFeedback.ALL.getValue()))) != 0) {
+                                KeyboardFeedback.SOUND.getValue()))) != 0) {
             vibrator.vibrate(QUICK_VIBRATION);
         }
         if (playSound
                 && (KeyboardFeedback.SOUND.value & Integer.parseInt(Options
                         .getStringPreference(getContext(),
                                 R.string.pref_keyboard_feedback_key,
-                                KeyboardFeedback.ALL.getValue()))) != 0) {
+                                KeyboardFeedback.SOUND.getValue()))) != 0) {
             playSoundEffect(SoundEffectConstants.CLICK);
         }
     }

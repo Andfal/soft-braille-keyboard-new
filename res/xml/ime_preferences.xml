@@ -134,7 +134,7 @@
              android:key="@string/pref_keyboard_feedback_key"
              android:title="@string/pref_keyboard_feedback_title"
              android:summary="@string/pref_keyboard_feedback_summary"
-             android:defaultValue="3" />
+             android:defaultValue="2" />
          <CheckBoxPreference
          android:key="@string/pref_echo_passwords_key"
          android:title="@string/speak_passwords"

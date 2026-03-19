@@ -312,7 +312,7 @@ public class ActionHandler {
             KeyboardFeedback feedback = KeyboardFeedback.valueOf(Integer
                     .parseInt(Options.getStringPreference(context,
                             R.string.pref_keyboard_feedback_key,
-                            KeyboardFeedback.ALL.getValue())));
+                            KeyboardFeedback.SOUND.getValue())));
             feedback = KeyboardFeedback.next(feedback);
             Options.writeStringPreference(context,
                     R.string.pref_keyboard_feedback_key, feedback.getValue());
