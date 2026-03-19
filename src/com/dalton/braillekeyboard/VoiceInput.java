@@ -111,14 +111,12 @@ public class VoiceInput {
             // There seems to be a bug where this gets called with
             // SpeechRecognizer.ERROR_NO_MATCH every time, but the very first
             // time voice input is done.
-            // However the results seem to be delivered to us just fine. For now
-            // ignore this error, but it needs further investigation and a
-            // better solution for example when it is actually a legitimate
-            // problem.
+            // However the results seem to be delivered to us just fine. 
             if (error != SpeechRecognizer.ERROR_NO_MATCH) {
                 textReadyListener.onError(error);
-                isListening = false;
             }
+            // Reset state regardless of error type to avoid "freezing" the keyboard.
+            isListening = false;
         }
 
         @Override
