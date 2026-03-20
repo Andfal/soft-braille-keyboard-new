@@ -161,7 +161,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             }
         }, 50);
         
-        if (!BrailleAccessibilityService.isServiceEnabled()) {
+        if (!BrailleAccessibilityService.isServiceEnabled() && !BrailleAccessibilityService.isJieshuoActive(this)) {
             boolean hasAskedAcc = Options.getBooleanPreference(this, R.string.pref_has_asked_accessibility_service_key, false);
             if (!hasAskedAcc) {
                 Intent intent = new Intent(this, IntentActivity.class);

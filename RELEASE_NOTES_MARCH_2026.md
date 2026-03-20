@@ -1,3 +1,19 @@
+# Latest Updates - March 20, 2026 (v6)
+
+## 1. Jieshuo (Commentary) Intelligent Integration
+- **Dormant Service Mode:** The keyboard's Accessibility Service now automatically remains dormant when Jieshuo is detected. This prevents conflicts with Jieshuo's native multi-touch bridge while allowing full functionality with TalkBack.
+- **Silent Operation:** In Jieshuo mode, the service will not request Android passthrough regions, ensuring maximum system stability and preventing double-focus issues.
+- **Seamless UX:** The keyboard will no longer prompt Jieshuo users to enable the accessibility service, recognizing that Jieshuo provides the necessary "Bridge Mode" out of the box.
+
+---
+
+# Ultimi Aggiornamenti - 20 Marzo 2026 (v6)
+
+## 1. Integrazione Intelligente per Jieshuo (Commentary)
+- **Modalità Servizio Dormiente:** Il Servizio di Accessibilità della tastiera ora rimane automaticamente dormiente quando viene rilevato Jieshuo. Questo evita conflitti con il "bridge" multi-touch nativo di Jieshuo, garantendo al contempo la piena funzionalità con TalkBack.
+- **Operatività Silenziosa:** In modalità Jieshuo, il servizio non richiederà le regioni di bypass (passthrough) ad Android, garantendo la massima stabilità del sistema ed evitando problemi di doppio focus.
+- **UX Senza Interruzioni:** La tastiera non chiederà più agli utenti di Jieshuo di abilitare il servizio di accessibilità, riconoscendo che Jieshuo implementa già la "Bridge Mode" nativamente.
+
 # Latest Updates - March 20, 2026 (v5)
 
 ## 1. Tabletop Layout: Inverted Y-Axis

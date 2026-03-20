@@ -27,6 +27,20 @@ public class BrailleAccessibilityService extends AccessibilityService {
         return isPassthroughActive;
     }
 
+    public static boolean isJieshuoActive(Context context) {
+        android.view.accessibility.AccessibilityManager am = (android.view.accessibility.AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+        if (am != null) {
+            java.util.List<AccessibilityServiceInfo> enabledServices = am.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
+            for (AccessibilityServiceInfo service : enabledServices) {
+                String id = service.getId();
+                if (id != null && (id.contains("com.nirenr.") || id.contains("jieshuo"))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     protected void onServiceConnected() {
         super.onServiceConnected();
@@ -59,6 +73,11 @@ public class BrailleAccessibilityService extends AccessibilityService {
     }
 
     public void updatePassthroughRegion(int x, int y, int width, int height) {
+        if (isJieshuoActive(this)) {
+            Log.d(TAG, "Jieshuo is active. Accessibility service staying dormant (no passthrough).");
+            return;
+        }
+
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             if (width > 0 && height > 0) {
                 setTouchExplorationEnabled(true);
@@ -81,6 +100,10 @@ public class BrailleAccessibilityService extends AccessibilityService {
     }
 
     public void clearPassthroughRegion() {
+        if (isJieshuoActive(this)) {
+            return;
+        }
+
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             try {
                 setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, new Region());
