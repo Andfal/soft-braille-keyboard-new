@@ -96,6 +96,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     public void onWindowShown() {
         super.onWindowShown();
         mIsFinishing = false;
+        if (brailleView != null) {
+            brailleView.setVisibility(View.VISIBLE);
+        }
         // Successful retry configuration
         scheduleAccessibilityUpdate(5, 400);
     }
@@ -116,7 +119,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     private void updatePassthroughRegion() {
-        if (brailleView == null || !brailleView.isShown()) return;
+        if (brailleView == null || !brailleView.isShown() || brailleView.getVisibility() != View.VISIBLE) return;
 
         if (android.os.Build.VERSION.SDK_INT >= 30) {
             BrailleAccessibilityService accService = BrailleAccessibilityService.getInstance();
@@ -174,7 +177,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             }
         }, 50);
         
-        if (!BrailleAccessibilityService.isServiceEnabled()) {
+        if (!BrailleAccessibilityService.isServiceEnabled() && !BrailleAccessibilityService.isJieshuoActive(this)) {
             boolean hasAskedAcc = Options.getBooleanPreference(this, R.string.pref_has_asked_accessibility_service_key, false);
             if (!hasAskedAcc) {
                 Intent intent = new Intent(this, IntentActivity.class);
@@ -219,6 +222,10 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public void onWindowHidden() {
         super.onWindowHidden();
+        if (brailleView != null) {
+            brailleView.setVisibility(View.GONE);
+            brailleView.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
+        }
         mIsFinishing = true;
         mAccessibilityHandler.removeCallbacksAndMessages(null);
         clearAccessibilityState();
@@ -616,7 +623,13 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         ic.commitText(text, newCursorPosition);
     }
 
-    @Override public void closeKeyboard() { requestHideSelf(0); }
+    @Override public void closeKeyboard() { 
+        if (brailleView != null) {
+            brailleView.setVisibility(View.GONE);
+            brailleView.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
+        }
+        requestHideSelf(0); 
+    }
 
     @Override
     public String translateOnly(byte dots) {
