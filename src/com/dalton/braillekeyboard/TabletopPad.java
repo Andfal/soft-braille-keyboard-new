@@ -144,7 +144,31 @@ public class TabletopPad extends Pad {
     @Override
     public Swipe getSwipe(Coords[] coords, boolean swap) {
         // Tabletop mode does not swap left/right gestures as the user faces the screen
-        return getGenericSwipeAction(coords, swap);
+        // However, we invert the Y-axis (up/down) specifically for this layout.
+        Swipe swipe = getGenericSwipeAction(coords, swap);
+        switch (swipe) {
+            case ONE_UP: return Swipe.ONE_DOWN;
+            case ONE_DOWN: return Swipe.ONE_UP;
+            case TWO_UP: return Swipe.TWO_DOWN;
+            case TWO_DOWN: return Swipe.TWO_UP;
+            case THREE_UP: return Swipe.THREE_DOWN;
+            case THREE_DOWN: return Swipe.THREE_UP;
+            case FOUR_UP: return Swipe.FOUR_DOWN;
+            case FOUR_DOWN: return Swipe.FOUR_UP;
+            case FIVE_UP: return Swipe.FIVE_DOWN;
+            case FIVE_DOWN: return Swipe.FIVE_UP;
+            case SIX_UP: return Swipe.SIX_DOWN;
+            case SIX_DOWN: return Swipe.SIX_UP;
+            case HOLD_ONE_UP: return Swipe.HOLD_ONE_DOWN;
+            case HOLD_ONE_DOWN: return Swipe.HOLD_ONE_UP;
+            case HOLD_THREE_UP: return Swipe.HOLD_THREE_DOWN;
+            case HOLD_THREE_DOWN: return Swipe.HOLD_THREE_UP;
+            case HOLD_FOUR_UP: return Swipe.HOLD_FOUR_DOWN;
+            case HOLD_FOUR_DOWN: return Swipe.HOLD_FOUR_UP;
+            case HOLD_SIX_UP: return Swipe.HOLD_SIX_DOWN;
+            case HOLD_SIX_DOWN: return Swipe.HOLD_SIX_UP;
+            default: return swipe;
+        }
     }
 }
 
