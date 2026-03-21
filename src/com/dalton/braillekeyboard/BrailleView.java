@@ -177,6 +177,7 @@ public class BrailleView extends View {
             invalidate();
             requestLayout();
         }
+
         actionHandler = new ActionHandler(context);
         actionHandler.setCallback(actionListener);
         actionHandler.setKeyboardListener(listener);
@@ -228,6 +229,16 @@ public class BrailleView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         setDisplayParams(w, h);
         loadInitialPad(w, h);
+    }
+
+    @Override
+    protected void onConfigurationChanged(android.content.res.Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Rotation might have changed even if size remained the same (e.g., Landscape to Reverse Landscape)
+        if (getWidth() > 0 && getHeight() > 0) {
+            loadInitialPad(getWidth(), getHeight());
+            invalidate();
+        }
     }
 
     @Override

@@ -102,7 +102,7 @@ public class PadUtilities {
         } else {
             if (keyboard == KeyboardType.TABLETOP) {
                 pad = new TabletopPad(context, coords, width, height,
-                        portrait, invert, useEightDots);
+                        portrait, !invert, useEightDots);
             } else if (keyboard == KeyboardType.HORIZONTAL) {
                 pad = new HorizontalPad(context, coords, width, height,
                         portrait, invert, useEightDots);
@@ -164,14 +164,15 @@ public class PadUtilities {
                         .getResources().getDisplayMetrics());
         int screen = (int) Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
         if (keyboard == KeyboardType.TABLETOP) {
+            boolean effectiveInvert = !invert;
             Coords[] coords = null;
-            int prefKey = TabletopPad.getPrefKey(portrait, invert);
+            int prefKey = TabletopPad.getPrefKey(portrait, effectiveInvert);
             if ((coords = Pad.load(context, width, height, prefKey, portrait)) != null) {
                 pad = new TabletopPad(context, coords, width, height,
-                        portrait, invert, useEightDots);
+                        portrait, effectiveInvert, useEightDots);
             } else {
                 pad = TabletopPad.displayDefaultPad(context, width, height,
-                        portrait, invert, useEightDots);
+                        portrait, effectiveInvert, useEightDots);
             }
         } else if (keyboard == KeyboardType.HORIZONTAL
                 || (screen > maxScreen && KeyboardType.AUTO == keyboard)) {
