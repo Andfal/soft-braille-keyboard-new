@@ -1,0 +1,1298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="action_menu_items">
+        <item>@string/command_clean</item>
+        <item>@string/command_select</item>
+        <item>@string/command_copy</item>
+        <item>@string/command_append_copy</item>
+        <item>@string/command_paste</item>
+        <item>@string/clipboard_menu_title</item>
+        <item>@string/favorites_menu_title</item>
+        <item>@string/split_edit_title</item>
+        <item>@string/command_long_copy</item>
+        <item>Open keyboard</item>
+    </string-array>
+    <string-array name="advanced_menu_items">
+        <item>Oversæt nuværende element og kopier oversættelsen</item>
+        <item>scenebeskrivelse</item>
+        <item>Tekstgenkendelse</item>
+        <item>Ansigtsgenkendelse</item>
+        <item>Identificer CAPTCHA</item>
+        <item>Se genkendelsesresultater</item>
+        <item>Billedegenkendelse</item>
+        <item>Skyderbekræftigelse</item>
+        <item>Identificer eksamens opgaver og lignende</item>
+    </string-array>
+    <string-array name="alarm_hour_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+    </string-array>
+    <string-array name="alarm_interval_entries">
+        <item>Hvert femte minut</item>
+        <item>Hvert tiende minut</item>
+        <item>Hvert kvarter</item>
+        <item>Hver halve time</item>
+        <item>Hver time</item>
+    </string-array>
+    <string-array name="alarm_interval_values">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+    <string-array name="code_help_items">
+        <item>"解说多功能手势和插件以lua语法配合解说专有API实现一个手势多个功能。
+ 如果对lua和androlua比较熟悉，还可以实现更多功能，本文档只讲述专有API部分。"</item>
+        <item>"基本概念，
+ service，辅助功能服务，是这个读屏服务的核心，各个功能都是以这个服务为核心。"</item>
+        <item>"参数类型说明，
+ node，当前焦点，也就是当前获得辅助功能焦点的节点，一般操作都是针对这个焦点的。
+ bool，布尔值，true或者false。
+ text，文字内容。"</item>
+        <item>"return，返回，通知读屏你是否希望读屏执行该手势的默认操作。
+ 返回true则拦截该手势，false返回上一层执行，如在单程序手势返回false，则由全局手势接管处理，全局手势返回false，由默认手势处理。"</item>
+        <item>" 常用命令，
+ service.execute(命令,node)
+ 这个命令就是解说为了简化开发内置的一些指令，如果执行成功返回true，失败返回false。 "</item>
+        <item>" service.postExecute(时间,命令,node)
+ 延时执行命令， "</item>
+        <item>"text=service.getText(node)
+ 获取指定节点的文字信息。"</item>
+        <item>"service.setText(node,text)
+ 设置指定焦点输入框文字内容。"</item>
+        <item>"service.setText(text)
+ 设置当前界面焦点输入框文字内容。"</item>
+        <item>"service.copy()
+ 复制当前焦点的文字内容到剪切板。"</item>
+        <item>"service.appendCopy()
+ 追加复制当前焦点的文字内容到剪切板。"</item>
+        <item>"service.copy(text)
+ 复制指定的文字内容到剪切板。"</item>
+        <item>"service.appendCopy(text)
+ 追加复制指定的文字内容到剪切板。"</item>
+        <item>"service.paste()
+ 将剪切板内容粘贴到当前界面的输入框。"</item>
+        <item>"service.paste(node)
+ 将剪切板内容粘贴到指定的输入框。"</item>
+        <item>"service.toNext()
+ 下一个焦点。"</item>
+        <item>"service.toNext(node,bool)
+ 指定节点下一个焦点，bool为true查找子节点，为false不查找子节点。"</item>
+        <item>"service.toPrevious()
+ 上一个焦点。"</item>
+        <item>"service.toPrevious(node,bool)
+ 指定节点上一个焦点，bool为true查找子节点，为false不查找子节点。"</item>
+        <item>"service.toNextChar()
+ 下一个字符。"</item>
+        <item>"service.toPreviousChar()
+ 上一个字符。"</item>
+        <item>"service.toNextLine()
+ 下一行。"</item>
+        <item>"service.toPreviousLine()
+ 上一行。"</item>
+        <item>"service.toTextStart()
+ 到文字开头。"</item>
+        <item>"service.toTextEnd()
+ 到文字结尾。"</item>
+        <item>"service.toListViewStart()
+ 到列表开头。"</item>
+        <item>"service.toListViewEnd()
+ 到列表结尾。"</item>
+        <item>"service.getRootNodeInfo()
+ 获取根节点。"</item>
+        <item>"service.ocr(node)
+ 文字识别指定节点，仅会员可用。"</item>
+        <item>"service.setTimerMode(bool)
+ 开启或关闭计时器模式，bool为true开启，false为关闭。"</item>
+        <item>"service.setAutoReadEnabled(bool)
+ 开启或关闭阅读模式，bool为true开启，false为关闭。"</item>
+        <item>"service.setAutoNext(bool)
+ 开启或关闭自动浏览模式，bool为true开启，false为关闭。"</item>
+        <item>"bool=service.isEditView(node)
+ 判断当前节点是否为编辑框。"</item>
+        <item>"bool=service.isSeekBar(node)
+ 判断当前节点是否为进度滑块。"</item>
+        <item>"bool=service.isListView(node)
+ 判断当前节点是否为列表。"</item>
+        <item>"bool=service.isInListView(node)
+ 判断当前节点是否在列表中。"</item>
+        <item>"bool=service.isInWebView(node)
+ 判断当前节点是否在网页中。"</item>
+        <item>"bool=service.isClick(node)
+ 判断当前节点是否可以点击。"</item>
+        <item>"service.toClick()
+ 点击当前焦点，在安卓7以上优先使用模拟手点击焦点。"</item>
+        <item>"service.toClick(node)
+ 点击指定节点。"</item>
+        <item>"service.toLongClick()
+ 长当前焦点。"</item>
+        <item>"service.toLongClick(node)
+ 长按指定节点。"</item>
+        <item>"service.toBack()
+ 返回。"</item>
+        <item>"service.toHome()
+ 返回主屏幕。"</item>
+        <item>"service.toNotification()
+ 打开通知栏。"</item>
+        <item>"service.toParent()
+ 打开最近任务列表。"</item>
+        <item>"service.scrollBackward(node)
+ 向后滚动。"</item>
+        <item>"service.scrollForward(node)
+ 向前滚动。"</item>
+        <item>"service.loadGesturePackage(name)
+ 载入手势方案。"</item>
+        <item>"service.click(x,y)
+ 模拟人手点击屏幕指定位置，仅安卓7以上可用。"</item>
+        <item>"service.longClick(x,y)
+ 模拟人手长按屏幕指定位置，仅安卓7以上可用。"</item>
+        <item>"service.press(x,y,t)
+ 模拟人手在屏幕指定位置按住指定时间，仅安卓7以上可用。"</item>
+        <item>"service.swipe(x1,y1,x2,y2,t)
+ 模式人手从一个位置用指定时间滑动到另一个位置，仅安卓7以上可用。"</item>
+        <item>代码控制语句。</item>
+        <item>" if 条件 then 要执行的代码
+ end
+ 满足指定条件执行中间的代码。
+ 如，
+ if service.isEditView(node) then service.execute(拆分编辑,node)
+ return true
+ end
+ 这句代码意思是，当焦点为编辑框时打开拆分编辑。 "</item>
+        <item>"for n=1,重复次数 do
+ 要执行代码
+ end
+ 重复指定代码一定次数
+ 如，
+ for n=1,10 do
+ service.toBack()
+ end
+ 重复返回10次。"</item>
+        <item>"定义函数，
+ function 函数名称(参数)
+ 函数代码
+ end"</item>
+        <item>" 函数是代码的功能块，可以有效的重复利用代码。
+ 如，下边是一个向列表添加数据的函数，在手势代码中，可以用于向一个列表添加重复的代码。
+ function append(t1,t2)
+ for k,v in ipairs(t2) do
+ table.insert(t1,v)
+ end 
+ end 
+ 点击列表={}
+ 按钮列表={%点击,%返回}
+ for n=1,10 do
+ append(点击列表,按钮列表)
+ end
+ 向点击列表重复添加10次按钮列表的内容。 "</item>
+        <item>" function 滑动()
+ service.swipe(500,300,500,1000,1000)
+ return true
+ end
+ 模拟手在屏幕上滑动，可以在手势代码中使用，
+ service.click({{>微信,%滑动}})
+ 打开微信模拟在屏幕从上向下滑动。 "</item>
+        <item>"自动点击，
+ service.click({按钮列表})
+ 自动依次查找点击按钮列表的按钮，
+ 按钮名称支持一些符号进行通配，
+ 如前面加#(井号)，表示搜索的是自定义标签，
+ 前边或后边加*(星号)表示前边或后边还有其他字符，
+ 后边加#(井号)表示按钮次序，
+ 后边加@(圈a)表示只在某一个程序查找，
+ 加$(美元)表示执行完成后延时。
+ 参数支持多个表，按顺序查找，
+ 如果查找成功返回true，失败返回false。
+ 完整说明见后边，"</item>
+        <item>"延时点击，
+ service.postClick(时间,{按钮列表})
+ 延时一定时间执行点击，时间单位为毫秒，按钮列表定义与click相同，
+ 没有返回值。"</item>
+        <item>" service.plugin(插件名称,node)
+ 执行一个插件，
+ 返回插件自定义返回的值。 "</item>
+        <item>解说手势以自动点击最为灵活，基础形式是</item>
+        <item>"按钮列表={}
+ service.click(按钮列表)
+ return true"</item>
+        <item>"下边两行是固定的，自己只需要修改按钮列表即可，
+ 按钮列表格式是用英文花括号或者叫大括号括起来的一些按钮名称和符号组成，"</item>
+        <item>最简单的例子，</item>
+        <item>" 按钮列表={确定}
+ service.click(按钮列表)
+ return true "</item>
+        <item>这个代码就能点击屏幕上的确定按钮，</item>
+        <item>" 按钮列表={
+ 确定,
+ 完成
+ } service.click(按钮列表)
+ return true "</item>
+        <item>这是第一级花括号，这个是如果有确定点击确定，没有确定就点击完成，如果没有确定，就继续找完成，依次类推</item>
+        <item>有时候我们需要连续点击一系列按钮实现一些功能，这也是自动点击的优势，</item>
+        <item>" 按钮列表={
+ {群资料卡,文件}
+ } service.click(按钮列表)
+ return true "</item>
+        <item>这是二级花括号，在二级花括号中的按钮会被依次点击，直到某一个按钮不存在停止，</item>
+        <item>在花括号中嵌套括号可以实现连续点击，</item>
+        <item>在按钮列表中我们用一些符号来增强功能，</item>
+        <item>最常用的是 * 星号，英文星号，这个符号在按钮文字的前后，表示可以有其它内容</item>
+        <item>比如，在QQ主界面要点击，解说读屏交流群，而这个列表内容有时候后面会有99条未读之类内容，这时候就要写成，</item>
+        <item>解说读屏交流群*</item>
+        <item># 井号，表示第几个结果，有时候一个界面有很多个名字一样的按钮，这时候需要用井号来说明点击第几个，</item>
+        <item>如，确定#1，表示第一个，也可以是负数，如确定#-1，表示最后一个。</item>
+        <item>这个井号在文字开头表示要查找的是按钮的标签，而不是按钮的名字，比如有的按钮没有名字，可以自己添加标签，并使用标签查找，</item>
+        <item>"符号中英文竖线|，表示或，也就是如果有竖线前边的点击前边的，没有就点击后边的，
+ 就拿刚才确定和完成的例子，可以简写为，
+ 确定|完成
+ 点击 确定 或者 完成，"</item>
+        <item>&amp; 表示和，也就是只有有&amp;符号后边内容的界面，才点击前边内容的按钮，</item>
+        <item>"确定&amp;*退出*
+ 表示，只有这个界面有退出字样，比如确定退出吗，才点击确定，而没有退出两个字就不执行，"</item>
+        <item>"&amp;后边加叹号加关键字表示不包含后边内容时执行，
+ 确定&amp;!*退出*
+ 表示，只有这个界面没有退出字样时，才点击确定，而有退出两个字就不执行,和上一个情况相反，"</item>
+        <item>"&amp;符号在前表示检查当前焦点类型，
+ &amp;可编辑
+ &amp;可点击
+ &amp;列表
+ &amp;列表项目
+ &amp;编辑框
+ 这个编辑框是弹出输入法的编辑框，"</item>
+        <item>$美元符号，这个符号在文字后边表示点击该按钮后等待多长时间，执行下一步操作，</item>
+        <item>"群资料卡$2000,文件
+ 表示点击群资料卡卡后2秒点击文件， "</item>
+        <item>"&lt; 小于号，在后边表示重复执行，重复点击按钮多少次，
+ 如 下一曲&lt;10
+ 就重复点击下一曲十次，"</item>
+        <item>"小于号在前边表示只定位，不点击。
+ &lt;确定
+ 找到确定但是不点击。"</item>
+        <item>" > 大于号，大于号在后边表示，等待次数符，
+ 群资料卡,文件>10
+ 手机反应有快有慢，用这个符号可以等待一定时间，这个代码表示，点击群资料卡后等待十秒，十秒以内以内如果出现文件就立即点击，如果超时就停止执行， "</item>
+        <item>"在开头的大于号可以打开程序，
+ >微信
+ 打开微信，
+ >QQ
+ 打开QQ，"</item>
+        <item>"还有一些扩展符号，可以执行其它功能，
+ % 可以执行一些常用指令，
+ 比如，
+ %复制
+ 可以复制，
+ %全文朗读
+ 可以全屏朗读，"</item>
+        <item>%还可以执行脚本中指定的函数，函数返回true表示继续执行，false停止继续执行，</item>
+        <item>"[]方括号包括的内容表示模拟直接点击，和使用辅助功能点击不同，直接点击可以解决一部分焦点不能点击的问题，
+ [播放]
+ 模拟直接点击播放按钮，
+ [%点击]
+ 模拟直接点击当前焦点"</item>
+        <item>"[x,y]方括号包含两个数字表示模拟点击指定位置，可以用整数表示绝对位置，或者用小数表示相对位置，
+ [300,500]
+ 模拟点击从左算300像素，从上算500像素的位置，
+ [0.3,0.5]
+ 模拟点击从左算 0.3 个屏幕宽度，从上算 0.5 个屏幕高度的位置，"</item>
+        <item>"[x,y,t]方括号包含三个数字表示模拟点击指定位置指定时间，前两个意思和上一个相同，第三个是以毫秒为单位的时间，
+ [300,500,1000]
+ 模拟点击从左算 300 像素，从上算 500 像素的位置，持续 1000 毫秒"</item>
+        <item>"[x1,y1,x2,y2,t]方括号包含五个数字表示用指定时间模拟从x1，y1滑动到x2,y2位置，可以用整数表示绝对位置，或者用小数表示相对位置，
+ [300,500,300,800,1000]
+ 模拟从左算 300 像素，从上算 500 像素的位置，用 1000 毫秒时间滑动到 300,800 的位置，"</item>
+        <item>"模拟滑动还可以指定滑动次数
+ [300,500,300,800,1000,10]
+ 模拟从左算 300 像素，从上算 500 像素的位置，用 1000 毫秒时间滑动到 300,800 的位置，10 次,"</item>
+        <item>"在手势执行中有时会有一些不同情况出现，比如打开QQ，点击解说读屏交流群，点击群资料卡，点击文件，
+ 如果有群公告，会在点击群资料卡那一步卡住，不能执行，
+ 这时需要分支代码来执行这些突发情况，
+ 我只是手写例子，可能会有错字导致不能执行，理解意思就可以了，"</item>
+        <item>" 按钮列表={
+ { >QQ,
+ 解说读屏交流群*,
+ { 我已阅读群公告|我知道了
+ },
+ 群资料卡,
+ 文件
+ } } "</item>
+        <item>"因为QQ版本不同，确定群公告按钮也不一样，
+ 可以看到，在点击解说读屏交流群后，多了一对花括号括起来按钮，这个括号中的按钮，有则执行，没有则跳过，不影响后边按钮的执行，
+ 如果分支中有复杂操作，或者多种场景，我们还可以套入多个括号，"</item>
+        <item>" 按钮列表={
+ { >QQ,
+ 解说读屏交流群*,
+ { { 我已阅读群公告,确定},
+ { 我知道了,确定},
+ },
+ 群资料卡,
+ 文件
+ } } "</item>
+    </string-array>
+    <string-array name="edge_gesture_width_entries">
+        <item>Lille</item>
+        <item>Mellem</item>
+        <item>Stor</item>
+        <item>Maksimal</item>
+    </string-array>
+    <string-array name="edge_gesture_width_values">
+        <item>8</item>
+        <item>12</item>
+        <item>16</item>
+        <item>20</item>
+    </string-array>
+    <string-array name="gesture_help_items">
+        <item>"Standardbevægelser:
+ Bevægelser med en finger, skal udføres lige, og foregå i et almindeligt tempo.
+ Bevægelser med en finger, bruges f.eks. til at flytte Jieshuo-markøren, eller benytte bevægelsesgenveje. Til info! Hjælpebeskrivelsen forholder sig til at invertering af bevægelser ikke er valgt."</item>
+        <item>"Bevægelser med en finger:
+ Stryg op og så ned med en finger: flytter Jieshuo-markøren til det første element i skærmbilledet.
+ Stryg ned og så op med en finger: flytter Jieshuo-markøren til det sidste element i skærmbilledet.
+ Stryg til venstre og så højre med en finger: viser skærmbillede over seneste apps.
+ Stryg til højre og så venstre med en finger: går tilbage til det forrige skærmbillede.
+ Stryg op og så til højre med en finger: åbner funktionsmenuen.
+ Stryg ned og så til højre med en finger: Åbner Jieshuo menuen.
+ Stryg op og så til venstre med en finger: viser udvidelser til Jieshuo.
+ Stryg ned og så til venstre med en finger: aktivere tale assistenten.
+ Stryg til venstre og så ned med en finger: Slår tekstnavigeringsmarkøren til, udfør samme bevægelse igen, for at slå Jieshuo-markøren til.
+ Stryg til venstre og så op med en finger: viser enhedens notifikationscenter.
+ Stryg til højre og så op med en finger: læser fra det næste element.
+ Stryg til højre og så ned med en finger: Foretager en skærmsøgning i skærmbilledet.
+"</item>
+        <item>"Almindelig navigering med Jieshuo-markøren:
+ Stryg ned med en finger: flytter Jieshuo-markøren til næste element.
+ Stryg op med en finger: flytter Jieshuo-markøren til forrige element."</item>
+        <item>"Justering af skydværdi:
+ Stryg til venstre med en finger: sænker skyderværdi.
+ Stryg til højre med en finger: forøger skyderværdi."</item>
+        <item>"Flyt indsætningsmærkets placering i tekstfelter:
+ Stryg til højre med en finger: flytter indsætningsmærket fremad tegn for tegn.
+ Stryg til venstre med en finger: flytter indsætningsmærket tilbage tegn for tegn.
+ Stryg op og så ned med en finger: flytter indsætningsmærket til begyndelsen af tekstfeltet.
+ Stryg ned og så op med en finger: flytter indsætningsmærket til slutningen af tekstfeltet.
+ Tryk to gange med en finger: flytter indsætningsmærket til begyndelsen af tekstfeltet, foretag handlingen igen, for at flytte indsætningsmærket til slutningen af tekstfeltet."</item>
+        <item>"Bevægelser med Tekstnavigeringsmarkøren:
+ Stryg ned med en finger: flytter tekstnavigeringsmarkøren fremad en linje af gangen.
+ Stryg op med en finger: flytter tekstnavigeringsmarkøren tilbage en linje af gangen.
+ Stryg til højre med en finger: flytter tekstnavigeringsmarkøren fremad tegn for tegn.
+ Stryg til venstre med en finger: flytter tekstnavigeringsmarkøren tilbage tegn for tegn.
+ Stryg til højre og så ned med en finger: flytter tekstnavigeringsmarkøren en sætning fremad af gangen.
+ Stryg til venstre og så op med en finger: flytter tekstnavigeringsmarkøren en sætning tilbage af gangen.
+ Stryg op og så til højre med en finger: Slår markeringsmarkøren til, udfør samme bevægelse igen, for at slå tekstnavigeringsmarkøren til.
+ Stryg til venstre og så ned med en finger: slår Jieshuo-markøren til.
+ Til Info!
+ Bruger du tilpassede bevægelser, kan bevægelser med tekstnavigeringsmarkøren, ikke bruges. Du kan undgå denne konflikt, ved at gå ind i Bevægelse og navigering > Bevægelseshåndtering, vælg herinde, at slå midlertidig tilpasset bevægelser fra, når tekstnavigeringsmarkøren er slået til."</item>
+        <item>"Bevægelser med markeringsmarkøren: 
+ Tryk en gang med en finger: læser valgt tekst op.
+ Stryg op med en finger: markerer en linje frem af gangen.
+ Stryg ned med en finger: markerer en linje tilbage af gangen.
+ Stryg til højre med en finger: markerer et tegn frem af gangen.
+ Stryg til venstre med en finger: markerer et tegn tilbage af gangen.
+ Stryg til venstre og så ned med en finger: markerer en sætning frem af gangen.
+ Stryg til højre og så op med en finger: markerer en sætning tilbage af gangen.
+ Stryg op og så til højre med en finger: Slår tekstnavigeringsmarkøren til.
+ Stryg til venstre og så ned med en finger: slår Jieshuo-markøren til.
+ Stryg ned og så til højre med en finger: kopiere markeret tekst til udklipsholderen.
+ Stryg op og så til venstre med en finger: tilføjer markeret tekst til udklipsholderen.
+ Stryg til højre og så op med en finger: kopiere alt tekst til udklipsholderen."</item>
+        <item>"Stemmekommandoer til tale assistenten: 
+ Sig åbn, plus navn på specifik app: åbner den specifikke app. Sig send + tekst der skal sendes: sender tekst du har sagt i beskedapps, eksempelvis beskeder, Messenger og WhatsApp. Sig søg efter, plus hvad du gerne vil søge efter: udfører en online søgning, efter det indhold du beder om. Tale assistenten kan udvides med funktioner, ved at du går ind i Avancerede funktioner > Tale assistent og oversættelse > Tale assistent funktioner. Tale assistenten har muligheden, for at kunne tilgå og bruge dine udvidelser, og Tilføjelsesprogrammer."</item>
+    </string-array>
+    <string-array name="help_items">
+        <item>"Standard navigering med Jieshuo-markøren:
+ Et stryg op med en finger, flytter som standard Jieshuo-markøren til det forrige element. Et stryg ned med en finger, flytter som standard Jieshuo-markøren til det næste element.
+ Du kan ændre hvordan Jieshuo-markøren skal navigerer, ved at gå ind i Jieshuos grundlæggende indstillinger, vælg herinde inverter bevægelser, for at flytte Jieshuo-markøren til det næste og forrige element, ved at stryge til højre eller venstre med en finger. du har også mulighed for at vælge en foretrukken navigeringsmetode, ved at gå ind i Bevægelse og navigering > Bevægelseshåndtering > Navigeringsmetode."</item>
+        <item>"Jieshuo menu: 
+ Et stryg ned og så til højre med en finger, åbner som standard Jieshuo menuen. Når Jieshuo menuen er åbnet, vil der som standard være otte funktioner du kan tilgå. Det er muligt at udvide Jieshuo menuens funktioner, flyt markøren til mere, tryk to gange med en finger på det pågældende element, hvilket udvider Jieshuo menuen. Til Info! Jieshuo menuen, kan sammelagt udvides op til to gange, hvilket vil vise alle funktioner.
+ Du kan selv tilpasse, hvilke funktioner Jieshuo menuen skal vise, ved at gå ind i Avancerede funktioner > Jieshuo menu og funktionsmenu."</item>
+        <item>"tale assistent:
+ Som standard, aktiveres tale assistenten, med et stryg ned og så til venstre med en finger. En lyd vil blive afspillet, som en Identifikation på tale assistenten lytter, herefter, vil du kunne sige den handling du ønsker udført af tale assistenten. Tryk på skærmen med en finger, for at afbryde tale assistenten , mens den er i gang med at lytte.
+ Du kan tilpasse tale assistentens funktioner og muligheder, ved at gå ind i Avancerede funktioner > Tale assistent og oversættelse.
+"</item>
+        <item>"Funktionsmenu: 
+ Som standard, åbnes funktionsmenuen, med et stryg op og så til højre med en finger. Du kan vælge og få vist forskellige elementer i funktionsmenuen, ved at gå ind i Avancerede funktioner > Jieshuo menu og funktionsmenu."</item>
+        <item>"Udvidelser:
+ Som standard, åbnes udvidelsesvinduet, med et stryg op og så til venstre med en finger.
+ Du kan hente udvidelser ved at gå ind under Hent indhold til Jieshuo > Udvidelser."</item>
+        <item>"Kopier og føj til udklipsholder, udklipsholderen, og opslagstavlen:
+ Du finder de beskrevne funktioner nedenfor i funktionsmenuen.
+ Kopier til udklipsholder: kopierer det fokuserede element til udklipsholderen.
+ Føj til udklipsholder: kopierer det fokuserede element efter det tidligere kopieret indhold i udklipsholderen.
+ Udklipsholder: Administrer kopieret indhold i udklipsholderen. Står du placeret i et tekstfelt, kan du trykke to gange med en finger på kopieret indhold i udklipsholderen, for at indsætte det i tekstfeltet. Udfør et langt tryk, for at føje indhold til opslagstavlen, redigere tekst, slette tekst, gemme tekst internt på enheden, eller føje til notesblokken.
+ Opslagstavle: Tilgå opslagstavlen for at se gemt indhold du har føjet hertil. Står du placeret i et tekstfelt, kan du trykke to gange med en finger på indhold i opslagstavlen, for at indsætte det. Udfør et langt tryk, for at kopiere til udklipsholderen, redigere tekst, slette tekst, gemme tekst internt på din enhed, eller føj til notesblokken.
+ Du kan sikkerhedskopierer eller slette alt indhold I udklipsholderen og opslagstavlen, ved at gå ind i Avancerede funktioner > Overførsler > Administrer udklipsholderen"</item>
+        <item>"Listekopiering (kun tilgængelig i den fulde version):
+ Listekopiering kan kopiere indhold fra Jieshuo-markørens placering, til det sidste element, som Jieshuo-markøren indrammer.
+ Efter listekopiering er startet, skal du vente til processen er fuldført, varigheden på en listekopiering, varierer af mængden på det indhold der kopieres. Når processen er fuldført, vil du blive informeret omkring antallet af linjer og elementer der er blevet kopieret til udklipsholderen.
+ Under en listekopiering, kan du stoppe processen, ved at stryge i hvilken som helst retning med en finger."</item>
+        <item>"Fuld adgang til tekstmarkering (kun tilgængelig i den fulde version):
+ Tekstmarkering kan hjælpe med kopiering af indhold, eksempelvis på en webside, eller i længere tekstafsnit. Med tekstmarkerings funktionen, kan du sorterer indholdet op i tegn, ord, linjer og sætninger, hvorefter du kan markere dele af teksten du ønsker, og herefter kopierer den til udklipsholderen.
+ Når tekstmarkerings funktionen er åbnet, kan du udføre et langt tryk på et element, for at sætte en startmarkering, udfør et langt tryk på det element hvor slutmarkeringen skal sættes, alle elementer imellem start og slutmarkeringen, vil derved blive valgt."</item>
+        <item>"Tekstredigering (kun tilgængelig i den fulde version):
+ Du kan redigere tekst, alt fra tegn, ord, linjer, sætninger, eller hele teksten i tekstfelter, eller i tekst du læser.
+ Tryk to gange med en finger på et element, for at redigere det, udfør et langt tryk på et element, for at få yderligere funktioner fremvist til det specifikke element.
+ Det er også muligt at gemme redigerede tekst internt på enheden. Tryk to gange med en finger på eksporter, navngiv teksten du gerne vil gemme, afslut nu processen, ved at trykke to gange med en finger på ok."</item>
+        <item>"Skærmsøgning:
+ En skærmsøgning med Jieshuo, tilbyder at du kan søge efter specifikke elementer i det pågældende skærmbillede. Du foretager som standard en skærmsøgning, ved at stryge til højre og så ned med en finger. Når skærmsøgningsvinduet er åbnet, kan du søge efter specifikt indhold, Vises der ikke nogle søgeresultater, kan du vælge og trykke på en af de to rulleknapper, hvorved skærmsøgningsvinduet vil rulle ned eller op, indtil et matchende resultat vises. Vises der matchende resultater i skærmsøgningen, vil du kunne flytte Jieshuo-markøren ned gennem resultaterne. Elementet, du vælger og trykke på, vil blive aktiveret omgående, hvis det har mulighed for interaktion, takket være intelligens fra Jieshuo. Består elementet af almindelig tekst, vil Jieshuo-markøren blive flyttet dertil, hvis du integrere med det i skærmsøgningen. En skærmsøgning med Jieshuo, er praktisk ved navigering inde i apps og på websider, da det i visse situationer, giver et bedre overblik over indhold, hvorved skærmlæser-brugere får en bedre forståelse for sidens indhold."</item>
+        <item>"Læsetilstand (kun tilgængelig i den fulde version):
+ Du kan læse websiders artikler I din browser, filtrer uønsket indhold fra, og få læst indhold automatisk op."</item>
+        <item>"Jieshuo kamera (kun tilgængelig i den fulde version):
+ Funktionen Jieshuo kamera, kan hjælpe med og give beskrivelse af scener, tekst, ansigter, billeder, dyr, planter, frugt og grøntsager, valuta, eller hjælpe dig med at få kameravejledning. Jieshuo kamera, kan kun bruges med enhedens bagerste kamera. Et tryk på lydstyrke op-tasten, starter registreringsprocessen, et tryk på lydstyrke ned-tasten, skifter imellem registreringsfunktionerne."</item>
+        <item>"Hurtignavigering igennem lister:
+ Jieshuos Bevægelsesgenveje, er bevægelser der gør navigering igennem lister langt hurtigere, eksempelvis i Facebook, Telegram og YouTube. Bevægelsesgenveje, springer uoverflødige elementer over, for at gøre navigeringen mere simpel, hvilket gør læsning af indhold mere behagelig. Brug den højre bevægelsesgenvej, for at navigere i en liste, brug den venstre bevægelsesgenvej, for at navigere tilbage i en liste. Du kan finde flere indstillinger til Jieshuos bevægelsesgenveje, ved at gå ind under Bevægelse og navigering > Bevægelseshåndtering > Bevægelsesgenveje."</item>
+        <item>"Systemdialoger der aldrig skal læses op og altid skal læses op:
+ Systemdialoger der aldrig skal læses op, kan filtrere systemdialoger, indeholdende specifikt indhold.
+ Systemdialoger der altid skal læses op, kan hjælpe med at læse systemdialoger, indeholdende specifikt indhold."</item>
+        <item>"Jieshuo-markør systemdialoger der aldrig skal læses op:
+ Du kan filtrere Jieshuo-markørens indhold til et specifikt element, det bruges primært til at filtrere tilgængelighedsvejledninger fra."</item>
+        <item>"Filtrer billeder på websider, med manglende alternative billedtekster (kun tilgængelig i den fulde version):
+ Billeder, med manglende alternative billedtekster på websider, kan filtreres. Denne filtrering, gør det nemmere og hurtigere, at konstatere, at indholdet, ikke indeholder en alternativ billedtekst, hvilket hjælper med unødvendig information til et aktuelt billede."</item>
+        <item>"Tilpas og hent bevægelsestemaer:
+ Du kan tilpasse indbyggede og udvidet funktioner til bevægelser.
+ Det er en mulighed at hente et nyt bevægelsestema, hvilket giver adgang til nye bevægelser. Du henter et nyt bevægelsestema, ved at gå ind i Hent indhold til Jieshuo > Bevægelsestema.
+ Efter bevægelsestemaet er hentet ned, skal du først vælge det som dit bevægelsestema, før du kan tage det i brug. For at vælge et bevægelsestema, skal du gå ind i Bevægelse og navigering > Bevægelsestema.
+ Hvis du ønsker at oprette dit eget bevægelsestema, er det også en mulighed. For at oprette dit eget bevægelsestema, skal du gå ind i Bevægelse og navigering > Administrer bevægelsestemaer > Opret nyt bevægelsestema. Efter et bevægelsestema er oprettet, kan du efterfølgende gå ind og tilpasse bevægelser efter dine egene preferencer. For at kunne tilpasse bevægelser, i et specifikt bevægelsestema, skal du gå ind i Bevægelse og navigering > Tilpas bevægelsestema."</item>
+        <item>"Gamer-tilstand:
+ Vil du gerne spille spil på din smartphone, har Jieshuo en indbygget funktion, kaldet for gamer-tilstand, som hjælper med at levere den bedste oplevelse, når du gamer. Du kan vælge hvilke apps som skal bruge Jieshuos indbyggede gamer-tilstand, ved at gå ind i Bevægelse og navigering > Gamer-tilstand > Apps til gamer-tilstand. Det er muligt at vælge og slå Jieshuos tale fra, når gamer-tilstand er aktiv, dette hjælper med at undgå forstyrrelser, når du er ved at game. Desuden, kan du også vælge, at kant-bevægelser og menuer skal slåes fra, når gamer-tilstand er aktiv, dette hjælper med at undgå du ikke udløser en kant-bevægelse, eller trækker en kant-menu frem ved et uheld, imens du gamer. Jieshuos tale, kant-bevægelser og menuer, bliver automatisk slået til igen, når du går ud af apps, som er valgt til gamer-tilstand."</item>
+        <item>"Fingeraftrykssensor-bevægelser:
+ Har du en smartphone med en fysisk fingeraftrykssensor, kan du udføre forskellige handlinger, ved at stryge til venstre, højre, op, og ned på den, f.eks. åbne en app, eller kopiere tekst. For at bruge fingeraftrykssensor-bevægelser, skal du gå ind i Bevægelse og navigering > Fingeraftrykssensor-bevægelser, vælg herinde brug fingeraftrykssensor-bevægelser. Til info! For at bruge fingeraftrykssensor-bevægelser, kræver det at enheden har en fysisk fingeraftrykssensor, samt at Android 8 eller nyere installeret."</item>
+        <item>"Kant-bevægelser (kun tilgængelig i den fulde version):
+ Med kant-bevægelser, er det en mulighed at udføre forskellige kommandoer, ved at stryge med dine fingre fra skærmens kanter af. Kant-bevægelser kan slåes til, ved at du går ind i Bevægelse og navigering > Bevægelseshåndtering. Kant-bevægelser kan udløses ved hjælp af enten en eller to fingre. Du kan vælge om kant-bevægelser skal bruges med enten en, eller to fingre, ved at gå ind i Bevægelse og navigering > Bevægelseshåndtering > Indstillinger for kant-bevægelser. Med kant-bevægelser, kan du også trække menuer frem fra den venstre eller højre kant af skærmen, disse menuer, kaldes for kant-menuer. Kant-menuer, giver dig mulighed for at udføre forskellige kommandoer, hvilket hjælper med at spare dig for unødvendig tid, i at søge efter en specifik funktion, app, eller kommando. Du kan tilpasse kant-menuerne, ved at gå ind i Bevægelse og navigering > Bevægelseshåndtering > Indstillinger for kant-bevægelser > Tilpas den venstre/højre kant-menu. Kant-bevægelser og kant-menuer, aktiveres på et lodret aktiveringspunkt, som har fire niveauer for størrelser du kan vælge imellem, som standard er mellem valgt. Du kan tilpasse størrelsen for det lodrette aktiveringspunkt, ved at gå ind i Bevægelse og navigering > Bevægelseshåndtering > Indstillinger for kant-bevægelser > Størrelse for lodret aktiveringspunkt. Kant-menuer har en funktion, som kan vise dine tilføjede app-bevægelsestemaers kommandoer. Med denne funktion slået til, kan du udføre forskellige kommandoer, ved at trække den venstre kant-menu frem, inde i de appps, som har tilføjede app-bevægelser."</item>
+        <item>"Flerparts-bevægelser (kun tilgængelig i den fulde version):
+ En flerparts-bevægelse, er en bevægelse der skal udføres, indenfor en bestemt tidsperiode, straks efter en anden bevægelse er udført.
+ Flerparts-bevægelser kan slåes til, ved at du går ind i Bevægelse og navigering > Bevægelseshåndtering.
+ Efter flerparts-bevægelser er slået til, har du som standard et halvt sekund, til at udføre en flerparts-bevægelse, denne tidsperiode, kan du tilpasse, ved at gå ind i Bevægelse og navigering > Bevægelseshåndtering > Varighed for flerparts-bevægelse. Du kan vælge, hvilke handlinger der skal udføres, til en specifik flerpartsbevægelse, ved at gå ind i Bevægelse og navigering > Bevægelseshåndtering > Indstillinger for flerparts-bevægelser."</item>
+        <item>"Jieshuo profiler:
+ Er der flere brugere af den samme enhed i husstanden, f.eks. en tablet, er Jieshuo profiler, en funktion der anbefales. Med Jieshuo profiler, kan de forskellige brugere i hustanden, oprette sine egne indstillinger, som tilhører profilen de foretages i. Jieshuo profiler kan tilføjes og administreres, inde i Avancerede funktioner > Jieshuo profiler. Det er muligt at vælge hvilken Jieshuo profil der skal bruges, ved at gå ind i Avancerede funktioner > Jieshuo profiler, eller ved at tilgå Jieshuo menuen, og her finde Jieshuo profiler."</item>
+    </string-array>
+    <string-array name="hot_key_help_items">
+        <item>Ctrl+Piletast op: Flytter til det forrige emne.</item>
+        <item>Ctrl+Piletast ned: Flytter til det næste emne.</item>
+        <item>Ctrl+Venstre piletast: Udfører den venstre bevægelsesgenvej.</item>
+        <item>Ctrl+Højre piletast: Udfører den højre bevægelsesgenvej.</item>
+        <item>Ctrl+Side op: Ruller en side op.</item>
+        <item>Ctrl+Side ned: Ruller en side ned.</item>
+        <item>Ctrl+H: Flytter til startskærmen.</item>
+        <item>Ctrl+N: Åbner notifikationscentret.</item>
+        <item>Ctrl+P: Viser de seneste apps.</item>
+        <item>Ctrl+Mellemrum: Aktivere emnet i fokus.</item>
+        <item>Ctrl + L: Udfører et langt tryk på et emne.</item>
+        <item>Ctrl + Q: Åbner kvikmenuen.</item>
+        <item>Alt + M: Åbner Jieshuo-menuen.</item>
+        <item>Alt + A: Åbner funktionsmenuen.</item>
+        <item>Alt + P: Åbner installeret udvidelser.</item>
+        <item>Alt + T: Åbner installeret tilføjelsesprogrammer.</item>
+        <item>Alt + V: Aktiverer Jieshuo Assistant.</item>
+        <item>Alt + S: Starter tekstbehandling.</item>
+        <item>Alt + L: Åbner emnevælgeren.</item>
+    </string-array>
+    <string-array name="lang_entries">
+        <item>Automatisk</item>
+        <item>Koreansk</item>
+        <item>Klassisk Kinesisk</item>
+        <item>Forenklet kinesisk</item>
+        <item>Hollandsk</item>
+        <item>Thailandsk</item>
+        <item>Græsk</item>
+        <item>Italiensk</item>
+        <item>Slovensk</item>
+        <item>Japansk</item>
+        <item>Engelsk</item>
+        <item>Arabisk</item>
+        <item>Kantonesisk kinesisk</item>
+        <item>Ungarsk</item>
+        <item>Estisk</item>
+        <item>rumænsk</item>
+        <item>Kinesisk</item>
+        <item>Tjekkisk</item>
+        <item>Tysk</item>
+        <item>Fransk</item>
+        <item>Finsk</item>
+        <item>Portugisisk</item>
+        <item>Dansk</item>
+        <item>Russisk</item>
+        <item>Bulgarsk</item>
+        <item>Spansk</item>
+        <item>Svensk</item>
+        <item>Polsk</item>
+        <item>Vietnamesisk</item>
+        <item>Irsk</item>
+        <item>Orkis</item>
+        <item>Albansk</item>
+        <item>Akan</item>
+        <item>Aragonsk</item>
+        <item>Amharisk</item>
+        <item>Assamesisk</item>
+        <item>Aymara</item>
+        <item>Aserbajdsjansk</item>
+        <item>Asterisk</item>
+        <item>Ossetisk</item>
+        <item>Ojibwa</item>
+        <item>Orion</item>
+        <item>Oromo</item>
+        <item>Persisk</item>
+        <item>Bretonsk</item>
+        <item>Baskirisjk</item>
+        <item>Baskisk</item>
+        <item>Brasiliansk portugisisk</item>
+        <item>Hviderussisk</item>
+        <item>Berbisk</item>
+        <item>Filippinsk</item>
+        <item>Samisk</item>
+        <item>Sotho</item>
+        <item>Bemba</item>
+        <item>Birim</item>
+        <item>Bislama</item>
+        <item>Baluchistan</item>
+        <item>Islandsk</item>
+        <item>Bosnisk</item>
+        <item>Bhojpuri</item>
+        <item>Chuvash</item>
+        <item>Conga</item>
+        <item>Tatarisk</item>
+        <item>Shan</item>
+        <item>Detun</item>
+        <item>Dhivehi</item>
+        <item>Plattysk</item>
+        <item>Filipino</item>
+        <item>Sanskrit</item>
+        <item>Friulisk</item>
+        <item>Fulani</item>
+        <item>Færøsk</item>
+        <item>Gælisk</item>
+        <item>Congo</item>
+        <item>Sorbian</item>
+        <item>Khmer</item>
+        <item>Grønlandsk</item>
+        <item>Georgisk</item>
+        <item>Gujarati</item>
+        <item>Oldgræsk</item>
+        <item>Angelsaksisk (oldengelsk)</item>
+        <item>Guaraní</item>
+        <item>Hupa</item>
+        <item>Hakachin</item>
+        <item>Haitiansk</item>
+        <item>Hausa</item>
+        <item>Montenegrinsk</item>
+        <item>Kirgisisk</item>
+        <item>Galicisk</item>
+        <item>Canadisk fransk</item>
+        <item>Catalansk</item>
+        <item>Kabairian</item>
+        <item>Canadisk</item>
+        <item>Kanuri</item>
+        <item>Kasjubisk</item>
+        <item>Kangwar</item>
+        <item>Corsa</item>
+        <item>Korsikansk</item>
+        <item>Creek</item>
+        <item>Krimtatarisk</item>
+        <item>Klingon</item>
+        <item>Kroatisk</item>
+        <item>Kechuan</item>
+        <item>Kashmirisk</item>
+        <item>Konkani</item>
+        <item>Kurdisk</item>
+        <item>Latinsk</item>
+        <item>Lao</item>
+        <item>Latgalai</item>
+        <item>Lettisk</item>
+        <item>Limburgish</item>
+        <item>Lingala</item>
+        <item>Luganda</item>
+        <item>Luxembourgsk</item>
+        <item>Lushanian</item>
+        <item>Rwandan</item>
+        <item>Litauisk</item>
+        <item>Rætoromansk</item>
+        <item>Romani</item>
+        <item>Logic</item>
+        <item>Malajisk</item>
+        <item>Burmesisk</item>
+        <item>Marathi</item>
+        <item>Malagassisk</item>
+        <item>Malayalam</item>
+        <item>Makedonsk</item>
+        <item>Marshallesisk</item>
+        <item>Maitili</item>
+        <item>Manx</item>
+        <item>Mauritisk kreolsk</item>
+        <item>Maori</item>
+        <item>Bengali</item>
+        <item>Maltesisk</item>
+        <item>Hmong</item>
+        <item>Norsk</item>
+        <item>Napolitansk</item>
+        <item>Ndebele</item>
+        <item>Afrikaans</item>
+        <item>Sotho</item>
+        <item>Nepalesisk</item>
+        <item>Punjabi</item>
+        <item>Papi Amento</item>
+        <item>Pashto</item>
+        <item>Chichewa</item>
+        <item>Chivean</item>
+        <item>Cherokee</item>
+        <item>Sardisk</item>
+        <item>Samoansk</item>
+        <item>Serbokroatisk</item>
+        <item>Serbisk</item>
+        <item>Sanghainese</item>
+        <item>Singalesisk</item>
+        <item>Asperanto</item>
+        <item>Skriftlig norsk</item>
+        <item>Slovakisk</item>
+        <item>Kiswahili</item>
+        <item>Somali</item>
+        <item>Serbisk (Cyrillic)</item>
+        <item>Tyrkisk</item>
+        <item>Tadsjikisk</item>
+        <item>Tamil</item>
+        <item>Tagalog</item>
+        <item>Tigrinsk</item>
+        <item>Telugu</item>
+        <item>Tunisisk Arabisk</item>
+        <item>Turkmensk</item>
+        <item>Ukrainsk</item>
+        <item>Walloon</item>
+        <item>Walisisk</item>
+        <item>Vinda</item>
+        <item>Volovian</item>
+        <item>Urdu</item>
+        <item>Hebraisk</item>
+        <item>Sepharic</item>
+        <item>Cilician</item>
+        <item>Hiligaynon</item>
+        <item>Neder Sorbisk</item>
+        <item>Hawaiiansk</item>
+        <item>Nynorsk</item>
+        <item>Skriftlig vest afrikansk</item>
+        <item>Sindhi</item>
+        <item>Shona</item>
+        <item>Cebuano</item>
+        <item>Syrisk</item>
+        <item>Sundanesisk</item>
+        <item>Hindi</item>
+        <item>Indonesisk</item>
+        <item>Yiddish</item>
+        <item>Inte</item>
+        <item>Azeri</item>
+        <item>Ingush</item>
+        <item>Igbo</item>
+        <item>Ido</item>
+        <item>Yoruba</item>
+        <item>Armensk</item>
+        <item>Inuktitut (inuit)</item>
+        <item>Iransk</item>
+        <item>Zazaqi</item>
+        <item>Medieval French</item>
+        <item>Zulu</item>
+        <item>Javanesisk</item>
+        <item>Oriya</item>
+        <item>Frisisk</item>
+        <item>Kasakhisk</item>
+        <item>Haitisk kreol</item>
+        <item>Madagaskisk</item>
+        <item>Mongolsk</item>
+        <item>Sesotho</item>
+        <item>Uigh</item>
+        <item>Usbekisk</item>
+    </string-array>
+    <string-array name="lang_values">
+        <item>Automatisk</item>
+        <item>kor</item>
+        <item>wyw</item>
+        <item>cht</item>
+        <item>nl</item>
+        <item>th</item>
+        <item>el</item>
+        <item>it</item>
+        <item>slo</item>
+        <item>jp</item>
+        <item>en</item>
+        <item>ara</item>
+        <item>yue</item>
+        <item>hu</item>
+        <item>est</item>
+        <item>rom</item>
+        <item>zh</item>
+        <item>cs</item>
+        <item>de</item>
+        <item>fra</item>
+        <item>fin</item>
+        <item>pt</item>
+        <item>dk</item>
+        <item>ru</item>
+        <item>bul</item>
+        <item>spa</item>
+        <item>swe</item>
+        <item>pl</item>
+        <item>vie</item>
+        <item>gle</item>
+        <item>oci</item>
+        <item>alb</item>
+        <item>aka</item>
+        <item>arg</item>
+        <item>amh</item>
+        <item>asm</item>
+        <item>aym</item>
+        <item>aze</item>
+        <item>ast</item>
+        <item>oss</item>
+        <item>oji</item>
+        <item>ori</item>
+        <item>orm</item>
+        <item>per</item>
+        <item>bre</item>
+        <item>bak</item>
+        <item>baq</item>
+        <item>pot</item>
+        <item>bel</item>
+        <item>ber</item>
+        <item>pam</item>
+        <item>sme</item>
+        <item>ped</item>
+        <item>bem</item>
+        <item>bli</item>
+        <item>bis</item>
+        <item>bal</item>
+        <item>ice</item>
+        <item>bos</item>
+        <item>bho</item>
+        <item>chv</item>
+        <item>tso</item>
+        <item>tat</item>
+        <item>sha</item>
+        <item>tet</item>
+        <item>div</item>
+        <item>log</item>
+        <item>fil</item>
+        <item>san</item>
+        <item>fri</item>
+        <item>ful</item>
+        <item>fao</item>
+        <item>gla</item>
+        <item>kon</item>
+        <item>ups</item>
+        <item>hkm</item>
+        <item>kal</item>
+        <item>geo</item>
+        <item>guj</item>
+        <item>gra</item>
+        <item>eno</item>
+        <item>grn</item>
+        <item>hup</item>
+        <item>hak</item>
+        <item>ht</item>
+        <item>hau</item>
+        <item>mot</item>
+        <item>kir</item>
+        <item>glg</item>
+        <item>frn</item>
+        <item>cat</item>
+        <item>kab</item>
+        <item>kan</item>
+        <item>kau</item>
+        <item>kah</item>
+        <item>cor</item>
+        <item>xho</item>
+        <item>cos</item>
+        <item>cre</item>
+        <item>cri</item>
+        <item>kli</item>
+        <item>hrv</item>
+        <item>que</item>
+        <item>kas</item>
+        <item>kok</item>
+        <item>kur</item>
+        <item>lat</item>
+        <item>lao</item>
+        <item>lag</item>
+        <item>lav</item>
+        <item>lim</item>
+        <item>lin</item>
+        <item>lug</item>
+        <item>ltz</item>
+        <item>ruy</item>
+        <item>kin</item>
+        <item>lit</item>
+        <item>roh</item>
+        <item>ro</item>
+        <item>loj</item>
+        <item>may</item>
+        <item>bur</item>
+        <item>mar</item>
+        <item>mg</item>
+        <item>mal</item>
+        <item>mac</item>
+        <item>mah</item>
+        <item>mai</item>
+        <item>glv</item>
+        <item>mau</item>
+        <item>mao</item>
+        <item>ben</item>
+        <item>mlt</item>
+        <item>hmn</item>
+        <item>nor</item>
+        <item>nea</item>
+        <item>nbl</item>
+        <item>afr</item>
+        <item>sot</item>
+        <item>nep</item>
+        <item>pan</item>
+        <item>pap</item>
+        <item>pus</item>
+        <item>nya</item>
+        <item>twi</item>
+        <item>chr</item>
+        <item>srd</item>
+        <item>sm</item>
+        <item>sec</item>
+        <item>srp</item>
+        <item>sol</item>
+        <item>sin</item>
+        <item>epo</item>
+        <item>nob</item>
+        <item>sk</item>
+        <item>swa</item>
+        <item>som</item>
+        <item>src</item>
+        <item>tr</item>
+        <item>tgk</item>
+        <item>tam</item>
+        <item>tgl</item>
+        <item>tir</item>
+        <item>tel</item>
+        <item>tua</item>
+        <item>tuk</item>
+        <item>ukr</item>
+        <item>wln</item>
+        <item>wel</item>
+        <item>ven</item>
+        <item>wol</item>
+        <item>urd</item>
+        <item>heb</item>
+        <item>fry</item>
+        <item>sil</item>
+        <item>hil</item>
+        <item>los</item>
+        <item>haw</item>
+        <item>nno</item>
+        <item>nqo</item>
+        <item>snd</item>
+        <item>sna</item>
+        <item>ceb</item>
+        <item>syr</item>
+        <item>sun</item>
+        <item>hi</item>
+        <item>id</item>
+        <item>yid</item>
+        <item>ina</item>
+        <item>ach</item>
+        <item>ing</item>
+        <item>ibo</item>
+        <item>ido</item>
+        <item>yor</item>
+        <item>arm</item>
+        <item>iku</item>
+        <item>ir</item>
+        <item>zaz</item>
+        <item>frm</item>
+        <item>zul</item>
+        <item>jav</item>
+        <item>or</item>
+        <item>fy</item>
+        <item>kk</item>
+        <item>ht</item>
+        <item>mg</item>
+        <item>mn</item>
+        <item>st</item>
+        <item>ug</item>
+        <item>uz</item>
+    </string-array>
+    <string-array name="left_button">
+        <item>Læg på</item>
+        <item>Afslut</item>
+        <item>*Stryg til venstre for at afbryde*</item>
+        <item>Afslut opkald</item>
+        <item>Hang up</item>
+        <item>Slut opkald</item>
+        <item>结束QQ通话</item>
+        <item>结束QQ电话</item>
+        <item>Forrige medie</item>
+        <item>Forrige spor</item>
+        <item>Gå tilbage</item>
+    </string-array>
+    <string-array name="left_menu_items">
+        <item>@string/command_auto_next</item>
+        <item>@string/command_read_mode</item>
+        <item>@string/list_mode_title</item>
+        <item>@string/split_menu_title</item>
+        <item>@string/command_verbatim_speak2</item>
+        <item>@string/command_all_speak</item>
+        <item>@string/command_all_select</item>
+        <item>@string/command_ocr_text</item>
+        <item>@string/plugin_title</item>
+        <item>@string/command_notification_box</item>
+        <item>@string/command_to_notifications</item>
+        <item>@string/command_long_edit</item>
+        <item>@string/command_gestures_edit</item>
+        <item>@string/command_virtual_screen</item>
+        <item>@string/cancel</item>
+    </string-array>
+    <string-array name="long_click_entries">
+        <item>Kort</item>
+        <item>Mellem</item>
+        <item>Lang</item>
+    </string-array>
+    <string-array name="long_click_values">
+        <item>500</item>
+        <item>750</item>
+        <item>1000</item>
+    </string-array>
+    <string-array name="menu_def_items">
+        <item>@string/split_menu_title</item>
+        <item>@string/list_mode_title</item>
+        <item>@string/command_all_speak</item>
+        <item>@string/command_voice_helper</item>
+        <item>@string/plugin_title</item>
+        <item>@string/main_setting</item>
+        <item>@string/command_disable_feedback</item>
+    </string-array>
+    <string-array name="menu_items">
+        <item>@string/action_menu_title</item>
+        <item>@string/advanced_menu_title</item>
+        <item>@string/command_auto_next</item>
+        <item>@string/command_read_mode</item>
+        <item>@string/list_mode_title</item>
+        <item>@string/command_node_mode</item>
+        <item>@string/split_menu_title</item>
+        <item>@string/command_verbatim_speak2</item>
+        <item>@string/command_all_speak</item>
+        <item>@string/all_text_title</item>
+        <item>@string/command_all_select</item>
+        <item>@string/command_voice_helper</item>
+        <item>@string/command_ocr_text</item>
+        <item>@string/camera_title</item>
+        <item>@string/plugin_title</item>
+        <item>@string/tool_title</item>
+        <item>@string/main_setting</item>
+        <item>@string/command_disable_touch</item>
+        <item>@string/command_disable_feedback</item>
+        <item>@string/command_notification_box</item>
+        <item>@string/command_to_notifications</item>
+        <item>@string/command_long_edit</item>
+        <item>@string/command_gestures_edit</item>
+        <item>@string/command_enable_dim_screen</item>
+        <item>@string/command_virtual_screen</item>
+        <item>@string/command_quick_mode</item>
+        <item>@string/command_supper_mode</item>
+        <item>@string/command_virtual_navigation</item>
+    </string-array>
+    <string-array name="recognizer_lang_entries">
+        <item>Forenklet kinesisk</item>
+        <item>Kantonesisk kinesisk</item>
+        <item>Engelsk</item>
+    </string-array>
+    <string-array name="recognizer_lang_values">
+        <item>zh_CN</item>
+        <item>zh_GD</item>
+        <item>en_GB</item>
+    </string-array>
+    <string-array name="right_button">
+        <item>Besvar</item>
+        <item>*Stryg til højre for at besvare*</item>
+        <item>Højtaler</item>
+        <item>Besvar opkald</item>
+        <item>Næste medie</item>
+        <item>Næste spor</item>
+    </string-array>
+    <string-array name="right_menu_items">
+        <item>@string/command_click</item>
+        <item>@string/command_long_click</item>
+        <item>@string/command_start</item>
+        <item>@string/command_end</item>
+        <item>@string/command_copy</item>
+        <item>@string/command_append_copy</item>
+        <item>@string/command_paste</item>
+        <item>@string/clipboard_menu_title</item>
+        <item>@string/favorites_menu_title</item>
+        <item>@string/split_edit_title</item>
+        <item>@string/command_long_copy</item>
+        <item>@string/command_trans</item>
+        <item>@string/command_verification2</item>
+        <item>@string/command_timer_mode</item>
+        <item>@string/cancel</item>
+    </string-array>
+    <string-array name="timer_interval_entries">
+        <item>Hvert minut</item>
+        <item>Hvert femte minut</item>
+        <item>Hvert tiende minut</item>
+        <item>Hvert femtende minut</item>
+    </string-array>
+    <string-array name="timer_interval_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+    <string-array name="tts_engine_entries">
+        <item>System stemme</item>
+        <item>Uni sound</item>
+        <item>Baidu</item>
+    </string-array>
+    <string-array name="tts_engine_values">
+        <item>system</item>
+        <item>unisound</item>
+        <item>baidu</item>
+    </string-array>
+    <string-array name="tts_engine_vip_entries">
+        <item>System stemme</item>
+        <item>iFLYTEK</item>
+        <item>Uni sound</item>
+        <item>Baidu Cloud TTS-stemme</item>
+    </string-array>
+    <string-array name="tts_engine_vip_values">
+        <item>system</item>
+        <item>iFLYTEK</item>
+        <item>uni sound</item>
+        <item>baidu</item>
+    </string-array>
+    <string-array name="tts_scale_entries">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="tts_scale_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="tts_speaker_entries">
+        <item>Xiao Yan</item>
+        <item>Xiao Feng</item>
+    </string-array>
+    <string-array name="tts_speaker_values">
+        <item>xiaoyan</item>
+        <item>xiaofeng</item>
+    </string-array>
+    <string-array name="tts_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+        <item>46</item>
+        <item>47</item>
+        <item>48</item>
+        <item>49</item>
+        <item>50</item>
+        <item>51</item>
+        <item>52</item>
+        <item>53</item>
+        <item>54</item>
+        <item>55</item>
+        <item>56</item>
+        <item>57</item>
+        <item>58</item>
+        <item>59</item>
+        <item>60</item>
+        <item>61</item>
+        <item>62</item>
+        <item>63</item>
+        <item>64</item>
+        <item>65</item>
+        <item>66</item>
+        <item>67</item>
+        <item>68</item>
+        <item>69</item>
+        <item>70</item>
+        <item>71</item>
+        <item>72</item>
+        <item>73</item>
+        <item>74</item>
+        <item>75</item>
+        <item>76</item>
+        <item>77</item>
+        <item>78</item>
+        <item>79</item>
+        <item>80</item>
+        <item>81</item>
+        <item>82</item>
+        <item>83</item>
+        <item>84</item>
+        <item>85</item>
+        <item>86</item>
+        <item>87</item>
+        <item>88</item>
+        <item>89</item>
+        <item>90</item>
+        <item>91</item>
+        <item>92</item>
+        <item>93</item>
+        <item>94</item>
+        <item>95</item>
+        <item>96</item>
+        <item>97</item>
+        <item>98</item>
+        <item>99</item>
+        <item>100</item>
+    </string-array>
+    <string-array name="vibrate_intensity_entries">
+        <item>Svag</item>
+        <item>Mellem</item>
+        <item>Stærk</item>
+        <item>Kraftig</item>
+    </string-array>
+    <string-array name="vibrate_intensity_values">
+        <item>12</item>
+        <item>32</item>
+        <item>48</item>
+        <item>64</item>
+    </string-array>
+    <string-array name="view_type_title">
+        <item>Standard</item>
+        <item>Etiketter</item>
+        <item>Knapper</item>
+        <item>Tekstfelter</item>
+        <item>Billeder</item>
+        <item>Afkrydsningsfelter</item>
+        <item>Statusindikatorer</item>
+        <item>Lister</item>
+        <item>Listemner</item>
+        <item>Fokusemner</item>
+        <item>Formularfelter</item>
+        <item>Emner</item>
+        <item>Rul</item>
+        <item>Lodret navigering</item>
+        <item>Tegn</item>
+        <item>Ord</item>
+        <item>Linjer</item>
+        <item>Sætninger</item>
+        <item>Sider</item>
+        <item>Kopiér og vedføj</item>
+        <item>Medielydstyrke</item>
+        <item>Talehastighed</item>
+        <item>OCR-genkendelse og oversæt</item>
+        <item>Vinduer</item>
+    </string-array>
+    <string-array name="voice_helper_help_items">
+        <item>Sig åbn app: åbner den specifikke app.</item>
+        <item>Sig installer, plus navn på app der skal hentes ned: åbner den givende app i play butik, hvorefter den kan installeres.</item>
+        <item>Sig afinstallere, plus navn på app: afinstallerer den givende app på enheden.</item>
+        <item>Sig læs hele skærmen op: læser hele skærmbilledet op.</item>
+        <item>Sig læs fra det næste element: læser fra det næste element.</item>
+        <item>Sig registrer tændt lys: informerer dine nuværende omgivelsers lysniveau.</item>
+        <item>Sig tryk: aktiverer elementet i markøren.</item>
+        <item>Sig aktiver, plus navn på element: aktivere et specifikt element du beder tale assistenten om.</item>
+        <item>Sig kopier til udklipsholder: kopierer det fokuserede element til udklipsholderen.</item>
+        <item>Sig oversæt element: kommandoen vil oversætte elementet i markøren, efterfølgende, vil du kunne tilgå resultatet i udklipsholderen.</item>
+    </string-array>
+    <string-array name="voice_recognizer_entries">
+        <item>System stemme</item>
+        <item>Stemme 1</item>
+        <item>Stemme 2</item>
+        <item>Stemme 3</item>
+    </string-array>
+    <string-array name="voice_recognizer_values">
+        <item>3</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="web_type_title">
+        <item>Standardnavigation</item>
+        <item>Overskrifter</item>
+        <item>Links</item>
+        <item>Knapper</item>
+        <item>Landmærker</item>
+        <item>Tekstfelter</item>
+        <item>Fokusemner</item>
+        <item>Formularfelter</item>
+        <item>Billeder</item>
+        <item>Afkrydsningsfelter</item>
+        <item>Combo boxe</item>
+        <item>Informationer</item>
+        <item>Lister</item>
+        <item>Listeemner</item>
+        <item>Rul</item>
+        <item>Overblik</item>
+        <item>Tegn</item>
+        <item>Ord</item>
+        <item>Linjer</item>
+        <item>Sætninger</item>
+        <item>Sider</item>
+        <item>Kopier og vedføj</item>
+        <item>Medielydstyrke</item>
+        <item>Talehastighed</item>
+        <item>OCR-genkendelse og oversættelse</item>
+        <item>Vinduer</item>
+    </string-array>
+</resources>

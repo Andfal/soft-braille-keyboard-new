@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference android:title="@string/setup_setting_title">
+        <intent android:targetPackage="com.nirenr.talkman" android:targetClass="com.nirenr.talkman.SetupActivity" />
+    </Preference>
+    <ListPreference android:entries="@array/tts_values" android:title="@string/tts_speed_title" android:key="@string/tts_speed" android:defaultValue="50" android:entryValues="@array/tts_values" />
+    <ListPreference android:entries="@array/tts_values" android:title="@string/tts_volume_title" android:key="@string/tts_volume" android:defaultValue="100" android:entryValues="@array/tts_values" />
+    <CheckBoxPreference android:title="@string/usage_hints_title" android:key="@string/usage_hints" android:defaultValue="true" />
+    <CheckBoxPreference android:title="@string/use_list_index_title" android:key="@string/use_list_index" android:defaultValue="true" />
+    <CheckBoxPreference android:title="@string/notification_bar_speak_title" android:key="@string/notification_bar_speak" android:defaultValue="true" />
+    <CheckBoxPreference android:title="@string/use_left_right_title" android:key="@string/use_left_right" android:summary="@string/use_left_right_summary" android:defaultValue="false" />
+    <CheckBoxPreference android:title="@string/use_custom_gesture_title" android:key="@string/use_custom_gesture" />
+    <Preference android:title="@string/custom_gesture_settings_title" android:key="@string/custom_gesture_settings" />
+</PreferenceScreen>

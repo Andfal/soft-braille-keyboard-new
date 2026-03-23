@@ -1,0 +1,23 @@
+version: 3.0.1
+apkFileName: jieshuo_full.apk
+usesFramework:
+  ids:
+  - 1
+sdkInfo:
+  minSdkVersion: 21
+  targetSdkVersion: 31
+versionInfo:
+  versionCode: 236
+  versionName: 20260213
+resourcesInfo:
+  packageId: 127
+doNotCompress:
+- arsc
+- gif
+- jet
+- mid
+- mp3
+- ogg
+- png
+- res/raw/espeakdata.zip
+- res/raw/espeakdata_version

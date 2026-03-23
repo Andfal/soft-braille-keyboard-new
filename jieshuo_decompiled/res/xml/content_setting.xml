@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceScreen android:title="@string/hints_list_settings_title">
+        <CheckBoxPreference android:title="@string/usage_hints_title" android:key="@string/usage_hints" android:summary="@string/usage_hints_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_node_info_title" android:key="@string/use_node_info" android:summary="@string/use_node_info_summary" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_speak_changed_volume_title" android:key="@string/use_speak_changed_volume" android:summary="@string/use_speak_changed_volume_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_speak_changed_window_title" android:key="@string/use_speak_changed_window" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_speak_key_title" android:key="@string/use_speak_key" android:defaultValue="false" />
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/list_view_settings_title">
+        <CheckBoxPreference android:title="@string/use_list_index_title" android:key="@string/use_list_index" android:summary="@string/use_list_index_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_list_item_index_real_time_title" android:key="@string/use_list_item_index_real_time" android:dependency="@string/use_list_index" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_list_item_index_title" android:key="@string/use_list_item_index" android:summary="@string/use_list_item_index_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_scroll_list_index_title" android:key="@string/use_scroll_list_index" android:summary="@string/use_scroll_list_index_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_scroll_list_content_title" android:key="@string/use_scroll_list_content" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_scroll_list_keep_position_title" android:key="@string/use_scroll_list_keep_position" android:summary="@string/use_scroll_list_keep_position_summary" android:defaultValue="false" />
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/view_label_settings_title">
+        <CheckBoxPreference android:title="@string/use_view_name_title" android:key="@string/use_view_name" android:summary="@string/use_view_name_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_web_view_name_title" android:key="@string/use_web_view_name" android:summary="@string/use_web_view_name_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/unknown_lable_title" android:key="@string/unknown_lable" android:summary="@string/unknown_lable_summary" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/unknown_index_title" android:key="@string/unknown_index" android:summary="@string/unknown_index_summary" android:dependency="@string/unknown_lable" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_edit_hint_title" android:key="@string/use_edit_hint" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_speak_state_title" android:key="@string/use_speak_state" android:defaultValue="false" />
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/view_changed_settings_title">
+        <CheckBoxPreference android:title="@string/use_progress_title" android:key="@string/use_progress" android:summary="@string/use_progress_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_content_changed_title" android:key="@string/use_content_changed" android:summary="@string/use_content_changed_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_window_title_changed_title" android:key="@string/use_window_title_changed" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_content_tree_changed_title" android:key="@string/use_content_tree_changed" android:summary="@string/use_content_tree_changed_summary" android:defaultValue="false" />
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/auto_speak_title">
+        <CheckBoxPreference android:title="@string/use_speak_qq_changed_title" android:key="@string/use_speak_qq_changed" android:summary="@string/use_speak_qq_changed_summary" android:defaultValue="false" />
+        <MultiSelectListPreference android:title="@string/auto_speak_apps_title" android:key="@string/auto_speak_apps" android:summary="@string/auto_speak_apps_summary" />
+        <Preference android:title="@string/auto_speak_blacklist_title" android:key="@string/auto_speak_blacklist" />
+        <Preference android:title="@string/auto_list_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/auto_list_tts_setting_title" android:data="3" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/screen_on_off_settings_title">
+        <CheckBoxPreference android:title="@string/use_screen_on_speak_title" android:key="@string/use_screen_on_speak" android:defaultValue="true" />
+        <ListPreference android:title="@string/timer_format_title" android:key="@string/timer_format" android:defaultValue="0" />
+        <CheckBoxPreference android:title="@string/use_screen_on_speak_battery_title" android:key="@string/use_screen_on_speak_battery" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_screen_on_speak_notification_title" android:key="@string/use_screen_on_speak_notification" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_screen_off_speak_title" android:key="@string/use_screen_off_speak" android:defaultValue="true" />
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/incall_setting_title">
+        <CheckBoxPreference android:title="@string/use_speak_call_phone_title" android:key="@string/use_speak_call_phone" android:summary="@string/use_speak_call_phone_summary" android:defaultValue="false" />
+        <ListPreference android:title="@string/speak_call_phone_index_title" android:key="@string/speak_call_phone_index" android:defaultValue="5" />
+        <CheckBoxPreference android:title="@string/use_ringtone_volume_title" android:key="@string/use_ringtone_volume" android:summary="@string/use_ringtone_volume_summary" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_speak_call_time_title" android:key="@string/use_speak_call_time" android:summary="@string/use_speak_call_time_summary" android:defaultValue="false" />
+        <Preference android:title="@string/incall_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/incall_tts_setting_title" android:data="6" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/text_format_settings_title" android:key="text_format_settings">
+        <CheckBoxPreference android:title="@string/use_text_format_first_title" android:key="@string/use_text_format_first" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_text_format_char_number_title" android:key="@string/use_text_format_char_number" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_text_format_char_upper_title" android:key="@string/use_text_format_char_upper" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_text_format_read_word_title" android:key="@string/use_text_format_read_word" android:defaultValue="false" />
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/content_filter_settings_title">
+        <Preference android:title="@string/content_blacklist_title" android:key="@string/content_blacklist" android:summary="@string/content_blacklist_summary" />
+        <CheckBoxPreference android:title="@string/use_small_filter_title" android:key="@string/use_small_filter" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_image_filter_title" android:key="@string/use_image_filter" android:summary="@string/use_image_filter_summary" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_supper_filter_title" android:key="@string/use_supper_filter" android:summary="@string/use_supper_filter_summary" android:defaultValue="false" />
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/custom_content_title">
+        <CheckBoxPreference android:title="@string/use_cloud_label_title" android:key="@string/use_cloud_label" android:summary="@string/use_cloud_label_summary" android:defaultValue="false" />
+        <Preference android:title="@string/content_label_title" android:key="@string/content_label" />
+        <CheckBoxPreference android:title="@string/use_custom_node_name_title" android:key="@string/use_custom_node_name" android:defaultValue="false" />
+        <Preference android:title="@string/custom_node_name_title" android:key="@string/custom_node_name" />
+        <CheckBoxPreference android:title="@string/use_custom_dict_speak_title" android:key="@string/use_custom_dict_speak" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_custom_dict_regex_title" android:key="@string/use_custom_dict_regex" android:defaultValue="false" />
+        <Preference android:title="@string/custom_dict_title" android:key="@string/custom_dict" />
+    </PreferenceScreen>
+</PreferenceScreen>

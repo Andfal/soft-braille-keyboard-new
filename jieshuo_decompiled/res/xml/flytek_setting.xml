@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference android:entries="@array/tts_speaker_entries" android:title="@string/tts_speaker_title" android:key="@string/fly_tts_speaker" android:defaultValue="@string/xiaoyan" android:entryValues="@array/tts_speaker_values" />
+    <CheckBoxPreference android:title="@string/use_number_speak_title" android:key="@string/fly_number_speak" android:defaultValue="false" />
+    <CheckBoxPreference android:title="@string/fly_pinyin_speak_title" android:key="@string/fly_pinyin_speak" android:defaultValue="false" />
+</PreferenceScreen>

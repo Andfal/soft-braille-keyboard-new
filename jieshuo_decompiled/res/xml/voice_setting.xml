@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference android:title="@string/tts_engine_title" android:key="@string/tts_engine" />
+    <Preference android:title="@string/async_tts_engine_title" android:key="@string/async_tts_engine" />
+    <PreferenceScreen android:title="@string/more_tts_setting_title">
+        <Preference android:title="@string/notification_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/notification_tts_setting_title" android:data="1" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+        <Preference android:title="@string/reader_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/reader_tts_setting_title" android:data="2" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+        <Preference android:title="@string/auto_list_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/auto_list_tts_setting_title" android:data="3" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+        <Preference android:title="@string/auto_read_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/auto_read_tts_setting_title" android:data="4" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+        <Preference android:title="@string/char_mode_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/char_mode_tts_setting_title" android:data="5" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+        <Preference android:title="@string/incall_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/incall_tts_setting_title" android:data="6" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+        <Preference android:title="@string/timer_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/timer_tts_setting_title" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+        <Preference android:title="@string/helper_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/helper_tts_setting_title" android:data="8" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+        <Preference android:title="@string/node_tts_setting_title">
+            <intent android:targetPackage="com.nirenr.talkman" android:action="@string/node_tts_setting_title" android:data="9" android:targetClass="com.nirenr.talkman.settings.TimerTtsSetting" />
+        </Preference>
+    </PreferenceScreen>
+    <Preference android:title="@string/tts_system_settings_title" android:key="@string/tts_system_settings" />
+    <Preference android:title="@string/tts_iflytek_settings_title" android:key="@string/tts_iflytek_settings" />
+    <Preference android:title="@string/tts_settings_label" android:key="@string/tts_unisound_settings" />
+    <CheckBoxPreference android:title="@string/use_custom_symbol_speak_title" android:key="@string/use_custom_symbol_speak" android:defaultValue="false" />
+    <Preference android:title="@string/custom_symbol_title" android:key="@string/custom_symbol" />
+    <ListPreference android:title="@string/use_emoji_speak_mode_title" android:key="@string/use_emoji_speak_mode" android:defaultValue="0" />
+    <PreferenceScreen android:title="@string/speak_clear_setting">
+        <CheckBoxPreference android:title="@string/use_custom_speak_clear_title" android:key="@string/use_custom_speak_clear" android:defaultValue="false" />
+        <Preference android:title="@string/custom_speak_clear_title" android:key="@string/custom_speak_clear" android:summary="@string/custom_speak_clear_summary" />
+        <CheckBoxPreference android:title="@string/use_custom_speak_symbol_number_title" android:key="@string/use_custom_speak_symbol_number" android:defaultValue="false" />
+        <Preference android:title="@string/custom_speak_symbol_number_title" android:key="@string/custom_speak_symbol_number" />
+    </PreferenceScreen>
+    <PreferenceScreen android:title="@string/other_setting">
+        <CheckBoxPreference android:title="@string/tts_low_latency_title" android:key="@string/tts_low_latency" android:defaultValue="true" />
+        <CheckBoxPreference android:title="@string/use_add_async_tts_title" android:key="@string/use_add_async_tts" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_slow_speed_title" android:key="@string/use_slow_speed" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_no_bluetooth_title" android:key="@string/use_no_bluetooth" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_recording_stop_title" android:key="@string/use_recording_stop" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_accessibility_volume_fix_title" android:key="@string/use_accessibility_volume_fix" android:summary="@string/use_accessibility_volume_fix_summary" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_wake_lock_pro_title" android:key="@string/use_wake_lock_pro" android:summary="@string/use_wake_lock_pro_summary" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_number_speak_title" android:key="@string/use_number_speak" android:defaultValue="false" />
+        <CheckBoxPreference android:title="@string/use_symbol_speak_title" android:key="@string/use_symbol_speak" android:defaultValue="false" />
+    </PreferenceScreen>
+</PreferenceScreen>

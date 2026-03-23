@@ -1,0 +1,16 @@
+{
+  LinearLayout;
+  layout_width="fill";
+  orientation="vertical";
+  {
+    EditText;
+    id="title",
+    layout_width="fill";
+  };
+  {
+    LuaEditor;
+    id="content",
+    layout_width="fill";
+    layout_height="fill";
+  };
+};

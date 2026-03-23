@@ -1,0 +1,17 @@
+{
+  LinearLayout;
+  layout_width="fill";
+  orientation="vertical";
+  {
+    TextView;
+    id="title",
+    layout_width="fill";
+  };
+  {
+    TextView;
+    id="content",
+    textSize="18",
+    layout_width="fill";
+    layout_height="fill";
+  };
+};

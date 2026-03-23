@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference android:entries="@array/tts_engine_entries" android:title="@string/command_set_tts_engine" android:key="@string/tts_engine" android:defaultValue="@string/tts_engine_default_value" android:entryValues="@array/tts_engine_values" />
+    <Preference android:title="@string/tts_settings_title" android:key="@string/tts_settings" />
+    <CheckBoxPreference android:title="@string/use_single_tts_title" android:key="@string/use_single_tts" android:summary="@string/use_single_tts_summary" android:defaultValue="false" />
+    <ListPreference android:entries="@array/tts_scale_entries" android:title="@string/tts_scale_title" android:key="@string/system_tts_scale" android:defaultValue="1" android:entryValues="@array/tts_scale_values" />
+    <ListPreference android:entries="@array/tts_values" android:title="@string/tts_speed_title" android:key="@string/system_tts_speed" android:defaultValue="50" android:entryValues="@array/tts_values" />
+    <ListPreference android:entries="@array/tts_values" android:title="@string/tts_volume_title" android:key="@string/system_tts_volume" android:defaultValue="100" android:entryValues="@array/tts_values" />
+    <ListPreference android:entries="@array/tts_values" android:title="@string/tts_pitch_title" android:key="@string/system_tts_pitch" android:defaultValue="50" android:entryValues="@array/tts_values" />
+    <CheckBoxPreference android:title="@string/audio_focus_title" android:key="@string/use_audio_focus" android:summary="@string/audio_focus_summary" android:defaultValue="false" />
+    <CheckBoxPreference android:title="@string/use_accessibility_volume_title" android:key="@string/use_accessibility_volume" android:defaultValue="false" />
+    <CheckBoxPreference android:title="@string/use_proixmity_sensor_title" android:key="@string/use_proixmity_sensor" android:summary="@string/use_proixmity_sensor_summary" android:defaultValue="false" />
+    <CheckBoxPreference android:title="@string/use_touch_stop_title" android:key="@string/use_touch_stop" android:defaultValue="false" />
+    <CheckBoxPreference android:title="@string/use_wake_lock_title" android:key="@string/use_wake_lock" android:summary="@string/use_wake_lock_summary" android:defaultValue="true" />
+</PreferenceScreen>

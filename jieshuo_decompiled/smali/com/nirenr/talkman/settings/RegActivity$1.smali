@@ -1,0 +1,53 @@
+.class Lcom/nirenr/talkman/settings/RegActivity$1;
+.super Ljava/lang/Object;
+.source "SourceFile"
+
+# interfaces
+.implements Landroid/view/View$OnClickListener;
+
+
+# annotations
+.annotation system Ldalvik/annotation/EnclosingMethod;
+    value = Lcom/nirenr/talkman/settings/RegActivity;->onCreate(Landroid/os/Bundle;)V
+.end annotation
+
+.annotation system Ldalvik/annotation/InnerClass;
+    accessFlags = 0x0
+    name = null
+.end annotation
+
+
+# instance fields
+.field final synthetic a:Lcom/nirenr/talkman/settings/RegActivity;
+
+
+# direct methods
+.method constructor <init>(Lcom/nirenr/talkman/settings/RegActivity;)V
+    .locals 0
+
+    iput-object p1, p0, Lcom/nirenr/talkman/settings/RegActivity$1;->a:Lcom/nirenr/talkman/settings/RegActivity;
+
+    invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    return-void
+.end method
+
+
+# virtual methods
+.method public onClick(Landroid/view/View;)V
+    .locals 3
+
+    iget-object p1, p0, Lcom/nirenr/talkman/settings/RegActivity$1;->a:Lcom/nirenr/talkman/settings/RegActivity;
+
+    new-instance v0, Landroid/content/Intent;
+
+    iget-object v1, p0, Lcom/nirenr/talkman/settings/RegActivity$1;->a:Lcom/nirenr/talkman/settings/RegActivity;
+
+    const-class v2, Lcom/nirenr/talkman/settings/LoginActivity;
+
+    invoke-direct {v0, v1, v2}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
+
+    invoke-virtual {p1, v0}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
+
+    return-void
+.end method

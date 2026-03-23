@@ -1,0 +1,1321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="action_menu_items">
+        <item>@string/command_clean</item>
+        <item>@string/command_select</item>
+        <item>@string/command_copy</item>
+        <item>@string/command_append_copy</item>
+        <item>@string/command_paste</item>
+        <item>@string/clipboard_menu_title</item>
+        <item>@string/favorites_menu_title</item>
+        <item>@string/split_edit_title</item>
+        <item>@string/command_long_copy</item>
+    </string-array>
+    <string-array name="advanced_menu_items">
+        <item>terjemahan</item>
+        <item>Pengenalan recognition</item>
+        <item>teks recognition</item>
+        <item>Pengenalan wajah</item>
+        <item>CAPTCHA recognition</item>
+        <item>Hasil recognition</item>
+        <item>Deskripsi gambar</item>
+        <item>Verifikasi teka-teki penggeser</item>
+        <item>Pengakuan ujian</item>
+    </string-array>
+    <string-array name="alarm_hour_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+    </string-array>
+    <string-array name="alarm_interval_entries">
+        <item>Setiap 5 menit</item>
+        <item>Setiap 10 menit</item>
+        <item>Setiap 15 menit</item>
+        <item>Setiap 30 menit</item>
+        <item>Setiap 60 menit</item>
+    </string-array>
+    <string-array name="alarm_interval_values">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+    </string-array>
+    <string-array name="code_help_items">
+        <item>"Jelaskan gerakan multifungsi dan plug-in dengan sintaks lua untuk menjelaskan API berpemilik untuk mengimplementasikan beberapa fungsi gerakan.
+ Jika Anda akrab dengan lua dan androlua, Anda juga dapat mencapai lebih banyak fitur, Dokumen ini hanya mencakup bagian API berpemilik."</item>
+        <item>"Konsep dasar,
+ service, Layanan aksesibilitas, Ini adalah inti dari layanan layar ini, Setiap fungsi berpusat pada layanan ini."</item>
+        <item>"Deskripsi tipe parameter,
+ node, Fokus saat ini, Artinya, node yang saat ini menerima fokus aksesibilitas, Tindakan umum diarahkan pada fokus ini.
+"</item>
+        <item>"bool, Boolean, true atau false.
+ text, Konten teks."</item>
+        <item>return, kembali, Beri tahu layar jika Anda ingin layar melakukan tindakan default untuk gerakan tersebut.</item>
+        <item>kembali true mencegat gerakan, false Kembali ke tingkat eksekusi sebelumnya, Seperti kembali dalam satu gerakan program false, Gerakan global mengambil alih pemrosesan, Gerakan global kembali false, Ditangani oleh gerakan default.</item>
+        <item>"Perintah umum,
+ service.execute(perintah,node)"</item>
+        <item>Perintah ini adalah penjelasan untuk menyederhanakan pengembangan beberapa instruksi bawaan, Jika eksekusi berhasil dikembalikan true, Pengembalian yang gagal false.</item>
+        <item>service.postExecute(时间,perintah,node)</item>
+        <item>Menunda eksekusi perintah,</item>
+        <item>text=service.getText(node)</item>
+        <item>Mendapatkan informasi teks untuk node yang ditentukan.</item>
+        <item>service.setText(node,text)</item>
+        <item>Atur konten teks dari kotak fokus yang ditentukan.</item>
+        <item>service.setText(text)</item>
+        <item>Atur konten teks dari kotak input fokus antarmuka saat ini.</item>
+        <item>service.copy()</item>
+        <item>Salin konten teks dari fokus saat ini ke clipboard.</item>
+        <item>service.appendCopy()</item>
+        <item>Tambahkan konten teks yang menyalin fokus saat ini ke clipboard.</item>
+        <item>service.copy(text)</item>
+        <item>Salin konten teks yang ditentukan ke clipboard.</item>
+        <item>service.appendCopy(text)</item>
+        <item>Tambahkan teks yang ditentukan ke clipboard.</item>
+        <item>service.paste()</item>
+        <item>Tempelkan konten clipboard ke dalam kotak input antarmuka saat ini.</item>
+        <item>service.paste(node)</item>
+        <item>Tempelkan isi clipboard ke dalam kotak input yang ditentukan.</item>
+        <item>service.toNext()</item>
+        <item>Fokus berikutnya.</item>
+        <item>service.toNext(node,bool)</item>
+        <item>Tentukan fokus node berikutnya, bool = true, Menemukan node anak, untuk false, Jangan mencari node anak.</item>
+        <item>service.toPrevious()</item>
+        <item>fokus sebelumnya.</item>
+        <item>service.toPrevious(node,bool)</item>
+        <item>Menentukan fokus node sebelumnya, bool = true, Menemukan node anak, untuk false, Jangan mencari node anak.</item>
+        <item>service.toNextChar()</item>
+        <item>karakter berikutnya.</item>
+        <item>service.toPreviousChar()</item>
+        <item>karakter sebelumnya.</item>
+        <item>service.toNextLine()</item>
+        <item>Baris berikutnya.</item>
+        <item>service.toPreviousLine()</item>
+        <item>baris sebelumnya.</item>
+        <item>service.toTextStart()</item>
+        <item>ke awal teks.</item>
+        <item>service.toTextEnd()</item>
+        <item>ke akhir teks.</item>
+        <item>service.toListViewStart()</item>
+        <item>Ke awal daftar.</item>
+        <item>service.toListViewEnd()</item>
+        <item>Ke akhir daftar.</item>
+        <item>service.getRootNodeInfo()</item>
+        <item>Mendapatkan info root node.</item>
+        <item>service.ocr(node)</item>
+        <item>Pengenalan teks menentukan node, Hanya anggota yang tersedia.</item>
+        <item>service.setTimerMode(bool)</item>
+        <item>Mengaktifkan atau menonaktifkan mode timer, bool = true, Buka, false untuk penutupan.</item>
+        <item>"service.setAutoReadEnabled(bool)
+ Mengaktifkan atau menonaktifkan mode membaca, bool = true, Buka, false untuk penutupan."</item>
+        <item>"service.setAutoNext(bool)
+ Mengaktifkan atau menonaktifkan mode penjelajahan otomatis, bool = true, Buka, false untuk penutupan."</item>
+        <item>"bool=service.isEditView(node)
+ Menentukan apakah node saat ini adalah kotak edit."</item>
+        <item>"bool=service.isSeekBar(node)
+ Menentukan apakah node saat ini adalah slider kemajuan."</item>
+        <item>"bool=service.isListView(node)
+ Menentukan apakah node saat ini adalah daftar."</item>
+        <item>"bool=service.isInListView(node)
+ Menentukan apakah node saat ini ada dalam daftar."</item>
+        <item>"bool=service.isInWebView(node)
+ Menentukan apakah node saat ini ada di halaman Web."</item>
+        <item>"bool=service.isClick(node)
+ Menentukan apakah node saat ini dapat diklik."</item>
+        <item>"service.toClick()
+ Klik pada fokus saat ini, Prioritas penggunaan tangan analog klik fokus di atas Android 7."</item>
+        <item>"service.toClick(node)
+ Klik pada node yang ditentukan."</item>
+        <item>"service.toLongClick()
+klik Fokus yang panjang saat ini."</item>
+        <item>"service.toLongClick(node)
+ Tekan dan tahan node yang ditentukan."</item>
+        <item>"service.toBack()
+kembali."</item>
+        <item>"service.toHome()
+ Kembali ke layar beranda."</item>
+        <item>"service.toNotification()
+ buka panel notifikasi."</item>
+        <item>"service.toParent()
+ buka recent apps."</item>
+        <item>"service.scrollBackward(node)
+ Gulir ke belakang."</item>
+        <item>"service.scrollForward(node)
+ Gulir ke depan."</item>
+        <item>"service.loadGesturePackage(name)
+ load Skema gerakan."</item>
+        <item>"service.click(x,y)
+ Simulasi tangan manusia mengetuk layar untuk menentukan lokasi,Hanya Android 7 ke atas yang tersedia."</item>
+        <item>"service.longClick(x,y)
+ Simulasi tekan dan tahan pada layar untuk menentukan posisi,Hanya Android 7 ke atas yang tersedia."</item>
+        <item>"service.press(x,y,t)
+ Simulator tekan dan tahan waktu yang ditentukan pada posisi yang ditentukan pada layar. Hanya Android 7 ke atas yang tersedia."</item>
+        <item>"service.swipe(x1,y1,x2,y2,t)
+ Mode simulasi menggesek dari satu posisi ke posisi lain pada waktu tertentu. Hanya Android 7 ke atas yang tersedia."</item>
+        <item>Pernyataan kontrol kode.</item>
+        <item>"if keadaan then Kode untuk mengeksekusi
+ end
+ Kode di tengah eksekusi yang memenuhi kriteria yang ditentukan.
+ sebagai contoh,"</item>
+        <item>if service.isEditView(node) then service.execute(Pengeditan secara Terpisah,node) return true end</item>
+        <item>Kode ini berarti, Pengeditan terpisah diaktifkan saat fokus ada di kotak edit.</item>
+        <item>"for n=1,Jumlah pengulangan do
+ Kode untuk mengeksekusi
+ end
+ Ulangi kode yang ditentukan beberapa kali
+ sebagai contoh,"</item>
+        <item>for n=1,10 do service.toBack() end Kembali 10 kali.</item>
+        <item>"Menentukan fungsi,
+ function Nama fungsi(argumen)
+ Kode fungsi
+ end"</item>
+        <item>"Fungsi adalah blok fungsi kode. Kode dapat digunakan kembali secara efektif.
+ sebagai contoh, Di bawah ini adalah fungsi yang menambahkan data ke daftar. Dalam kode gerakan, Dapat digunakan untuk menambahkan kode duplikat ke daftar."</item>
+        <item>function append(t1,t2) for k,v in ipairs(t2) do table.insert(t1,v) end end</item>
+        <item>Klik pada daftar={} Daftar tombol={%Klik,%Pengembalian} for n=1,10 do append(Klik pada daftar,daftar tombol) end Tambahkan isi daftar tombol 10 kali ke daftar klik.</item>
+        <item>fungsi Geser()</item>
+        <item>service.swipe(500,300,500,1000,1000) return true end</item>
+        <item>Slide tangan simulator di layar,Anda dapat menggunakannya dalam kode isyarat, service.click({{>Wechat%[usap ke bawah]}}) Buka WeChat Analog untuk menggesek ke bawah, Dari atas, ke bawah layar.</item>
+        <item>"Klik otomatis,
+ service.click({Daftar tombol})
+ Secara otomatis menemukan tombol yang mengklik daftar tombol,
+ Nama tombol mendukung beberapa simbol untuk pencocokan perintah umum,
+ Seperti sebelumnya ditambah hashtag,Menunjukkan bahwa pencarian adalah untuk tag kustom,
+ Bagian depan atau belakang ditambah tanda bintang menunjukkan bahwa ada karakter lain di depan atau belakang.
+ Bagian belakang ditambah hashtag (hashtag) menunjukkan urutan tombol,
+ Tambahkan bagian belakang@ (tanda at) hanya berjalan pada suatu program,
+Menambahkan $ digunakan untuk penundaan setelah eksekusi selesai.
+ Argumen mendukung beberapa tabel,Lihat dalam rangka,
+ Jika pencarian kembali dengan sukses true,Pengembalian yang gagal false.
+ Lihat kembali untuk deskripsi lengkap,"</item>
+        <item>Klik selang waktu, service.postClick(Waktu,{Daftar tombol}) Menunda sejumlah waktu tertentu untuk melakukan klik, Satuan waktu adalah milidetik. Daftar tombol didefinisikan sama dengan klik, Tidak ada nilai pengembalian.</item>
+        <item>"service.plugin(插件名称,node)
+ Jalankan plug-in,
+ Mengembalikan nilai yang dikembalikan dengan kustomisasi plug-in."</item>
+        <item>Jelaskan gerakan untuk secara otomatis mengklik yang paling fleksibel, Bentuk dasarnya adalah,</item>
+        <item>"Daftar tombol={}
+ service.click(Daftar tombol)
+ return true"</item>
+        <item>"Dua baris bawah diperbaiki,Yang harus Anda lakukan adalah memodifikasi daftar tombol.
+ Format daftar tombol terdiri dari beberapa nama tombol dan simbol yang diapit dalam kurung kurawal bahasa Inggris atau kurung kurawal."</item>
+        <item>Contoh yang paling sederhana,</item>
+        <item>"Daftar tombol={Ok}
+ service.click(Daftar tombol)
+ return true"</item>
+        <item>Kode ini dapat mengklik tombol OK di layar,</item>
+        <item>"Daftar tombol={Ok}
+selesai
+ } service.click(Daftar tombol)
+ return true"</item>
+        <item>Ini adalah kurung kurawal tingkat pertama, Ini jika sudah yakin, klik OKe, Klik Selesai tanpa konfirmasi, Jika tidak yakin, Terus cari dan selesaikan,Dan seterusnya</item>
+        <item>Terkadang kita perlu mengklik serangkaian tombol berturut-turut untuk mencapai beberapa fungsi, Ini juga keuntungan dari klik otomatis,</item>
+        <item>"Daftar tombol={
+{kartu profil grup,dokumen}
+} service.click(Daftar tombol)
+return true
+"</item>
+        <item>Ini adalah kurung kurawal sekunder, Tombol-tombol dalam kurung kurawal sekunder akan diklik secara bergantian, sampai tombol tidak berhenti,</item>
+        <item>Kurung kurawal dalam tanda kurung dapat menghasilkan klik terus menerus,</item>
+        <item>Dalam daftar tombol kami menggunakan beberapa simbol untuk meningkatkan fitur,</item>
+        <item>Paling sering digunakan* tanda bintang, Tanda bintang bahasa indonesia, Simbol ini sebelum dan sesudah teks tombol, Menunjukkan bahwa mungkin ada sesuatu yang lain</item>
+        <item>Seperti apa,Di antarmuka utama QQ untuk mengklik, Jelaskan grup komunikasi layar baca, Dan daftar ini kadang-kadang dilengkapi dengan 99 item yang belum dibaca, Saat itulah ia akan ditulis,</item>
+        <item>Grup Komunikasi Layar Baca Komentar*</item>
+        <item># Hashtag atau tanda pagar, Mewakili beberapa hasil pertama, Terkadang antarmuka memiliki banyak tombol dengan nama yang sama, Kali ini Anda perlu menggunakan hashtag untuk menunjukkan bahwa Anda mengklik beberapa yang pertama,</item>
+        <item>sebagai contoh, Ok1, Mewakili yang pertama, Bisa juga negatif, Jika Ok dengan #-1,Mewakili yang terakhir.</item>
+        <item>Hashtag ini menunjukkan di awal teks bahwa Anda mencari label tombol, Alih-alih nama tombol, Misalnya, beberapa tombol tidak memiliki nama, Anda dapat menandai diri sendiri, dan menggunakan tag untuk menemukan,</item>
+        <item>"Simbol ini memiliki garis vertikal dalam bahasa Inggris dan Cina. |, mewakili atau, Artinya, jika ada klik di depan garis vertikal, Tanpa mengklik bagian belakang,
+Ambil contoh yang baru saja diidentifikasi dan diselesaikan, Hal ini dapat abbrecompensally,
+Ok|selesai
+Klik Ok, atau selesai"</item>
+        <item>&amp; mewakili dan, Artinya, hanya ada satu &amp;Antarmuka konten di balik simbol, sebelum mengklik tombol pada konten depan,</item>
+        <item>"确定&amp;*keluar*
+Menunjukkan, Hanya antarmuka ini yang memiliki kata keluar, Seperti ok untuk berhenti, Sebelum mengklik OK, dan jangan mengeksekusi tanpa berhenti dua kata,"</item>
+        <item>"&amp;Dieksekusi ketika bagian belakang ditambah tanda seru ditambah kata kunci menunjukkan bahwa konten belakang tidak disertakan.
+Kamu yakin&amp;!*keluar*
+Menunjukkan Hanya ketika antarmuka ini tidak memiliki kata keluar, Sebelum mengklik OK, Dan ada dua kata keluar yang tidak dieksekusi, Bertentangan dengan situasi sebelumnya,"</item>
+        <item>"&amp;Simbol menunjukkan sebelum memeriksa jenis fokus saat ini,
+"</item>
+        <item>"&amp;Diedit
+"</item>
+        <item>"&amp;Dapat diklik
+"</item>
+        <item>"&amp;daftar
+"</item>
+        <item>"&amp;Daftar item
+"</item>
+        <item>"&amp;Mengedit kotak
+Kotak edit ini adalah kotak edit yang memunculkan metode input,
+"</item>
+        <item>$ Tanda dolar, Simbol di belakang teks ini menunjukkan berapa lama menunggu setelah mengklik tombol, Lakukan langkah selanjutnya,</item>
+        <item>"Kartu informasi grup$2000,arsip
+Menunjukkan bahwa klik pada kartu kartu data grup setelah 2 detik klik pada file,
+"</item>
+        <item>"Tanda kurang dari,  &lt;Di belakang perintah, menunjukkan eksekusi pengulangan, Berapa kali Anda mengklik tombol berulang kali,
+ sebagai contoh, Lagu berikutnya&lt;10
+exsekusi klik pada lagu berikutnya sepuluh kali,"</item>
+        <item>"Tanda lebih kecil, di depan, hanya memindahkan posisi fokus,tidak mengeklik.
+&lt;Ok.
+Temukan OK tapi jangan klik."</item>
+        <item>">Tanda lebih besar dari angka, Tanda lebih besar ditempatkan di belakang, Nomor tunggu.
+Kartu informasi grup, Berkas>10
+Telepon merespons dengan cepat atau lambat,  Anda dapat menunggu waktu tertentu dengan simbol ini,  Kode ini berarti, Tunggu sepuluh detik setelah mengklik kartu profil grup, Jika file muncul dalam sepuluh detik, klik segera, Hentikan eksekusi jika waktu habis,"</item>
+        <item>" Pada awal tanda yang lebih besar dari dapat membuka program,> WeChat
+Buka Wechat>QQ
+ Buka qq"</item>
+        <item>"Ada juga beberapa simbol ekstensi,Dapat melakukan fungsi lain,
+% Beberapa instruksi umum dapat dijalankan,
+Seperti apa yang
+% Replikasi
+Dapat disalin,
+% Teks lengkap dibaca dengan keras
+Dapat dibaca dengan keras di layar penuh,"</item>
+        <item>% Anda juga dapat menjalankan fungsi yang ditentukan dalam skrip,Fungsi mengembalikan true untuk melanjutkan eksekusi, palsu berhenti melanjutkan eksekusi,</item>
+        <item>"[] Konten yang termasuk dalam tanda kurung siku menunjukkan bahwa klik langsung simulasi, dan gunakan klik aksesibilitas secara berbeda,Mengklik langsung dapat memecahkan masalah bahwa beberapa fokus tidak dapat diklik,
+[Mainkan]
+Simulasikan langsung mengklik tombol putar,
+[%Klik]
+Simulasikan mengklik langsung pada fokus saat ini"</item>
+        <item>"[x,y] Braket siku berisi dua angka yang menunjukkan klik analog untuk menentukan lokasi, Posisi absolut dapat diwakili oleh bilangan bulat, Atau posisi relatif dalam desimal,
+[300,500]
+ Klik analog menghitung 300 piksel dari kiri, Menghitung posisi 500 piksel dari atas,
+[0.3,0.5]
+ Mensimulasikan penghitungan klik dari kiri 0.3 lebar layar, Hitung dari atas 0.5 posisi tinggi layar,"</item>
+        <item>"[x,y,t] Braket siku berisi tiga digit yang mewakili klik analog pada waktu yang ditentukan di lokasi yang ditentukan. Dua arti pertama adalah sama dengan yang sebelumnya, Yang ketiga adalah waktu dalam milidetik.
+[300,500,1000]
+Mensimulasikan penghitungan klik dari kiri 300 pixel Hitung dari atas 500 Posisi pixel, Gigih 1000 Milidetik"</item>
+        <item>"[x1,y1,x2,y2,t] Tanda kurung siku berisi lima angka yang mewakili analog dari x1 pada waktu tertentu, y1 slide ke x2, y2 lokasi, Posisi absolut dapat diwakili oleh bilangan bulat, Atau posisi relatif dalam desimal,
+[300,500,300,800,1000]
+ Simulasi dihitung dari kiri 300 pixel Hitung dari atas 500 Posisi pixel, pakai 1000 Slide waktu milidetik ke 300,800 Tempat"</item>
+        <item>"Simulasi swipe juga memungkinkan Anda untuk menentukan jumlah gesekan
+[300,500,300,800,1000,10]
+Simulasi dihitung dari kiri 300 pixel Hitung dari atas 500 Posisi pixel, pakai 1000 Slide waktu milidetik ke 300,800 Tempat 10 kali"</item>
+        <item>"Terkadang ada beberapa situasi berbeda dalam eksekusi gerakan, Misalnya, buka QQ, Klik pada komentar untuk membaca grup pertukaran layar,Klik pada kartu profil grup,Klik Berkas,
+Jika ada pengumuman kelompok, Akan terjebak dalam langkah kartu profil grup klik, Tidak dapat dieksekusi,
+Kode cabang diperlukan untuk melaksanakan kontinjensi ini,
+Saya hanya contoh tulisan tangan, Mungkin ada kesalahan ketik yang mencegah eksekusi, Memahami artinya,"</item>
+        <item>"Daftar tombol={
+{>QQ,
+Komentar Membaca Screen Exchange Group*,
+{Saya telah membaca pengumuman grup|saya tahu
+},
+ Kartu informasi grup,
+arsip,
+}}"</item>
+        <item>"Karena versi QQ berbeda, Tombol Pengumuman OK Group juga berbeda,
+Seperti yang anda lihat, Setelah mengklik grup pertukaran layar baca komentar, Ada satu lagi pasang tombol bracketing kawat gigi keriting, Tombol dalam kurung ini, Ada eksekusi, Lewati jika tidak, Tidak mempengaruhi eksekusi tombol kembali,
+Jika ada operasi yang kompleks di cabang, Atau beberapa skenario, Kita juga bisa memasukkan beberapa tanda kurung"</item>
+        <item>"Daftar tombol={
+{>QQ,
+Komentar Membaca Screen Exchange Group*,
+{{Saya sudah membaca pengumuman grup,ok},
+{Saya tahu,ok},
+},
+Kartu informasi grup,
+arsip,
+} }"</item>
+    </string-array>
+    <string-array name="edge_gesture_width_entries">
+        <item>Kecil</item>
+        <item>Medium</item>
+        <item>Besar</item>
+        <item>Maksimum</item>
+    </string-array>
+    <string-array name="edge_gesture_width_values">
+        <item>8</item>
+        <item>12</item>
+        <item>16</item>
+        <item>20</item>
+    </string-array>
+    <string-array name="gesture_help_items">
+        <item>"Gesture operation essentials:
+ Single gestures should be straight, and movements should be fast
+ The first part of the combined gesture should be longer than half the length of the screen, and the second part can be oriented as long as it is right."</item>
+        <item>"Combination gesture:
+ First up, down, last focus
+ First down, first, first focus
+ First left and right task switching
+ Right, then left, back
+ First up and then right operation menu
+ First right and then right function menu
+ First, then left, extension
+ First, then left, voice assistant
+ First left, then left, word by word
+ Right first, then upper, automatically read aloud
+ First left and then open the notification bar
+ First right, then bottom, browse the list
+ Up twice click to browse
+ Twice swipe down"</item>
+        <item>"Click on the browse mode gesture:
+ Click to switch focus
+ Browse up mode
+ Browse down mode"</item>
+        <item>"Focus browsing mode gestures:
+ Up one focus
+ Down next focus"</item>
+        <item>"QQ WeChat call
+ Reject with left swipe
+ Answer with right swipe"</item>
+        <item>"Phone QQ WeChat call
+ Hang up left
+ Answer right"</item>
+        <item>"List
+ Page up to the left
+ Flip right to the bottom"</item>
+        <item>"Dialog
+ Cancel left
+ OK right"</item>
+        <item>"Progress slider
+ Swipe left to decrease slider
+ Swipe right to increase slider"</item>
+        <item>"Edit box
+ Move the cursor forward
+ Move the cursor backward"</item>
+        <item>"Word-by-word browse mode gestures:
+ Click to explain the current character
+ Up one line up
+ Down one line
+ Left previous character
+ Right next character
+ First left, last, last paragraph
+ First right, then next, next paragraph
+ First, then right, select text
+ Left first, then left, exit literally"</item>
+        <item>"Text selection gestures: 
+ Single tap: read the current character.
+ Up swipe: Go to the previous line.
+ Down swipe: Go to the next line.
+ Left swipe: Go to the previous character.
+ Right swipe: Go to the next character.
+ Left up swipe: Go to the previous paragraph.
+ Right up swipe: Go to the next paragraph.
+ Up right swipe: Deselect all.
+ Down right swipe: Copy selection.
+ Up left swipe: Append copy.
+ Right down swipe: copy the whole text."</item>
+        <item>"Node browsing mode gestures Up swipe: go to the previous node.
+ Down swipe: Go to the next node.
+ Left swipe: go to the parent node.
+ Right swipe: Go to the child node.
+ Down left swipe: exit the node."</item>
+        <item>"Voice assistant manual: 
+ Open AppName: Opens the given app Send Content: allows direct sending to QQ and Wechat Search for content: performs the online search for the given phrase Voice assistant is extensible thanks to the editing menus and plugins."</item>
+    </string-array>
+    <string-array name="help_items">
+        <item>"Menjelajah dengan operasi dasar:
+ Secara standar, mengusap ke atas akan bernavigasi ke item sebelumnya. dan mengusap ke bawah akan bernavigasi ke item berikutnya.
+ Anda dapat merubah gerakan ini di pengaturan tindakan."</item>
+        <item>"Menu utama: 
+ Secara standar, mengusap ke bawah lalu ke kanan akan membuka menu, mengusap ke kanan untuk melihat lebih banyak opsi.
+ Anda dapat menampilkan semua item menu sekaligus dengan menyesuaikannya di pengaturan."</item>
+        <item>"Assisten perintah suara:
+ Secara standar, suara asisten dapat diaktifkan dengan mengusap ke bawah lalu ke kiri dan perintah diucapkan setelah terdengar nada. Tapping the screen will force the immediate recognition
+ Suara asisten tersebut dapat disesuaikan di pengaturan lanjutan, pengaturan suara asisten, pengaturan kemampuan suara asisten.
+"</item>
+        <item>"Menu tindakan: 
+ Secara standar, mengusap ke atas lalu ke kanan akan membuka menu tindakan, mengusap ke kanan akan memperluas menu dan mengetuk dua kali akan mengaktifkan menu."</item>
+        <item>"Ekstensi:
+ Secara standar, mengusap ke atas lalu ke kiri akan membuka daftar ekstensi , kemudian usap ke kanan untuk membuka daftar perintah, dan mengetuk dua kali akan menjalankan fungsi yang dipilih.
+ Anda dapat menemukan lebih banyak plugin di resource download.
+ Pengaturan lanjutan, pengaturan suara asisten, pengaturan perintah suara, membuat baru, modivikasi atau yang diunduh"</item>
+        <item>"Copy, append copy, clipboard and favorites:
+ Fungsi ini terdapat pada operasi menu.
+ Copy, menyalin yang terfokus ke papan klip
+ Append copy, untuk menambahkan konten terfokus ke item terakhir pada papan klip,
+ Clipboard, Merekam yang terakhir disalin, klik untuk masuk ke kotak edit, tekan lama untuk menambahkan konten ke favorit
+ Favorites, klik untuk masuk ke kotak edit, tekan lama untuk mengedit,
+ Di pengaturan lanjutan, pengelolaan resource dapat menghapus atau mencadangkan papan clip dan favorit"</item>
+        <item>"Penyalinan lanjutan (Hanya pengguna premium):
+ Penyalinan lanjutan dapat menyalin daftar isi yang panjang.
+ Setelah penyalinan lanjutan diaktifkan di operasi menu, Anda harus menunggu dengan waktu yang berbeda menurut seberapa panjang daftar teks. Ketika penyalinan selesai, anda akan diminta untuk menyelesaikan penyalinan lanjutan.
+ Selama penyalinan lanjutan diproses, anda dapat melakukan berbagai gerakan pada layar untuk menghentikan proses."</item>
+        <item>"Pemilihan teks bebas(Khusus penguna primium):
+ Pemilihan teks bebas akan berguna saat kamu ingin memilih dan menyalin teks pada halaman web atau artikel panjang. Fitur ini dapat membagi cara pemilihan menjadi perkata, ataupun perkalimat. beri tanda centang pada cara pemilihan yang kamu inginkan lalu mulai menyalin
+ Pada daftar konten, kamu dapat menandai bagian awal teks yang ingin di-copy dengan cara melakukan gestur ketuk dan tahan, lalu cari bagian akhir teks yang ingin disalin dan lakukan lagi gestur ketuk dan tahan untuk memberi tanda akhiran"</item>
+        <item>"Pengeditan tingkat lanjut (member function):
+ Anda dapat mengedit isi yang terfokus menurut kata, perkalimat, paragraphs atau text penuh di dalam kotak edit atau tidak untuk memudahkan pesisi cepat dan medifikasi.
+ Click on the split edit list to edit it, long press to make the entry more detailed split.
+ Edit box can be clicked to enter the edit box, and the non-edit box can only be saved to the clipboard by copying."</item>
+        <item>"List browsing:
+ Menampilkan semua fokus menjadi tampilan daftar, klik untuk mengaktifkan fokus yang diinginkan, sangat cocok digunakan saat berada di halaman web."</item>
+        <item>"Mode membaca (member function):
+ Mode ini dapat membantu anda untuk berganti halaman dengan otomatis dan menyaring konten yang tidak diinginkan pada artikel sehingga dapat meningkatkan kenyamanan membaca."</item>
+        <item>"Layar virtual (member function):
+ OCR mengenali konten di layar, menampilkan hasil sesuai dengan posisi teks, mengklik teks hasil untuk mengaktifkan fokus yang sesuai, menekan lama kata untuk membagi fokus, dan mengklik kata untuk mengaktifkan posisi kata yang sesuai.
+ Untuk Android 7 ke atas ketuk dua kali untuk mengaktifkannya, dan Android 6 ke bawah ketuk 3 kali untuk mengaktifkan."</item>
+        <item>"Text recognition (member function):
+ Konten pada layar dikenali oleh OCR, dan hasilnya ditampilkan dalam bentuk daftar, dan untuk mengaktifkan fokus yang sesuai, pers lama diikuti oleh hasil tampilan kata, dan kata tunggal diaktifkan untuk mengaktifkan posisi kata yang sesuai.
+ android 6 tidak mendukung fitur ini."</item>
+        <item>"Penyelesai captcha (member function):
+ Sentuh kode verivication focus, pilih advance menu,, lalu verivication code identification atau voice assistant, lalu verivication code identification. Fitur ini dapat mengenali bahasa inggris atau digital verivication code, dan hasilnya akan disalin ke papan ketik secara otomatis."</item>
+        <item>"Kamera Jieshuo (member function):
+ Kamera jieshuo adalah fitur khusus untuk mengenali objek disekitar anda. Kamera ini terbagi atas beberapa mode, misalnya mode wajah, hewan, tumbuhan, dan mata uang. Tekan tombol volume atas untuk mengambil gambar, dan volume bawah untuk beralih antar mode"</item>
+        <item>"Berpindah cepat antar daftar item:
+ Pada pengaturan tindakan, pengaturan alternatif gestur centang kiri dan kanan untuk berpindah cepat antar daftar, anda dapat menggunakan kiri dan kanan gestur untuk menjelajah cepat di daftar pesan QQ, sebagai contohnya."</item>
+        <item>"Daftar hitam/putih notifikasi:
+ Daftar hitam notifikasi dapat memfilter pemberitahuan yang berisi konten yang ditentukan, dan memasukkan tanda bintang untuk memfilter semua pemberitahuan aplikasi. 
+         Daftar putih notifikasi dapat memungkinkan pembacaan pemberitahuan yang berisi konten yang ditentukan, bahkan jika pemberitahuan telah ditutup, memasukkan tanda bintang menunjukkan bahwa semua pemberitahuan untuk program telah diizinkan. 
+Keywords support regular expressions."</item>
+        <item>"Daftar hitam konten:
+ Anda dapat memfilter konten fokus dari konten yang ditentukan, biasanya digunakan untuk memfilter beberapa instruksi aksesibilitas non-standar.
+ regular expression tidak didukung berdasarkan pertimbangan efisiensi."</item>
+        <item>"Web content filtering (member function):
+ Memfilter anotasi gambar yang tidak berguna pada halaman untuk memfilter instruksi yang panjang dan tidak berguna pada halaman.
+ Pemfilteran yang lebih kuat dapat lebih jauh memfilter konten yang tidak penting."</item>
+        <item>"Powerful mode (member function):
+ Powerful mode gives you more operational focus,
+ biasanya memberikan pengalaman yang lebih baik dalam software seperti WeChat Sports, WeChat Friends Circle, Taobao Footprint, Huawei Router dan sebagainya."</item>
+        <item>"Virtual navigation (member function):
+ Navigasi virtual dapat menambahkan lokasi konten yang tidak dapat langsung diklik ke daftar navigasi.
+ Harap tambahkan hanya fokus posisi tidak berubah, klik pada nama input fokus yang dikenali di klik pengakuan untuk menambahkan,,
+ Hanya mendukung Android 7 ke atas."</item>
+        <item>"Kustomisasi gestur:
+ Anda dapat mengkostumisasi fitur bawaan atau tambahan sebagai isyarat.
+ Ubah gerakan dengan cepat dengan mengimpor paket gerakan.
+ Setelah gerakan diimpor, perlu diatur dalam operasi, dan pengalihan skema gerakan dapat berlaku.
+ Jika Anda tidak terbiasa dengan saran operasi dalam pengaturan umum, sesuaikan isyarat untuk memodifikasi isyarat."</item>
+        <item>"Two-step gestures (member function):
+ two steps gestures adalah operasi yang dengan cepat mengoperasikan gerakan kedua setelah operasi gerakan pertama selesai.
+ Itu dapat dinyalakan atau dikustomisasi dalam action settings, kemudian pilih two steps gestures,
+ Setelah two steps gestures dihidupkan, ada penundaan setengah detik setelah operasi gerakan pertama selesai, menunggu langkah kedua.
+ Jangan mengatur gerakan yang membutuhkan efisiensi, seperti gerakan fokus bergerak, menggunakan two steps gestures."</item>
+        <item>"Rekam perintah suara:
+ Mulai voice assistant untuk mengucapkan perintah rekaman, ucapkan program yang akan dibuka kemudian atau klik tombol fokus untuk mulai membuat perintah suara yang cepat. Setelah semua instruksi selesai, ucapkan untuk mengakhiri rekaman, setelah diminta memasukkan nama perintah, ucapkan nama perintah, dan akhirnya ucapkan tentukan .
+ Jika ada instruksi yang tidak dikenal selama proses perekaman, Anda dapat mengucapkannya kembali.         Perintah yang direkam dapat diubah dalam Pengaturan Lanjut, Pengaturan Asisten Suara, Pengaturan Perintah Suara."</item>
+    </string-array>
+    <string-array name="hot_key_help_items">
+        <item>Pindah ke item di atas</item>
+        <item>Pindah ke item dibawah</item>
+        <item>Pindah ke item sebelumnya</item>
+        <item>Pindah ke item selanjutnya</item>
+        <item>Kebawah</item>
+        <item>Ke atas</item>
+        <item>Kembali ke layar depan</item>
+        <item>Buka panel notifikasi</item>
+        <item>Buka menu aplikasi yang sedang digunakan</item>
+        <item>klik</item>
+        <item>Klik dan tahan</item>
+        <item>Pengaturan cepat</item>
+        <item>Menu utama</item>
+        <item>Menu lokal</item>
+        <item>menu plugin</item>
+        <item>ALT+T: 扩展工具</item>
+        <item>asisten suara</item>
+        <item>split text editing</item>
+        <item>Bergulir di daftar</item>
+    </string-array>
+    <string-array name="lang_entries">
+        <item>Automatic</item>
+        <item>Indonesia</item>
+        <item>Jawa</item>
+        <item>inggris</item>
+        <item>korea</item>
+        <item>china klasik</item>
+        <item>cina tradisional</item>
+        <item>belanda</item>
+        <item>Thai</item>
+        <item>Greek</item>
+        <item>italia</item>
+        <item>Slovenian</item>
+        <item>jepang</item>
+        <item>arab</item>
+        <item>Chinese Cantonese</item>
+        <item>Hungarian</item>
+        <item>Estonian</item>
+        <item>Romanian</item>
+        <item>cina</item>
+        <item>Czech</item>
+        <item>German</item>
+        <item>Perancis</item>
+        <item>Finlandia</item>
+        <item>Portugis</item>
+        <item>ken mart</item>
+        <item>Russian</item>
+        <item>Bulgarian</item>
+        <item>spanyol</item>
+        <item>swedia</item>
+        <item>Polandia</item>
+        <item>vietnam</item>
+        <item>irlandia</item>
+        <item>Orkish</item>
+        <item>Albanian</item>
+        <item>Akan</item>
+        <item>Aragonese</item>
+        <item>Amharic</item>
+        <item>Assamese</item>
+        <item>Aymara</item>
+        <item>Azeri</item>
+        <item>Asturian</item>
+        <item>Ossetian</item>
+        <item>Ojibwa</item>
+        <item>Oryan</item>
+        <item>Oromo</item>
+        <item>Persian</item>
+        <item>Breton</item>
+        <item>Bashkir</item>
+        <item>Basque</item>
+        <item>Brazilian Portuguese</item>
+        <item>Belarusian</item>
+        <item>Berber</item>
+        <item>Pampanga</item>
+        <item>Northern Sami</item>
+        <item>Northern Sotho</item>
+        <item>Bemba</item>
+        <item>Birim</item>
+        <item>Bislama</item>
+        <item>Balochian</item>
+        <item>Icelandic</item>
+        <item>Bosnian</item>
+        <item>Bhojpuri</item>
+        <item>Chuvash</item>
+        <item>Conga</item>
+        <item>Tatar</item>
+        <item>Shan</item>
+        <item>Detun</item>
+        <item>Dhivehi</item>
+        <item>Lowland German</item>
+        <item>Filipina</item>
+        <item>Sansekerta</item>
+        <item>Friuli</item>
+        <item>Fulani</item>
+        <item>Faroese</item>
+        <item>Gaelic</item>
+        <item>Congo</item>
+        <item>Highland Sorbian</item>
+        <item>Khmer</item>
+        <item>Greenlandic</item>
+        <item>Georgian</item>
+        <item>Gujarati</item>
+        <item>Ancient Greek</item>
+        <item>Old English</item>
+        <item>Guarani</item>
+        <item>Hupa</item>
+        <item>Hakachin</item>
+        <item>Haitian</item>
+        <item>Hausa</item>
+        <item>Montenegrin</item>
+        <item>Kyrgyz</item>
+        <item>Galician</item>
+        <item>Canadian French</item>
+        <item>Catalan</item>
+        <item>Kabairian</item>
+        <item>Kanadian</item>
+        <item>Kanuri</item>
+        <item>Kashubian</item>
+        <item>Kangwar</item>
+        <item>Corsa</item>
+        <item>Corsican</item>
+        <item>Creek</item>
+        <item>Crimea Tatar</item>
+        <item>Klingon</item>
+        <item>Croatian</item>
+        <item>Kechuan</item>
+        <item>Kashmiri</item>
+        <item>Konkani</item>
+        <item>Kurdish</item>
+        <item>Latin</item>
+        <item>Laotian</item>
+        <item>Latgalai</item>
+        <item>Latvian</item>
+        <item>Limburgish</item>
+        <item>Lingala</item>
+        <item>Luganda</item>
+        <item>Luxembourgish</item>
+        <item>Lushanian</item>
+        <item>Rwandan</item>
+        <item>Lithuanian</item>
+        <item>Romansh</item>
+        <item>Roma</item>
+        <item>Logic</item>
+        <item>Melayu</item>
+        <item>Burmese</item>
+        <item>Marathi</item>
+        <item>Malagasy</item>
+        <item>Malayalam</item>
+        <item>Macedonian</item>
+        <item>Marshallese</item>
+        <item>Maitili</item>
+        <item>Manx</item>
+        <item>Mauritian Creole</item>
+        <item>Maori</item>
+        <item>Bengali</item>
+        <item>Maltese</item>
+        <item>Hmong</item>
+        <item>Norwegian</item>
+        <item>Neapolitan</item>
+        <item>South Ndebele</item>
+        <item>African Dutch</item>
+        <item>South Sotho</item>
+        <item>Nepali</item>
+        <item>Punjabi</item>
+        <item>Papi Amento</item>
+        <item>Pashto</item>
+        <item>Chichewa</item>
+        <item>Chivean</item>
+        <item>Cherokee</item>
+        <item>Sardinian</item>
+        <item>Samoan</item>
+        <item>Serbian-Croatian</item>
+        <item>Serbian</item>
+        <item>Sanghainese</item>
+        <item>Sinhalese</item>
+        <item>Asperanto</item>
+        <item>Written Norwegian</item>
+        <item>Slovak</item>
+        <item>Kiswahili</item>
+        <item>Somali</item>
+        <item>Serbian (Cyrillic)</item>
+        <item>Turkish</item>
+        <item>Tajik</item>
+        <item>Tamil</item>
+        <item>Tagalog</item>
+        <item>Tigrinya</item>
+        <item>Telugu</item>
+        <item>Tunisian Arabic</item>
+        <item>Turkmen</item>
+        <item>Ukrainian</item>
+        <item>Walloon</item>
+        <item>Welsh</item>
+        <item>Vinda</item>
+        <item>Volovian</item>
+        <item>Urdu</item>
+        <item>Hebrew</item>
+        <item>Sepharic</item>
+        <item>Cilician</item>
+        <item>Hiligaynon</item>
+        <item>Lower Sorbian</item>
+        <item>Hawaiian</item>
+        <item>New Norwegian</item>
+        <item>Western African written language</item>
+        <item>Sindhi</item>
+        <item>Shona</item>
+        <item>Cebuano</item>
+        <item>Syriac</item>
+        <item>Sundanese</item>
+        <item>Hindi</item>
+        <item>Yiddish</item>
+        <item>Inte</item>
+        <item>Azeri</item>
+        <item>Ingush</item>
+        <item>Ibo language</item>
+        <item>Ido language</item>
+        <item>Yoruba</item>
+        <item>Armenian</item>
+        <item>Inuktitut</item>
+        <item>Iranian</item>
+        <item>Zazaqi</item>
+        <item>Medieval French</item>
+        <item>Zulu</item>
+        <item>奥利亚语</item>
+        <item>弗里西语</item>
+        <item>哈萨克语</item>
+        <item>海地克里奥尔语</item>
+        <item>马尔加什语</item>
+        <item>蒙古语</item>
+        <item>塞索托语</item>
+        <item>维吾尔语</item>
+        <item>乌兹别克语</item>
+    </string-array>
+    <string-array name="lang_values">
+        <item>auto</item>
+        <item>id</item>
+        <item>jav</item>
+        <item>en</item>
+        <item>kor</item>
+        <item>wyw</item>
+        <item>cht</item>
+        <item>nl</item>
+        <item>th</item>
+        <item>el</item>
+        <item>it</item>
+        <item>slo</item>
+        <item>jp</item>
+        <item>ara</item>
+        <item>yue</item>
+        <item>hu</item>
+        <item>est</item>
+        <item>rom</item>
+        <item>zh</item>
+        <item>cs</item>
+        <item>de</item>
+        <item>fra</item>
+        <item>fin</item>
+        <item>pt</item>
+        <item>dan</item>
+        <item>ru</item>
+        <item>bul</item>
+        <item>spa</item>
+        <item>swe</item>
+        <item>pl</item>
+        <item>vie</item>
+        <item>gle</item>
+        <item>oci</item>
+        <item>alb</item>
+        <item>aka</item>
+        <item>arg</item>
+        <item>amh</item>
+        <item>asm</item>
+        <item>aym</item>
+        <item>aze</item>
+        <item>ast</item>
+        <item>oss</item>
+        <item>oji</item>
+        <item>ori</item>
+        <item>orm</item>
+        <item>per</item>
+        <item>bre</item>
+        <item>bak</item>
+        <item>baq</item>
+        <item>pot</item>
+        <item>bel</item>
+        <item>ber</item>
+        <item>pam</item>
+        <item>sme</item>
+        <item>ped</item>
+        <item>bem</item>
+        <item>bli</item>
+        <item>bis</item>
+        <item>bal</item>
+        <item>ice</item>
+        <item>bos</item>
+        <item>bho</item>
+        <item>chv</item>
+        <item>tso</item>
+        <item>tat</item>
+        <item>sha</item>
+        <item>tet</item>
+        <item>div</item>
+        <item>log</item>
+        <item>fil</item>
+        <item>san</item>
+        <item>fri</item>
+        <item>ful</item>
+        <item>fao</item>
+        <item>gla</item>
+        <item>kon</item>
+        <item>ups</item>
+        <item>hkm</item>
+        <item>kal</item>
+        <item>geo</item>
+        <item>guj</item>
+        <item>gra</item>
+        <item>eno</item>
+        <item>grn</item>
+        <item>hup</item>
+        <item>hak</item>
+        <item>ht</item>
+        <item>hau</item>
+        <item>mot</item>
+        <item>kir</item>
+        <item>glg</item>
+        <item>frn</item>
+        <item>cat</item>
+        <item>kab</item>
+        <item>kan</item>
+        <item>kau</item>
+        <item>kah</item>
+        <item>cor</item>
+        <item>xho</item>
+        <item>cos</item>
+        <item>cre</item>
+        <item>cri</item>
+        <item>kli</item>
+        <item>hrv</item>
+        <item>que</item>
+        <item>kas</item>
+        <item>kok</item>
+        <item>kur</item>
+        <item>lat</item>
+        <item>lao</item>
+        <item>lag</item>
+        <item>lav</item>
+        <item>lim</item>
+        <item>lin</item>
+        <item>lug</item>
+        <item>ltz</item>
+        <item>ruy</item>
+        <item>kin</item>
+        <item>lit</item>
+        <item>roh</item>
+        <item>ro</item>
+        <item>loj</item>
+        <item>may</item>
+        <item>bur</item>
+        <item>mar</item>
+        <item>mg</item>
+        <item>mal</item>
+        <item>mac</item>
+        <item>mah</item>
+        <item>mai</item>
+        <item>glv</item>
+        <item>mau</item>
+        <item>mao</item>
+        <item>ben</item>
+        <item>mlt</item>
+        <item>hmn</item>
+        <item>nor</item>
+        <item>nea</item>
+        <item>nbl</item>
+        <item>afr</item>
+        <item>sot</item>
+        <item>nep</item>
+        <item>pan</item>
+        <item>pap</item>
+        <item>pus</item>
+        <item>nya</item>
+        <item>twi</item>
+        <item>chr</item>
+        <item>srd</item>
+        <item>sm</item>
+        <item>sec</item>
+        <item>srp</item>
+        <item>sol</item>
+        <item>sin</item>
+        <item>epo</item>
+        <item>nob</item>
+        <item>sk</item>
+        <item>swa</item>
+        <item>som</item>
+        <item>src</item>
+        <item>tr</item>
+        <item>tgk</item>
+        <item>tam</item>
+        <item>tgl</item>
+        <item>tir</item>
+        <item>tel</item>
+        <item>tua</item>
+        <item>tuk</item>
+        <item>ukr</item>
+        <item>wln</item>
+        <item>wel</item>
+        <item>ven</item>
+        <item>wol</item>
+        <item>urd</item>
+        <item>heb</item>
+        <item>fry</item>
+        <item>sil</item>
+        <item>hil</item>
+        <item>los</item>
+        <item>haw</item>
+        <item>nno</item>
+        <item>nqo</item>
+        <item>snd</item>
+        <item>sna</item>
+        <item>ceb</item>
+        <item>syr</item>
+        <item>sun</item>
+        <item>hi</item>
+        <item>yid</item>
+        <item>ina</item>
+        <item>ach</item>
+        <item>ing</item>
+        <item>ibo</item>
+        <item>ido</item>
+        <item>yor</item>
+        <item>arm</item>
+        <item>iku</item>
+        <item>ir</item>
+        <item>zaz</item>
+        <item>frm</item>
+        <item>zul</item>
+        <item>or</item>
+        <item>fy</item>
+        <item>kk</item>
+        <item>ht</item>
+        <item>mg</item>
+        <item>mn</item>
+        <item>st</item>
+        <item>ug</item>
+        <item>uz</item>
+    </string-array>
+    <string-array name="left_button">
+        <item>Tolak</item>
+        <item>Tolak</item>
+        <item>*Geser untuk menolak panggilan masuk*</item>
+        <item>Akhiri panggilan</item>
+        <item>Tolak panggilan</item>
+        <item>Akhiri panggilan</item>
+        <item>Akhiri panggilan QQ</item>
+        <item>Akhiri panggilan QQ</item>
+        <item>Beralih ke elemen sebelumnya</item>
+        <item>Trek sebelumnya</item>
+        <item>Navigasi ke atas</item>
+    </string-array>
+    <string-array name="left_menu_items">
+        <item>@string/command_auto_next</item>
+        <item>@string/command_read_mode</item>
+        <item>@string/list_mode_title</item>
+        <item>@string/split_menu_title</item>
+        <item>@string/command_verbatim_speak2</item>
+        <item>@string/command_all_speak</item>
+        <item>@string/command_all_select</item>
+        <item>@string/command_ocr_text</item>
+        <item>@string/plugin_title</item>
+        <item>@string/command_notification_box</item>
+        <item>@string/command_to_notifications</item>
+        <item>@string/command_long_edit</item>
+        <item>@string/command_gestures_edit</item>
+        <item>@string/command_virtual_screen</item>
+        <item>@string/cancel</item>
+    </string-array>
+    <string-array name="long_click_entries">
+        <item>Pendek</item>
+        <item>Medium</item>
+        <item>Panjang</item>
+    </string-array>
+    <string-array name="long_click_values">
+        <item>500</item>
+        <item>750</item>
+        <item>1000</item>
+    </string-array>
+    <string-array name="menu_def_items">
+        <item>@string/split_menu_title</item>
+        <item>@string/list_mode_title</item>
+        <item>@string/command_all_speak</item>
+        <item>@string/command_voice_helper</item>
+        <item>@string/plugin_title</item>
+        <item>@string/main_setting</item>
+        <item>@string/command_disable_feedback</item>
+    </string-array>
+    <string-array name="menu_items">
+        <item>@string/action_menu_title</item>
+        <item>@string/advanced_menu_title</item>
+        <item>@string/command_auto_next</item>
+        <item>@string/command_read_mode</item>
+        <item>@string/list_mode_title</item>
+        <item>@string/command_node_mode</item>
+        <item>@string/split_menu_title</item>
+        <item>@string/command_verbatim_speak2</item>
+        <item>@string/command_all_speak</item>
+        <item>@string/all_text_title</item>
+        <item>@string/command_all_select</item>
+        <item>@string/command_voice_helper</item>
+        <item>@string/command_ocr_text</item>
+        <item>@string/camera_title</item>
+        <item>@string/plugin_title</item>
+        <item>@string/tool_title</item>
+        <item>@string/main_setting</item>
+        <item>@string/command_disable_touch</item>
+        <item>@string/command_disable_feedback</item>
+        <item>@string/command_notification_box</item>
+        <item>@string/command_to_notifications</item>
+        <item>@string/command_long_edit</item>
+        <item>@string/command_gestures_edit</item>
+        <item>@string/command_enable_dim_screen</item>
+        <item>@string/command_virtual_screen</item>
+        <item>@string/command_quick_mode</item>
+        <item>@string/command_supper_mode</item>
+        <item>@string/command_virtual_navigation</item>
+    </string-array>
+    <string-array name="recognizer_lang_entries">
+        <item>Cina sederhana</item>
+        <item>Cina tradisional</item>
+        <item>Inggris</item>
+    </string-array>
+    <string-array name="recognizer_lang_values">
+        <item>zh_CN</item>
+        <item>zh_GD</item>
+        <item>en_GB</item>
+    </string-array>
+    <string-array name="right_button">
+        <item>Jawab panggilan</item>
+        <item>*Geser untuk menjawab panggilan*</item>
+        <item>Mode handsfree</item>
+        <item>Mode speaker</item>
+        <item>Beralih ke elemen berikutnya</item>
+        <item>Trek selanjutnya</item>
+    </string-array>
+    <string-array name="right_menu_items">
+        <item>@string/command_click</item>
+        <item>@string/command_long_click</item>
+        <item>@string/command_start</item>
+        <item>@string/command_end</item>
+        <item>@string/command_copy</item>
+        <item>@string/command_append_copy</item>
+        <item>@string/command_paste</item>
+        <item>@string/clipboard_menu_title</item>
+        <item>@string/favorites_menu_title</item>
+        <item>@string/split_edit_title</item>
+        <item>@string/command_long_copy</item>
+        <item>@string/command_trans</item>
+        <item>@string/command_verification2</item>
+        <item>@string/command_timer_mode</item>
+        <item>@string/cancel</item>
+    </string-array>
+    <string-array name="timer_interval_entries">
+        <item>1 menit</item>
+        <item>5 menit</item>
+        <item>10 menit</item>
+        <item>15 menit</item>
+    </string-array>
+    <string-array name="timer_interval_values">
+        <item>1</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+    </string-array>
+    <string-array name="tts_engine_entries">
+        <item>Sistem teks ke ucapan</item>
+        <item>Yunzhisheng teks ke ucapan</item>
+    </string-array>
+    <string-array name="tts_engine_values">
+        <item>system</item>
+        <item>unisound</item>
+    </string-array>
+    <string-array name="tts_engine_vip_entries">
+        <item>System teks ke ucapan</item>
+        <item>Xunfei teks ke ucapan</item>
+        <item>Yunzhisheng teks ke ucapan</item>
+    </string-array>
+    <string-array name="tts_engine_vip_values">
+        <item>system</item>
+        <item>iflytek</item>
+        <item>unisound</item>
+    </string-array>
+    <string-array name="tts_scale_entries">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="tts_scale_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string-array name="tts_speaker_entries">
+        <item>Xiaoyan</item>
+        <item>Xiaofeng</item>
+    </string-array>
+    <string-array name="tts_speaker_values">
+        <item>xiaoyan</item>
+        <item>xiaofeng</item>
+    </string-array>
+    <string-array name="tts_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+        <item>46</item>
+        <item>47</item>
+        <item>48</item>
+        <item>49</item>
+        <item>50</item>
+        <item>51</item>
+        <item>52</item>
+        <item>53</item>
+        <item>54</item>
+        <item>55</item>
+        <item>56</item>
+        <item>57</item>
+        <item>58</item>
+        <item>59</item>
+        <item>60</item>
+        <item>61</item>
+        <item>62</item>
+        <item>63</item>
+        <item>64</item>
+        <item>65</item>
+        <item>66</item>
+        <item>67</item>
+        <item>68</item>
+        <item>69</item>
+        <item>70</item>
+        <item>71</item>
+        <item>72</item>
+        <item>73</item>
+        <item>74</item>
+        <item>75</item>
+        <item>76</item>
+        <item>77</item>
+        <item>78</item>
+        <item>79</item>
+        <item>80</item>
+        <item>81</item>
+        <item>82</item>
+        <item>83</item>
+        <item>84</item>
+        <item>85</item>
+        <item>86</item>
+        <item>87</item>
+        <item>88</item>
+        <item>89</item>
+        <item>90</item>
+        <item>91</item>
+        <item>92</item>
+        <item>93</item>
+        <item>94</item>
+        <item>95</item>
+        <item>96</item>
+        <item>97</item>
+        <item>98</item>
+        <item>99</item>
+        <item>100</item>
+    </string-array>
+    <string-array name="vibrate_intensity_entries">
+        <item>Paling kecil</item>
+        <item>Kecil</item>
+        <item>Besar</item>
+        <item>Paling besar</item>
+    </string-array>
+    <string-array name="vibrate_intensity_values">
+        <item>12</item>
+        <item>32</item>
+        <item>48</item>
+        <item>64</item>
+    </string-array>
+    <string-array name="view_type_title">
+        <item>Default</item>
+        <item>teks label</item>
+        <item>tombol</item>
+        <item>kotak edit</item>
+        <item>gambar</item>
+        <item>kotak centang</item>
+        <item>progress indicator</item>
+        <item>tabel kolom</item>
+        <item>daftar</item>
+        <item>item daftar</item>
+        <item>dapat diklik</item>
+        <item>node</item>
+        <item>scroll penggeser</item>
+        <item>bergerak vertikal</item>
+        <item>Karakter</item>
+        <item>kata</item>
+        <item>baris</item>
+        <item>paragraf</item>
+        <item>halaman</item>
+        <item>salin</item>
+        <item>volume media</item>
+        <item>kecepatan ucapan</item>
+        <item>OCR dan terjemahan</item>
+        <item>jendela</item>
+    </string-array>
+    <string-array name="voice_helper_help_items">
+        <item>Open the given program: Open application name</item>
+        <item>Install the given program: install Application Name</item>
+        <item>Uninstall the given program: uninstall Application Name</item>
+        <item>Read Everything: Read the whole screen</item>
+        <item>Read aloud: read aloud and follow the cursor</item>
+        <item>"Current Brightness: read the environment's brightness."</item>
+        <item>Click: activate the focused element.</item>
+        <item>Activate specified item: activate item with the specified name</item>
+        <item>Copy currently focused item: Copy the currently focused item to the clipboard</item>
+        <item>Translate: Translate the currently focused text.</item>
+        <item>Translate LanguageName: Translate the currently focused text to a given language</item>
+        <item>Select: Selects the given text</item>
+        <item>Send a message in the qq WeChat chat window: Hello send</item>
+        <item>ENter Text: Enters the spoken text in the text box</item>
+        <item>Long Input: Long dictation mode</item>
+        <item>Check weather: checks the weather</item>
+        <item>Check the ticket: checks the train tickets.</item>
+        <item>Tell the recipe: check the recipe for a given food.</item>
+        <item>Tell a joke: tells a random joke</item>
+        <item>Copy the response: copies the response of a given command.</item>
+        <item>There are more features waiting for being discovered.</item>
+    </string-array>
+    <string-array name="voice_recognizer_entries">
+        <item>Sistem</item>
+        <item>Mesin 1</item>
+        <item>Mesin 2</item>
+        <item>Mesin 3</item>
+    </string-array>
+    <string-array name="voice_recognizer_values">
+        <item>3</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+    <string-array name="web_type_title">
+        <item>Default</item>
+        <item>Judul</item>
+        <item>Tautan</item>
+        <item>Tombol</item>
+        <item>landmark</item>
+        <item>kotak edit</item>
+        <item>fokus</item>
+        <item>kontrol</item>
+        <item>gambar</item>
+        <item>kotak centang</item>
+        <item>kotak pilihan</item>
+        <item>formulir</item>
+        <item>tabel kolom</item>
+        <item>daftar</item>
+        <item>Gulir</item>
+        <item>Lihat</item>
+        <item>Karakter</item>
+        <item>kata</item>
+        <item>baris</item>
+        <item>paragraf</item>
+        <item>halaman</item>
+        <item>salin</item>
+        <item>volume media</item>
+        <item>kecepatan ucapan</item>
+        <item>OCR dan terjemahan</item>
+        <item>jendela</item>
+    </string-array>
+</resources>

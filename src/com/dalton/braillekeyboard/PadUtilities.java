@@ -96,15 +96,12 @@ public class PadUtilities {
                 pad = new VerticalPad(context, coords, width, height, portrait,
                         invert, useEightDots);
             } else {
-                pad = new HorizontalPad(context, coords, width, height,
+                pad = new TabletopPad(context, coords, width, height,
                         portrait, invert, useEightDots);
             }
         } else {
-            if (keyboard == KeyboardType.TABLETOP) {
+            if (keyboard == KeyboardType.TABLETOP || keyboard == KeyboardType.HORIZONTAL) {
                 pad = new TabletopPad(context, coords, width, height,
-                        portrait, invert, useEightDots);
-            } else if (keyboard == KeyboardType.HORIZONTAL) {
-                pad = new HorizontalPad(context, coords, width, height,
                         portrait, invert, useEightDots);
             } else {
                 pad = new VerticalPad(context, coords, width, height, portrait,
@@ -163,26 +160,23 @@ public class PadUtilities {
                 TypedValue.COMPLEX_UNIT_DIP, MAX_SCREEN_SIZE, context
                         .getResources().getDisplayMetrics());
         int screen = (int) Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
-        if (keyboard == KeyboardType.TABLETOP) {
+        if (keyboard == KeyboardType.TABLETOP || keyboard == KeyboardType.HORIZONTAL
+                || (screen > maxScreen && KeyboardType.AUTO == keyboard)) {
             Coords[] coords = null;
             int prefKey = TabletopPad.getPrefKey(portrait, invert);
             if ((coords = Pad.load(context, width, height, prefKey, portrait)) != null) {
                 pad = new TabletopPad(context, coords, width, height,
                         portrait, invert, useEightDots);
             } else {
-                pad = TabletopPad.displayDefaultPad(context, width, height,
-                        portrait, invert, useEightDots);
-            }
-        } else if (keyboard == KeyboardType.HORIZONTAL
-                || (screen > maxScreen && KeyboardType.AUTO == keyboard)) {
-            Coords[] coords = null;
-            int prefKey = HorizontalPad.getPrefKey(portrait, invert);
-            if ((coords = Pad.load(context, width, height, prefKey, portrait)) != null) {
-                pad = new HorizontalPad(context, coords, width, height,
-                        portrait, invert, useEightDots);
-            } else {
-                pad = HorizontalPad.displayDefaultPad(context, width, height,
-                        portrait, invert, useEightDots);
+                // Migration path: if tabletop calibration is missing, try loading horizontal calibration
+                int oldPrefKey = HorizontalPad.getPrefKey(portrait, invert);
+                if ((coords = Pad.load(context, width, height, oldPrefKey, portrait)) != null) {
+                    pad = new TabletopPad(context, coords, width, height,
+                            portrait, invert, useEightDots);
+                } else {
+                    pad = TabletopPad.displayDefaultPad(context, width, height,
+                            portrait, invert, useEightDots);
+                }
             }
         } else {
             Coords[] coords = null;

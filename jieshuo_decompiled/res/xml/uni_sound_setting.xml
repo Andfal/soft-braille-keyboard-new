@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference android:entries="@array/tts_scale_entries" android:title="@string/tts_scale_title" android:key="@string/tts_scale" android:defaultValue="1" android:entryValues="@array/tts_scale_values" />
+    <ListPreference android:entries="@array/tts_values" android:title="@string/tts_volume_title" android:key="@string/tts_volume" android:defaultValue="100" android:entryValues="@array/tts_values" />
+    <ListPreference android:entries="@array/tts_values" android:title="@string/tts_speed_title" android:key="@string/tts_speed" android:defaultValue="50" android:entryValues="@array/tts_values" />
+    <ListPreference android:entries="@array/tts_values" android:title="@string/tts_pitch_title" android:key="@string/tts_pitch" android:defaultValue="50" android:entryValues="@array/tts_values" />
+</PreferenceScreen>
