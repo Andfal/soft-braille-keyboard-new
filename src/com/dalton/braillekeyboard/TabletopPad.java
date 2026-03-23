@@ -107,24 +107,30 @@ public class TabletopPad extends Pad {
 
     private void sortKeys(List<Coords> coords, boolean portrait, boolean invert,
             boolean useEightDots) {
-        Collections.sort(coords, comparatorX);
-        Collections.swap(keys, 0, 2);
+        Collections.sort(keys, comparatorX);
+        if (invert) {
+            // Mapping for 180-degree rotation (speaker on left)
+            // Screen L->R: Dot 6, Dot 5, Dot 4, Dot 1, Dot 2, Dot 3
+            // So that User L->R (after 180 rotation) is: Dot 3, Dot 2, Dot 1, Dot 4, Dot 5, Dot 6
+            Coords d1 = keys.get(3);
+            Coords d2 = keys.get(4);
+            Coords d3 = keys.get(5);
+            Coords d4 = keys.get(2);
+            Coords d5 = keys.get(1);
+            Coords d6 = keys.get(0);
+            keys.set(0, d1);
+            keys.set(1, d2);
+            keys.set(2, d3);
+            keys.set(3, d4);
+            keys.set(4, d5);
+            keys.set(5, d6);
+        } else {
+            // Standard Perkins (speaker on right)
+            // Screen L->R: Dot 3, Dot 2, Dot 1, Dot 4, Dot 5, Dot 6
+            Collections.swap(keys, 0, 2);
+        }
         if (useEightDots) {
             insertSpecialDots();
-        }
-        if (invert) {
-            swapLeftRight();
-        }
-    }
-
-    private void swapLeftRight() {
-        int i = 0;
-        int j = 3;
-        while (i < 3 && j < 6) {
-            Collections.swap(keys, i++, j++);
-        }
-        if (keys.size() == 8) {
-            Collections.swap(keys, 6, 7);
         }
     }
 

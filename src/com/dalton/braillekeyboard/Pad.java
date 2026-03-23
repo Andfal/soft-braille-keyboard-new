@@ -641,7 +641,7 @@ public abstract class Pad {
                 boolean invertHorizontal, boolean invertVertical) {
             byte swipe = swipeDirection(xSwipeThreshold, ySwipeThreshold, swap, 
                     swapAxes, invertHorizontal, invertVertical);
-            if (!swap || !invert) {
+            if (!invert) {
                 return swipe;
             }
             switch (swipe) {
