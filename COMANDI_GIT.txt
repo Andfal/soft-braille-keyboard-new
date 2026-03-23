@@ -1,0 +1,12 @@
+COMANDI PER RIMUOVERE STABLE-REF (Eseguire nel terminale/CMD):
+
+1. Spostati nella cartella del progetto moderno:
+cd C:\Users\sergi\StudioProjects\soft-braille-keyboard-modern
+
+2. Conferma a Git l'eliminazione della cartella:
+git add -A stable-ref
+
+3. Esegui il commit per ripulire il repository:
+git commit -m "chore: rimozione definitiva stable-ref"
+
+Dopo aver eseguito questi comandi, fammi sapere così posso completare l'unificazione del layout.

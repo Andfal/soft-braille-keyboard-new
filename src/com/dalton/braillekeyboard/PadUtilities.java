@@ -168,15 +168,8 @@ public class PadUtilities {
                 pad = new TabletopPad(context, coords, width, height,
                         portrait, invert, useEightDots);
             } else {
-                // Migration path: if tabletop calibration is missing, try loading horizontal calibration
-                int oldPrefKey = HorizontalPad.getPrefKey(portrait, invert);
-                if ((coords = Pad.load(context, width, height, oldPrefKey, portrait)) != null) {
-                    pad = new TabletopPad(context, coords, width, height,
-                            portrait, invert, useEightDots);
-                } else {
-                    pad = TabletopPad.displayDefaultPad(context, width, height,
-                            portrait, invert, useEightDots);
-                }
+                pad = TabletopPad.displayDefaultPad(context, width, height,
+                        portrait, invert, useEightDots);
             }
         } else {
             Coords[] coords = null;

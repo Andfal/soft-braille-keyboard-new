@@ -35,7 +35,7 @@ import android.util.TypedValue;
  * your own as long as they can provide the arrangement of the dots and the
  * swiping implementation.
  * 
- * See HorizontalPad or VerticalPad for examples.
+ * See TabletopPad or VerticalPad for examples.
  * 
  */
 public abstract class Pad {
