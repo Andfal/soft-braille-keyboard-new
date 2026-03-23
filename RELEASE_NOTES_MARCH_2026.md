@@ -1,57 +1,20 @@
+# Latest Updates - March 23, 2026 (v8)
+
+## 1. Tabletop Gesture Alignment (Full Consistency)
+- **Gesture Synchronization:** Removed the manual Y-axis inversion in **Tabletop Mode**. Gestures like swiping UP and DOWN are now identical across all keyboard layouts (Vertical and Tabletop). 
+- **Predictable Behavior:** Swiping UP always triggers the same action (e.g., Privacy Mode or reading a character) regardless of the chosen layout, ensuring a more intuitive experience when switching modes.
+- **Initialization Fix:** Corrected a legacy bug where Tabletop mode was initialized with an inverted layout by default. It now respects the global "Invert keyboard" setting consistently with other pads.
+
+---
+
+# Ultimi Aggiornamenti - 23 Marzo 2026 (v8)
+
+## 1. Allineamento Gesture Da Tavolo (Piena Consistenza)
+- **Sincronizzazione Gesture:** Rimossa l'inversione manuale dell'asse Y nella **Modalità Da Tavolo**. Le gesture come lo swipe verso l'ALTO e il BASSO sono ora identiche in tutti i layout (Verticale e Da Tavolo).
+- **Comportamento Prevedibile:** Lo swipe verso l'ALTO attiva sempre la stessa azione (es. Modalità Privacy o lettura carattere) indipendentemente dal layout scelto, garantendo un'esperienza più intuitiva nel cambio modalità.
+- **Correzione Inizializzazione:** Risolto un bug legacy per cui la modalità Da Tavolo veniva inizializzata con un layout invertito per impostazione predefinita. Ora rispetta l'impostazione globale "Invert keyboard" in modo coerente con gli altri pad.
+
 # Latest Updates - March 21, 2026 (v7)
-
-## 1. Default Tabletop Orientation (Port Left)
-- **New Standard:** The Tabletop mode now defaults to functioning with the device's charging port facing **left**. This matches the most natural and requested posture for blind users.
-- **Manual 180 Rotation:** If the port needs to face **right**, users can still activate the 'Invert keyboard' (Rotate 180) option in the settings.
-- **Global Consistency:** This change has been applied to both the default layout calculation and custom finger calibration, ensuring a seamless experience for all users.
-
----
-
-# Ultimi Aggiornamenti - 21 Marzo 2026 (v7)
-
-## 1. Orientamento Predefinito Da Tavolo (Porta a Sinistra)
-- **Nuovo Standard:** La modalità Da Tavolo ora funziona per impostazione predefinita con la porta di ricarica del dispositivo rivolta verso **sinistra**. Questo risponde alla postura più naturale e richiesta dagli utenti non vedenti.
-- **Rotazione Manuale a 180:** Se la porta deve essere rivolta verso **destra**, gli utenti possono comunque attivare l'opzione 'Invert keyboard' (Ruota 180) nelle impostazioni.
-- **Consistenza Globale:** Questa modifica è stata applicata sia al calcolo del layout predefinito che alla calibrazione personalizzata delle dita, garantendo un'esperienza coerente per tutti gli utenti.
-
-
----
-
-# Latest Updates - March 20, 2026 (v6)
-
-## 1. Jieshuo (Commentary) Intelligent Integration
-- **Dormant Service Mode:** The keyboard's Accessibility Service now automatically remains dormant when Jieshuo is detected. This prevents conflicts with Jieshuo's native multi-touch bridge while allowing full functionality with TalkBack.
-- **Silent Operation:** In Jieshuo mode, the service will not request Android passthrough regions, ensuring maximum system stability and preventing double-focus issues.
-- **Seamless UX:** The keyboard will no longer prompt Jieshuo users to enable the accessibility service, recognizing that Jieshuo provides the necessary "Bridge Mode" out of the box.
-
----
-
-# Ultimi Aggiornamenti - 20 Marzo 2026 (v6)
-
-## 1. Integrazione Intelligente per Jieshuo (Commentary)
-- **Modalità Servizio Dormiente:** Il Servizio di Accessibilità della tastiera ora rimane automaticamente dormiente quando viene rilevato Jieshuo. Questo evita conflitti con il "bridge" multi-touch nativo di Jieshuo, garantendo al contempo la piena funzionalità con TalkBack.
-- **Operatività Silenziosa:** In modalità Jieshuo, il servizio non richiederà le regioni di bypass (passthrough) ad Android, garantendo la massima stabilità del sistema ed evitando problemi di doppio focus.
-- **UX Senza Interruzioni:** La tastiera non chiederà più agli utenti di Jieshuo di abilitare il servizio di accessibilità, riconoscendo che Jieshuo implementa già la "Bridge Mode" nativamente.
-
-
-# Latest Updates - March 20, 2026 (v5)
-
-## 1. Tabletop Layout: Inverted Y-Axis
-- **Context-Specific Inversion:** Implemented an automatic Y-axis inversion exclusively for the **Tabletop Layout**. When the phone is placed on a table, swiping towards the user now correctly triggers actions previously mapped to 'swipe up' and vice versa.
-- **Improved Intuition:** Physical swipe-up (away from user) now activates **Privacy Mode** (FOUR_UP), while physical swipe-down (towards user) now inserts a **Newline** (FOUR_DOWN) in Tabletop mode.
-- **Selective Application:** This change only affects the Tabletop layout, leaving Horizontal and Vertical layouts unchanged.
-
----
-
-# Ultimi Aggiornamenti - 20 Marzo 2026 (v5)
-
-## 1. Layout da Tavolo: Inversione Asse Y
-- **Inversione Specifica per Contesto:** Implementata l'inversione automatica dell'asse Y esclusivamente per il **Layout da Tavolo**. Quando il telefono è appoggiato, lo swipe verso l'utente ora attiva correttamente le azioni precedentemente mappate come 'swipe su' e viceversa.
-- **Intuizione Migliorata:** Lo swipe fisico verso l'alto (lontano dall'utente) ora attiva la **Modalità Privacy** (FOUR_UP), mentre lo swipe fisico verso il basso (verso l'utente) ora inserisce una **Nuova riga** (FOUR_DOWN) nel layout da tavolo.
-- **Applicazione Selettiva:** Questa modifica riguarda solo il layout da tavolo, mantenendo inalterati i layout Orizzontale e Verticale.
-
-
-# Latest Updates - March 19, 2026 (v4)
 
 ## 1. Voice Input "Frozen Touch" Fix
 - **State Restoration:** Fixed a critical bug where the keyboard would become "frozen" and unresponsive to touch after voice dictation. 
@@ -66,6 +29,28 @@
 - **Ripristino dello Stato:** Risolto un bug critico per cui la tastiera diventava "congelata" e insensibile al tocco dopo l'uso della dettatura vocale.
 - **Resilienza agli Errori:** La tastiera ora resetta correttamente lo stato di ascolto anche se non viene rilevato alcun parlato (ERROR_NO_MATCH), garantendo il ritorno immediato alla scrittura Braille.
 - **Alternanza Affidabile:** È ora possibile alternare tra dettatura e scrittura in modo fluido senza dover chiudere e riaprire l'app.
+
+# Latest Updates - March 18, 2026 (v3)
+
+## 1. Multilingual Voice Dictation Sync
+- **Context-Aware Dictation:** Voice input now automatically uses the language of the active Braille table (e.g., Italian dictation for Italian table) regardless of system language settings.
+- **Improved Accuracy:** Reduced errors in multi-language workflows by passing the dynamic Locale directly to Google's Speech-to-Text engine.
+
+## 2. Calibration Reliability & Performance
+- **Atomic Saving:** Fixed a silent Android bug in SharedPreferences that could cause calibration data loss; we now force a new HashSet instance for every save operation.
+- **UI Responsiveness:** Switched from synchronous `commit()` to asynchronous `apply()` for all configuration changes, eliminating micro-lags during typing or calibration.
+
+---
+
+# Ultimi Aggiornamenti - 18 Marzo 2026 (v3)
+
+## 1. Dettatura Vocale Multilingue Sincronizzata
+- **Sincronizzazione Lingua:** L'input vocale ora utilizza automaticamente la lingua della tabella Braille attiva (es. dettatura in italiano per tabella italiana) indipendentemente dalla lingua di sistema di Android.
+- **Precisione Migliorata:** Ridotti gli errori nei flussi di lavoro multilingua passando il Locale dinamico direttamente al motore Speech-to-Text di Google.
+
+## 2. Affidabilità Calibrazione e Prestazioni
+- **Salvataggio Atomico:** Risolto un bug silenzioso di Android nelle SharedPreferences che poteva causare la perdita dei dati di calibrazione; ora forziamo una nuova istanza di HashSet per ogni salvataggio.
+- **Reattività UI:** Passaggio da `commit()` sincrono ad `apply()` asincrono per tutti i cambiamenti di configurazione, eliminando micro-lag durante la scrittura o la calibrazione.
 
 # Latest Updates - March 16, 2026 (v2)
 
