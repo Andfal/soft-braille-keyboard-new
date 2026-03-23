@@ -1,15 +1,19 @@
-# Gemini CLI Session Summary - February 2, 2026
+# Gemini CLI Session Summary - March 23, 2026
 
 ## Accomplishments
 
-### 1. Bug Fixes
-- **Character Duplication in Star Taxi:** Fixed a persistent character duplication issue.
-    - **Final Root Cause Identified:** The keyboard was using Android's "composing text" feature (`setComposingText`). Many apps (Star Taxi, Chrome address bar) do not handle composition spans correctly and append the entire composing buffer to the existing text on every update, instead of replacing it. This lead to the "a", "aac", "aacace" pattern.
-    - **Final Solution:**
-        1. **Disabled system-level prediction/composition** globally in `BrailleIME.java`.
-        2. **Standardized on "Manual Differential Update"**: The keyboard now manually calculates the difference between what's in the editor and what it needs to write.
-        3. **Append-Only Behavior**: For standard typing, the keyboard now only calls `commitText` for the single new character. It **never** uses delete or replace commands unless a contraction or backspace truly changes the previous text.
-    - **Result:** The keyboard now behaves like a standard physical keyboard, adding letters one-by-one. This is the most compatible method for Android and completely eliminates duplication in problematic apps.
+### 1. Tabletop Gesture Alignment
+- **Problem:** Tabletop mode had a manual Y-axis inversion and an incorrect default layout orientation compared to Vertical mode.
+- **Solution:** 
+    - Removed the manual UP/DOWN gesture inversion in `TabletopPad.java`.
+    - Corrected the initialization logic in `PadUtilities.java` to use the global `invert` setting instead of forcing `!invert` for Tabletop mode.
+- **Result:** Gestures are now perfectly consistent across all keyboard layouts. A swipe UP performs the same action whether the phone is held vertically or placed on a table.
+
+### 2. Cross-Project Synchronization
+- Applied the same Tabletop fixes to both the **Classic** (`soft-braille-keyboard`) and **Modern** (`soft-braille-keyboard-modern`) versions of the application.
+- Successfully built both versions to verify code integrity.
 
 ## Technical Notes
-- **Robustness:** By avoiding `setComposingText` and `deleteSurroundingText` for standard appends, we maximize compatibility with non-standard Android UI frameworks.
+- **Gesture Logic:** All pads now rely on `getGenericSwipeAction` without layout-specific inversions, ensuring long-term maintainability and a unified user experience.
+- **Modern Project Path:** `C:\Users\sergi\StudioProjects\soft-braille-keyboard-modern\`
+- **Modern Build APK:** `build\outputs\apk\debug\Soft-Braille-Keyboard-debug.apk` (inside modern project).
