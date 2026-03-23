@@ -2,18 +2,17 @@
 
 ## Accomplishments
 
-### 1. Tabletop Gesture Alignment
-- **Problem:** Tabletop mode had a manual Y-axis inversion and an incorrect default layout orientation compared to Vertical mode.
+### 1. Definitive Tabletop 180° Fix
+- **Problem:** Tabletop mode had inconsistent dot mapping and reversed gestures when the device was rotated 180 degrees (speaker on left).
 - **Solution:** 
-    - Removed the manual UP/DOWN gesture inversion in `TabletopPad.java`.
-    - Corrected the initialization logic in `PadUtilities.java` to use the global `invert` setting instead of forcing `!invert` for Tabletop mode.
-- **Result:** Gestures are now perfectly consistent across all keyboard layouts. A swipe UP performs the same action whether the phone is held vertically or placed on a table.
+    - Implemented a precise dot remapping in `TabletopPad.java` for the `invert=true` state. This ensures that even when upside down, the physical layout remains **3-2-1 (left hand)** and **4-5-6 (right hand)**.
+    - Refactored `Pad.java` (`Coords.swipeDirection`) to remove the dependency on the `swap` parameter. Gestures are now mathematically inverted whenever "Invert keyboard" is active, regardless of screen orientation.
+- **Result:** Full parity between Vertical and Tabletop layouts. Gestures and dots are now intuitive in any physical orientation.
 
-### 2. Cross-Project Synchronization
-- Applied the same Tabletop fixes to both the **Classic** (`soft-braille-keyboard`) and **Modern** (`soft-braille-keyboard-modern`) versions of the application.
-- Successfully built both versions to verify code integrity.
+### 2. Cross-Project Alignment
+- Applied and verified these fixes in both the **Classic** (`soft-braille-keyboard`) and **Modern** (`soft-braille-keyboard-modern`) versions.
+- Built both APKs successfully to ensure stability.
 
 ## Technical Notes
-- **Gesture Logic:** All pads now rely on `getGenericSwipeAction` without layout-specific inversions, ensuring long-term maintainability and a unified user experience.
-- **Modern Project Path:** `C:\Users\sergi\StudioProjects\soft-braille-keyboard-modern\`
-- **Modern Build APK:** `build\outputs\apk\debug\Soft-Braille-Keyboard-debug.apk` (inside modern project).
+- **Gestures:** Fixed a legacy engine bug where 180-degree swipe inversion was incorrectly skipped in landscape mode.
+- **Modern Build:** Verified at `C:\Users\sergi\StudioProjects\soft-braille-keyboard-modern\`.

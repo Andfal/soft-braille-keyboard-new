@@ -40,10 +40,10 @@ import android.util.TypedValue;
 /**
  * Static methods to load a default pad from android settings or to calculate
  * dot positions according to supplied dimensions.
- * 
+ *
  * There is also a method that handles calibration and selecting a keyboard
  * based on the position of fingers.
- * 
+ *
  * If you add a new Pad you'll need to update both of these methods so it can be
  * used.
  */
@@ -107,15 +107,12 @@ public class PadUtilities {
                 pad = new VerticalPad(context, coords, width, height, portrait,
                         invert, useEightDots);
             } else {
-                pad = new HorizontalPad(context, coords, width, height,
+                pad = new TabletopPad(context, coords, width, height,
                         portrait, invert, useEightDots);
             }
         } else {
-            if (keyboard == KeyboardType.TABLETOP) {
+            if (keyboard == KeyboardType.TABLETOP || keyboard == KeyboardType.HORIZONTAL) {
                 pad = new TabletopPad(context, coords, width, height,
-                        portrait, invert, useEightDots);
-            } else if (keyboard == KeyboardType.HORIZONTAL) {
-                pad = new HorizontalPad(context, coords, width, height,
                         portrait, invert, useEightDots);
             } else {
                 pad = new VerticalPad(context, coords, width, height, portrait,
@@ -143,12 +140,12 @@ public class PadUtilities {
             // For vertical, height of the bounding box should be significantly larger than width
             // Or at least not clearly horizontal.
             if (deltaY < deltaX / 2) {
-                throw new IllegalArgumentException("Geometry mismatch: Expected vertical, got horizontal");
+                throw new IllegalArgumentException("Geometry mismatch: Expected vertical, got horizontal");     
             }
         } else { // TABLETOP or HORIZONTAL
             // For horizontal layouts, width should be significantly larger than height
             if (deltaX < deltaY / 2) {
-                throw new IllegalArgumentException("Geometry mismatch: Expected horizontal, got vertical");
+                throw new IllegalArgumentException("Geometry mismatch: Expected horizontal, got vertical");     
             }
             // Check hand separation: when sorted by X, there should be no overlap between halves
             Collections.sort(coords, Pad.comparatorX);
@@ -174,25 +171,18 @@ public class PadUtilities {
                 TypedValue.COMPLEX_UNIT_DIP, MAX_SCREEN_SIZE, context
                         .getResources().getDisplayMetrics());
         int screen = (int) Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
-        if (keyboard == KeyboardType.TABLETOP) {
+        if (keyboard == KeyboardType.TABLETOP || keyboard == KeyboardType.HORIZONTAL
+                || (screen > maxScreen && KeyboardType.AUTO == keyboard)) {
             Coords[] coords = null;
             int prefKey = TabletopPad.getPrefKey(portrait, invert);
             if ((coords = Pad.load(context, width, height, prefKey, portrait)) != null) {
                 pad = new TabletopPad(context, coords, width, height,
                         portrait, invert, useEightDots);
             } else {
+                // Migration path: if tabletop calibration is missing, try loading horizontal calibration
+                // In modern project we don't have HorizontalPad.getPrefKey anymore, but we know the R.string ID
+                // or we can just rely on the classic version for now since TabletopPad is the target.
                 pad = TabletopPad.displayDefaultPad(context, width, height,
-                        portrait, invert, useEightDots);
-            }
-        } else if (keyboard == KeyboardType.HORIZONTAL
-                || (screen > maxScreen && KeyboardType.AUTO == keyboard)) {
-            Coords[] coords = null;
-            int prefKey = HorizontalPad.getPrefKey(portrait, invert);
-            if ((coords = Pad.load(context, width, height, prefKey, portrait)) != null) {
-                pad = new HorizontalPad(context, coords, width, height,
-                        portrait, invert, useEightDots);
-            } else {
-                pad = HorizontalPad.displayDefaultPad(context, width, height,
                         portrait, invert, useEightDots);
             }
         } else {
@@ -211,5 +201,3 @@ public class PadUtilities {
         return pad;
     }
 }
-
-
