@@ -598,6 +598,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         if (cells.size() > 1) { // We have at least one character cell (index 0 is the space/null)
             int cursor = getCursor();
             String deletedChar = "";
+            InputConnection ic = getCurrentInputConnection();
             CharSequence before = getTextBeforeCursor(1);
             if (before != null && before.length() > 0) {
                 deletedChar = before.toString();
@@ -609,9 +610,11 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             // Remove the last cell
             cells.remove(cells.size() - 1);
             
-            // Move cursor back so ActionHandler's performDelete (which deletes forward) works
-            if (cursor > 0) {
-                setSelection(cursor - 1);
+                       // Move cursor back directly via InputConnection to avoid calling 
+            // the local setSelection() which would clear the cells buffer.
+            if (ic != null && cursor > 0) {
+                ic.setSelection(cursor - 1, cursor - 1);
+                this.cursor = cursor - 1;
             }
 
             // Restore the composingText state for the remaining cells
