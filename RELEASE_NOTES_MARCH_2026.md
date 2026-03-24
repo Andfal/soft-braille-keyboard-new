@@ -1,3 +1,29 @@
+# Latest Updates - March 24, 2026 (v10)
+
+## 1. Double-Letter "Swallowing" Fix
+- **Intelligent Snapshot:** Implemented a new context-aware check that prevents the keyboard from accidentally discarding intentional double letters (like "pp" or "tt").
+- **Chrome Compatibility:** This fix resolves a long-standing conflict where Google Chrome's address bar would cause the first character to be duplicated, but without breaking standard typing of repeated letters.
+- **Accurate Input:** The keyboard now takes a "snapshot" of the text field before each stroke to distinguish between actual user input and browser-generated duplications.
+
+## 2. Context-Aware Backspace (UEB & Punctuation)
+- **Fluid Deletion:** Refactored the Backspace logic to use a more surgical approach. When deleting a single character, the keyboard now removes only the last Braille cell and re-translates the remaining word.
+- **Improved Announcements:** Restored the vocal announcement for deleted characters (e.g., "Deleted: p") which was previously missing in certain punctuation contexts.
+- **Visual Sync:** Fixed a bug where characters would remain on screen after a backspace when typing specific punctuation marks or starting a new word.
+
+---
+
+# Ultimi Aggiornamenti - 24 Marzo 2026 (v10)
+
+## 1. Risoluzione "Lettere Doppie Inghiottite"
+- **Snapshot Intelligente:** Implementato un nuovo controllo contestuale che impedisce alla tastiera di scartare accidentalmente le lettere doppie intenzionali (come "pp" o "tt").
+- **Compatibilità Chrome:** Questa correzione risolve un conflitto storico in cui la barra degli indirizzi di Google Chrome causava la duplicazione del primo carattere, ma senza rompere la normale digitazione di lettere ripetute.
+- **Input Accurato:** La tastiera ora scatta una "istantanea" del campo di testo prima di ogni tocco per distinguere tra l'input reale dell'utente e le duplicazioni generate dal browser.
+
+## 2. Backspace Intelligente (UEB e Punteggiatura)
+- **Cancellazione Fluida:** Rifattorizzata la logica del Backspace per utilizzare un approccio più chirurgico. Quando si cancella un singolo carattere, la tastiera ora rimuove solo l'ultima cella Braille e ricalcola la traduzione della parola rimanente.
+- **Annunci Migliorati:** Ripristinato l'annuncio vocale per i caratteri cancellati (es. "Cancellato: p"), precedentemente assente in alcuni contesti di punteggiatura.
+- **Sincronizzazione Visiva:** Risolto un bug per cui i caratteri rimanevano a schermo dopo un backspace durante la digitazione di specifici segni di punteggiatura o all'inizio di una nuova parola.
+
 # Latest Updates - March 23, 2026 (v9)
 
 ## 1. Tabletop 180° Rotation: Perfect Perkins Mapping
@@ -104,7 +130,7 @@
 - **Improved Accuracy:** Reduced errors in multi-language workflows by passing the dynamic Locale directly to Google's Speech-to-Text engine.
 
 ## 2. Calibration Reliability & Performance
-- **Atomic Saving:** Fixed a silent Android bug in SharedPreferences that could cause calibration data loss; we now force a new HashSet instance for every save operation.
+- **Atomic Saving:** Fixed a silent Android bug in SharedPreferences that could cause calibration data data loss; we now force a new HashSet instance for every save operation.
 - **UI Responsiveness:** Switched from synchronous `commit()` to asynchronous `apply()` for all configuration changes, eliminating micro-lags during typing or calibration.
 
 ---
