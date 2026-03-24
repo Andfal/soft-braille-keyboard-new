@@ -814,6 +814,10 @@ public class ActionHandler {
         boolean canDelete = true;
         switch (granularity) {
         case CHARACTER:
+            word = listener.handleBackspace();
+            if (word != null) {
+                break;
+            }
             listener.finishComposingText();
             word = EditingUtilities.moveToPreviousCharacter(listener);
             break;

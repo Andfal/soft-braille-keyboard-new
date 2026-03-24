@@ -269,6 +269,13 @@ public interface KeyboardListener {
     void finishComposingText();
 
     /**
+     * Handle a backspace action. If there is an active Braille composition,
+     * it should remove the last cell and update the composition.
+     * @return The Word object containing information about the deleted character, or null if not handled.
+     */
+    EditingUtilities.Word handleBackspace();
+
+    /**
      * Close the keyboard.
      */
     void closeKeyboard();

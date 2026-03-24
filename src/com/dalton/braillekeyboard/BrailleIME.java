@@ -449,15 +449,22 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         return brailleParser != null ? brailleParser.getBrailleType(this).dots : -1;
     }
 
-    @Override
+        @Override
     public String handleTypedCharacter(byte dots) {
         if (brailleParser != null) {
+            InputConnection ic = getCurrentInputConnection();
+            String snapshot = "";
+            if (ic != null) {
+                CharSequence before = ic.getTextBeforeCursor(20, 0);
+                if (before != null) snapshot = before.toString();
+            }
+
             // If dots is 0 (space) or contains space-like behavior, finish composition
             if (dots == 0) {
                 finishComposingText(true);
                 return " ";
             }
-            
+
             Locale locale = getLocale();
             boolean isEnglish = locale != null && locale.getLanguage().equals(Locale.ENGLISH.getLanguage());
             if (isEnglish && dots == 32 && cells.contains((byte) 60)) {
@@ -467,7 +474,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             setCells(dots);
             String text = brailleParser.backTranslate(this, cells.toArray(new Byte[cells.size()]));
             if (text != null) {
-                text = compose(text.subSequence(0, text.length()));
+                text = compose(text.subSequence(0, text.length()), snapshot);
             } else {
                 cells.remove(cells.size() - 1);
                 return null;
@@ -477,7 +484,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         return null;
     }
 
-    private String compose(CharSequence text) {
+        private String compose(CharSequence text, String snapshot) {
         if (composingText.length() == 0) updateShiftState();
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return text.toString();
@@ -494,7 +501,14 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 String curr = text.toString();
                 CharSequence beforeCursor = ic.getTextBeforeCursor(curr.length(), 0);
                 if (beforeCursor != null && beforeCursor.length() > 0 && curr.startsWith(beforeCursor.toString())) {
-                    prev = beforeCursor.toString();
+                    String beforeStr = beforeCursor.toString();
+                    if (composingText.length() > 0) {
+                        if (beforeStr.length() > composingText.length()) {
+                            prev = beforeStr;
+                        }
+                    } else if (snapshot.length() == 0 || !snapshot.endsWith(beforeStr)) {
+                        prev = beforeStr;
+                    }
                 }
                 int commonLen = 0;
                 while (commonLen < prev.length() && commonLen < curr.length() && prev.charAt(commonLen) == curr.charAt(commonLen)) commonLen++;
@@ -579,17 +593,65 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         return array;
     }
 
-    @Override
+                        @Override
+    public EditingUtilities.Word handleBackspace() {
+        if (cells.size() > 1) { // We have at least one character cell (index 0 is the space/null)
+            int cursor = getCursor();
+            String deletedChar = "";
+            CharSequence before = getTextBeforeCursor(1);
+            if (before != null && before.length() > 0) {
+                deletedChar = before.toString();
+            }
+
+            // Commit current composition to screen before moving cursor
+            finishComposingText(true, false);
+
+            // Remove the last cell
+            cells.remove(cells.size() - 1);
+            
+            // Move cursor back so ActionHandler's performDelete (which deletes forward) works
+            if (cursor > 0) {
+                setSelection(cursor - 1);
+            }
+
+            // Restore the composingText state for the remaining cells
+            if (cells.size() > 1) {
+                String text = brailleParser.backTranslate(this, cells.toArray(new Byte[cells.size()]));
+                if (text != null) {
+                    composingText.setLength(0);
+                    composingText.append(text);
+                }
+            } else {
+                composingText.setLength(0);
+            }
+            
+            // Return a Word object so ActionHandler can announce it and handle deletion from editor
+            EditingUtilities.Word word = new EditingUtilities.Word(deletedChar, 1, 0);
+            word.moveLeft = true;
+            return word;
+        }
+        return null;
+    }
+
+        @Override
     public void finishComposingText() { finishComposingText(true); }
 
     private void finishComposingText(boolean commit) {
+        finishComposingText(commit, true);
+    }
+
+    private void finishComposingText(boolean commit, boolean clearCells) {
         InputConnection ic = getCurrentInputConnection();
-        if (ic == null) { composingText.setLength(0); cells.clear(); return; }
+        if (ic == null) { 
+            composingText.setLength(0); 
+            if (clearCells) cells.clear(); 
+            return; 
+        }
         if (composingText.length() > 0) {
             if (predictionOn && commit) ic.commitText(composingText, 1);
             composingText.setLength(0);
         }
-        cells.clear();
+        if (clearCells) cells.clear();
     }
 
     private void setCells(byte dots) {
