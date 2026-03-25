@@ -538,13 +538,12 @@ public abstract class Pad {
 
     private static Coords[] processLoadedPoints(Context context, Set<String> points, int viewWidth, int viewHeight, boolean portrait) {
         if (points != null && !points.isEmpty()) {
-            float density = context.getResources().getDisplayMetrics().density;
             int[] centre = { portrait ? viewHeight / 2 : viewWidth / 2,
                     portrait ? viewWidth / 2 : viewHeight / 2 };
             Coords[] coords = new Coords[points.size()];
             int i = 0;
             for (String point : points) {
-                coords[i++] = new Coords(centre, point, density);
+                coords[i++] = new Coords(centre, point);
             }
             // Sort by ID to ensure dot 1 is dot 1
             java.util.List<Coords> sorted = new ArrayList<Coords>(java.util.Arrays.asList(coords));
@@ -557,16 +556,15 @@ public abstract class Pad {
     }
 
     private String savePointString(Context context, Coords key, boolean portrait) {
-        float density = context.getResources().getDisplayMetrics().density;
         int centre[] = { portrait ? viewHeight / 2 : viewWidth / 2,
                 portrait ? viewWidth / 2 : viewHeight / 2 };
         StringBuilder sb = new StringBuilder();
         sb.append(String.valueOf(key.id));
         sb.append(',');
-        // Convert to DP for resolution independence
-        sb.append(String.valueOf((int)((key.x - centre[0]) / density)));
+        // Save absolute pixel offset for maximum precision
+        sb.append(String.valueOf(key.x - centre[0]));
         sb.append(',');
-        sb.append(String.valueOf((int)((key.y - centre[1]) / density)));
+        sb.append(String.valueOf(key.y - centre[1]));
         return sb.toString();
     }
 
@@ -621,16 +619,16 @@ public abstract class Pad {
         }
 
         public Coords(int[] centre, String point) {
-            this(centre, point, 1.0f);
+            String[] components = point.split(",");
+            // Load absolute pixel offset for maximum precision
+            x = centre[0] + Integer.parseInt(components[1]);
+            y = centre[1] + Integer.parseInt(components[2]);
+            id = Integer.parseInt(components[0]);
+            coordHistory.add(new XY(x, y));
         }
 
         public Coords(int[] centre, String point, float density) {
-            String[] components = point.split(",");
-            // Convert back from DP to pixels
-            x = centre[0] + (int)(Integer.parseInt(components[1]) * density);
-            y = centre[1] + (int)(Integer.parseInt(components[2]) * density);
-            id = Integer.parseInt(components[0]);
-            coordHistory.add(new XY(x, y));
+            this(centre, point);
         }
 
         public int getSecondX() {
