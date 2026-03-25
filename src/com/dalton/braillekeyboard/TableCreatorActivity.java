@@ -157,22 +157,7 @@ public class TableCreatorActivity extends Activity {
         }
     }
 
-    private static class Preset {
-        String label; String character; int[][] cells6; int[][] cells8;
-        Preset(String l, String c, int[][] d6) { this(l, c, d6, null); }
-        Preset(String l, String c, int[][] d6, int[][] d8) { label = l; character = c; cells6 = d6; cells8 = d8; }
-        @Override public String toString() { return label + " (" + character + ")"; }
-        int[][] getCells(boolean is8dot) {
-            if (is8dot && cells8 != null) return cells8;
-            return cells6;
-        }
-    }
-
-    private final List<PresetCategory> mPresetCategories = new ArrayList<>();
-    private static class PresetCategory {
-        String name; String defaultOpcode; List<Preset> presets = new ArrayList<>();
-        PresetCategory(String n, String op) { name = n; defaultOpcode = op; }
-    }
+    private final java.util.Map<String, String> mPresetLookup = new java.util.HashMap<>();
 
     private TextView mSearchResultsSummary;
 
@@ -686,106 +671,35 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void initPresets() {
-        mPresetCategories.clear();
-        int scriptIndex = mScriptSpinner != null ? mScriptSpinner.getSelectedItemPosition() : 0;
-        PresetCategory catPunc = new PresetCategory(getString(R.string.preset_cat_punc), "punctuation");
-        catPunc.presets.add(new Preset("Full stop .", ".", new int[][]{{2,5,6}}, new int[][]{{3}}));
-        catPunc.presets.add(new Preset("Comma ,", ",", new int[][]{{2}}));
-        catPunc.presets.add(new Preset("Semicolon ;", ";", new int[][]{{2,3}}));
-        catPunc.presets.add(new Preset("Colon :", ":", new int[][]{{2,5}}));
-        catPunc.presets.add(new Preset("Question mark ?", "?", new int[][]{{2,6}}));
-        catPunc.presets.add(new Preset("Exclamation !", "!", new int[][]{{2,3,5}}));
-        catPunc.presets.add(new Preset("Apostrophe '", "'", new int[][]{{3}}, new int[][]{{6}}));
-        catPunc.presets.add(new Preset("Quotes \"", "\"", new int[][]{{4}}, new int[][]{{4}}));
-        catPunc.presets.add(new Preset("Open Paren (", "(", new int[][]{{2,3,5,6}}, new int[][]{{2,3,6}}));
-        catPunc.presets.add(new Preset("Close Paren )", ")", new int[][]{{2,3,5,6}}, new int[][]{{3,5,6}}));
-        mPresetCategories.add(catPunc);
-
-        PresetCategory catMath = new PresetCategory(getString(R.string.preset_cat_math), "math");
-        catMath.presets.add(new Preset("Plus +", "+", new int[][]{{2,3,5}}, new int[][]{{2,3,5}}));
-        catMath.presets.add(new Preset("Minus -", "-", new int[][]{{3,6}},   new int[][]{{3,6}}));
-        catMath.presets.add(new Preset("Multiplication x", "×", new int[][]{{2,3,6}}, new int[][]{{2,3,4,6,8}}));
-        catMath.presets.add(new Preset("Division /", "÷", new int[][]{{2,5,6}}, new int[][]{{1,2,5,6,7,8}}));
-        catMath.presets.add(new Preset("Euro €", "€", new int[][]{{4}, {1,5}}, new int[][]{{4,5,7}}));
-        mPresetCategories.add(catMath);
-
-        if (scriptIndex == 0) {
-            PresetCategory catBase = new PresetCategory(getString(R.string.preset_cat_base), "lowercase");
-            catBase.presets.add(new Preset("a", "a", new int[][]{{1}}));
-            catBase.presets.add(new Preset("b", "b", new int[][]{{1,2}}));
-            catBase.presets.add(new Preset("c", "c", new int[][]{{1,4}}));
-            catBase.presets.add(new Preset("d", "d", new int[][]{{1,4,5}}));
-            catBase.presets.add(new Preset("e", "e", new int[][]{{1,5}}));
-            catBase.presets.add(new Preset("f", "f", new int[][]{{1,2,4}}));
-            catBase.presets.add(new Preset("g", "g", new int[][]{{1,2,4,5}}));
-            catBase.presets.add(new Preset("h", "h", new int[][]{{1,2,5}}));
-            catBase.presets.add(new Preset("i", "i", new int[][]{{2,4}}));
-            catBase.presets.add(new Preset("j", "j", new int[][]{{2,4,5}}));
-            catBase.presets.add(new Preset("k", "k", new int[][]{{1,3}}));
-            catBase.presets.add(new Preset("l", "l", new int[][]{{1,2,3}}));
-            catBase.presets.add(new Preset("m", "m", new int[][]{{1,3,4}}));
-            catBase.presets.add(new Preset("n", "n", new int[][]{{1,3,4,5}}));
-            catBase.presets.add(new Preset("o", "o", new int[][]{{1,3,5}}));
-            catBase.presets.add(new Preset("p", "p", new int[][]{{1,2,3,4}}));
-            catBase.presets.add(new Preset("q", "q", new int[][]{{1,2,3,4,5}}));
-            catBase.presets.add(new Preset("r", "r", new int[][]{{1,2,3,5}}));
-            catBase.presets.add(new Preset("s", "s", new int[][]{{2,3,4}}));
-            catBase.presets.add(new Preset("t", "t", new int[][]{{2,3,4,5}}));
-            catBase.presets.add(new Preset("u", "u", new int[][]{{1,3,6}}));
-            catBase.presets.add(new Preset("v", "v", new int[][]{{1,2,3,6}}));
-            catBase.presets.add(new Preset("w", "w", new int[][]{{2,4,5,6}}));
-            catBase.presets.add(new Preset("x", "x", new int[][]{{1,3,4,6}}));
-            catBase.presets.add(new Preset("y", "y", new int[][]{{1,3,4,5,6}}));
-            catBase.presets.add(new Preset("z", "z", new int[][]{{1,3,5,6}}));
-            mPresetCategories.add(catBase);
-            PresetCategory catIt = new PresetCategory(getString(R.string.preset_cat_it_accents), "lowercase");
-            catIt.presets.add(new Preset(getString(R.string.label_a_grave), "à", new int[][]{{1,2,3,5,6}}));
-            catIt.presets.add(new Preset(getString(R.string.label_e_grave), "è", new int[][]{{2,3,4,6}}));
-            catIt.presets.add(new Preset(getString(R.string.label_e_acute), "é", new int[][]{{1,2,3,4,5,6}}));
-            catIt.presets.add(new Preset(getString(R.string.label_i_grave), "ì", new int[][]{{3,4}}));
-            catIt.presets.add(new Preset(getString(R.string.label_o_grave), "ò", new int[][]{{3,4,6}}));
-            catIt.presets.add(new Preset(getString(R.string.label_u_grave), "ù", new int[][]{{2,3,4,5,6}}));
-            mPresetCategories.add(catIt);
+        mPresetLookup.clear();
+        String lang = "en";
+        if (mLocaleSpinner != null && mLocaleSpinner.getSelectedItemPosition() > 0) {
+            lang = mLocaleCodes.get(mLocaleSpinner.getSelectedItemPosition()).split("-")[0];
         }
-        PresetCategory catControl = new PresetCategory(getString(R.string.preset_cat_control), "capsletter");
-        catControl.presets.add(new Preset(getString(R.string.preset_caps_sign), "", new int[][]{{4,6}}));
-        catControl.presets.add(new Preset(getString(R.string.preset_num_sign), "", new int[][]{{3,4,5,6}}));
-        catControl.presets.add(new Preset(getString(R.string.preset_let_sign), "", new int[][]{{5}}));
-        mPresetCategories.add(catControl);
-    }
+        
+        boolean is8dot = mEightDotCheck != null && mEightDotCheck.isChecked();
+        String templateFile = lang + (is8dot ? "_standard_8dot.json" : "_standard_6dot.json");
+        
+        // Try language specific template, fallback to English
+        String json = null;
+        try { json = loadTemplateFromAssets(templateFile); } 
+        catch (Exception e) {
+            try { json = loadTemplateFromAssets("en" + (is8dot ? "_standard_8dot.json" : "_standard_6dot.json")); }
+            catch (Exception e2) { /* No template found */ }
+        }
 
-    private void showPresetPicker() {
-        AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle(R.string.title_select_template);
-        String[] cats = new String[mPresetCategories.size()];
-        for (int i=0; i<mPresetCategories.size(); i++) cats[i] = mPresetCategories.get(i).name;
-        b.setItems(cats, (d, w) -> showPresetItems(mPresetCategories.get(w)));
-        b.show();
-    }
-
-    private void showPresetItems(final PresetCategory cat) {
-        final boolean[] checked = new boolean[cat.presets.size()];
-        for (int i = 0; i < checked.length; i++) checked[i] = true;
-        AlertDialog.Builder b = new AlertDialog.Builder(this);
-        b.setTitle(cat.name);
-        String[] labels = new String[cat.presets.size()];
-        for (int i = 0; i < cat.presets.size(); i++) labels[i] = cat.presets.get(i).toString();
-        b.setMultiChoiceItems(labels, checked, (dialog, which, isChecked) -> checked[which] = isChecked);
-        b.setPositiveButton(R.string.btn_add_selected, (dialog, which) -> {
-            boolean is8dot = mEightDotCheck.isChecked();
-            for (int i = 0; i < cat.presets.size(); i++) {
-                if (checked[i]) {
-                    Preset p = cat.presets.get(i);
-                    int[][] cells = p.getCells(is8dot);
-                    List<Integer> pts = new ArrayList<>();
-                    for (int[] c : cells) { int pattern = 0; for (int d : c) pattern |= (1 << (d - 1)); pts.add(pattern); }
-                    mMappings.add(new Mapping(cat.defaultOpcode, p.character, pts, false));
+        if (json != null) {
+            try {
+                JSONArray mappings = new JSONObject(json).getJSONArray("mappings");
+                for (int i = 0; i < mappings.length(); i++) {
+                    JSONObject m = mappings.getJSONObject(i);
+                    String dots = m.getString("dots");
+                    String character = m.optString("char", "");
+                    String label = character.isEmpty() ? m.getString("opcode") : character;
+                    mPresetLookup.put(dots, label);
                 }
-            }
-            refreshSpinner();
-        });
-        b.setNegativeButton(R.string.btn_cancel, null);
-        b.show();
+            } catch (Exception e) { Log.e(TAG, "Error parsing presets", e); }
+        }
     }
 
     private void updateDotsDisplay() {
@@ -815,16 +729,7 @@ public class TableCreatorActivity extends Activity {
     }
 
     private String findDuplicateInPresets(String dots) {
-        for (PresetCategory cat : mPresetCategories) {
-            for (Preset p : cat.presets) if (getDotsString(patternsFromCells(p.getCells(mEightDotCheck.isChecked()))).equals(dots)) return p.label;
-        }
-        return null;
-    }
-
-    private List<Integer> patternsFromCells(int[][] cells) {
-        List<Integer> pts = new ArrayList<>();
-        for (int[] cell : cells) { int p = 0; for (int d : cell) p |= (1 << (d - 1)); pts.add(p); }
-        return pts;
+        return mPresetLookup.get(dots);
     }
 
     private void showDuplicateDialog(final Mapping newMapping, final int existingIndex) {
