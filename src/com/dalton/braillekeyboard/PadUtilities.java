@@ -145,6 +145,18 @@ public class PadUtilities {
         }
     }
 
+    public static int getHorizontalPrefKey(boolean portrait, boolean invert) {
+        if (portrait && !invert) {
+            return R.string.pref_keyboard_save_horizontal_portrait_key;
+        } else if (!portrait && !invert) {
+            return R.string.pref_keyboard_save_horizontal_landscape_key;
+        } else if (portrait && invert) {
+            return R.string.pref_keyboard_save_horizontal_portrait_invert_key;
+        } else {
+            return R.string.pref_keyboard_save_horizontal_landscape_invert_key;
+        }
+    }
+
     public static Pad displayDefaultPad(Context context, int width, int height,
             boolean portrait, boolean useEightDots) {
         Pad pad;
@@ -168,8 +180,17 @@ public class PadUtilities {
                 pad = new TabletopPad(context, coords, width, height,
                         portrait, invert, useEightDots);
             } else {
-                pad = TabletopPad.displayDefaultPad(context, width, height,
-                        portrait, invert, useEightDots);
+                // Migration path: if tabletop calibration is missing, try loading horizontal calibration
+                int oldPrefKey = getHorizontalPrefKey(portrait, invert);
+                if ((coords = Pad.load(context, width, height, oldPrefKey, portrait)) != null) {
+                    pad = new TabletopPad(context, coords, width, height,
+                            portrait, invert, useEightDots);
+                    // Save it as tabletop for next time
+                    pad.save(context, prefKey, portrait);
+                } else {
+                    pad = TabletopPad.displayDefaultPad(context, width, height,
+                            portrait, invert, useEightDots);
+                }
             }
         } else {
             Coords[] coords = null;
