@@ -156,6 +156,26 @@ public class Options {
         return sharedPref.getString(context.getString(resource), defaultValue);
     }
 
+    public static void writeStringPreference(Context context, int resource,
+            String value) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(context.getString(resource), value);
+        editor.apply();
+    }
+
+    public static void writeStringPreferenceStringKey(Context context, String key,
+            String value) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
     public static boolean switchBooleanPreference(Context context,
             int resource, boolean defaultValue) {
         if (context == null) return defaultValue;
@@ -178,13 +198,19 @@ public class Options {
         editor.apply();
     }
 
-    public static void writeStringPreference(Context context, int resource,
-            String value) {
+    public static int getIntPreference(Context context, int resource, int defaultValue) {
+        if (context == null) return defaultValue;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return defaultValue;
+        return sharedPref.getInt(context.getString(resource), defaultValue);
+    }
+
+    public static void writeIntPreference(Context context, int resource, int value) {
         if (context == null) return;
         SharedPreferences sharedPref = getSharedPreferences(context);
         if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(context.getString(resource), value);
+        editor.putInt(context.getString(resource), value);
         editor.apply();
     }
 

@@ -460,6 +460,8 @@ public abstract class Pad {
 
     abstract Swipe getSwipe(Coords[] coords, boolean swap);
 
+    public abstract Options.KeyboardType getKeyboardType();
+
     protected static int getXGap(List<Coords> list) {
         int[] array = new int[list.size()];
         for (int i = 0; i < list.size(); i++) {

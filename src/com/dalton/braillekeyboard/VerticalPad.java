@@ -171,4 +171,9 @@ public class VerticalPad extends Pad {
     public Swipe getSwipe(Coords[] coords, boolean swap) {
         return getGenericSwipeAction(coords, swap);
     }
+
+    @Override
+    public Options.KeyboardType getKeyboardType() {
+        return Options.KeyboardType.VERTICAL;
+    }
 }

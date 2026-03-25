@@ -452,6 +452,9 @@ public class BrailleView extends View {
                 pad.saveStringKey(getContext(), dynamicKey, height > width && !displayParams.autoRotate, dots);
                 Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
                 
+                // Save the layout type that was detected/selected during manual calibration
+                Options.writeIntPreference(getContext(), R.string.pref_last_calibrated_layout_key, pad.getKeyboardType().ordinal());
+                
                 speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_FLUSH);
                 vibrator.vibrate(LONG_VIBRATION);
             } else {
@@ -556,6 +559,10 @@ public class BrailleView extends View {
                 String dynamicKey = getDynamicCalibrationKey(width, height);
                 pad.saveStringKey(getContext(), dynamicKey, height > width && !displayParams.autoRotate, dots);
                 Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
+                
+                // Memory enhancement: save the layout type detected
+                Options.writeIntPreference(getContext(), R.string.pref_last_calibrated_layout_key, pad.getKeyboardType().ordinal());
+                
                 speech.speak(getContext(), getContext().getString(pad.padString), Speech.QUEUE_FLUSH);
                 speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_ADD);
                 vibrator.vibrate(MEDIUM_VIBRATION);
