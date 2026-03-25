@@ -167,6 +167,16 @@ public class PadUtilities {
                         context,
                         R.string.pref_default_keyboard_key,
                         context.getString(R.string.pref_default_keyboard_default))));
+
+        // Memory enhancement: If set to AUTO, first check if we have a record of the last calibrated layout.
+        // This prevents the keyboard from reverting to Vertical on small screens if the user explicitly calibrated for Tabletop.
+        if (keyboard == KeyboardType.AUTO) {
+            int lastLayoutOrdinal = Options.getIntPreference(context, R.string.pref_last_calibrated_layout_key, -1);
+            if (lastLayoutOrdinal != -1) {
+                keyboard = KeyboardType.values()[lastLayoutOrdinal];
+            }
+        }
+
         int maxScreen = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, MAX_SCREEN_SIZE, context
                         .getResources().getDisplayMetrics());

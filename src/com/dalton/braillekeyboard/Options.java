@@ -191,6 +191,22 @@ public class Options {
         editor.apply();
     }
 
+    public static int getIntPreference(Context context, int resource, int defaultValue) {
+        if (context == null) return defaultValue;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return defaultValue;
+        return sharedPref.getInt(context.getString(resource), defaultValue);
+    }
+
+    public static void writeIntPreference(Context context, int resource, int value) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(context.getString(resource), value);
+        editor.apply();
+    }
+
     public static void writeStringPreference(Context context, int resource,
             String value) {
         if (context == null) return;

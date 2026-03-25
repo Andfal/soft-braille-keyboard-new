@@ -462,6 +462,7 @@
     <string name="pref_lock_calibration_key">LOCK_CALIBRATION</string>
     <string name="pref_lock_calibration_default">false</string>
     <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
+    <string name="pref_last_calibrated_layout_key">LAST_CALIBRATED_LAYOUT</string>
 
     <!-- Build stability and features keys -->
     <string name="accessibility_service_label">Soft Braille Keyboard Accessibility</string>

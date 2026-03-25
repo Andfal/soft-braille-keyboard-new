@@ -473,6 +473,8 @@ public abstract class Pad {
 
     abstract Swipe getSwipe(Coords[] coords, boolean swap);
 
+    public abstract Options.KeyboardType getKeyboardType();
+
     protected static int getXGap(List<Coords> list) {
         int[] array = new int[list.size()];
         for (int i = 0; i < list.size(); i++) {
@@ -504,7 +506,7 @@ public abstract class Pad {
     protected void save(Context context, int prefKey, boolean portrait) {
         Set<String> points = new HashSet<String>();
         for (Coords key : keys) {
-            points.add(savePointString(key, portrait));
+            points.add(savePointString(context, key, portrait));
         }
         Options.writeStringSetPreference(context, prefKey, points);
     }
@@ -512,7 +514,7 @@ public abstract class Pad {
     protected void saveStringKey(Context context, String prefKey, boolean portrait) {
         Set<String> points = new HashSet<String>();
         for (Coords key : keys) {
-            points.add(savePointString(key, portrait));
+            points.add(savePointString(context, key, portrait));
         }
         Options.writeStringSetPreferenceStringKey(context, prefKey, points);
     }
@@ -520,7 +522,7 @@ public abstract class Pad {
     protected void save(Context context, int prefKey, boolean portrait, Coords[] customDots) {
         Set<String> points = new HashSet<String>();
         for (Coords key : customDots) {
-            points.add(savePointString(key, portrait));
+            points.add(savePointString(context, key, portrait));
         }
         Options.writeStringSetPreference(context, prefKey, points);
     }
@@ -528,7 +530,7 @@ public abstract class Pad {
     protected void saveStringKey(Context context, String prefKey, boolean portrait, Coords[] customDots) {
         Set<String> points = new HashSet<String>();
         for (Coords key : customDots) {
-            points.add(savePointString(key, portrait));
+            points.add(savePointString(context, key, portrait));
         }
         Options.writeStringSetPreferenceStringKey(context, prefKey, points);
     }
@@ -537,17 +539,17 @@ public abstract class Pad {
             int prefKey, boolean portrait) {
         Set<String> points = Options.getStringSetPreference(context, prefKey,
                 null);
-        return processLoadedPoints(points, viewWidth, viewHeight, portrait);
+        return processLoadedPoints(context, points, viewWidth, viewHeight, portrait);
     }
 
     public static Coords[] loadStringKey(Context context, int viewWidth, int viewHeight,
             String prefKey, boolean portrait) {
         Set<String> points = Options.getStringSetPreferenceStringKey(context, prefKey,
                 null);
-        return processLoadedPoints(points, viewWidth, viewHeight, portrait);
+        return processLoadedPoints(context, points, viewWidth, viewHeight, portrait);
     }
 
-    private static Coords[] processLoadedPoints(Set<String> points, int viewWidth, int viewHeight, boolean portrait) {
+    private static Coords[] processLoadedPoints(Context context, Set<String> points, int viewWidth, int viewHeight, boolean portrait) {
         if (points != null && !points.isEmpty()) {
             int[] centre = { portrait ? viewHeight / 2 : viewWidth / 2,
                     portrait ? viewWidth / 2 : viewHeight / 2 };
@@ -566,12 +568,13 @@ public abstract class Pad {
         return null;
     }
 
-    private String savePointString(Coords key, boolean portrait) {
+    private String savePointString(Context context, Coords key, boolean portrait) {
         int centre[] = { portrait ? viewHeight / 2 : viewWidth / 2,
                 portrait ? viewWidth / 2 : viewHeight / 2 };
         StringBuilder sb = new StringBuilder();
         sb.append(String.valueOf(key.id));
         sb.append(',');
+        // Save absolute pixel offset for maximum precision in Modern version
         sb.append(String.valueOf(key.x - centre[0]));
         sb.append(',');
         sb.append(String.valueOf(key.y - centre[1]));
@@ -630,6 +633,7 @@ public abstract class Pad {
 
         public Coords(int[] centre, String point) {
             String[] components = point.split(",");
+            // Load absolute pixel offset for maximum precision in Modern version
             x = centre[0] + Integer.parseInt(components[1]);
             y = centre[1] + Integer.parseInt(components[2]);
             id = Integer.parseInt(components[0]);

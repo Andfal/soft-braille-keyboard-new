@@ -192,17 +192,22 @@ public class BrailleView extends View {
         actionHandler.setKeyboardListener(listener);
     }
 
-    private String getDynamicCalibrationKey(int width, int height) {
+        private String getDynamicCalibrationKey(int width, int height) {
         String baseKey = getContext().getString(R.string.pref_custom_dots_key);
         // L'orientamento fisico determina il profilo di calibrazione da caricare (_PORTRAIT o _LANDSCAPE).
-        // Il bug precedente impediva il caricamento del profilo _PORTRAIT quando autoRotate era attivo.
         boolean isPortrait = height > width;
         String orientation = isPortrait ? "_PORTRAIT" : "_LANDSCAPE";
         
-        // Calcola la larghezza minima in dip per distinguere telefono da tablet/foldable aperto
-        DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
-        float widthDp = Math.min(width, height) / displayMetrics.density;
-        String size = widthDp >= 600 ? "_LARGE" : "_SMALL";
+        // Usa smallestScreenWidthDp per una distinzione robusta smartphone/tablet (API 13+)
+        int smallestWidthDp = getContext().getResources().getConfiguration().smallestScreenWidthDp;
+        
+        // Fallback per vecchi dispositivi se smallestWidthDp fosse 0
+        if (smallestWidthDp == 0) {
+            DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
+            smallestWidthDp = (int) (Math.min(width, height) / displayMetrics.density);
+        }
+        
+        String size = smallestWidthDp >= 600 ? "_LARGE" : "_SMALL";
         
         return baseKey + orientation + size;
     }
@@ -439,16 +444,25 @@ public class BrailleView extends View {
         int height = displayParams.autoRotate ? getHeight() : Math.min(getWidth(), getHeight());
         
         Coords[] dots = mManualCalibrationDots.toArray(new Coords[mManualCalibrationDots.size()]);
-        if (selectPad(dots, width, height)) {
-            // Success! Save and Lock.
-            String dynamicKey = getDynamicCalibrationKey(width, height);
-            pad.saveStringKey(getContext(), dynamicKey, height > width && !displayParams.autoRotate, dots);
-            Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
-            
-            speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_FLUSH);
-            vibrator.vibrate(LONG_VIBRATION);
-        } else {
-            speech.speak(getContext(), getContext().getString(R.string.keyboard_error), Speech.QUEUE_FLUSH);
+        try {
+            if (selectPad(dots, width, height)) {
+                // Success! Save and Lock.
+                String dynamicKey = getDynamicCalibrationKey(width, height);
+                pad.saveStringKey(getContext(), dynamicKey, height > width && !displayParams.autoRotate, dots);
+                Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
+                
+                // Save the layout type that was detected/selected during manual calibration
+                Options.writeIntPreference(getContext(), R.string.pref_last_calibrated_layout_key, pad.getKeyboardType().ordinal());
+                
+                speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_FLUSH);
+                vibrator.vibrate(LONG_VIBRATION);
+            } else {
+                speech.speak(getContext(), getContext().getString(R.string.keyboard_error), Speech.QUEUE_FLUSH);
+            }
+        } catch (IllegalArgumentException e) {
+            // Provide specific feedback if geometry validation fails
+            speech.speak(getContext(), getContext().getString(R.string.keyboard_error) + ". " + e.getMessage(), Speech.QUEUE_FLUSH);
+            vibrator.vibrate(QUICK_VIBRATION);
         }
         mManualCalibrationDots.clear();
         resetDots();
@@ -539,15 +553,24 @@ public class BrailleView extends View {
         }
         
         mIsManualCalibrating = false;
-        if (selectPad(dots, width, height)) {
-            String dynamicKey = getDynamicCalibrationKey(width, height);
-            pad.saveStringKey(getContext(), dynamicKey, height > width && !displayParams.autoRotate, dots);
-            Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
-            speech.speak(getContext(), getContext().getString(pad.padString), Speech.QUEUE_FLUSH);
-            speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_ADD);
-            vibrator.vibrate(MEDIUM_VIBRATION);
-        } else {
-            speech.speak(getContext(), getContext().getString(R.string.keyboard_error), Speech.QUEUE_FLUSH);
+        try {
+            if (selectPad(dots, width, height)) {
+                String dynamicKey = getDynamicCalibrationKey(width, height);
+                pad.saveStringKey(getContext(), dynamicKey, height > width && !displayParams.autoRotate, dots);
+                Options.writeBooleanPreference(getContext(), R.string.pref_lock_calibration_key, true);
+                
+                // Memory enhancement: save the layout type detected
+                Options.writeIntPreference(getContext(), R.string.pref_last_calibrated_layout_key, pad.getKeyboardType().ordinal());
+                
+                speech.speak(getContext(), getContext().getString(pad.padString), Speech.QUEUE_FLUSH);
+                speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_ADD);
+                vibrator.vibrate(MEDIUM_VIBRATION);
+            } else {
+                speech.speak(getContext(), getContext().getString(R.string.keyboard_error), Speech.QUEUE_FLUSH);
+                vibrator.vibrate(QUICK_VIBRATION);
+            }
+        } catch (IllegalArgumentException e) {
+            speech.speak(getContext(), getContext().getString(R.string.keyboard_error) + ". " + e.getMessage(), Speech.QUEUE_FLUSH);
             vibrator.vibrate(QUICK_VIBRATION);
         }
         lastDotList.clear();
