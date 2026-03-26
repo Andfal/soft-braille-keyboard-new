@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Do not translate the following preference strings-->
     <string name="action_record_audio_permission">ACTION_RECORD_AUDIO_PERMISSION</string>
@@ -506,11 +506,11 @@
     <string name="preset_cat_base">Base Alphabet (a-z)</string>
     <string name="preset_cat_control">Control Codes (6-pt)</string>
     <string name="preset_cat_punc">Punctuation (Standard/Literary)</string>
-    <string name="preset_cat_math">Math &amp; Symbols (+, €, ...)</string>
+    <string name="preset_cat_math">Math &amp; Symbols (+, â‚¬, ...)</string>
     <string name="preset_cat_it_accents">Italian Accents</string>
-    <string name="preset_cat_acute">Acute/Spanish (á, ñ...)</string>
-    <string name="preset_cat_circ">Circumflex/French (â, œ...)</string>
-    <string name="preset_cat_dier">Diaeresis (ä, ë...)</string>
+    <string name="preset_cat_acute">Acute/Spanish (Ã¡, Ã±...)</string>
+    <string name="preset_cat_circ">Circumflex/French (Ã¢, Å“...)</string>
+    <string name="preset_cat_dier">Diaeresis (Ã¤, Ã«...)</string>
     <string name="btn_load_template">Load Template</string>
     <string name="title_select_template">Select Template</string>
     <string name="msg_template_applied">Template applied successfully!</string>
@@ -541,4 +541,9 @@
     <string name="label_i_grave">i grave</string>
     <string name="label_o_grave">o grave</string>
     <string name="label_u_grave">u grave</string>
+    <string name="btn_sync_folder">Grant folder access for scanning</string>
+    <string name="msg_sync_folder_desc">Select the soft-braille folder to automatically load files.</string>
+    <string name="msg_sync_success">Folder access activated!</string>
+    <string name="msg_sync_error">Error requesting folder access.</string>
+    <string name="label_external_synced">[External]</string>
 </resources>
