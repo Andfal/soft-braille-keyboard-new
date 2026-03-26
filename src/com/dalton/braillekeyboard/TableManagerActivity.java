@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.googlecode.eyesfree.braille.service.translate.CustomTableManager;
 import com.googlecode.eyesfree.braille.translate.TableInfo;
+import android.support.v4.provider.DocumentFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,11 +28,14 @@ import java.util.List;
 public class TableManagerActivity extends Activity {
     private static final String TAG = "TableManagerActivity";
     private static final int PICK_FILE_REQUEST = 1;
+    private static final int REQUEST_SYNC_FOLDER = 2;
+    private static final String PREF_SYNC_FOLDER_URI = "sync_folder_uri";
     private CustomTableManager mManager;
     private ListView mListView;
     private ArrayAdapter<String> mAdapter;
     private List<TableInfo> mTables;
     private File mPendingFile;
+    private DocumentFile mPendingDocument;
 
     private static final int REQUEST_STORAGE_PERMISSION = 100;
 
@@ -78,6 +82,17 @@ public class TableManagerActivity extends Activity {
             }
         });
         layout.addView(exportSysButton);
+
+        Button syncButton = new Button(this);
+        syncButton.setId(View.generateViewId());
+        syncButton.setText(R.string.btn_sync_folder);
+        syncButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickSyncFolder();
+            }
+        });
+        layout.addView(syncButton);
         
         android.widget.TextView tv = new android.widget.TextView(this);
         tv.setText(R.string.label_tap_to_edit);
@@ -122,12 +137,30 @@ public class TableManagerActivity extends Activity {
     private void showDeleteConfirmation(final TableInfo table) {
         String fileName = table.getId();
         if (fileName.startsWith("custom:")) fileName = fileName.substring(7);
-        if (!fileName.endsWith(".ctb") && !fileName.endsWith(".utb")) fileName += ".ctb";
+        if (!fileName.endsWith(".ctb") && !fileName.endsWith(".utb") && !fileName.endsWith(".dis")) fileName += ".ctb";
         
         final String finalFileName = fileName;
+        
+        // Check for legacy File
         File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
-        final File externalFile = new File(new File(downloadsDir, "soft-braille"), finalFileName);
-        final boolean hasExternalCopy = externalFile.exists();
+        final File legacyFile = new File(new File(downloadsDir, "soft-braille"), finalFileName);
+        
+        // Check for SAF DocumentFile
+        DocumentFile syncedFile = null;
+        String syncUriStr = Options.getSharedPreferences(this).getString(PREF_SYNC_FOLDER_URI, null);
+        if (syncUriStr != null) {
+            try {
+                DocumentFile root = DocumentFile.fromTreeUri(this, Uri.parse(syncUriStr));
+                if (root != null && root.exists()) {
+                    syncedFile = root.findFile(finalFileName);
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error checking synced file for deletion", e);
+            }
+        }
+
+        final boolean hasExternalCopy = legacyFile.exists() || (syncedFile != null && syncedFile.exists());
+        final DocumentFile finalSyncedFile = syncedFile;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.confirm_delete_title);
@@ -156,7 +189,17 @@ public class TableManagerActivity extends Activity {
                 if (mManager.deleteTable(table.getId())) {
                     if (hasExternalCopy && checkBox.isChecked()) {
                         try {
-                            if (externalFile.delete()) {
+                            boolean deleted = false;
+                            // Try SAF first
+                            if (finalSyncedFile != null && finalSyncedFile.exists()) {
+                                deleted = finalSyncedFile.delete();
+                            }
+                            // Fallback to legacy
+                            if (!deleted && legacyFile.exists()) {
+                                deleted = legacyFile.delete();
+                            }
+                            
+                            if (deleted) {
                                 Log.d(TAG, "External file deleted: " + finalFileName);
                             } else {
                                 Log.w(TAG, "Could not delete external file: " + finalFileName);
@@ -203,6 +246,16 @@ public class TableManagerActivity extends Activity {
 
     private void refreshList() {
         mManager.scanFiles();
+        
+        // Assicuriamoci che la cartella esterna esista per facilitare l'utente (PC/ADB)
+        try {
+            File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+            File softBrailleDir = new File(downloadsDir, "soft-braille");
+            if (!softBrailleDir.exists()) softBrailleDir.mkdirs();
+        } catch (Exception e) {
+            Log.e(TAG, "Error ensuring soft-braille directory exists", e);
+        }
+
         final List<TableInfo> internalTables = mManager.getTables();
         final List<String> names = new ArrayList<>();
         
@@ -211,7 +264,40 @@ public class TableManagerActivity extends Activity {
             names.add(t.getVariant());
         }
 
-        // 2. Scan Download/soft-braille for external tables
+        // 2. Scan for external tables
+        // 2a. Via SAF DocumentFile (if synced)
+        String syncUriStr = Options.getStringPreference(this, R.string.pref_app_version_title, null); // Use a dummy resource or better a constant
+        // Let's use the constant directly instead of resource
+        syncUriStr = Options.getSharedPreferences(this).getString(PREF_SYNC_FOLDER_URI, null);
+        
+        if (syncUriStr != null) {
+            try {
+                Uri treeUri = Uri.parse(syncUriStr);
+                DocumentFile root = DocumentFile.fromTreeUri(this, treeUri);
+                if (root != null && root.exists()) {
+                    DocumentFile[] files = root.listFiles();
+                    for (DocumentFile f : files) {
+                        String name = f.getName();
+                        if (name != null && (name.endsWith(".ctb") || name.endsWith(".utb"))) {
+                            boolean existsInternally = false;
+                            for (TableInfo t : internalTables) {
+                                if (t.getId().equals("custom:" + name)) {
+                                    existsInternally = true;
+                                    break;
+                                }
+                            }
+                            if (!existsInternally) {
+                                names.add(name + " [" + getString(R.string.label_external_synced) + "]");
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Error scanning synced folder", e);
+            }
+        }
+
+        // 2b. Via Legacy File API (fallback or existing logic)
         try {
             File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
             File softBrailleDir = new File(downloadsDir, "soft-braille");
@@ -228,7 +314,12 @@ public class TableManagerActivity extends Activity {
                                     break;
                                 }
                             }
-                            if (!existsInternally) {
+                            // Only add if not already added by SAF and not exists internally
+                            boolean alreadyAdded = false;
+                            for (String n : names) {
+                                if (n.startsWith(name)) { alreadyAdded = true; break; }
+                            }
+                            if (!existsInternally && !alreadyAdded) {
                                 names.add(name + " [Download]");
                             }
                         }
@@ -248,7 +339,15 @@ public class TableManagerActivity extends Activity {
                 if (position < 0 || position >= names.size()) return;
                 String selectedName = names.get(position);
                 
-                if (selectedName.endsWith("[Download]")) {
+                if (selectedName.endsWith("[" + getString(R.string.label_external_synced) + "]")) {
+                    String fileName = selectedName.replace(" [" + getString(R.string.label_external_synced) + "]", "");
+                    String syncUriStr = Options.getSharedPreferences(TableManagerActivity.this).getString(PREF_SYNC_FOLDER_URI, null);
+                    if (syncUriStr != null) {
+                        DocumentFile root = DocumentFile.fromTreeUri(TableManagerActivity.this, Uri.parse(syncUriStr));
+                        DocumentFile file = root.findFile(fileName);
+                        if (file != null) checkPermissionAndImport(file);
+                    }
+                } else if (selectedName.endsWith("[Download]")) {
                     String fileName = selectedName.replace(" [Download]", "");
                     File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
                     File externalFile = new File(new File(downloadsDir, "soft-braille"), fileName);
@@ -274,8 +373,14 @@ public class TableManagerActivity extends Activity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 if (position < 0 || position >= names.size()) return true;
-                String selectedName = names.get(position);
-                if (selectedName.endsWith("[Download]")) return true;
+                final String selectedName = names.get(position);
+                
+                // Se è una tabella esterna (non ancora importata), permettiamo solo l'importazione (già gestita dal click singolo)
+                // oppure possiamo aggiungere opzioni specifiche se necessario. 
+                // Per ora, le tabelle esterne non hanno menu di cancellazione diretta finché non sono importate.
+                if (selectedName.endsWith("[Download]") || selectedName.endsWith("[" + getString(R.string.label_external_synced) + "]")) {
+                    return false; // Lascia che il sistema gestisca altri eventi o non fare nulla
+                }
 
                 TableInfo selectedTable = null;
                 for (TableInfo t : internalTables) {
@@ -301,6 +406,39 @@ public class TableManagerActivity extends Activity {
                 return true;
             }
         });
+    }
+
+    private void checkPermissionAndImport(DocumentFile externalFile) {
+        // For SAF DocumentFile, we already have the URI permission from the tree
+        importExternalTable(externalFile);
+    }
+
+    private void importExternalTable(DocumentFile externalFile) {
+        try {
+            File destFile = mManager.getCustomTableFile(externalFile.getName());
+            try (InputStream is = getContentResolver().openInputStream(externalFile.getUri());
+                 OutputStream os = new FileOutputStream(destFile)) {
+                byte[] buffer = new byte[4096];
+                int read;
+                while ((read = is.read(buffer)) != -1) os.write(buffer, 0, read);
+            }
+            Toast.makeText(this, String.format(getString(R.string.msg_imported), externalFile.getName()), Toast.LENGTH_SHORT).show();
+            refreshList();
+            
+            mManager.scanFiles();
+            TableInfo table = null;
+            for (TableInfo t : mManager.getTables()) {
+                if (t.getId().equals("custom:" + externalFile.getName())) { table = t; break; }
+            }
+            if (table != null) {
+                Intent intent = new Intent(this, TableCreatorActivity.class);
+                intent.putExtra("table_id", table.getId());
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error importing external document", e);
+            Toast.makeText(this, "Import failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void importExternalTable(File externalFile) {
@@ -404,11 +542,65 @@ public class TableManagerActivity extends Activity {
         startActivityForResult(Intent.createChooser(intent, getString(R.string.title_select_table_file)), PICK_FILE_REQUEST);
     }
 
+    private void pickSyncFolder() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            new AlertDialog.Builder(this)
+                .setTitle(R.string.btn_sync_folder)
+                .setMessage(R.string.msg_sync_desc)
+                .setPositiveButton(R.string.btn_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 1. Assicuriamoci che la cartella esista (altrimenti il puntamento fallisce)
+                        try {
+                            File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+                            File softBrailleDir = new File(downloadsDir, "soft-braille");
+                            if (!softBrailleDir.exists()) softBrailleDir.mkdirs();
+                        } catch (Exception e) {
+                            Log.e(TAG, "Could not ensure directory exists", e);
+                        }
+
+                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                        
+                        // 2. Tenta di puntare direttamente alla cartella soft-braille
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                            // Uri speciale per la cartella Download/soft-braille nella memoria primaria
+                            Uri initialUri = Uri.parse("content://com.android.externalstorage.documents/document/primary:Download%2Fsoft-braille");
+                            intent.putExtra("android.provider.extra.INITIAL_URI", initialUri);
+                        }
+                        
+                        startActivityForResult(intent, REQUEST_SYNC_FOLDER);
+                    }
+                })
+                .setNegativeButton(R.string.btn_cancel, null)
+                .show();
+        } else {
+            Toast.makeText(this, "Not supported on this Android version", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null) {
             Uri uri = data.getData();
             if (uri != null) importTable(uri);
+        } else if (requestCode == REQUEST_SYNC_FOLDER && resultCode == RESULT_OK && data != null) {
+            Uri uri = data.getData();
+            if (uri != null) {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    final int takeFlags = data.getFlags()
+                            & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    try {
+                        getContentResolver().takePersistableUriPermission(uri, takeFlags);
+                        Options.writeStringPreferenceStringKey(this, PREF_SYNC_FOLDER_URI, uri.toString());
+                        Toast.makeText(this, R.string.msg_sync_success, Toast.LENGTH_SHORT).show();
+                        refreshList();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error taking persistable permission", e);
+                        Toast.makeText(this, R.string.msg_sync_error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
         }
     }
 

@@ -541,4 +541,9 @@
     <string name="label_i_grave">i grave</string>
     <string name="label_o_grave">o grave</string>
     <string name="label_u_grave">u grave</string>
+    <string name="btn_sync_folder">Grant folder access for scanning</string>
+    <string name="msg_sync_desc">Select the \'soft-braille\' folder to grant permanent access and automatically load files within it.</string>
+    <string name="msg_sync_success">Folder access activated!</string>
+    <string name="msg_sync_error">Error requesting folder access.</string>
+    <string name="label_external_synced">[External]</string>
 </resources>

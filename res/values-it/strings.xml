@@ -530,4 +530,9 @@
     <string name="label_i_grave">i grave</string>
     <string name="label_o_grave">o grave</string>
     <string name="label_u_grave">u grave</string>
+    <string name="btn_sync_folder">Dai accesso alla cartella per la scansione</string>
+    <string name="msg_sync_desc">Seleziona la cartella \'soft-braille\' per concedere l\'accesso permanente e caricare automaticamente i file al suo interno.</string>
+    <string name="msg_sync_success">Accesso alla cartella attivato!</string>
+    <string name="msg_sync_error">Errore durante la richiesta di accesso.</string>
+    <string name="label_external_synced">[Esterna]</string>
 </resources>
