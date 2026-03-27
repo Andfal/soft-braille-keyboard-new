@@ -24,6 +24,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
@@ -246,6 +247,9 @@ public class DisplayClient implements Display {
     }
 
     private class DisplayHandler extends Handler {
+        public DisplayHandler() {
+            super(Looper.getMainLooper());
+        }
         private static final int MSG_REPORT_CONNECTION_STATE = 1;
         private static final int MSG_REPORT_CONNECTION_CHANGE_PROGRESS = 2;
         private static final int MSG_REPORT_INPUT_EVENT = 3;

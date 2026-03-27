@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -41,8 +42,10 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.os.Vibrator;
+import android.os.VibratorManager;
+import android.os.VibrationEffect;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.MotionEventCompat;
+
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -145,10 +148,13 @@ public class BrailleView extends View {
         super(context, attrs);
         paint = new Paint();
         circlePaint = new Paint();
-        accessibilityManager = (AccessibilityManager) context
-                .getSystemService(Context.ACCESSIBILITY_SERVICE);
-        vibrator = (Vibrator) context
-                .getSystemService(Context.VIBRATOR_SERVICE);
+        accessibilityManager = context.getSystemService(AccessibilityManager.class);
+        if (android.os.Build.VERSION.SDK_INT >= 31) {
+            VibratorManager vm = context.getSystemService(VibratorManager.class);
+            vibrator = vm != null ? vm.getDefaultVibrator() : context.getSystemService(Vibrator.class);
+        } else {
+            vibrator = context.getSystemService(Vibrator.class);
+        }
     }
 
     @Override
@@ -231,7 +237,7 @@ public class BrailleView extends View {
                 R.string.pref_vibrate_on_exit_key,
                 Boolean.parseBoolean(getContext().getString(
                         R.string.pref_vibrate_on_exit_default)))) {
-            vibrator.vibrate(LONG_VIBRATION * 2);
+            vibrator.vibrate(VibrationEffect.createOneShot(LONG_VIBRATION * 2, VibrationEffect.DEFAULT_AMPLITUDE));
         }
         speech.shutdown(getContext().getString(R.string.closing_keyboard));
         actionHandler.shutdown();
@@ -325,7 +331,7 @@ public class BrailleView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        int action = MotionEventCompat.getActionMasked(motionEvent);
+        int action = motionEvent.getActionMasked();
         
         if (shrinkKeyboard) {
             if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
@@ -338,10 +344,10 @@ public class BrailleView extends View {
                 getWidth(), getHeight());
         int height = displayParams.autoRotate ? getHeight() : Math.min(
                 getWidth(), getHeight());
-        int index = MotionEventCompat.getActionIndex(motionEvent);
-        int id = MotionEventCompat.getPointerId(motionEvent, index);
-        int x = (int) MotionEventCompat.getX(motionEvent, index);
-        int y = (int) MotionEventCompat.getY(motionEvent, index);
+        int index = motionEvent.getActionIndex();
+        int id = motionEvent.getPointerId(index);
+        int x = (int) motionEvent.getX(index);
+        int y = (int) motionEvent.getY(index);
 
         int tempX = x;
         x = displayParams.autoRotate || getWidth() >= getHeight() ? x : y;
@@ -402,11 +408,11 @@ public class BrailleView extends View {
                 invalidate();
             }
             break;
-        case MotionEventCompat.ACTION_HOVER_MOVE:
+        case MotionEvent.ACTION_HOVER_MOVE:
         case MotionEvent.ACTION_MOVE:
             updatePointer(dotsDown, id, x, y, false);
             break;
-        case MotionEventCompat.ACTION_POINTER_UP:
+        case MotionEvent.ACTION_POINTER_UP:
             if (!setPad(id, width, height, displayParams.autoRotate)) {
                 updatePointer(dotsDown, id, x, y, false);
                 setDots();
@@ -427,7 +433,7 @@ public class BrailleView extends View {
         if (totalDots == -1) totalDots = 6;
         
         mManualCalibrationDots.add(new Coords(mCurrentCalibrationStep, x, y));
-        vibrator.vibrate(QUICK_VIBRATION);
+        vibrator.vibrate(VibrationEffect.createOneShot(QUICK_VIBRATION, VibrationEffect.DEFAULT_AMPLITUDE));
         mCurrentCalibrationStep++;
         
         if (mCurrentCalibrationStep >= totalDots) {
@@ -455,14 +461,14 @@ public class BrailleView extends View {
                 Options.writeIntPreference(getContext(), R.string.pref_last_calibrated_layout_key, pad.getKeyboardType().ordinal());
                 
                 speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_FLUSH);
-                vibrator.vibrate(LONG_VIBRATION);
+                vibrator.vibrate(VibrationEffect.createOneShot(LONG_VIBRATION, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 speech.speak(getContext(), getContext().getString(R.string.keyboard_error), Speech.QUEUE_FLUSH);
             }
         } catch (IllegalArgumentException e) {
             // Provide specific feedback if geometry validation fails
             speech.speak(getContext(), getContext().getString(R.string.keyboard_error) + ". " + e.getMessage(), Speech.QUEUE_FLUSH);
-            vibrator.vibrate(QUICK_VIBRATION);
+            vibrator.vibrate(VibrationEffect.createOneShot(QUICK_VIBRATION, VibrationEffect.DEFAULT_AMPLITUDE));
         }
         mManualCalibrationDots.clear();
         resetDots();
@@ -477,16 +483,17 @@ public class BrailleView extends View {
         return setLocale(locale, true);
     }
 
+    @SuppressWarnings("deprecation")
     private boolean setLocale(Locale locale, boolean setTTSLocale) {
         if (locale != null) {
             Resources resources = getContext().getResources();
-            DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-            android.content.res.Configuration conf = resources
-                    .getConfiguration();
-            if (!conf.locale.equals(locale)) {
+            Configuration conf = resources.getConfiguration();
+            if (!conf.getLocales().get(0).equals(locale)) {
                 if (!setTTSLocale || (setTTSLocale && speech.setLocale(locale))) {
-                    conf.locale = locale;
-                    resources.updateConfiguration(conf, displayMetrics);
+                    conf.setLocale(locale);
+                    getContext().createConfigurationContext(conf);
+                    // For legacy support in this specific app context
+                    resources.updateConfiguration(conf, resources.getDisplayMetrics());
                     return true;
                 }
             }
@@ -530,7 +537,7 @@ public class BrailleView extends View {
         // Else start step-by-step
         speech.speak(getContext(), getContext().getString(R.string.calibration_init_message), Speech.QUEUE_FLUSH);
         speech.speak(getContext(), getContext().getString(R.string.calibration_step, 1), Speech.QUEUE_ADD);
-        vibrator.vibrate(MEDIUM_VIBRATION);
+        vibrator.vibrate(VibrationEffect.createOneShot(MEDIUM_VIBRATION, VibrationEffect.DEFAULT_AMPLITUDE));
         lastDotList.clear();
         resetDots();
         invalidate();
@@ -564,14 +571,14 @@ public class BrailleView extends View {
                 
                 speech.speak(getContext(), getContext().getString(pad.padString), Speech.QUEUE_FLUSH);
                 speech.speak(getContext(), getContext().getString(R.string.calibration_success), Speech.QUEUE_ADD);
-                vibrator.vibrate(MEDIUM_VIBRATION);
+                vibrator.vibrate(VibrationEffect.createOneShot(MEDIUM_VIBRATION, VibrationEffect.DEFAULT_AMPLITUDE));
             } else {
                 speech.speak(getContext(), getContext().getString(R.string.keyboard_error), Speech.QUEUE_FLUSH);
-                vibrator.vibrate(QUICK_VIBRATION);
+                vibrator.vibrate(VibrationEffect.createOneShot(QUICK_VIBRATION, VibrationEffect.DEFAULT_AMPLITUDE));
             }
         } catch (IllegalArgumentException e) {
             speech.speak(getContext(), getContext().getString(R.string.keyboard_error) + ". " + e.getMessage(), Speech.QUEUE_FLUSH);
-            vibrator.vibrate(QUICK_VIBRATION);
+            vibrator.vibrate(VibrationEffect.createOneShot(QUICK_VIBRATION, VibrationEffect.DEFAULT_AMPLITUDE));
         }
         lastDotList.clear();
         resetDots();
@@ -676,7 +683,7 @@ public class BrailleView extends View {
                         .getStringPreference(getContext(),
                                 R.string.pref_keyboard_feedback_key,
                                 KeyboardFeedback.SOUND.getValue()))) != 0) {
-            vibrator.vibrate(QUICK_VIBRATION);
+            vibrator.vibrate(VibrationEffect.createOneShot(QUICK_VIBRATION, VibrationEffect.DEFAULT_AMPLITUDE));
         }
         if (playSound
                 && (KeyboardFeedback.SOUND.value & Integer.parseInt(Options

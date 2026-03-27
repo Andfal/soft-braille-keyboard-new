@@ -40,6 +40,7 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
+import android.media.AudioFocusRequest;
 import android.media.SoundPool;
 import android.os.Build;
 import android.os.Bundle;
@@ -88,9 +89,17 @@ public class Speech {
 
         @Override
         public void onStart(String utteranceId) {
-            audioManager.requestAudioFocus(audioFocusChangeListener,
-                    AudioManager.STREAM_MUSIC,
-                    AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK);
+            if (mFocusRequest == null) {
+                mFocusRequest = new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK)
+                        .setAudioAttributes(new AudioAttributes.Builder()
+                                .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+                                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                                .build())
+                        .setAcceptsDelayedFocusGain(true)
+                        .setOnAudioFocusChangeListener(audioFocusChangeListener)
+                        .build();
+            }
+            audioManager.requestAudioFocus(mFocusRequest);
         }
 
         @Override
@@ -99,20 +108,28 @@ public class Speech {
         }
 
         @Override
+        public void onError(String utteranceId, int errorCode) {
+            // Log or handle error code if necessary
+        }
+
+        @Override
         public void onDone(String utteranceId) {
-            audioManager.abandonAudioFocus(audioFocusChangeListener);
+            if (mFocusRequest != null) {
+                audioManager.abandonAudioFocusRequest(mFocusRequest);
+            }
             if (SHUTDOWN_ID.equals(utteranceId)) {
                 doShutdown();
             }
         }
     };
 
+    private AudioFocusRequest mFocusRequest;
     private final OnAudioFocusChangeListener audioFocusChangeListener = new OnAudioFocusChangeListener() {
 
         @Override
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                audioManager.abandonAudioFocus(audioFocusChangeListener);
+                if (mFocusRequest != null) { audioManager.abandonAudioFocusRequest(mFocusRequest); }
             }
         }
     };
@@ -154,20 +171,16 @@ public class Speech {
         speechRate = rate;
 
         // Init SoundPool
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            int usage = useAccessibilityVolume ? AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY
-                    : AudioAttributes.USAGE_MEDIA;
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(usage)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                    .build();
-            soundPool = new SoundPool.Builder()
-                    .setMaxStreams(5)
-                    .setAudioAttributes(audioAttributes)
-                    .build();
-        } else {
-            soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-        }
+        int usage = useAccessibilityVolume ? AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY
+                : AudioAttributes.USAGE_MEDIA;
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(usage)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .build();
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(5)
+                .setAudioAttributes(audioAttributes)
+                .build();
         loadSounds(context);
 
         // Some symbols are not spoken natively by TTS engines, so add them into
@@ -186,15 +199,13 @@ public class Speech {
             public void onInit(int status) {
                 if (status == TextToSpeech.SUCCESS) {
                     tts.setSpeechRate(speechRate);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        int usage = useAccessibilityVolume ? AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY
-                                : AudioAttributes.USAGE_MEDIA;
-                        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                                .setUsage(usage)
-                                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                                .build();
-                        tts.setAudioAttributes(audioAttributes);
-                    }
+                    int usage = useAccessibilityVolume ? AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY
+                            : AudioAttributes.USAGE_MEDIA;
+                    AudioAttributes ttsAudioAttributes = new AudioAttributes.Builder()
+                            .setUsage(usage)
+                            .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                            .build();
+                    tts.setAudioAttributes(ttsAudioAttributes);
                     canSpeak = true;
                     setProgressListener();
                     listener.ttsReady();
@@ -203,12 +214,9 @@ public class Speech {
         }, engine);
     }
 
-    @SuppressLint("NewApi")
     private void setProgressListener() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (tts != null && canSpeak) {
-                tts.setOnUtteranceProgressListener(progressListener);
-            }
+        if (tts != null && canSpeak) {
+            tts.setOnUtteranceProgressListener(progressListener);
         }
     }
 
@@ -221,8 +229,7 @@ public class Speech {
      */
     public void shutdown(String message) {
         if (tts != null) {
-            if (message != null
-                    && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+            if (message != null) {
                 ttsSpeak(message, QUEUE_FLUSH, null, SHUTDOWN_ID);
             } else {
                 doShutdown();
@@ -410,29 +417,24 @@ public class Speech {
         }
     }
 
-    @SuppressLint("NewApi")
     private void ttsSpeak(String text, int queueMode,
             HashMap<String, String> params, String id) {
         if (!canSpeak || tts == null) {
             return;
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            if (id == null) {
-                id = String.valueOf(System.currentTimeMillis());
-            }
-
-            Bundle bundle = new Bundle();
-            if (params != null) {
-                for (String key : params.keySet()) {
-                    bundle.putString(key, params.get(key));
-                }
-            }
-
-            tts.speak(text, queueMode, bundle, id);
-        } else {
-            tts.speak(text, queueMode, params);
+        if (id == null) {
+            id = String.valueOf(System.currentTimeMillis());
         }
+
+        Bundle bundle = new Bundle();
+        if (params != null) {
+            for (String key : params.keySet()) {
+                bundle.putString(key, params.get(key));
+            }
+        }
+
+        tts.speak(text, queueMode, bundle, id);
     }
 
     // Find the best endpoint to speak until.

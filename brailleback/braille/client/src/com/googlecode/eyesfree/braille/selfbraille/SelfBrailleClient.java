@@ -26,6 +26,7 @@ import android.content.pm.Signature;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.util.Log;
@@ -159,8 +160,13 @@ public class SelfBrailleClient {
         PackageManager pm = mContext.getPackageManager();
         PackageInfo pi;
         try {
-            pi = pm.getPackageInfo(BRAILLE_BACK_PACKAGE,
-                    PackageManager.GET_SIGNATURES);
+            if (android.os.Build.VERSION.SDK_INT >= 28) {
+                pi = pm.getPackageInfo(BRAILLE_BACK_PACKAGE,
+                        PackageManager.GET_SIGNING_CERTIFICATES);
+            } else {
+                pi = pm.getPackageInfo(BRAILLE_BACK_PACKAGE,
+                        PackageManager.GET_SIGNATURES);
+            }
         } catch (PackageManager.NameNotFoundException ex) {
             Log.w(LOG_TAG, "Can't verify package " + BRAILLE_BACK_PACKAGE,
                     ex);
@@ -173,8 +179,20 @@ public class SelfBrailleClient {
             Log.e(LOG_TAG, "SHA-1 not supported", ex);
             return false;
         }
+        
+        Signature[] signatures;
+        if (android.os.Build.VERSION.SDK_INT >= 28) {
+            if (pi.signingInfo.hasMultipleSigners()) {
+                signatures = pi.signingInfo.getApkContentsSigners();
+            } else {
+                signatures = pi.signingInfo.getSigningCertificateHistory();
+            }
+        } else {
+            signatures = pi.signatures;
+        }
+
         // Check if any of the certificates match our hash.
-        for (Signature signature : pi.signatures) {
+        for (Signature signature : signatures) {
             digest.update(signature.toByteArray());
             if (MessageDigest.isEqual(EYES_FREE_CERT_SHA1, digest.digest())) {
                 return true;
@@ -221,6 +239,9 @@ public class SelfBrailleClient {
     }
 
     private class SelfBrailleHandler extends Handler {
+        public SelfBrailleHandler() {
+            super(Looper.getMainLooper());
+        }
         private static final int MSG_REBIND_SERVICE = 1;
         private static final int MSG_UNBIND_SERVICE = 2;
 

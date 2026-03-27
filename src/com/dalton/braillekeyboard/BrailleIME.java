@@ -543,8 +543,10 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         if (selectAll) { toggleMark(); selectAll = false; }
         finishComposingText();
         switch (keyCode) {
-        case Keyboard.KEYCODE_DELETE: keyDownUp(ic, KeyEvent.KEYCODE_DEL); break;
-        case Keyboard.KEYCODE_DONE:
+        case KeyEvent.KEYCODE_DEL:
+            keyDownUp(ic, KeyEvent.KEYCODE_DEL);
+            break;
+        case KeyEvent.KEYCODE_ENTER:
         case '\n':
             keyDownUp(ic, KeyEvent.KEYCODE_ENTER);
             break;

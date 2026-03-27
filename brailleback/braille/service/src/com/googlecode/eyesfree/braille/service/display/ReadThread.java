@@ -89,7 +89,7 @@ class ReadThread extends Thread implements DriverThread.OnInitListener {
     }
 
     private boolean connect() {
-        List<DeviceFinder.DeviceInfo> bonded = mDeviceFinder.findDevices();
+        List<DeviceFinder.DeviceInfo> bonded = mDeviceFinder.findDevices(mDisplayService);
         if (bonded.size() > 0) {
             tryToConnect(bonded);
         } else {
@@ -98,9 +98,10 @@ class ReadThread extends Thread implements DriverThread.OnInitListener {
         }
         if (mSocket != null) {
             BluetoothDevice bthDev = mConnectedDeviceInfo.getBluetoothDevice();
+            String devName = bthDev.getName();
             mDisplayService.setConnectionProgress(
                     mResources.getString(R.string.connprog_initializing,
-                            bthDev.getName()));
+                            devName));
             try {
                 mDriverThread = new DriverThread(mSocket.getOutputStream(),
                         mConnectedDeviceInfo,
@@ -148,11 +149,12 @@ class ReadThread extends Thread implements DriverThread.OnInitListener {
                                 bthDev.getAddress())) {
                     continue;
                 }
+                String devName = bthDev.getName();
                 mDisplayService.setConnectionProgress(
                         mResources.getString(R.string.connprog_trying,
-                                bthDev.getName()));
+                                devName));
                 Log.d(LOG_TAG, "Trying to connect to braille device: "
-                        + bthDev.getName());
+                        + devName);
                 try {
                     BluetoothSocket socket;
                     if (dev.getConnectSecurely()) {

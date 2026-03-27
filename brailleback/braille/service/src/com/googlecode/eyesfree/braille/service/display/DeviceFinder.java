@@ -17,10 +17,10 @@
 package com.googlecode.eyesfree.braille.service.display;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import com.googlecode.eyesfree.braille.service.R;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,15 +105,16 @@ public class DeviceFinder {
 
     public DeviceFinder(Context context) {
         mSharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(context);
+                context.getSharedPreferences(context.getPackageName() + "_preferences", Context.MODE_PRIVATE);
     }
 
     /**
      * Returns a list of bonded and supported devices in the order they
      * should be tried.
      */
-    public List<DeviceInfo> findDevices() {
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+    public List<DeviceInfo> findDevices(Context context) {
+        BluetoothManager bm = (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
+        BluetoothAdapter adapter = bm != null ? bm.getAdapter() : null;
         if (adapter == null) {
             return Collections.emptyList();
         }

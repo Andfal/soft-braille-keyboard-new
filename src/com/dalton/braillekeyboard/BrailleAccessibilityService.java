@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.accessibility.AccessibilityEvent;
 import android.os.Vibrator;
+import android.os.VibrationEffect;
 import android.content.Context;
 
 public class BrailleAccessibilityService extends AccessibilityService {
@@ -152,10 +153,17 @@ public class BrailleAccessibilityService extends AccessibilityService {
     }
 
     private void provideFeedback() {
-        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator v;
+        if (android.os.Build.VERSION.SDK_INT >= 31) {
+            android.os.VibratorManager vm = getSystemService(android.os.VibratorManager.class);
+            v = vm != null ? vm.getDefaultVibrator() : null;
+        } else {
+            v = getSystemService(Vibrator.class);
+        }
+
         if (v != null && v.hasVibrator()) {
             // Un breve doppio tocco per segnalare che il passthrough è attivo
-            v.vibrate(new long[]{0, 20, 50, 20}, -1);
+            v.vibrate(VibrationEffect.createWaveform(new long[]{0, 20, 50, 20}, -1));
         }
     }
 }

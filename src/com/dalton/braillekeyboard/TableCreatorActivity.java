@@ -30,6 +30,7 @@ import com.dalton.braillekeyboard.SpellChecker.Suggestion;
 import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import java.io.OutputStream;
@@ -467,7 +468,7 @@ public class TableCreatorActivity extends AppCompatActivity {
         setContentView(mainContainer);
 
         mCharEdit.addTextChangedListener(new android.text.TextWatcher() {
-            private final android.os.Handler handler = new android.os.Handler();
+            private final android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
             private Runnable runnable;
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -1103,7 +1104,7 @@ public class TableCreatorActivity extends AppCompatActivity {
     }
 
     private void confirmTemplateApplication(final String fileName) {
-        if (!mMappings.isEmpty()) new AlertDialog.Builder(this).setTitle(R.string.title_select_template).setMessage(R.string.msg_confirm_template).setPositiveButton(android.R.string.yes, (dialog, which) -> applyTemplate(fileName)).setNegativeButton(android.R.string.no, null).show();
+        if (!mMappings.isEmpty()) new AlertDialog.Builder(this).setTitle(R.string.title_select_template).setMessage(R.string.msg_confirm_template).setPositiveButton(android.R.string.ok, (dialog, which) -> applyTemplate(fileName)).setNegativeButton(android.R.string.cancel, null).show();
         else applyTemplate(fileName);
     }
 
@@ -1129,9 +1130,21 @@ public class TableCreatorActivity extends AppCompatActivity {
     private static final int REQUEST_STORAGE_PERMISSION = 100;
 
     private void shareTable() {
-        String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) return; if (!name.endsWith(".ctb")) name += ".ctb";
-        File f = new CustomTableManager(this).getCustomTableFile(name); if (!f.exists()) return;
-        Intent intent = new Intent(Intent.ACTION_SEND); intent.setType("text/plain"); intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f)); intent.putExtra(Intent.EXTRA_SUBJECT, "Braille Table: " + name); startActivity(Intent.createChooser(intent, getString(R.string.title_share_table)));
+        String name = mTableNameEdit.getText().toString().trim();
+        if (name.isEmpty()) return;
+        if (!name.endsWith(".ctb")) name += ".ctb";
+        
+        File f = new CustomTableManager(this).getCustomTableFile(name);
+        if (!f.exists()) return;
+
+        Uri contentUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", f);
+        
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_STREAM, contentUri);
+        intent.putExtra(Intent.EXTRA_SUBJECT, "Braille Table: " + name);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(intent, getString(R.string.title_share_table)));
     }
 
         private void exportTable() {

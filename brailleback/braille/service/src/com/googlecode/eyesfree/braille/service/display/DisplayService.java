@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteCallbackList;
 import android.os.RemoteException;
@@ -258,6 +259,7 @@ public class DisplayService extends Service
      * If {@code intent} indicates that a new device has been
      * paired, try to connect to it.
      */
+    @SuppressWarnings("deprecation")
     private void connectFromBroadcastIntent(Intent intent) {
         if (mConnectionState == STATE_CONNECTED) {
             return;
@@ -267,8 +269,12 @@ public class DisplayService extends Service
         if (bondState != BluetoothDevice.BOND_BONDED) {
             return;
         }
-        BluetoothDevice bthDev = intent.getParcelableExtra(
-                BluetoothDevice.EXTRA_DEVICE);
+        BluetoothDevice bthDev;
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            bthDev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice.class);
+        } else {
+            bthDev = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+        }
         if (bthDev == null) {
             return;
         }
@@ -286,7 +292,11 @@ public class DisplayService extends Service
         for (String action : actions) {
             filter.addAction(action);
         }
-        registerReceiver(mBroadcastReceiver, filter, null, null);
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mBroadcastReceiver, filter, Context.RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(mBroadcastReceiver, filter);
+        }
     }
 
     private void sendConnectionState(IBrailleServiceCallback callback) {
@@ -368,6 +378,7 @@ public class DisplayService extends Service
         return numClients > 0;
     }
 
+    @SuppressWarnings("deprecation")
     private void ensureDataFiles() {
         if (mDataFileState != FILES_NOT_EXTRACTED) {
             return;
@@ -397,6 +408,9 @@ public class DisplayService extends Service
     }
 
     private class MainHandler extends Handler {
+        public MainHandler() {
+            super(Looper.getMainLooper());
+        }
         private static final int MSG_REGISTER_CALLBACK = 1;
         private static final int MSG_ON_DISPLAY_CONNECTED = 2;
         private static final int MSG_ON_DISPLAY_DISCONNECTED = 3;

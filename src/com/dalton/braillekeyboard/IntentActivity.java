@@ -117,7 +117,7 @@ public class IntentActivity extends Activity {
                     .setTitle(getString(R.string.voice_input_permission_title))
                     .setMessage(
                             getString(R.string.voice_input_permission_message))
-                    .setNeutralButton(android.R.string.yes,
+                    .setNeutralButton(android.R.string.ok,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog,
                                         int which) {
