@@ -30,7 +30,7 @@ import com.dalton.braillekeyboard.SpellChecker.Suggestion;
 import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
 
 import android.Manifest;
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,7 +46,7 @@ import android.provider.Settings;
  * is used for things like showing alert dialogs and interracting with other
  * system frameworks normally reserved for use only by activities.
  */
-public class IntentActivity extends Activity {
+public class IntentActivity extends AppCompatActivity {
     // Request code for the record_audio permission
     private static final int PERMISSION_RECORD_AUDIO_REQUEST = 0;
 

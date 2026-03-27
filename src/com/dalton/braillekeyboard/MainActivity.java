@@ -31,7 +31,7 @@ import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
 
 import java.util.List;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -53,7 +53,7 @@ import android.widget.EditText;
  * the UI for the user to enable this keyboard, practice in a text field,
  * navigate to the Settings screen and to navigate to the user manual.
  */
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -31,12 +31,14 @@ import java.util.Locale;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceActivity;
-import android.preference.PreferenceFragment;
+import androidx.annotation.NonNull;
+import androidx.preference.CheckBoxPreference;
+import androidx.preference.ListPreference;
+import androidx.preference.MultiSelectListPreference;
+import androidx.preference.Preference;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.EngineInfo;
 import android.widget.Toast;
@@ -53,177 +55,207 @@ import com.dalton.braillekeyboard.Options.KeyboardFeedback;
 import com.dalton.braillekeyboard.Options.OptionList;
 import com.googlecode.eyesfree.braille.translate.TableInfo;
 
-// TODO fix the keyboard echo / feedback prefs
-@SuppressWarnings("deprecation")
-public class PreferenceIME extends PreferenceActivity {
-    @Override
-    protected boolean isValidFragment(String fragmentName) {
-        return true;
-    }
+/**
+ * Modernized PreferenceIME using AndroidX Preference Library.
+ * Handles nested PreferenceScreens and Dialogs correctly.
+ */
+public class PreferenceIME extends AppCompatActivity implements 
+    PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
-    @Override
-    public Intent getIntent() {
-        final Intent modIntent = new Intent(super.getIntent());
-        modIntent.putExtra(EXTRA_SHOW_FRAGMENT, Settings.class.getName());
-        modIntent.putExtra(EXTRA_NO_HEADERS, true);
-        return modIntent;
-    }
+    private static final String TITLE_TAG = "settings_title";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle(R.string.settings_name);
+        setContentView(R.layout.activity_settings);
+        
+        if (savedInstanceState == null) {
+            String rootKey = getIntent().getStringExtra(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT);
+            Settings fragment = Settings.newInstance(rootKey);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.settings, fragment)
+                    .commit();
+        } else {
+            setTitle(savedInstanceState.getCharSequence(TITLE_TAG));
+        }
+
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> {
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                setTitle(R.string.settings_name);
+            }
+        });
+        
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
-    public static class Settings extends PreferenceFragment {
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putCharSequence(TITLE_TAG, getTitle());
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        if (getSupportFragmentManager().popBackStackImmediate()) {
+            return true;
+        }
+        finish();
+        return true;
+    }
+
+    @Override
+    public boolean onPreferenceStartScreen(PreferenceFragmentCompat caller, PreferenceScreen pref) {
+        Settings fragment = Settings.newInstance(pref.getKey());
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.settings, fragment)
+                .addToBackStack(pref.getKey())
+                .commit();
+        setTitle(pref.getTitle());
+        return true;
+    }
+
+    public static class Settings extends PreferenceFragmentCompat {
         private BrailleParser brailleParser;
         private TextToSpeech tts;
 
+        public static Settings newInstance(String rootKey) {
+            Settings fragment = new Settings();
+            Bundle args = new Bundle();
+            args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, rootKey);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
         @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 getPreferenceManager().setStorageDeviceProtected();
             }
-            // Load the preferences from an XML resource
-            addPreferencesFromResource(R.xml.ime_preferences);
-            ListPreference keyboardEcho = (ListPreference) findPreference(getString(R.string.pref_echo_feedback_key));
-            ListPreference keyboardFeedback = (ListPreference) findPreference(getString(R.string.pref_keyboard_feedback_key));
-            ListPreference textToSpeechPreference = (ListPreference) findPreference(getString(R.string.pref_text_to_speech_engine_key));
+            
+            setPreferencesFromResource(R.xml.ime_preferences, rootKey);
+            
+            // Logic for specific keys that might be in different screens
+            initPreferences(rootKey);
+        }
+        
+        private void initPreferences(String rootKey) {
+            // Main screen or specific categories
+            if (rootKey == null) {
+                // Initialize version on main screen
+                setupVersionPreference();
+            }
 
-            addOptions(keyboardFeedback, KeyboardFeedback.ALL);
-            addOptions(keyboardEcho, KeyboardEcho.ALL);
-            addTTSList(textToSpeechPreference);
+            // Keyboard Feedback Category
+            if (rootKey == null || rootKey.equals(getString(R.string.pref_category_feedback_key))) {
+                setupFeedbackPreferences();
+            }
 
+            // Braille Category
+            if (rootKey == null || rootKey.equals(getString(R.string.pref_category_braille_key))) {
+                setupBraillePreferences();
+            }
+
+            // TTS Category
+            if (rootKey == null || rootKey.equals("pref_text_to_speech_title_key") || findPreference(getString(R.string.pref_text_to_speech_engine_key)) != null) {
+                setupTTSPreferences();
+            }
+            
+            // Advanced / Log Category
+            if (rootKey == null || rootKey.equals(getString(R.string.pref_category_advanced_key))) {
+                setupLogPreferences();
+            }
+        }
+
+        private void setupFeedbackPreferences() {
+            ListPreference echo = findPreference(getString(R.string.pref_echo_feedback_key));
+            ListPreference feedback = findPreference(getString(R.string.pref_keyboard_feedback_key));
+            if (echo != null) addOptions(echo, KeyboardEcho.ALL);
+            if (feedback != null) addOptions(feedback, KeyboardFeedback.ALL);
+        }
+
+        private void setupBraillePreferences() {
             Preference importTable = findPreference("pref_import_table_key");
             if (importTable != null) {
-                importTable.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference preference) {
-                        Intent intent = new Intent(getActivity(), TableManagerActivity.class);
-                        startActivity(intent);
-                        return true;
-                    }
+                importTable.setOnPreferenceClickListener(p -> {
+                    startActivity(new Intent(getActivity(), TableManagerActivity.class));
+                    return true;
                 });
             }
 
-            Preference preference = findPreference(getActivity().getString(
-                    R.string.pref_app_version_key));
-            try {
-                String versionCode = getActivity().getPackageManager()
-                        .getPackageInfo(getActivity().getPackageName(), 0).versionName;
-                preference.setTitle(String.format(
-                        getActivity()
-                                .getString(R.string.pref_app_version_title),
-                        versionCode));
-            } catch (Exception e) {
-                preference.setEnabled(false);
-            }
+            brailleParser = new BrailleParser(getActivity(), status -> addTables(status));
 
-            brailleParser = new BrailleParser(getActivity(),
-                    new BrailleParser.BrailleParserListener() {
+            final CheckBoxPreference lock = findPreference(getString(R.string.pref_lock_calibration_key));
+            final CheckBoxPreference auto = findPreference(getString(R.string.pref_auto_match_keyboard_key));
 
-                        @Override
-                        public void onTranslatorReady(int status) {
-                            addTables(status);
-                        }
-                    });
-
-            final CheckBoxPreference lockCalibration = (CheckBoxPreference) findPreference(getString(R.string.pref_lock_calibration_key));
-            final CheckBoxPreference autoMatch = (CheckBoxPreference) findPreference(getString(R.string.pref_auto_match_keyboard_key));
-
-            // Initial state check: Ensure exactly one is active
-            if (lockCalibration != null && autoMatch != null) {
-                if (lockCalibration.isChecked() && autoMatch.isChecked()) {
-                    autoMatch.setChecked(false);
-                } else if (!lockCalibration.isChecked() && !autoMatch.isChecked()) {
-                    autoMatch.setChecked(true);
-                    Options.writeBooleanPreference(getActivity(), R.string.pref_auto_match_keyboard_key, true);
-                }
-            }
-
-            if (lockCalibration != null) {
-                lockCalibration.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        boolean locked = (Boolean) newValue;
-                        if (autoMatch != null) {
-                            autoMatch.setChecked(!locked);
-                            Options.writeBooleanPreference(getActivity(), R.string.pref_auto_match_keyboard_key, !locked);
-                        }
-                        return true;
-                    }
+            if (lock != null && auto != null) {
+                lock.setOnPreferenceChangeListener((p, newValue) -> {
+                    auto.setChecked(!(Boolean) newValue);
+                    Options.writeBooleanPreference(getActivity(), R.string.pref_auto_match_keyboard_key, !(Boolean) newValue);
+                    return true;
+                });
+                auto.setOnPreferenceChangeListener((p, newValue) -> {
+                    lock.setChecked(!(Boolean) newValue);
+                    Options.writeBooleanPreference(getActivity(), R.string.pref_lock_calibration_key, !(Boolean) newValue);
+                    return true;
                 });
             }
+        }
 
-            if (autoMatch != null) {
-                autoMatch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        boolean auto = (Boolean) newValue;
-                        if (lockCalibration != null) {
-                            lockCalibration.setChecked(!auto);
-                            Options.writeBooleanPreference(getActivity(), R.string.pref_lock_calibration_key, !auto);
-                        }
-                        return true;
-                    }
-                });
+        private void setupTTSPreferences() {
+            ListPreference ttsPref = findPreference(getString(R.string.pref_text_to_speech_engine_key));
+            if (ttsPref != null) addTTSList(ttsPref);
+        }
+
+        private void setupLogPreferences() {
+            Preference share = findPreference(getString(R.string.pref_share_log_key));
+            Preference clear = findPreference(getString(R.string.pref_clear_log_key));
+            if (share != null) share.setOnPreferenceClickListener(p -> { shareLog(); return true; });
+            if (clear != null) clear.setOnPreferenceClickListener(p -> { clearLog(); return true; });
+        }
+
+        private void setupVersionPreference() {
+            Preference version = findPreference(getString(R.string.pref_app_version_key));
+            if (version != null) {
+                try {
+                    String vName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
+                    version.setTitle(String.format(getString(R.string.pref_app_version_title), vName));
+                } catch (Exception ignored) {}
             }
         }
 
         @Override
         public void onResume() {
             super.onResume();
-            if (brailleParser != null) {
-                addTables(BrailleParser.STATUS_OK);
-            }
+            if (brailleParser != null) addTables(BrailleParser.STATUS_OK);
         }
 
         @Override
         public void onDestroy() {
             super.onDestroy();
-            if (brailleParser != null) {
-                brailleParser.destroy();
-            }
+            if (brailleParser != null) brailleParser.destroy();
+            if (tts != null) tts.shutdown();
         }
 
-        @Override
-        public boolean onPreferenceTreeClick(android.preference.PreferenceScreen preferenceScreen, Preference preference) {
-            String key = preference.getKey();
-            if (getString(R.string.pref_share_log_key).equals(key)) {
-                shareLog();
-                return true;
-            } else if (getString(R.string.pref_clear_log_key).equals(key)) {
-                clearLog();
-                return true;
-            }
-            return super.onPreferenceTreeClick(preferenceScreen, preference);
-        }
-
+        // --- Log Logic ---
         private void shareLog() {
             try {
                 File logFile = new File(getActivity().getCacheDir(), "logcat.txt");
                 Process process = Runtime.getRuntime().exec("logcat -d");
-                InputStream is = process.getInputStream();
-                FileOutputStream fos = new FileOutputStream(logFile);
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, read);
+                try (InputStream is = process.getInputStream(); FileOutputStream fos = new FileOutputStream(logFile)) {
+                    byte[] buffer = new byte[1024]; int read;
+                    while ((read = is.read(buffer)) != -1) fos.write(buffer, 0, read);
                 }
-                fos.close();
-                is.close();
-
-                Uri contentUri = FileProvider.getUriForFile(getActivity(),
-                        getActivity().getPackageName() + ".fileprovider", logFile);
-
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.pref_share_log_title)));
+                Uri uri = FileProvider.getUriForFile(getActivity(), getActivity().getPackageName() + ".fileprovider", logFile);
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(intent, getString(R.string.pref_share_log_title)));
             } catch (Exception e) {
-                android.util.Log.e("PreferenceIME", "Error sharing log", e);
                 Toast.makeText(getActivity(), R.string.msg_error_logs, Toast.LENGTH_SHORT).show();
             }
         }
@@ -232,176 +264,81 @@ public class PreferenceIME extends PreferenceActivity {
             try {
                 Runtime.getRuntime().exec("logcat -c");
                 Toast.makeText(getActivity(), R.string.msg_logs_cleared, Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                android.util.Log.e("PreferenceIME", "Error clearing log", e);
-                Toast.makeText(getActivity(), R.string.msg_error_logs, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {}
+        }
+
+        // --- Tables Logic ---
+        private void addTables(int status) {
+            ListPreference comp = findPreference(getString(R.string.pref_braille_computer_table_key));
+            ListPreference literary = findPreference(getString(R.string.pref_braille_literary_table_key));
+            MultiSelectListPreference switchPref = findPreference(getString(R.string.pref_switch_tables_key));
+
+            if (comp == null && literary == null && switchPref == null) return;
+
+            List<TableInfo> tables = (status == BrailleParser.STATUS_OK || status == BrailleParser.STATUS_TABLE_ERROR) 
+                                     ? brailleParser.getTables(BrailleType.ALL) : null;
+            if (tables == null) return;
+
+            List<String> entries = new ArrayList<>(), values = new ArrayList<>();
+            populateWithTables(tables, entries, values, true, null);
+            if (switchPref != null) {
+                switchPref.setEntries(entries.toArray(new String[0]));
+                switchPref.setEntryValues(values.toArray(new String[0]));
+            }
+
+            entries.clear(); values.clear();
+            populateWithTables(brailleParser.getTables(BrailleType.LITERARY), entries, values, true, brailleParser.getDefaultId(getActivity(), BrailleType.LITERARY));
+            if (literary != null) {
+                literary.setEntries(entries.toArray(new String[0]));
+                literary.setEntryValues(values.toArray(new String[0]));
+            }
+
+            entries.clear(); values.clear();
+            populateWithTables(brailleParser.getTables(BrailleType.COMPUTER), entries, values, true, brailleParser.getDefaultId(getActivity(), BrailleType.COMPUTER));
+            if (comp != null) {
+                comp.setEntries(entries.toArray(new String[0]));
+                comp.setEntryValues(values.toArray(new String[0]));
             }
         }
 
-        private void addTables(int status) {
-            android.util.Log.i("PreferenceIME", "addTables called with status: " + status);
-            List<String> entries = new ArrayList<String>();
-            List<String> entryValues = new ArrayList<String>();
-
-            ListPreference compBraille = (ListPreference) findPreference(getString(R.string.pref_braille_computer_table_key));
-            ListPreference literaryBraille = (ListPreference) findPreference(getString(R.string.pref_braille_literary_table_key));
-            MultiSelectListPreference switchPref = (MultiSelectListPreference) findPreference(getActivity()
-                    .getString(R.string.pref_switch_tables_key));
-
-            List<TableInfo> tables = null;
-            if (status == BrailleParser.STATUS_OK || status == BrailleParser.STATUS_TABLE_ERROR) {
-                tables = brailleParser.getTables(BrailleType.ALL);
-            }
-            
-            if (tables == null) {
-                android.util.Log.w("PreferenceIME", "Tables list is NULL, skipping population");
-                return;
-            }
-
-            android.util.Log.i("PreferenceIME", "Populating switchPref with " + tables.size() + " tables");
-            populateWithTables(tables, entries, entryValues, true, null);
-            if (switchPref != null) {
-                switchPref.setEntries(entries.toArray(new String[entries.size()]));
-                switchPref.setEntryValues(entryValues.toArray(new String[entryValues.size()]));
-            }
-
-            resetLists(entries, entryValues);
-            tables = brailleParser.getTables(BrailleType.LITERARY);
-            android.util.Log.i("PreferenceIME", "Populating literaryBraille with " + (tables != null ? tables.size() : 0) + " tables");
-            populateWithTables(tables, entries, entryValues, true,
-                    brailleParser.getDefaultId(getActivity(),
-                            BrailleType.LITERARY));
-            if (literaryBraille != null) {
-                literaryBraille.setEntries(entries.toArray(new String[entries.size()]));
-                literaryBraille.setEntryValues(entryValues.toArray(new String[entryValues.size()]));
-                literaryBraille.setEnabled(true);
-            }
-
-            resetLists(entries, entryValues);
-            tables = brailleParser.getTables(BrailleType.COMPUTER);
-            android.util.Log.i("PreferenceIME", "Populating compBraille with " + (tables != null ? tables.size() : 0) + " tables");
-            populateWithTables(tables, entries, entryValues, true,
-                    brailleParser.getDefaultId(getActivity(),
-                            BrailleType.COMPUTER));
-            if (compBraille != null) {
-                compBraille.setEntries(entries.toArray(new String[entries.size()]));
-                compBraille.setEntryValues(entryValues.toArray(new String[entryValues.size()]));
-                compBraille.setEnabled(true);
+        private void populateWithTables(List<TableInfo> tables, List<String> entries, List<String> values, boolean verbose, String defId) {
+            if (tables == null || getActivity() == null) return;
+            for (TableInfo t : tables) {
+                String text = t.getId().startsWith("custom:") ? getString(R.string.custom_table_label_prefix) + " " + (t.getVariant() != null ? t.getVariant() : "table")
+                                                              : t.getLocale().getDisplayName();
+                if (verbose) {
+                    String label = t.isEightDot() ? getString(R.string.grade_computer) : String.format(getString(R.string.grade_table), t.getGrade());
+                    if (t.getVariant() != null && !t.getVariant().isEmpty() && !t.getId().startsWith("custom:")) label += " (" + t.getVariant() + ")";
+                    text += ": " + label;
+                }
+                entries.add(text);
+                values.add(t.getId().equals(defId) ? getString(R.string.pref_braille_table_auto) : t.getId());
             }
         }
 
         private void addOptions(ListPreference pref, OptionList option) {
-            if (pref == null) return;
             OptionList[] types = option.getValues();
-            CharSequence[] entries = new CharSequence[types.length];
-            CharSequence[] entryValues = new CharSequence[entries.length];
-            for (int i = 0; i < entries.length; i++) {
+            CharSequence[] entries = new CharSequence[types.length], values = new CharSequence[types.length];
+            for (int i = 0; i < types.length; i++) {
                 entries[i] = getString(types[i].getResource());
-                entryValues[i] = types[i].getValue();
+                values[i] = types[i].getValue();
             }
             pref.setEntries(entries);
-            pref.setEntryValues(entryValues);
+            pref.setEntryValues(values);
         }
 
-        private void populateWithTables(List<TableInfo> tables,
-                List<String> entries, List<String> entryValues,
-                boolean verbose, String defaultId) {
-            if (tables == null) return;
-            
-            Context context = getActivity();
-            if (context == null) return;
-
-            for (TableInfo table : tables) {
-                try {
-                    String text = "";
-                    if (table.getId().startsWith("custom:")) {
-                        String name = table.getVariant();
-                        if (name == null || name.isEmpty()) name = "table";
-                        text = context.getString(R.string.custom_table_label_prefix) + " " + name;
-                    } else {
-                        text = table.getLocale().getDisplayLanguage();
-                        String country = table.getLocale().getDisplayCountry();
-                        if (country != null && !country.isEmpty()) {
-                            text += " (" + country + ")";
-                        }
-                    }
-
-                    if (verbose) {
-                        String label;
-                        if (table.isEightDot()) {
-                            label = context.getString(R.string.grade_computer);
-                        } else {
-                            label = String.format(
-                                    context.getString(R.string.grade_table),
-                                    table.getGrade());
-                        }
-
-                        
-                        String variant = table.getVariant();
-                        if (variant != null && !variant.isEmpty() && !table.getId().startsWith("custom:")) {
-                            if (variant.equalsIgnoreCase("Unofficial")) {
-                                label += " (" + context.getString(R.string.table_variant_unofficial) + ")";
-                            } else {
-                                label += " (" + variant + ")";
-                            }
-                        }
-                        
-                        text += ": " + label;
-                    }
-                    entries.add(text);
-                    if (table.getId().equals(defaultId)) {
-                        entryValues.add(context.getString(R.string.pref_braille_table_auto));
-                    } else {
-                        entryValues.add(table.getId());
-                    }
-                } catch (Exception e) {
-                    android.util.Log.e("PreferenceIME", "Error populating table: " + table.getId(), e);
+        private void addTTSList(final ListPreference pref) {
+            tts = new TextToSpeech(getActivity(), status -> {
+                List<EngineInfo> engines = tts.getEngines();
+                Collections.sort(engines, (o1, o2) -> o1.label.toLowerCase().compareTo(o2.label.toLowerCase()));
+                CharSequence[] entries = new CharSequence[engines.size()], values = new CharSequence[engines.size()];
+                for (int i = 0; i < engines.size(); i++) {
+                    entries[i] = engines.get(i).label;
+                    values[i] = engines.get(i).name;
                 }
-            }
-        }
-
-        private static void resetLists(List<String> list1, List<String> list2) {
-            list1.clear();
-            list2.clear();
-        }
-
-        private void addTTSList(final ListPreference preference) {
-            tts = new TextToSpeech(getActivity(),
-                    new TextToSpeech.OnInitListener() {
-
-                        @Override
-                        public void onInit(int status) {
-                            doEnginesList(preference);
-                        }
-                    });
-        }
-
-        private void doEnginesList(ListPreference preference) {
-            List<EngineInfo> engines = tts.getEngines();
-            tts.shutdown();
-            Collections.sort(engines, new Comparator<EngineInfo>() {
-                @Override
-                public int compare(EngineInfo o1, EngineInfo o2) {
-                    return o1.label.toLowerCase(Locale.getDefault()).compareTo(
-                            o2.label.toLowerCase(Locale.getDefault()));
-                }
+                pref.setEntries(entries);
+                pref.setEntryValues(values);
             });
-
-            CharSequence[] entries = new CharSequence[engines.size()];
-            CharSequence[] entryValues = new CharSequence[engines.size()];
-
-            for (int i = 0; i < engines.size(); i++) {
-                String label = engines.get(i).label;
-                String name = engines.get(i).name;
-                entryValues[i] = name.subSequence(0, name.length());
-                entries[i] = label.subSequence(0, label.length());
-            }
-
-            preference.setEntries(entries);
-            preference.setEntryValues(entryValues);
         }
     }
 }
-
-
-

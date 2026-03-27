@@ -506,11 +506,11 @@
     <string name="preset_cat_base">Base Alphabet (a-z)</string>
     <string name="preset_cat_control">Control Codes (6-pt)</string>
     <string name="preset_cat_punc">Punctuation (Standard/Literary)</string>
-    <string name="preset_cat_math">Math &amp; Symbols (+, â‚¬, ...)</string>
+    <string name="preset_cat_math">Math &amp; Symbols (+, €, ...)</string>
     <string name="preset_cat_it_accents">Italian Accents</string>
-    <string name="preset_cat_acute">Acute/Spanish (Ã¡, Ã±...)</string>
-    <string name="preset_cat_circ">Circumflex/French (Ã¢, Å“...)</string>
-    <string name="preset_cat_dier">Diaeresis (Ã¤, Ã«...)</string>
+    <string name="preset_cat_acute">Acute/Spanish (à¡, à±...)</string>
+    <string name="preset_cat_circ">Circumflex/French (à¢, œ...)</string>
+    <string name="preset_cat_dier">Diaeresis (à¤, ë...)</string>
     <string name="btn_load_template">Load Template</string>
     <string name="title_select_template">Select Template</string>
     <string name="msg_template_applied">Template applied successfully!</string>
