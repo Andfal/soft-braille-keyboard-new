@@ -29,7 +29,10 @@ import com.dalton.braillekeyboard.EmojiDictionary.EmojiEntry;
 import com.dalton.braillekeyboard.SpellChecker.Suggestion;
 import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
 
-import android.app.Activity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import java.io.OutputStream;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -59,8 +62,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.InputStream;
 
-public class TableCreatorActivity extends Activity {
+public class TableCreatorActivity extends AppCompatActivity {
     private static final String TAG = "TableCreatorActivity";
+
+    private ActivityResultLauncher<Intent> mCreateDocumentLauncher;
     
     private EditText mTableNameEdit;
     private EditText mAuthorEdit;
@@ -180,6 +185,17 @@ public class TableCreatorActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mCreateDocumentLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Uri uri = result.getData().getData();
+                        if (uri != null) {
+                            writeTableToUri(uri);
+                        }
+                    }
+                }
+        );
         
         OPCODE_LABELS = new String[] {
             getString(R.string.opcode_always), getString(R.string.opcode_lowercase), getString(R.string.opcode_uppercase),
@@ -1118,55 +1134,20 @@ public class TableCreatorActivity extends Activity {
         Intent intent = new Intent(Intent.ACTION_SEND); intent.setType("text/plain"); intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(f)); intent.putExtra(Intent.EXTRA_SUBJECT, "Braille Table: " + name); startActivity(Intent.createChooser(intent, getString(R.string.title_share_table)));
     }
 
-    private void exportTable() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&
-            android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.P) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_STORAGE_PERMISSION);
-                return;
-            }
-        }
-        
+        private void exportTable() {
         String name = mTableNameEdit.getText().toString().trim();
-        if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show(); mTableNameEdit.requestFocus(); return; }
-        if (!name.endsWith(".ctb")) name += ".ctb";
-        
-        try {
-            File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
-            File softBrailleDir = new File(downloadsDir, "soft-braille");
-            if (!softBrailleDir.exists() && !softBrailleDir.mkdirs()) {
-                Toast.makeText(this, "Failed to create directory", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            File outputFile = new File(softBrailleDir, name);
-            
-            StringBuilder sb = new StringBuilder("# " + name + "\n");
-            sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
-            int localePos = mLocaleSpinner.getSelectedItemPosition();
-            if (localePos > 0) sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
-            sb.append("\ninclude braille-patterns.cti\ninclude unicode.dis\n\n# --- ").append(getString(R.string.table_section_high)).append(" ---\n");
-            writeCustomMappings(sb, true);
-            sb.append("\n# --- ").append(getString(R.string.table_section_system)).append(" ---\ninclude unicode.dis\n");
-            int basePos = mBaseTableSpinner.getSelectedItemPosition();
-            if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
-            String scriptFile = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
-            sb.append("include ").append(scriptFile).append("\n");
-            if (scriptFile.contains("latin")) sb.append("space \\x0020 0\nspace \\x00a0 0\n");
-            int numSys = mNumSystemSpinner.getSelectedItemPosition();
-            if (numSys == NUM_CLASSIC) sb.append("include digits6Dots.uti\ninclude litdigits6Dots.uti\nnumsign 3456\n");
-            else if (numSys == NUM_ANTOINE) sb.append("include digits6DotsPlusDot6.uti\ninclude litdigits6DotsPlusDot6.uti\nnumsign 6\n");
-            else if (numSys == NUM_DROPPED) sb.append("include litdigits6Dots.uti\n");
-            else if (numSys == NUM_8DOT) sb.append("include digits8Dots.uti\n");
-            sb.append("\n# --- STANDARD PRIORITY ---\n");
-            writeCustomMappings(sb, false);
-            
-            try (FileOutputStream fos = new FileOutputStream(outputFile)) { fos.write(sb.toString().getBytes(StandardCharsets.UTF_8)); }
-            Toast.makeText(this, R.string.msg_table_exported, Toast.LENGTH_SHORT).show();
-        } catch (SecurityException e) {
-            Toast.makeText(this, "Permission denied. Please grant storage permissions.", Toast.LENGTH_LONG).show();
-        } catch (Exception e) { 
-            Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_SHORT).show(); 
+        if (name.isEmpty()) { 
+            Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show(); 
+            mTableNameEdit.requestFocus(); 
+            return; 
         }
+        if (!name.endsWith(".ctb")) name += ".ctb";
+
+        Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TITLE, name);
+        mCreateDocumentLauncher.launch(intent);
     }
 
     private void filterMappings(String query) {
@@ -1470,5 +1451,47 @@ private void loadBaseTableMappings() {
         // Search bar is anonymous, so we'll just refresh spinner if no search is active
         // But to be safe, we just refresh the spinner. The search results will update if the user types again.
         refreshSpinner();
+    }
+
+
+    private void writeTableToUri(Uri uri) {
+        try {
+            String tableContent = generateTableContent();
+            try (OutputStream os = getContentResolver().openOutputStream(uri)) {
+                if (os != null) {
+                    os.write(tableContent.getBytes(StandardCharsets.UTF_8));
+                    Toast.makeText(this, R.string.msg_table_exported, Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Export failed", e);
+            Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private String generateTableContent() {
+        String name = mTableNameEdit.getText().toString().trim();
+        if (!name.endsWith(".ctb")) name += ".ctb";
+        
+        StringBuilder sb = new StringBuilder("# " + name + "\n");
+        sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
+        int localePos = mLocaleSpinner.getSelectedItemPosition();
+        if (localePos > 0) sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
+        sb.append("\ninclude braille-patterns.cti\ninclude unicode.dis\n\n# --- ").append(getString(R.string.table_section_high)).append(" ---\n");
+        writeCustomMappings(sb, true);
+        sb.append("\n# --- ").append(getString(R.string.table_section_system)).append(" ---\ninclude unicode.dis\n");
+        int basePos = mBaseTableSpinner.getSelectedItemPosition();
+        if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
+        String scriptFile = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
+        sb.append("include ").append(scriptFile).append("\n");
+        if (scriptFile.contains("latin")) sb.append("space \\x0020 0\nspace \\x00a0 0\n");
+        int numSys = mNumSystemSpinner.getSelectedItemPosition();
+        if (numSys == NUM_CLASSIC) sb.append("include digits6Dots.uti\ninclude litdigits6Dots.uti\nnumsign 3456\n");
+        else if (numSys == NUM_ANTOINE) sb.append("include digits6DotsPlusDot6.uti\ninclude litdigits6DotsPlusDot6.uti\nnumsign 6\n");
+        else if (numSys == NUM_DROPPED) sb.append("include litdigits6Dots.uti\n");
+        else if (numSys == NUM_8DOT) sb.append("include digits8Dots.uti\n");
+        sb.append("\n# --- STANDARD PRIORITY ---\n");
+        writeCustomMappings(sb, false);
+        return sb.toString();
     }
 }
