@@ -112,6 +112,8 @@ public class TableCreatorActivity extends Activity {
     private List<String> mDisplayList = new ArrayList<>();
     private ArrayAdapter<String> mAdapter;
     private List<Mapping> mMappings = new ArrayList<>();
+    private List<Mapping> mBaseMappings = new ArrayList<>();
+    private List<Mapping> mCurrentSearchResults = new ArrayList<>();
     private int mEditingIndex = -1;
     private boolean mIsTemplateUsed = false;
 
@@ -149,6 +151,7 @@ public class TableCreatorActivity extends Activity {
         String opcode; String character; List<Integer> patterns = new ArrayList<>();
         boolean isHighPriority = false;
         boolean isFixed = false;
+        boolean isBase = false;
         Mapping(String op, String ch, List<Integer> pts, boolean high) { 
             this(op, ch, pts, high, false);
         }
@@ -229,6 +232,7 @@ public class TableCreatorActivity extends Activity {
             updateScriptSpinner(isChecked);
             updateSystemTables();
             initPresets(); // Refresh presets when switching 6/8 dots
+            loadBaseTableMappings();
         });
         topContent.addView(mEightDotCheck);
 
@@ -242,6 +246,10 @@ public class TableCreatorActivity extends Activity {
 
         mBaseTableSpinner = new Spinner(this);
         mBaseTableSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+        mBaseTableSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) { loadBaseTableMappings(); }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
         updateSystemTables();
         
         Button importRulesBtn = new Button(this);
@@ -256,7 +264,10 @@ public class TableCreatorActivity extends Activity {
         mScriptSpinner = new Spinner(this);
         updateScriptSpinner(false);
         mScriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) { initPresets(); }
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) { 
+                initPresets(); 
+                loadBaseTableMappings();
+            }
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
         mAdvancedSettingsLayout.addView(mScriptSpinner);
@@ -268,6 +279,10 @@ public class TableCreatorActivity extends Activity {
             getString(R.string.num_sys_none)
         };
         mNumSystemSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_number_system_short), numSystems));
+        mNumSystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) { loadBaseTableMappings(); }
+            @Override public void onNothingSelected(AdapterView<?> parent) {}
+        });
         mAdvancedSettingsLayout.addView(mNumSystemSpinner);
         topContent.addView(mAdvancedSettingsLayout);
 
@@ -377,14 +392,26 @@ public class TableCreatorActivity extends Activity {
         mMappedItemsSpinner.setContentDescription(getString(R.string.label_mapped_items));
         mMappedItemsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { 
+                if (pos <= 0) return;
+                
                 String selected = mDisplayList.get(pos);
-                if (pos > 0) {
-                    // Find actual index in mMappings by matching the display string
-                    for (int i = 0; i < mMappings.size(); i++) {
-                        if (getMappingDisplayString(mMappings.get(i)).equals(selected)) {
-                            loadMapping(i);
-                            break;
-                        }
+                String query = searchEdit.getText().toString().trim();
+                
+                if (query.isEmpty()) {
+                    // Regular view: only personal mappings
+                    if (pos - 1 < mMappings.size()) {
+                        loadMapping(pos - 1);
+                    }
+                } else {
+                    // Search view: could be personal or base
+                    // We need to find which mapping corresponds to this display string
+                    // To do this reliably, we re-run the search logic or store the filtered objects
+                    // Let's use a simpler approach: the filterMappings method already loads 
+                    // the mapping if there is exactly 1 result. For multiple results,
+                    // we can't easily store the objects in the spinner.
+                    // REFINEMENT: I will modify filterMappings to store current search results.
+                    if (mCurrentSearchResults != null && pos - 1 < mCurrentSearchResults.size()) {
+                        loadMappingFromObject(mCurrentSearchResults.get(pos - 1));
                     }
                 }
             }
@@ -1144,64 +1171,176 @@ public class TableCreatorActivity extends Activity {
         
         final String lowerQuery = query.toLowerCase().trim();
         List<String> filteredNames = new ArrayList<>();
-        List<Integer> filteredIndices = new ArrayList<>();
+        List<Mapping> filteredObjects = new ArrayList<>();
         
-        // SMART SEARCH LOGIC
-        boolean isNumeric = lowerQuery.matches("[1-8-]+");
-        boolean isSingleChar = query.length() == 1 && !isNumeric;
+        // SEMANTIC KEYWORDS
+        boolean searchNumbers = lowerQuery.contains("numero") || lowerQuery.contains("cifra") || lowerQuery.contains("num") || lowerQuery.contains("digit");
+        boolean searchCaps = lowerQuery.contains("maiusc") || lowerQuery.contains("cap");
+        
+        // LOGIC FOR SHADOWING (Personal rules win over Base rules)
+        java.util.Set<String> personalCharOpKeys = new java.util.HashSet<>();
+        for (Mapping m : mMappings) {
+            personalCharOpKeys.add(m.opcode + "|" + m.character);
+        }
 
-        for (int i = 0; i < mMappings.size(); i++) {
-            Mapping m = mMappings.get(i);
+        // Combine lists for searching (Personal first)
+        List<Mapping> allToSearch = new ArrayList<>(mMappings);
+        for (Mapping m : mBaseMappings) {
+            // Shadowing: don't show base rule if a personal rule exists for same char/opcode
+            if (!personalCharOpKeys.contains(m.opcode + "|" + m.character)) {
+                allToSearch.add(m);
+            }
+        }
+
+        boolean isNumericPattern = lowerQuery.matches("[1-8-]+");
+        boolean isSingleChar = query.length() == 1 && !isNumericPattern;
+
+        for (Mapping m : allToSearch) {
             boolean match = false;
             
-            if (isNumeric) {
-                // Search in DOTS (exact match or partial dots string)
-                String dots = getDotsString(m.patterns);
-                if (dots.equals(lowerQuery) || dots.contains(lowerQuery)) match = true;
-            } else if (isSingleChar) {
-                // Search in CHARACTER (exact match)
-                if (m.character != null && m.character.equals(query)) match = true;
-            } else {
-                // General search in the whole display string
-                String display = getMappingDisplayString(m).toLowerCase();
-                if (display.contains(lowerQuery)) match = true;
+            // 1. Semantic Match
+            if (searchNumbers && (m.opcode.equals("numsign") || m.opcode.equals("digit") || m.opcode.equals("litdigit") || m.opcode.startsWith("begnum"))) match = true;
+            else if (searchCaps && (m.opcode.contains("caps") || m.opcode.equals("letsign"))) match = true;
+            
+            // 2. Pattern/Char/Text Match
+            if (!match) {
+                if (isNumericPattern) {
+                    String dots = getDotsString(m.patterns);
+                    if (dots.equals(lowerQuery) || dots.contains(lowerQuery)) match = true;
+                } else if (isSingleChar) {
+                    if (m.character != null && m.character.equals(query)) match = true;
+                } else {
+                    String display = getMappingDisplayString(m).toLowerCase();
+                    if (display.contains(lowerQuery)) match = true;
+                }
             }
 
             if (match) {
                 filteredNames.add(getMappingDisplayString(m));
-                filteredIndices.add(i);
+                filteredObjects.add(m);
             }
         }
 
         mDisplayList.clear();
         mDisplayList.add(getString(R.string.label_mapped_items));
         mDisplayList.addAll(filteredNames);
+        mCurrentSearchResults = filteredObjects;
         mAdapter.notifyDataSetChanged();
 
         mSearchResultsSummary.setVisibility(View.VISIBLE);
-        if (filteredIndices.isEmpty()) {
+        if (filteredObjects.isEmpty()) {
             mSearchResultsSummary.setText("Nessun risultato trovato");
             mSearchResultsSummary.setTextColor(Color.RED);
-        } else if (filteredIndices.size() == 1) {
-            int index = filteredIndices.get(0);
-            mSearchResultsSummary.setText("Trovato 1 risultato (caricato): " + filteredNames.get(0));
+        } else if (filteredObjects.size() == 1) {
+            mSearchResultsSummary.setText("Trovato 1 risultato: " + filteredNames.get(0));
             mSearchResultsSummary.setTextColor(Color.parseColor("#388E3C")); // Green
-            loadMapping(index);
+            // Auto-load only if it's not base or if specifically requested? 
+            // Better to load it anyway so user can see it.
+            loadMappingFromObject(filteredObjects.get(0));
         } else {
-            mSearchResultsSummary.setText("Trovati " + filteredIndices.size() + " risultati");
+            mSearchResultsSummary.setText("Trovati " + filteredObjects.size() + " risultati");
             mSearchResultsSummary.setTextColor(Color.DKGRAY);
         }
         
         mSearchResultsSummary.announceForAccessibility(mSearchResultsSummary.getText());
     }
 
+    private void loadMappingFromObject(Mapping m) {
+        mIsUpdatingUI = true;
+        mEditingIndex = -1; // Default to -1 (new mapping)
+        
+        // If it's a personal mapping, find its actual index
+        if (!m.isBase) {
+            for (int i = 0; i < mMappings.size(); i++) {
+                if (mMappings.get(i) == m) {
+                    mEditingIndex = i;
+                    break;
+                }
+            }
+        }
+
+        for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { mOpcodeSpinner.setSelection(i); break; }
+        mCharEdit.setText(m.character); 
+        mDotsEdit.setText(getDotsString(m.patterns));
+        mCurrentPatterns.clear(); 
+        mCurrentPatterns.addAll(m.patterns); 
+        mMappingPriorityCheck.setChecked(m.isHighPriority);
+        updateDotsDisplay(); 
+        
+        if (m.isBase) {
+            mAddMappingBtn.setText(R.string.btn_add); // From base, we "Add" a personal override
+            Toast.makeText(this, "Regola ereditata caricata. Modificala per creare un override.", Toast.LENGTH_SHORT).show();
+        } else {
+            mAddMappingBtn.setText(R.string.btn_update);
+        }
+        mIsUpdatingUI = false;
+    }
+
     private String getMappingDisplayString(Mapping m) {
         String friendlyOp = m.opcode;
         for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { friendlyOp = OPCODE_LABELS[i]; break; }
-        StringBuilder sb = new StringBuilder(); if (m.isHighPriority) sb.append("[H] ");
-        sb.append(friendlyOp); if (m.character != null && !m.character.isEmpty()) sb.append(" '").append(m.character).append("'");
+        StringBuilder sb = new StringBuilder();
+        if (m.isBase) sb.append("[Ereditata] ");
+        else sb.append("[Personale] ");
+        
+        if (m.isHighPriority) sb.append("[H] ");
+        sb.append(friendlyOp); 
+        if (m.character != null && !m.character.isEmpty()) {
+            sb.append(" '").append(m.character).append("'");
+        }
         sb.append(" -> ").append(getDotsString(m.patterns));
         return sb.toString();
+    }
+
+    private void loadBaseTableMappings() {
+        mBaseMappings.clear();
+        
+        File translatorDir = getDir("translator", MODE_PRIVATE);
+        File tablesDir = new File(translatorDir, "liblouis/tables");
+        
+        // Load base table rules
+        int pos = mBaseTableSpinner != null ? mBaseTableSpinner.getSelectedItemPosition() : 0;
+        if (pos > 0 && mSystemTableFiles != null && pos < mSystemTableFiles.size()) {
+            String fileName = mSystemTableFiles.get(pos);
+            File baseFile = new File(tablesDir, fileName);
+            if (baseFile.exists()) {
+                try { parseTableRecursive(baseFile, tablesDir, mBaseMappings, 0); } catch (Exception e) {}
+            }
+        }
+        
+        // Load script rules
+        int scriptPos = mScriptSpinner != null ? mScriptSpinner.getSelectedItemPosition() : 0;
+        String scriptFile = (mEightDotCheck != null && mEightDotCheck.isChecked()) ? SCRIPTS_8[scriptPos][1] : SCRIPTS_6[scriptPos][1];
+        File scriptF = new File(tablesDir, scriptFile);
+        if (scriptF.exists()) {
+            try { parseTableRecursive(scriptF, tablesDir, mBaseMappings, 0); } catch (Exception e) {}
+        }
+        
+        // Load number system rules
+        int numSys = mNumSystemSpinner != null ? mNumSystemSpinner.getSelectedItemPosition() : NUM_NONE;
+        List<String> numFiles = new ArrayList<>();
+        if (numSys == NUM_CLASSIC) { numFiles.add("digits6Dots.uti"); numFiles.add("litdigits6Dots.uti"); }
+        else if (numSys == NUM_ANTOINE) { numFiles.add("digits6DotsPlusDot6.uti"); numFiles.add("litdigits6DotsPlusDot6.uti"); }
+        else if (numSys == NUM_DROPPED) { numFiles.add("litdigits6Dots.uti"); }
+        else if (numSys == NUM_8DOT) { numFiles.add("digits8Dots.uti"); }
+        
+        for (String f : numFiles) {
+            File nf = new File(tablesDir, f);
+            if (nf.exists()) {
+                try { parseTableRecursive(nf, tablesDir, mBaseMappings, 0); } catch (Exception e) {}
+            }
+        }
+        
+        // Mark all as base
+        for (Mapping m : mBaseMappings) {
+            m.isBase = true;
+        }
+        
+        // Re-run filter if search is active
+        EditText searchEdit = null;
+        // Search bar is anonymous, so we'll just refresh spinner if no search is active
+        // But to be safe, we just refresh the spinner. The search results will update if the user types again.
+        refreshSpinner();
     }
 
     private void importBaseRules() {

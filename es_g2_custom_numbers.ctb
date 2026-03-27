@@ -1,0 +1,14 @@
+# Tabella Personalizzata: Spagnolo Grado 2 con Segnanumero Prefissato
+# Risolve il conflitto tra il segnanumero (3456) e la contrazione "ion" (3456)
+
+include es-g2.ctb
+
+# Sovrascriviamo il segnanumero standard (3456) con una versione prefissata.
+# Usiamo il Punto 6 come prefisso per coerenza con gli altri simboli speciali spagnoli.
+# La vecchia regola "numsign 3456" viene annullata da questa nuova definizione.
+
+numsign 6-3456
+
+# Nota: In questo modo:
+# 1. Digitando 6 + 3456 si attiva la modalit numerica.
+# 2. Digitando solo 3456 si ottiene la contrazione "ion" o la parola "nmero".
