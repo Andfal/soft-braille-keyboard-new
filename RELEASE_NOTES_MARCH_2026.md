@@ -1,3 +1,41 @@
+# Latest Updates - March 26, 2026 (v11)
+
+## 1. Storage Access Framework (SAF) Integration
+- **Modern File Synchronization:** Implemented the Storage Access Framework (SAF) to allow users to safely select and synchronize external Braille tables from any location, including the **Download** folder and cloud services.
+- **Background I/O:** The synchronization process now runs entirely in the background, ensuring the keyboard remains responsive while processing large table sets.
+- **Android 11+ Compatibility:** This update ensures full compliance with modern Android security standards (Scoped Storage), allowing the app to access necessary files without requiring broad "All Files Access" permissions.
+- **Modern Implementation:** In the Modern version, utilized `ActivityResultLauncher` for a more robust and lifecycle-aware file picking experience.
+
+## 2. Pixel-Based Calibration & Layout Persistence
+- **Absolute Precision:** Migrated the finger calibration system from approximate percentages to absolute pixel coordinates. This ensures that the keyboard recognizes the exact physical touch points across device reboots.
+- **Layout Type Memory:** Fixed a bug where the keyboard would occasionally revert to the default 6-dot layout even after an 8-dot calibration. The specific layout type (6 or 8 dots) is now permanently persisted alongside the finger coordinates.
+- **Resolution Independence:** Implemented resolution-independent mapping to ensure calibration remains accurate even if the system's DPI or screen resolution settings are changed.
+
+## 3. Table Creator & List Refactoring
+- **Dynamic Presets:** Replaced hardcoded table configurations in the Table Creator with a dynamic JSON-based lookup system. This makes it easier to add or update supported languages without modifying the core code.
+- **Direct Table Visibility:** Updated the internal `tablelist.xml` to reference `.utb` and `.ctb` files directly instead of opaque master `.tbl` files. This significantly improves the accuracy and visibility of available tables within the Table Creator interface.
+- **Code Optimization:** Cleaned up redundant UI methods and legacy code in the `TableCreator` and `TableList` classes, reducing the app's memory footprint and improving maintainability.
+
+---
+
+# Ultimi Aggiornamenti - 26 Marzo 2026 (v11)
+
+## 1. Integrazione Storage Access Framework (SAF)
+- **Sincronizzazione File Moderna:** Implementato lo Storage Access Framework (SAF) per consentire agli utenti di selezionare e sincronizzare in sicurezza tabelle Braille esterne da qualsiasi posizione, inclusa la cartella **Download** e i servizi cloud.
+- **I/O in Background:** Il processo di sincronizzazione ora avviene interamente in background, garantendo che la tastiera rimanga reattiva durante l'elaborazione di set di tabelle di grandi dimensioni.
+- **Compatibilità Android 11+:** Questo aggiornamento garantisce la piena conformità con i moderni standard di sicurezza di Android (Scoped Storage), consentendo all'app di accedere ai file necessari senza richiedere permessi invasivi di "Accesso a tutti i file".
+- **Implementazione Moderna:** Nella versione Modern, è stato utilizzato `ActivityResultLauncher` per un'esperienza di selezione file più robusta e consapevole del ciclo di vita dell'applicazione.
+
+## 2. Calibrazione basata su Pixel e Persistenza Layout
+- **Precisione Assoluta:** Migrato il sistema di calibrazione delle dita da percentuali approssimate a coordinate in pixel reali. Questo assicura che la tastiera riconosca gli esatti punti fisici di tocco anche dopo il riavvio del dispositivo.
+- **Memoria del Tipo di Layout:** Risolto un bug per cui la tastiera a volte tornava al layout predefinito a 6 punti anche dopo una calibrazione a 8 punti. Il tipo specifico di layout (6 o 8 punti) è ora salvato in modo permanente insieme alle coordinate delle dita.
+- **Indipendenza dalla Risoluzione:** Implementata una mappatura indipendente dalla risoluzione per garantire che la calibrazione rimanga accurata anche in caso di modifica dei DPI o della risoluzione dello schermo nelle impostazioni di sistema.
+
+## 3. Rifattorizzazione Table Creator e Table List
+- **Preset Dinamici:** Sostituiti i preset delle tabelle cablati nel Table Creator con un sistema di ricerca dinamico basato su JSON. Ciò rende più semplice aggiungere o aggiornare le lingue supportate senza modificare il codice sorgente.
+- **Visibilità Diretta delle Tabelle:** Aggiornato il file interno `tablelist.xml` per referenziare direttamente i file `.utb` e `.ctb` invece dei file master `.tbl`. Questo migliora significativamente la precisione e la visibilità delle tabelle disponibili nell'interfaccia del Table Creator.
+- **Ottimizzazione del Codice:** Puliti i metodi UI ridondanti e il codice legacy nelle classi `TableCreator` e `TableList`, riducendo l'impatto sulla memoria e migliorando la manutenibilità.
+
 # Latest Updates - March 24, 2026 (v10)
 
 ## 1. Double-Letter "Swallowing" Fix
