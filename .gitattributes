@@ -1,0 +1,10 @@
+# Force UTF-8 for sensitive text files
+*.json text eol=lf
+*.ctb  text eol=lf
+*.utb  text eol=lf
+*.uti  text eol=lf
+*.dis  text eol=lf
+*.xml  text eol=lf
+*.java text eol=lf
+*.md   text eol=lf
+*.txt  text eol=lf
