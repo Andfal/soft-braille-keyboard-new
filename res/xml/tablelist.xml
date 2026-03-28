@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <table-list>
     <table id="zh-china-common" locale="zh" dots="6" grade="1" variant="Common (China)" fileName="zhcn-g1.ctb" />
     <table id="zh-china-tones" locale="zh" dots="6" grade="1" variant="With tones (China)" fileName="zhcn-cbs.ctb" />
@@ -44,6 +44,7 @@
     <table id="el-g1" locale="el" dots="6" grade="1" fileName="el.ctb" />
     <table id="es-g1" locale="es" dots="6" grade="1" fileName="es-g1.ctb" />
     <table id="es-g2" locale="es" dots="6" grade="2" fileName="es-g2.ctb" />
+    <table id="es-comp8" locale="es" dots="8" fileName="Es-Es-G0.utb" />
     <table id="et-g1" locale="et" dots="6" grade="1" fileName="et-6dot.utb" />
     <table id="et-comp8" locale="et" dots="8" fileName="et-g0.utb" />
     <table id="fi-g1" locale="fi" dots="6" grade="1" fileName="fi.utb" />

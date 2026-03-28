@@ -437,7 +437,12 @@ public class TableCreatorActivity extends Activity {
         exportBtn.setOnClickListener(v -> exportTable());
         exportBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
 
-        actionRow.addView(mMappedItemsSpinner); actionRow.addView(mAddMappingBtn); actionRow.addView(saveBtn); actionRow.addView(exportBtn);
+                Button removeMappingBtn = new Button(this);
+        removeMappingBtn.setText(R.string.btn_remove_mapping);
+        removeMappingBtn.setOnClickListener(v -> deleteSelected());
+        removeMappingBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+
+        actionRow.addView(mMappedItemsSpinner); actionRow.addView(mAddMappingBtn); actionRow.addView(removeMappingBtn); actionRow.addView(saveBtn); actionRow.addView(exportBtn);
         bottomPanel.addView(actionRow);
 
         mainContainer.addView(bottomPanel);
