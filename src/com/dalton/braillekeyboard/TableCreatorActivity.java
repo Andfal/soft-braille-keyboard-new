@@ -447,21 +447,30 @@ public class TableCreatorActivity extends AppCompatActivity {
         mAddMappingBtn.setOnClickListener(v -> addOrUpdateMapping());
         mAddMappingBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
 
+        Button removeMappingBtn = new Button(this);
+        removeMappingBtn.setText(R.string.btn_remove_mapping);
+        removeMappingBtn.setOnClickListener(v -> deleteSelected());
+        removeMappingBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+
         Button saveBtn = new Button(this);
         saveBtn.setText(R.string.btn_save);
         saveBtn.setBackgroundColor(Color.parseColor("#4CAF50"));
         saveBtn.setTextColor(Color.WHITE);
         saveBtn.setOnClickListener(v -> saveTable());
-        saveBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+        saveBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));   
 
         Button exportBtn = new Button(this);
         exportBtn.setText(R.string.btn_export_table);
         exportBtn.setBackgroundColor(Color.parseColor("#2196F3"));
         exportBtn.setTextColor(Color.WHITE);
         exportBtn.setOnClickListener(v -> exportTable());
-        exportBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+        exportBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f)); 
 
-        actionRow.addView(mMappedItemsSpinner); actionRow.addView(mAddMappingBtn); actionRow.addView(saveBtn); actionRow.addView(exportBtn);
+        actionRow.addView(mMappedItemsSpinner); 
+        actionRow.addView(mAddMappingBtn); 
+        actionRow.addView(removeMappingBtn);
+        actionRow.addView(saveBtn); 
+        actionRow.addView(exportBtn);
         bottomPanel.addView(actionRow);
 
         mainContainer.addView(bottomPanel);

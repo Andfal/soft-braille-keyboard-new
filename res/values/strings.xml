@@ -367,6 +367,7 @@
     <string name="btn_cancel">Cancel</string>
     <string name="menu_share">Share</string>
     <string name="menu_delete">Delete</string>
+    <string name="msg_delete_external">Also delete from external folder</string>
 
     <!-- Table Creator -->
     <string name="hint_table_name">Enter table name (e.g. my_table)</string>

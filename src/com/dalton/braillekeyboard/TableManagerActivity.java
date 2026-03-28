@@ -274,6 +274,13 @@ public class TableManagerActivity extends AppCompatActivity {
         com.googlecode.eyesfree.braille.service.translate.TableList tableList = new com.googlecode.eyesfree.braille.service.translate.TableList(this);
         List<TableInfo> tables = new ArrayList<>(tableList.getTables());
         tables.removeIf(t -> t.getId().startsWith("custom:"));
+
+        boolean showExtended = Options.getBooleanPreference(this, R.string.pref_show_ext_tables_key,
+                Boolean.parseBoolean(getString(R.string.pref_show_ext_tables_default)));
+
+        if (!showExtended) {
+            tables.removeIf(t -> t.getVariant() != null && t.getVariant().contains("[Ext]"));
+        }
         
         Collections.sort(tables, (t1, t2) -> t1.getLocale().getDisplayName().compareTo(t2.getLocale().getDisplayName()));
         
@@ -315,11 +322,44 @@ public class TableManagerActivity extends AppCompatActivity {
     }
 
     private void showDeleteConfirmation(TableInfo table) {
+        final String fileName = table.getId().replace("custom:", "");
+        final String syncUriStr = Options.getSharedPreferences(this).getString(PREF_SYNC_FOLDER_URI, null);
+        
+        android.widget.LinearLayout dialogLayout = new android.widget.LinearLayout(this);
+        dialogLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
+        dialogLayout.setPadding(50, 20, 50, 20);
+
+        android.widget.TextView msgView = new android.widget.TextView(this);
+        msgView.setText(String.format(getString(R.string.confirm_delete_msg), table.getVariant()));
+        msgView.setPadding(0, 0, 0, 20);
+        dialogLayout.addView(msgView);
+
+        final android.widget.CheckBox deleteExternalCheck = new android.widget.CheckBox(this);
+        deleteExternalCheck.setText(R.string.msg_delete_external);
+        deleteExternalCheck.setVisibility(View.GONE);
+        
+        if (syncUriStr != null) {
+            try {
+                DocumentFile root = DocumentFile.fromTreeUri(this, Uri.parse(syncUriStr));
+                if (root != null && root.findFile(fileName) != null) {
+                    deleteExternalCheck.setVisibility(View.VISIBLE);
+                }
+            } catch (Exception e) {}
+        }
+        dialogLayout.addView(deleteExternalCheck);
+
         new AlertDialog.Builder(this)
             .setTitle(R.string.confirm_delete_title)
-            .setMessage(String.format(getString(R.string.confirm_delete_msg), table.getVariant()))
+            .setView(dialogLayout)
             .setPositiveButton(R.string.btn_delete, (d, w) -> {
                 if (mManager.deleteTable(table.getId())) {
+                    if (deleteExternalCheck.isChecked() && syncUriStr != null) {
+                        try {
+                            DocumentFile root = DocumentFile.fromTreeUri(this, Uri.parse(syncUriStr));
+                            DocumentFile file = root.findFile(fileName);
+                            if (file != null) file.delete();
+                        } catch (Exception e) { Log.e(TAG, "Error deleting external file", e); }
+                    }
                     Toast.makeText(this, R.string.msg_deleted, Toast.LENGTH_SHORT).show();
                     refreshList();
                 }
