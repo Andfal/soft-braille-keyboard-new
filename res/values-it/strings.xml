@@ -58,6 +58,7 @@
     <string name="no_rotate_keyboard">Non ruotare la tastiera</string>
     <string name="no_suggestions">Nessun suggerimento disponibile</string>
     <string name="nothing_to_delete">Niente da cancellare</string>
+    <string name="pad_tabletop">Imposta tastiera in modalità da tavolo</string>
     <string name="pad_horizontal">Imposta layout orizzontale</string>
     <string name="pad_vertical">Imposta layout verticale</string>
     <string name="pasted">Incollato</string>
@@ -97,12 +98,18 @@
     <string name="pref_show_circles_title">Mostra cerchi sullo schermo?</string>
     <string name="pref_swipe_sensitivity_summary">Seleziona la sensibilità per i gesti.</string>
     <string name="pref_swipe_sensitivity_title">Sensibilità</string>
+    <string name="pref_swap_swipe_axes_key">SWAP_SWIPE_AXES</string>
     <string name="pref_swap_swipe_axes_title">Scambia assi di scorrimento</string>
     <string name="pref_swap_swipe_axes_summary">Interpreta gli scorrimenti orizzontali come verticali e viceversa.</string>
+    <string name="pref_swap_swipe_axes_default">false</string>
+    <string name="pref_invert_horizontal_swipes_key">INVERT_HORIZONTAL_SWIPES</string>
     <string name="pref_invert_horizontal_swipes_title">Inverti scorrimento orizzontale</string>
     <string name="pref_invert_horizontal_swipes_summary">Scambia le direzioni destra e sinistra.</string>
+    <string name="pref_invert_horizontal_swipes_default">false</string>
+    <string name="pref_invert_vertical_swipes_key">INVERT_VERTICAL_SWIPES</string>
     <string name="pref_invert_vertical_swipes_title">Inverti scorrimento verticale</string>
     <string name="pref_invert_vertical_swipes_summary">Scambia le direzioni su e giù.</string>
+    <string name="pref_invert_vertical_swipes_default">false</string>
     <string name="pref_switch_tables_summary">Scegli alcune lingue che consentono il passaggio al volo dall\'una all\'altra durante la digitazione.</string>
     <string name="pref_switch_tables_title">Abilita tabelle Braille per consentire il passaggio al volo dall\'una all\'altra.</string>
     <string name="pref_text_to_speech_engine_title">Motore di sintesi vocale</string>
@@ -259,6 +266,7 @@
     <string name="btn_cancel">Annulla</string>
     <string name="menu_share">Condividi</string>
     <string name="menu_delete">Elimina</string>
+    <string name="msg_delete_external">Elimina anche dalla cartella esterna</string>
 
     <!-- Table Creator -->
     <string name="hint_table_name">Inserisci nome tabella (es. mia_tabella)</string>
@@ -286,6 +294,13 @@
     <string name="hint_dots_format">Punti (es. 123-45)</string>
     <string name="msg_char_empty">Il campo carattere è vuoto</string>
     <string name="msg_enter_dots">Inserisci i punti (es. 123-45)</string>
+    <string name="pref_two_hand_calibration_default">true</string>
+    <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
+    <string name="pref_keyboard_save_tabletop_landscape_invert_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE</string>
+    <string name="pref_keyboard_save_tabletop_portrait_invert_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_portrait_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT</string>
+    <string name="pref_last_calibrated_layout_key">LAST_CALIBRATED_LAYOUT</string>
 
     <!-- Opcodes (Amichevoli per Italiani) -->
     <string name="opcode_always">Sostituzione forzata (Sempre)</string>

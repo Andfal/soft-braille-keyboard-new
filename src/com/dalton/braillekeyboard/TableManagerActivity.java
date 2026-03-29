@@ -423,6 +423,7 @@ public class TableManagerActivity extends Activity {
                 while ((read = is.read(buffer)) != -1) os.write(buffer, 0, read);
             }
             Toast.makeText(this, String.format(getString(R.string.msg_imported), externalFile.getName()), Toast.LENGTH_SHORT).show();
+            autoActivateTable(destFile);
             refreshList();
             
             mManager.scanFiles();
@@ -451,6 +452,7 @@ public class TableManagerActivity extends Activity {
                 while ((read = is.read(buffer)) != -1) os.write(buffer, 0, read);
             }
             Toast.makeText(this, String.format(getString(R.string.msg_imported), externalFile.getName()), Toast.LENGTH_SHORT).show();
+            autoActivateTable(destFile);
             refreshList();
             
             mManager.scanFiles();
