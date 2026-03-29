@@ -375,9 +375,9 @@ public class TableManagerActivity extends Activity {
                 if (position < 0 || position >= names.size()) return true;
                 final String selectedName = names.get(position);
                 
-                // Se Ã¨ una tabella esterna (non ancora importata), permettiamo solo l'importazione (giÃ  gestita dal click singolo)
+                // Se è una tabella esterna (non ancora importata), permettiamo solo l'importazione (già gestita dal click singolo)
                 // oppure possiamo aggiungere opzioni specifiche se necessario. 
-                // Per ora, le tabelle esterne non hanno menu di cancellazione diretta finchÃ© non sono importate.
+                // Per ora, le tabelle esterne non hanno menu di cancellazione diretta finché non sono importate.
                 if (selectedName.endsWith("[Download]") || selectedName.endsWith("[" + getString(R.string.label_external_synced) + "]")) {
                     return false; // Lascia che il sistema gestisca altri eventi o non fare nulla
                 }

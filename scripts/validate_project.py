@@ -4,7 +4,7 @@ import argparse
 
 # Common Mojibake patterns (broken UTF-8 sequences that are technically valid UTF-8 but look wrong)
 MOJIBAKE_PATTERNS = [
-    'Ã ', 'Ã ', 'Ã¨', 'Ã©', 'Ã¬', 'Ã²', 'Ã¹', 'Ã«', 'Ã¤', 'Ã¶', 'Ã¼', 'Ã¢', 'Ãª', 'Ã®', 'Ã´', 'Ã»', 'Ã§', 'Ã±', 'Ã¡', 'Ã³', 'Ãº', 'Å“', 'â‚¬', 'Ã€', 'Ã‰'
+    'Ã ', 'Ã¨', 'Ã©', 'Ã¬', 'Ã²', 'Ã¹', 'Ã«', 'Ã¤', 'Ã¶', 'Ã¼', 'Ã¢', 'Ãª', 'Ã®', 'Ã´', 'Ã»', 'Ã§', 'Ã±', 'Ã¡', 'Ã³', 'Ãº', 'â‚¬', 'Ã€', 'Ã‰', 'Å“'
 ]
 
 DIRS_TO_CHECK = [
@@ -19,6 +19,10 @@ DIRS_TO_CHECK = [
 EXTENSIONS = ('.json', '.xml', '.ctb', '.utb', '.uti', '.dis', '.java', '.py', '.md', '.txt', '.html')
 
 def validate_file(path):
+    # Skip legacy third-party directories that are known to have non-UTF8 or special encoding
+    if 'Liblouis' in path or 'brailleback' in path or 'brlttylib' in path:
+        return True, "OK (Skipped legacy directory)"
+
     # 1. Check Encoding
     try:
         with open(path, 'rb') as f:
@@ -28,8 +32,9 @@ def validate_file(path):
         return False, "Not valid UTF-8"
 
     # 2. Check for Mojibake (broken accents)
-    # Exclude Liblouis tables as they might have deliberate escape sequences
-    if not 'Liblouis' in path and not 'brailleback' in path:
+    # Exclude Liblouis and BRLTTY tables as they might have deliberate non-UTF8 or escape sequences
+    # Also skip this script itself
+    if not 'Liblouis' in path and not 'brailleback' in path and not 'brlttylib' in path and not 'validate_project.py' in path:
         for pattern in MOJIBAKE_PATTERNS:
             if pattern in content:
                 # Find line number for better reporting

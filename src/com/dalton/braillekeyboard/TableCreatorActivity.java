@@ -221,6 +221,7 @@ public class TableCreatorActivity extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 updateSystemTables();
+                if (!mIsUpdatingUI) initPresets();
             }
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
@@ -358,6 +359,7 @@ public class TableCreatorActivity extends Activity {
         mMappingPriorityCheck = new CheckBox(this);
         mMappingPriorityCheck.setText(getString(R.string.label_priority_short)); 
         mMappingPriorityCheck.setContentDescription(getString(R.string.label_high_priority));
+        mMappingPriorityCheck.setChecked(true);
         
         settingsRow.addView(mOpcodeSpinner); settingsRow.addView(mMappingPriorityCheck);
         bottomPanel.addView(settingsRow);
@@ -640,12 +642,13 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void loadTableData(String tableId) {
+        mIsUpdatingUI = true;
         try {
             CustomTableManager manager = new CustomTableManager(this);
             String fileName = tableId;
             if (fileName.startsWith("custom:")) fileName = fileName.substring(7);
             File f = manager.getCustomTableFile(fileName);
-            if (!f.exists()) return;
+            if (!f.exists()) { mIsUpdatingUI = false; return; }
 
             mTableNameEdit.setText(fileName);
             mMappings.clear();
@@ -662,6 +665,13 @@ public class TableCreatorActivity extends Activity {
                     else if (line.startsWith("#+locale: ")) {
                         String code = line.substring(10).trim();
                         int idx = mLocaleCodes.indexOf(code);
+                        if (idx == -1 && code.contains("-")) {
+                            // Try base language match if full locale not found (e.g. "fr" if "fr-FR" is in spinner)
+                            String baseLang = code.split("-")[0];
+                            for (int i=0; i<mLocaleCodes.size(); i++) {
+                                if (mLocaleCodes.get(i).startsWith(baseLang)) { idx = i; break; }
+                            }
+                        }
                         if (idx != -1) mLocaleSpinner.setSelection(idx);
                     }
                     else if (line.contains("SYSTEM INCLUDES")) currentlyHighPriority = false;
@@ -699,7 +709,12 @@ public class TableCreatorActivity extends Activity {
             }
             scanner.close();
             refreshSpinner();
-        } catch (Exception e) { Log.e(TAG, "Load error", e); }
+            mIsUpdatingUI = false;
+            initPresets();
+        } catch (Exception e) { 
+            Log.e(TAG, "Load error", e); 
+            mIsUpdatingUI = false;
+        }
     }
 
     private void initPresets() {
@@ -1181,7 +1196,9 @@ public class TableCreatorActivity extends Activity {
         // SEMANTIC KEYWORDS
         boolean searchNumbers = lowerQuery.contains("numero") || lowerQuery.contains("cifra") || lowerQuery.contains("num") || lowerQuery.contains("digit");
         boolean searchCaps = lowerQuery.contains("maiusc") || lowerQuery.contains("cap");
-        
+        boolean searchPunc = lowerQuery.contains("punt") || lowerQuery.contains("punc") || lowerQuery.contains("segno") || lowerQuery.contains("sign");
+        boolean searchMath = lowerQuery.contains("mat") || lowerQuery.contains("math") || lowerQuery.contains("simb") || lowerQuery.contains("sym");
+
         // LOGIC FOR SHADOWING (Personal rules win over Base rules)
         java.util.Set<String> personalCharOpKeys = new java.util.HashSet<>();
         for (Mapping m : mMappings) {
@@ -1206,8 +1223,13 @@ public class TableCreatorActivity extends Activity {
             // 1. Semantic Match
             if (searchNumbers && (m.opcode.equals("numsign") || m.opcode.equals("digit") || m.opcode.equals("litdigit") || m.opcode.startsWith("begnum"))) match = true;
             else if (searchCaps && (m.opcode.contains("caps") || m.opcode.equals("letsign"))) match = true;
+            else if (searchPunc && (m.opcode.equals("punctuation") || m.opcode.contains("punc") || m.opcode.equals("sign"))) match = true;
+            else if (searchMath && (m.opcode.equals("math") || m.opcode.contains("sign"))) match = true;
+
+            // 2. Technical Opcode Match
+            if (!match && m.opcode.toLowerCase().contains(lowerQuery)) match = true;
             
-            // 2. Pattern/Char/Text Match
+            // 3. Pattern/Char/Text Match
             if (!match) {
                 if (isNumericPattern) {
                     String dots = getDotsString(m.patterns);
@@ -1221,9 +1243,29 @@ public class TableCreatorActivity extends Activity {
             }
 
             if (match) {
-                filteredNames.add(getMappingDisplayString(m));
                 filteredObjects.add(m);
             }
+        }
+
+        // Custom Sort for Dot Search: exact match first, then shorter matches
+        if (isNumericPattern && !filteredObjects.isEmpty()) {
+            Collections.sort(filteredObjects, new Comparator<Mapping>() {
+                @Override
+                public int compare(Mapping m1, Mapping m2) {
+                    String d1 = getDotsString(m1.patterns);
+                    String d2 = getDotsString(m2.patterns);
+                    boolean exact1 = d1.equals(lowerQuery);
+                    boolean exact2 = d2.equals(lowerQuery);
+                    if (exact1 && !exact2) return -1;
+                    if (!exact1 && exact2) return 1;
+                    return d1.length() - d2.length();
+                }
+            });
+        }
+
+        // Build names from (potentially sorted) objects
+        for (Mapping m : filteredObjects) {
+            filteredNames.add(getMappingDisplayString(m));
         }
 
         mDisplayList.clear();

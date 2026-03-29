@@ -246,7 +246,7 @@
 
     <!-- Table Manager -->
     <string name="btn_import_table">Importa file tabella esistente</string>
-    <string name="btn_create_table">Crea nuova tabella da zero</string>
+    <string name="btn_create_table">Crea tabella personalizzata</string>
     <string name="btn_export_table">Esporta in Download</string>
     <string name="btn_export_system_table">Esporta Tabella di Sistema</string>
     <string name="btn_import_base_rules">Importa tutte le regole</string>

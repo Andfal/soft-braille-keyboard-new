@@ -352,7 +352,7 @@
 
     <!-- Table Manager -->
     <string name="btn_import_table">Import existing table file</string>
-    <string name="btn_create_table">Create new table from scratch</string>
+    <string name="btn_create_table">Create custom table</string>
     <string name="btn_export_table">Export to Download</string>
     <string name="btn_export_system_table">Export System Table</string>
     <string name="btn_import_base_rules">Import All Rules</string>
@@ -507,11 +507,11 @@
     <string name="preset_cat_base">Base Alphabet (a-z)</string>
     <string name="preset_cat_control">Control Codes (6-pt)</string>
     <string name="preset_cat_punc">Punctuation (Standard/Literary)</string>
-    <string name="preset_cat_math">Math &amp; Symbols (+, â‚¬, ...)</string>
+    <string name="preset_cat_math">Math &amp; Symbols (+, €, ...)</string>
     <string name="preset_cat_it_accents">Italian Accents</string>
-    <string name="preset_cat_acute">Acute/Spanish (Ã¡, Ã±...)</string>
-    <string name="preset_cat_circ">Circumflex/French (Ã¢, Å“...)</string>
-    <string name="preset_cat_dier">Diaeresis (Ã¤, Ã«...)</string>
+    <string name="preset_cat_acute">Acute/Spanish (á, ñ...)</string>
+    <string name="preset_cat_circ">Circumflex/French (â, œ...)</string>
+    <string name="preset_cat_dier">Diaeresis (ä, ë...)</string>
     <string name="btn_load_template">Load Template</string>
     <string name="title_select_template">Select Template</string>
     <string name="msg_template_applied">Template applied successfully!</string>
