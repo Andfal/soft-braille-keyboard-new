@@ -124,7 +124,6 @@
     <string name="swipe_confirm_input">Švihnite ešte raz ak si želáte zobraziť výber metódy vstupu</string>
     <string name="swipe_confirm">Potvrďte ďalším švihnutím</string>
     <string name="swipe_confirm_settings">Švihnite ešte raz ak si želáte zobraziť nastavenia Soft Braille Keyboard</string>
-    <string name="switch_off_talkback">Prosím pozastavte Talkback. Môžete to urobiť vykonaním gesta pripomínajúceho písmeno L, švihnite dolu a hneď vpravo, zobrazí sa kontextová ponuka, v ktorej vľavo hore nájdete položku Pozastaviť spätnú väzbu. Spätnú väzbu Talkback obnovíte dvojitým stlačením tlačidla určeného na zapínanie a vypýnanie zariadenia.</string>
     <string name="translator_error">Vyskytla sa chyba v súvislosti s prekladovou službou z Braillovho písma</string>
     <string name="try_box">Klávesnicu odskúšajte písaním do tohoto poľa.</string>
     <string name="unknown_character">Neznámy znak</string>

@@ -245,6 +245,7 @@ public class TableManagerActivity extends AppCompatActivity {
                 while ((read = is.read(buffer)) != -1) os.write(buffer, 0, read);
             }
             Toast.makeText(this, String.format(getString(R.string.msg_imported), fileName), Toast.LENGTH_SHORT).show();
+            autoActivateTable(dest);
             refreshList();
         } catch (Exception e) {
             Toast.makeText(this, "Import failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -262,6 +263,7 @@ public class TableManagerActivity extends AppCompatActivity {
                 }
                 runOnUiThread(() -> {
                     Toast.makeText(this, String.format(getString(R.string.msg_imported), file.getName()), Toast.LENGTH_SHORT).show();
+                    autoActivateTable(dest);
                     refreshList();
                 });
             } catch (Exception e) {
@@ -395,6 +397,26 @@ public class TableManagerActivity extends AppCompatActivity {
         intent.setType("*/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         mPickFileLauncher.launch(intent);
+    }
+
+    private void autoActivateTable(File f) {
+        if (f == null || !f.exists()) return;
+        boolean isEightDot = false;
+        try (InputStream is = new FileInputStream(f);
+             java.util.Scanner scanner = new java.util.Scanner(is, "UTF-8")) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.contains("#+ dots: 8") || line.contains("latinLetterDef8Dots.uti") || line.contains("digits8Dots.uti")) {
+                    isEightDot = true;
+                    break;
+                }
+            }
+        } catch (Exception e) { Log.e(TAG, "Error scanning for dots", e); }
+
+        int prefKey = isEightDot ? 
+            R.string.pref_braille_computer_table_key : 
+            R.string.pref_braille_literary_table_key;
+        Options.writeStringPreference(this, prefKey, "custom:" + f.getName());
     }
 
     private String getFileNameFromUri(Uri uri) {

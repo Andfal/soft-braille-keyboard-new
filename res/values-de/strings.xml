@@ -111,8 +111,7 @@
     <string name="start_of_text">Beginn des Textes</string>
     <string name="swipe_confirm">Zum Bestätigen erneut wischen</string>
     <string name="swipe_confirm_input">Erneut wischen um den Bildschirm zur Tastatur-Auswahl anzuzeigen</string>
-    <string name="swipe_confirm_settings">Erneut wischen um Soft Braille Tastatur Einstellungen anzuzeigen</string>
-    <string name="switch_off_talkback">Bitte die Wiedergabe (Talkback) deaktivieren. Hierzu die 1 Geste vollführen, dann nach unten und zuletzt nach rechts wischen. Sie finden dann die Option zum Pausieren der Wiedergabe im Kreis links oben. Die Wiedergabe (Talkback) kann jederzeit durch doppeltes Drücken der Einschalttaste wieder gestartet werden.</string> <!-- ANNI: I think you have a typo in your English version: "two" should be "to" -->
+    <string name="swipe_confirm_settings">Erneut wischen um Soft Braille Tastatur Einstellungen anzuzeigen</string> <!-- ANNI: I think you have a typo in your English version: "two" should be "to" -->
     <string name="translator_error">Es ist ein Problem bezüglich des Braille-Services aufgetreten</string>
     <string name="trial_buy">Kaufen</string>
     <string name="trial_expired_message">Test-Phase ist abgelaufen. Wenn Sie die App weiterhin nutzen möchten, laden Sie sie aus dem Google Play Store herunter oder kontaktieren Sie den App-Entwickler Daniel Dalton per Email: daniel.dalton10@gmail.com, um eine verbesserte Test-Versioin zu erhalten.\nVielen Dank für das Testen der Beta-Version!</string>
