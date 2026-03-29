@@ -13,6 +13,10 @@ DIRS_TO_CHECK = [
 EXTENSIONS = ('.json', '.xml', '.ctb', '.utb', '.uti', '.dis', '.java', '.py', '.md', '.txt', '.html')
 
 def validate_file(path):
+    # Skip legacy third-party directories that are known to have non-UTF8 or special encoding
+    if 'Liblouis' in path or 'brailleback' in path or 'brlttylib' in path:
+        return True, "OK (Skipped legacy directory)"
+
     # 1. Check Encoding
     try:
         with open(path, 'rb') as f:

@@ -251,6 +251,7 @@ public class TableCreatorActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 updateSystemTables();
+                if (!mIsUpdatingUI) initPresets();
             }
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
@@ -388,6 +389,7 @@ public class TableCreatorActivity extends AppCompatActivity {
         mMappingPriorityCheck = new CheckBox(this);
         mMappingPriorityCheck.setText(getString(R.string.label_priority_short)); 
         mMappingPriorityCheck.setContentDescription(getString(R.string.label_high_priority));
+        mMappingPriorityCheck.setChecked(true);
         
         settingsRow.addView(mOpcodeSpinner); settingsRow.addView(mMappingPriorityCheck);
         bottomPanel.addView(settingsRow);
@@ -668,6 +670,7 @@ public class TableCreatorActivity extends AppCompatActivity {
     }
 
     private void loadTableData(String tableId) {
+        mIsUpdatingUI = true;
         try {
             CustomTableManager manager = new CustomTableManager(this);
             String fileName = tableId;
@@ -690,6 +693,12 @@ public class TableCreatorActivity extends AppCompatActivity {
                     else if (line.startsWith("#+locale: ")) {
                         String code = line.substring(10).trim();
                         int idx = mLocaleCodes.indexOf(code);
+                        if (idx == -1 && code.contains("-")) {
+                            String baseLang = code.split("-")[0];
+                            for (int i=0; i<mLocaleCodes.size(); i++) {
+                                if (mLocaleCodes.get(i).startsWith(baseLang)) { idx = i; break; }
+                            }
+                        }
                         if (idx != -1) mLocaleSpinner.setSelection(idx);
                     }
                     else if (line.contains("SYSTEM INCLUDES")) currentlyHighPriority = false;
@@ -727,7 +736,12 @@ public class TableCreatorActivity extends AppCompatActivity {
             }
             scanner.close();
             refreshSpinner();
-        } catch (Exception e) { Log.e(TAG, "Load error", e); }
+            mIsUpdatingUI = false;
+            initPresets();
+        } catch (Exception e) { 
+            Log.e(TAG, "Load error", e); 
+            mIsUpdatingUI = false;
+        }
     }
 
     private void initPresets() {
@@ -1149,7 +1163,7 @@ public class TableCreatorActivity extends AppCompatActivity {
         Uri contentUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", f);
         
         Intent intent = new Intent(Intent.ACTION_SEND);
-        intent.setType("text/plain");
+        intent.setType("application/octet-stream");
         intent.putExtra(Intent.EXTRA_STREAM, contentUri);
         intent.putExtra(Intent.EXTRA_SUBJECT, "Braille Table: " + name);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -1167,7 +1181,7 @@ public class TableCreatorActivity extends AppCompatActivity {
 
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("text/plain");
+        intent.setType("application/octet-stream");
         intent.putExtra(Intent.EXTRA_TITLE, name);
         mCreateDocumentLauncher.launch(intent);
     }
@@ -1186,6 +1200,8 @@ public class TableCreatorActivity extends AppCompatActivity {
         // SEMANTIC KEYWORDS
         boolean searchNumbers = lowerQuery.contains("numero") || lowerQuery.contains("cifra") || lowerQuery.contains("num") || lowerQuery.contains("digit");
         boolean searchCaps = lowerQuery.contains("maiusc") || lowerQuery.contains("cap");
+        boolean searchPunc = lowerQuery.contains("punt") || lowerQuery.contains("punc") || lowerQuery.contains("segno") || lowerQuery.contains("sign");
+        boolean searchMath = lowerQuery.contains("mat") || lowerQuery.contains("math") || lowerQuery.contains("simb") || lowerQuery.contains("sym");
         
         // LOGIC FOR SHADOWING (Personal rules win over Base rules)
         java.util.Set<String> personalCharOpKeys = new java.util.HashSet<>();

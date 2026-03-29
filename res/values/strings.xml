@@ -352,7 +352,7 @@
 
     <!-- Table Manager -->
     <string name="btn_import_table">Import existing table file</string>
-    <string name="btn_create_table">Create new table from scratch</string>
+    <string name="btn_create_table">Create custom table</string>
     <string name="btn_export_table">Export to Download</string>
     <string name="btn_export_system_table">Export System Table</string>
     <string name="btn_import_base_rules">Import All Rules</string>
