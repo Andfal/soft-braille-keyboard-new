@@ -124,7 +124,6 @@
     <string name="swipe_confirm_input">Švihněte znovu pro zobrazení okna změny klávesnice</string>
     <string name="swipe_confirm_settings">Švihněte znovu pro zobrazení nastavení Soft Braille Keyboard</string>
     <string name="swipe_confirm">Švihněte znovu pro potvrzení</string>
-    <string name="switch_off_talkback">Prosím pozastavte TalkBack. Toto je možné udělat gestem ve tvaru písmene L, přesunutím dolů a doprava, následně najděte v menu položku Pozastavit zpětnou vazbu. Talkback můžete kdykoli obnovit dvojitým stiskem vypínače</string>
     <string name="translator_error">Nastala chyba s Braillovým písmem</string>
     <string name="try_box">Vyzkoušejte si klávesnici zde.</string>
     <string name="unknown_character">Neznámý znak</string>

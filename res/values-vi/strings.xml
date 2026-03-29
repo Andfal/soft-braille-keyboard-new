@@ -136,7 +136,6 @@
     <string name="swipe_confirm">Vuốt lần nữa để xác nhận</string>
     <string name="swipe_confirm_input">Vuốt lần nữa để hiển thị mục chọn bàn phím</string>
     <string name="swipe_confirm_settings">Vuốt lần nữa để hiển thị cài đặt bàn phím chữ Braille</string>
-    <string name="switch_off_talkback">Hãy tạm ngưng Talkback: vuốt xuống rồi qua phải như hình chữ l ngược,  lướt ngón tay theo hình tròn tìm mục tạm dừng phản hồi. Nhấn nút nguồn hai lần để bật lại Talkback</string>
     <string name="translator_error">Có sự cố với dịch vụ Braille</string>
     <string name="try_box">Thử nhập liệu tại đây.</string>
     <string name="unknown_character">Ký tự không xác định</string>

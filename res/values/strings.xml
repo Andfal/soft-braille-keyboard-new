@@ -241,7 +241,6 @@
     <string name="swipe_confirm_input">Swipe again to display the keyboard chooser</string>
     <string name="swipe_confirm_settings">Swipe again to show Soft Braille Keyboard settings</string>
     <string name="swipe_confirm">Swipe again to confirm</string>
-    <string name="switch_off_talkback">Please disable talkback. You can do this by performing the l gesture, swipe down and then to the right, and explore the circle to find the pause feedback option at the top left. Talkback can be restarted at any time by double pressing the power button</string>
     <string name="translator_error">There is a problem with the Braille service</string>
     <string name="try_box">Try typing with the keyboard here.</string>
     <string name="unknown_character">Unknown character</string>

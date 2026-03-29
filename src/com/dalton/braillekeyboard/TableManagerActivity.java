@@ -607,7 +607,7 @@ public class TableManagerActivity extends Activity {
     private void importTable(Uri uri) {
         try {
             String fileName = getFileName(uri);
-            if (!fileName.endsWith(".ctb") && !fileName.endsWith(".utb") && !fileName.endsWith(".dis")) {
+            if (!fileName.endsWith(".ctb") && !fileName.endsWith(".utb") && !fileName.endsWith(".dis")) {       
                 Toast.makeText(this, R.string.error_invalid_file, Toast.LENGTH_LONG).show(); return;
             }
             File destFile = mManager.getCustomTableFile(fileName);
@@ -616,6 +616,7 @@ public class TableManagerActivity extends Activity {
                 while ((read = is.read(buffer)) != -1) os.write(buffer, 0, read);
             }
             Toast.makeText(this, String.format(getString(R.string.msg_imported), fileName), Toast.LENGTH_SHORT).show();
+            autoActivateTable(destFile);
             refreshList();
         } catch (Exception e) {
             Log.e(TAG, "Error importing table", e);
@@ -623,8 +624,27 @@ public class TableManagerActivity extends Activity {
         }
     }
 
-    private String getFileName(Uri uri) {
-        String path = uri.getPath();
+    private void autoActivateTable(File f) {
+        if (f == null || !f.exists()) return;
+        boolean isEightDot = false;
+        try (InputStream is = new java.io.FileInputStream(f);
+             java.util.Scanner scanner = new java.util.Scanner(is, "UTF-8")) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.contains("#+ dots: 8") || line.contains("latinLetterDef8Dots.uti") || line.contains("digits8Dots.uti")) {
+                    isEightDot = true;
+                    break;
+                }
+            }
+        } catch (Exception e) { Log.e(TAG, "Error scanning for dots", e); }
+
+        int prefKey = isEightDot ? 
+            R.string.pref_braille_computer_table_key : 
+            R.string.pref_braille_literary_table_key;
+        Options.writeStringPreference(this, prefKey, "custom:" + f.getName());
+    }
+
+    private String getFileName(Uri uri) {        String path = uri.getPath();
         int cut = path.lastIndexOf('/');
         if (cut != -1) return path.substring(cut + 1);
         return "custom_table.ctb";

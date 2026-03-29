@@ -262,8 +262,7 @@ public class BrailleView extends View {
                         Boolean.parseBoolean(getContext().getString(
                                 R.string.pref_show_circles_default)))) {
             if (accessibilityManager.isTouchExplorationEnabled()) {
-                setContentDescription(getContext().getString(
-                        R.string.switch_off_talkback));
+                setContentDescription(null);
             } else {
                 setContentDescription(null);
             }
@@ -317,7 +316,7 @@ public class BrailleView extends View {
                         Speech.QUEUE_FLUSH);
             } else {
                 speech.speak(getContext(),
-                        getContext().getString(R.string.switch_off_talkback),
+                        getContext().getString(R.string.ready),
                         Speech.QUEUE_FLUSH);
             }
         }

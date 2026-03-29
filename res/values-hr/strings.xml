@@ -124,7 +124,6 @@
     <string name="swipe_confirm_input">Kliznite prstom ponovo za prikazivanje izbora tipkovnice</string>
     <string name="swipe_confirm_settings">Kliznite prstom ponovo za prikazivanje postavki za Soft Braille Keyboard</string>
     <string name="swipe_confirm">Kliznite prstom ponovo za potvrdu</string>
-    <string name="switch_off_talkback">Molimo isključite Talkback. To možete učiniti tako da napravite pokret u L na način da kliznete dolje pa zatim desno te istražite kružni izbornik kako biste pronašli opciju Pauziraj povratne informacije na gornjem lijevom dijelu. Talkback je moguće ponovno pokrenuti u bilo kojem trenutku dvostrukim pritiskom tipke Power.</string>
     <string name="translator_error">Došlo je do problema sa brajičnim servisom</string>
     <string name="try_box">Ovdje probajte tipkati s tipkovnicom.</string>
     <string name="unknown_character">Nepoznat znak</string>

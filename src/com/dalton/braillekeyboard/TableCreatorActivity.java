@@ -992,7 +992,7 @@ public class TableCreatorActivity extends Activity {
     private void saveTable() {
         String name = mTableNameEdit.getText().toString().trim();
         if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show(); mTableNameEdit.requestFocus(); return; }
-        if (!name.endsWith(".ctb")) name += ".ctb";
+        if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
         StringBuilder sb = new StringBuilder("# " + name + "\n");
         sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
         int localePos = mLocaleSpinner.getSelectedItemPosition();
@@ -1015,9 +1015,16 @@ public class TableCreatorActivity extends Activity {
         try {
             CustomTableManager manager = new CustomTableManager(this);
             File f = manager.getCustomTableFile(name);
-            try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(sb.toString().getBytes(StandardCharsets.UTF_8)); }
+            try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(sb.toString().getBytes("UTF-8")); }
             Toast.makeText(this, R.string.msg_table_saved, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_SHORT).show(); }
+
+            // Automatically set the saved table as active
+            int prefKey = mEightDotCheck.isChecked() ? 
+                R.string.pref_braille_computer_table_key : 
+                R.string.pref_braille_literary_table_key;
+            Options.writeStringPreference(this, prefKey, "custom:" + name);
+
+            } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_SHORT).show(); }
     }
 
     private void writeCustomMappings(StringBuilder sb, boolean highPriorityOnly) {

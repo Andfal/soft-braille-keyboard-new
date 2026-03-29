@@ -124,7 +124,6 @@
     <string name="swipe_confirm">Deslizar otra vez para confirmar</string>
     <string name="swipe_confirm_input">Deslizar otra vez para mostrar el selector de teclados</string>
     <string name="swipe_confirm_settings">Deslizar otra vez para mostrar los ajustes de Soft Braille Keyboard</string>
-    <string name="switch_off_talkback">Deshabilite talkback por favor. Para hacer esto, deslice en forma de L, moviendo el dedo hacia abajo y luego hacia la derecha, y explore el círculo hasta localizar la opción pausar Notificaciones en el ángulo superior izquierdo. Puede habilitar Talkback en cualquier momento con dos apretones del botón de encendido</string>
     <string name="translator_error">Hay un problema con el servicio de Braille</string>
     <string name="try_box">Intente escribir aquí con el teclado.</string>
     <string name="unknown_character">Caracter desconocido</string>

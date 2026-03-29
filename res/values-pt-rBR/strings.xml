@@ -124,7 +124,6 @@
     <string name="swipe_confirm_input">Repita o gesto para exibir o seletor de teclado</string>
     <string name="swipe_confirm">Repita o gesto para confirmar</string>
     <string name="swipe_confirm_settings">Repita o gesto para mostrar as configurações do Soft Braille Keyboard</string>
-    <string name="switch_off_talkback">Por favor, suspenda o talkback. Você pode fazer isso executando o gesto em l, deslizando o dedo para baixo e para a direita e explorar o círculo para encontrar a opção de pausar feedback no canto superior esquerdo. Talkback pode ser reiniciado a qualquer momento, pressionando duas vezes o botão liga\/desliga</string>
     <string name="translator_error">Há um problema com o serviço de Braille</string>
     <string name="try_box">Tente digitar com o teclado aqui.</string>
     <string name="unknown_character">Caracter desconhecido</string>
