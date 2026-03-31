@@ -54,6 +54,11 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity android:name=".KeyboardHelpActivity" android:label="Aiuto Tastiera" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
         <service android:name="com.dalton.braillekeyboard.BrailleIME"
             android:label="@string/braille_ime"
             android:permission="android.permission.BIND_INPUT_METHOD"

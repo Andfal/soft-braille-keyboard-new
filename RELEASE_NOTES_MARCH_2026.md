@@ -1,3 +1,33 @@
+# Latest Updates - March 31, 2026 (v11)
+
+## 1. Intelligent Keyboard Help
+- **Dynamic Exploration:** Introduced a new "Keyboard Help" feature that allows users to query any Braille combination or character.
+- **Instant Search:** Results appear in real-time as you type, explaining what specific dots do (e.g., "Capitalization Indicator") or how to write a specific character (e.g., "A -> dots 6-1" in UEB).
+- **Localized Descriptions:** Complex Liblouis technical rules are translated into human-friendly language in both English and Italian (e.g., explaining whole-word contractions or ordinal rules).
+- **On-the-fly Detection:** The help system automatically detects table switches made via gestures, ensuring you always get advice for the language you are currently typing.
+
+## 2. Enhanced Table Creator
+- **Deep Search:** The search tool now "digs" into inherited system files to find definitions for capital letters, numbers, and indicators (e.g., `base uppercase`, `numsign`, `capsletter`).
+- **Inherited Rule Management:** Users can now "disable" inherited characters that cannot be deleted directly (as they are in system files). The app automatically creates a personal override with empty dots.
+- **Stability Fixes:** Corrected a critical bug where deleting a mapping while a search filter was active could remove the wrong entry.
+
+---
+
+# Ultimi Aggiornamenti - 31 Marzo 2026 (v11)
+
+## 1. Aiuto Tastiera Intelligente
+- **Esplorazione Dinamica:** Introdotta la nuova funzione "Aiuto Tastiera" che permette agli utenti di interrogare qualsiasi combinazione Braille o carattere.
+- **Ricerca Istantanea:** I risultati appaiono in tempo reale mentre scrivi, spiegando cosa fanno determinati punti (es. "Indicatore Maiuscola") o come si scrive un carattere (es. "A -> punti 6-1" in UEB).
+- **Descrizioni Localizzate:** Le regole tecniche complesse di Liblouis sono tradotte in un linguaggio semplice sia in inglese che in italiano (es. spiegando le contrazioni a parola intera o le regole ordinali).
+- **Rilevamento Automatico:** Il sistema di aiuto rileva automaticamente i cambi di tabella effettuati "al volo" tramite gesti, garantendo suggerimenti sempre pertinenti alla lingua in uso.
+
+## 2. Creatore Tabelle Potenziato
+- **Ricerca Profonda:** Lo strumento di ricerca ora scansiona anche i file di sistema ereditati per trovare definizioni di maiuscole, numeri e indicatori (es. `base uppercase`, `numsign`, `capsletter`).
+- **Gestione Eredità:** Gli utenti possono ora "disattivare" i caratteri ereditati che non possono essere eliminati direttamente (perché residenti in file di sistema). L'app crea automaticamente una sovrascrittura personale con punti vuoti.
+- **Correzioni di Stabilità:** Risolto un bug critico per cui l'eliminazione di una mappatura mentre era attivo un filtro di ricerca poteva rimuovere la voce sbagliata.
+
+---
+
 # Latest Updates - March 24, 2026 (v10)
 
 ## 1. Double-Letter "Swallowing" Fix

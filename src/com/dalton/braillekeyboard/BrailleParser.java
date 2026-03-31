@@ -605,12 +605,11 @@ public class BrailleParser {
     private void setTable(Context context, TableInfo table) {
         if (table != null) {
             SharedPreferences.Editor editor = sharedPref.edit();
-            String defaultId = getDefaultId(context,
-                    table.isEightDot() ? BrailleType.COMPUTER
-                            : BrailleType.LITERARY);
-            String id = table.getId().equals(defaultId) ? context
-                    .getString(R.string.pref_braille_table_auto) : table
-                    .getId();
+            
+            // Always save the explicit ID when switching tables to ensure 
+            // other activities (like KeyboardHelp) can resolve the actual file.
+            String id = table.getId();
+            
             // Update the appropriate preference literary vs computer.
             if (table.isEightDot()) {
                 editor.putString(context

@@ -98,6 +98,46 @@
     <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
     <string name="pref_two_hand_calibration_summary">Allow calibrating the keyboard with two separate touches.</string>
     <string name="pref_two_hand_calibration_title">Two-touch calibration</string>
+
+    <!-- Keyboard Help Feature -->
+    <string name="keyboard_help_title">Keyboard Help (Active Table)</string>
+    <string name="keyboard_help_pref_title">Keyboard Help (Active Table)</string>
+    <string name="keyboard_help_pref_summary">Discover what Braille dots do in the current language</string>
+    <string name="keyboard_help_instruction">Enter dots (e.g., 45) to see what they do, or a character (e.g., A) to see how to write it.</string>
+    <string name="keyboard_help_dots_hint">Dots or character</string>
+    <string name="keyboard_help_search_btn">Search</string>
+    <string name="keyboard_help_active_table_label">Active Table: %s</string>
+    <string name="keyboard_help_error_no_table">Error: Active table not found.</string>
+    <string name="keyboard_help_no_results">No results found for \"%s\"</string>
+    <string name="keyboard_help_enter_dots_toast">Please enter dots or characters to search</string>
+    <string name="keyboard_help_file_not_available">Table file not available</string>
+    <string name="keyboard_help_result_line">Line %1$d</string>
+
+    <!-- Results for reverse search -->
+    <string name="keyboard_help_how_to_write_title">How to write \"%1$s\"</string>
+    <string name="keyboard_help_dots_result">Dots: %1$s</string>
+
+    <!-- Help Descriptions -->
+    <string name="help_desc_numeric">Ordinal/Numeric Rule: applies after a number.</string>
+    <string name="help_desc_whole_word">Whole Word Contraction: only works as a standalone word.</string>
+    <string name="help_desc_caps_letter">Capitalization Indicator: makes the next letter uppercase.</string>
+    <string name="help_desc_caps_lock">Caps Lock: makes the whole word uppercase.</string>
+    <string name="help_desc_numsign">Number Sign: starts numeric mode (following keys are numbers).</string>
+    <string name="help_desc_italic">Italic Mode Indicator.</string>
+    <string name="help_desc_bold">Bold Mode Indicator.</string>
+    <string name="help_desc_underline">Underline Mode Indicator.</string>
+    <string name="help_desc_autocorrect">Auto-correction: adjusts the position or style of this symbol.</string>
+    <string name="help_desc_diacritic">Diacritic Mark: used to modify the previous or next character.</string>
+    <string name="help_desc_latin_mode">Switch to Latin (International) mode.</string>
+    <string name="help_desc_greek_mode">Switch to Greek mode.</string>
+    <string name="help_desc_state_change">Internal state change (affects how next keys are interpreted).</string>
+    <string name="help_desc_default">Mapping for: %s</string>
+
+    <!-- Table Creator Deletion Management -->
+    <string name="msg_cannot_delete_inherited">Inherited rules cannot be deleted directly because they belong to a system file.</string>
+    <string name="msg_ask_disable_inherited">Would you like to disable this character by creating an override with empty points?</string>
+    <string name="btn_disable">Disable</string>
+    <string name="msg_fixed_mapping">This is a fixed system mapping and cannot be removed.</string>
     <string name="trial_buy">Buy</string>
     <string name="trial_expired_message">Trial expired.</string>
     <string name="trial_expired_title">Trial Expired</string>
@@ -488,7 +528,6 @@
     <string name="emoji_search_mode_off">Emoji search mode off</string>
     <string name="emoji_no_results_query">No results for %s</string>
     <string name="emoji_count_summary">%1$s, %2$d of %3$d</string>
-    <string name="msg_fixed_mapping">Fixed mapping (cannot delete)</string>
     <string name="msg_deleted">Deleted</string>
     <string name="title_select_table_file">Select Braille Table file</string>
     <string name="error_invalid_file">Invalid file type. Select .ctb or .utb</string>

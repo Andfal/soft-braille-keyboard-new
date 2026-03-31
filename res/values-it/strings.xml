@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- User interface strings go below here -->
     <string name="action_settings">Impostazioni</string>
     <string name="app_name">Soft Braille Keyboard</string>
     <string name="auto_caps_disabled">Maiuscole automatiche disattivate</string>
@@ -410,7 +409,6 @@
     <string name="label_tap_to_edit">Tocca per modificare, premi a lungo per eliminare</string>
     <string name="msg_deleted">Eliminato</string>
     <string name="msg_duplicate_dots">La combinazione %1$s è già usata per \'%2$s\'.</string>
-    <string name="msg_fixed_mapping">Mappatura fissa (non può essere eliminata)</string>
     <string name="msg_imported">Importato %s</string>
     <string name="msg_standard_char_override">Carattere standard del set selezionato. La tua scelta avrà la precedenza.</string>
     <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
@@ -488,6 +486,46 @@
     <string name="pref_text_to_speech_engine_key">TEXT_TO_SPEECH</string>
     <string name="pref_two_hand_calibration_summary">Consente la calibrazione della tastiera con due tocchi separati.</string>
     <string name="pref_two_hand_calibration_title">Calibrazione a due tocchi</string>
+
+    <!-- Keyboard Help Feature -->
+    <string name="keyboard_help_title">Aiuto Tastiera (Tabella Attiva)</string>
+    <string name="keyboard_help_pref_title">Aiuto Tastiera (Tabella Attiva)</string>
+    <string name="keyboard_help_pref_summary">Scopri cosa fanno i punti Braille nella lingua corrente</string>
+    <string name="keyboard_help_instruction">Inserisci i punti (es. 45) per vederne il significato, o un carattere (es. A) per vederne la combinazione Braille.</string>
+    <string name="keyboard_help_dots_hint">Punti o carattere</string>
+    <string name="keyboard_help_search_btn">Cerca</string>
+    <string name="keyboard_help_active_table_label">Tabella attiva: %s</string>
+    <string name="keyboard_help_error_no_table">Errore: Tabella attiva non trovata.</string>
+    <string name="keyboard_help_no_results">Nessun risultato trovato per \"%s\"</string>
+    <string name="keyboard_help_enter_dots_toast">Inserisci dei punti o dei caratteri da cercare</string>
+    <string name="keyboard_help_file_not_available">File tabella non disponibile</string>
+    <string name="keyboard_help_result_line">Riga %1$d</string>
+
+    <!-- Risultati per la ricerca inversa -->
+    <string name="keyboard_help_how_to_write_title">Come scrivere \"%1$s\"</string>
+    <string name="keyboard_help_dots_result">Punti: %1$s</string>
+
+    <!-- Help Descriptions -->
+    <string name="help_desc_numeric">Regola Ordinale/Numerica: si applica dopo un numero.</string>
+    <string name="help_desc_whole_word">Contrazione a Parola Intera: funziona solo come parola isolata.</string>
+    <string name="help_desc_caps_letter">Indicatore Maiuscola: rende maiuscola la lettera successiva.</string>
+    <string name="help_desc_caps_lock">Blocco Maiuscole: rende maiuscola l\'intera parola.</string>
+    <string name="help_desc_numsign">Segnanumero: attiva la modalità numerica (i tasti successivi saranno numeri).</string>
+    <string name="help_desc_italic">Indicatore Corsivo.</string>
+    <string name="help_desc_bold">Indicatore Grassetto.</string>
+    <string name="help_desc_underline">Indicatore Sottolineato.</string>
+    <string name="help_desc_autocorrect">Correzione Automatica: regola la posizione o lo stile di questo simbolo.</string>
+    <string name="help_desc_diacritic">Segno Diacritico: modifica il carattere precedente o successivo.</string>
+    <string name="help_desc_latin_mode">Passa alla modalità Latina (internazionale).</string>
+    <string name="help_desc_greek_mode">Passa alla modalità Greca.</string>
+    <string name="help_desc_state_change">Cambio di stato interno (influenza come vengono interpretati i tasti successivi).</string>
+    <string name="help_desc_default">Mappatura per: %s</string>
+
+    <!-- Table Creator Deletion Management -->
+    <string name="msg_cannot_delete_inherited">Le regole ereditate non possono essere eliminate direttamente perché appartengono a un file di sistema.</string>
+    <string name="msg_ask_disable_inherited">Vuoi disattivare questo carattere creando una sovrascrittura con punti vuoti?</string>
+    <string name="btn_disable">Disattiva</string>
+    <string name="msg_fixed_mapping">Questa è una mappatura di sistema fissa e non può essere rimossa.</string>
     <string name="pref_use_accessibility_volume_default">false</string>
     <string name="pref_use_accessibility_volume_key">USE_ACCESSIBILITY_VOLUME</string>
     <string name="pref_use_accessibility_volume_summary">Usa il volume di accessibilità sia per il TTS che per il feedback WAV.</string>

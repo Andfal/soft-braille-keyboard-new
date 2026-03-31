@@ -100,6 +100,18 @@ public class PreferenceIME extends PreferenceActivity {
                 });
             }
 
+            Preference keyboardHelp = findPreference("pref_keyboard_help_key");
+            if (keyboardHelp != null) {
+                keyboardHelp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(getActivity(), KeyboardHelpActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+            }
+
             Preference preference = findPreference(getActivity().getString(
                     R.string.pref_app_version_key));
             try {

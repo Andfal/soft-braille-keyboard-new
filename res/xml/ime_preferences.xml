@@ -121,6 +121,10 @@
              android:key="pref_import_table_key"
              android:title="@string/pref_manage_tables_title"
              android:summary="@string/pref_manage_tables_summary" />
+         <Preference
+             android:key="pref_keyboard_help_key"
+             android:title="@string/keyboard_help_pref_title"
+             android:summary="@string/keyboard_help_pref_summary" />
          </PreferenceScreen>
          <PreferenceScreen
          android:key="@string/pref_category_feedback_key"
