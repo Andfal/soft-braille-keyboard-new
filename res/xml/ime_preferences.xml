@@ -90,6 +90,10 @@
          <PreferenceScreen
          android:key="@string/pref_category_braille_key"
          android:title="@string/pref_category_braille_title" >
+                  <Preference
+             android:key="pref_keyboard_help_key"
+             android:title="@string/keyboard_help_pref_title"
+             android:summary="@string/keyboard_help_pref_summary" />
          <ListPreference
              android:key="@string/pref_braille_type_key"
              android:title="@string/grade"

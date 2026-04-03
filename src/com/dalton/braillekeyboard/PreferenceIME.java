@@ -178,6 +178,14 @@ public class PreferenceIME extends AppCompatActivity implements
         }
 
         private void setupBraillePreferences() {
+                        Preference keyboardHelp = findPreference("pref_keyboard_help_key");
+            if (keyboardHelp != null) {
+                keyboardHelp.setOnPreferenceClickListener(p -> {
+                    startActivity(new Intent(getActivity(), KeyboardHelpActivity.class));
+                    return true;
+                });
+            }
+
             Preference importTable = findPreference("pref_import_table_key");
             if (importTable != null) {
                 importTable.setOnPreferenceClickListener(p -> {

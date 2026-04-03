@@ -83,15 +83,16 @@ public class TableCreatorActivity extends AppCompatActivity {
     private List<String> mSystemTableLabels = new ArrayList<>();
 
     private Spinner mNumSystemSpinner;
-    private static final int NUM_CLASSIC = 0;
-    private static final int NUM_ANTOINE = 1;
-    private static final int NUM_DROPPED = 2;
-    private static final int NUM_8DOT = 3;
-    private static final int NUM_NONE = 4;
+    private static final int NUM_NONE = 0;
+    private static final int NUM_CLASSIC = 1;
+    private static final int NUM_ANTOINE = 2;
+    private static final int NUM_DROPPED = 3;
+    private static final int NUM_8DOT = 4;
 
     private Spinner mScriptSpinner;
     // We store the internal filename. The label is fetched via resource ID.
     private static final String[][] SCRIPTS_6 = {
+        {"label_none", "none"},
         {"label_latin", "latinLetterDef6Dots.uti"},
         {"label_cyrillic", "ru-comp6.utb"},
         {"label_greek", "grc-international-en.utb"},
@@ -104,6 +105,7 @@ public class TableCreatorActivity extends AppCompatActivity {
         {"label_unicode_braille", "unicode-braille.utb"}
     };
     private static final String[][] SCRIPTS_8 = {
+        {"label_none", "none"},
         {"label_latin", "latinLetterDef8Dots.uti"},
         {"label_cyrillic", "ru-comp8.utb"},
         {"label_greek", "gr-pl-comp8.utb"},
@@ -157,12 +159,13 @@ public class TableCreatorActivity extends AppCompatActivity {
     }
 
     private final String[] OPCODES = {
-        "always", "lowercase", "uppercase", "punctuation", "digit", "math", "sign", "space", 
-        "numsign", "capsletter", "begcaps", "endcaps", 
+        "always", "lowercase", "uppercase", "punctuation", "digit", "math", "sign", "space",
+        "numsign", "capsletter", "begcaps", "endcaps",
         "begcapsword", "endcapsword",
         "prepunc", "postpunc",
         "word", "partword", "letsign", "letter", "litdigit",
-        "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum"
+        "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum",
+        "base", "context"
     };
     private String[] OPCODE_LABELS;
 
@@ -171,10 +174,11 @@ public class TableCreatorActivity extends AppCompatActivity {
         boolean isHighPriority = false;
         boolean isFixed = false;
         boolean isBase = false;
-        Mapping(String op, String ch, List<Integer> pts, boolean high) { 
+        String baseRelation = null;
+        Mapping(String op, String ch, List<Integer> pts, boolean high) {
             this(op, ch, pts, high, false);
         }
-        Mapping(String op, String ch, List<Integer> pts, boolean high, boolean fixed) { 
+        Mapping(String op, String ch, List<Integer> pts, boolean high, boolean fixed) {
             opcode = op; character = ch; patterns.addAll(pts); isHighPriority = high; isFixed = fixed;
         }
     }
@@ -305,9 +309,9 @@ public class TableCreatorActivity extends AppCompatActivity {
 
         mNumSystemSpinner = new Spinner(this);
         String[] numSystems = {
+            getString(R.string.label_none),
             getString(R.string.num_sys_classic), getString(R.string.num_sys_antoine),
-            getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot),
-            getString(R.string.num_sys_none)
+            getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot)
         };
         mNumSystemSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_number_system_short), numSystems));
         mNumSystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -707,8 +711,8 @@ public class TableCreatorActivity extends AppCompatActivity {
                 if (line.startsWith("include ")) {
                     currentlyHighPriority = false;
                     String included = line.substring(8).trim();
-                    if (included.equals("latinLetterDef8Dots.uti")) { mEightDotCheck.setChecked(true); mScriptSpinner.setSelection(0); }
-                    else if (included.equals("latinLetterDef6Dots.uti")) { mEightDotCheck.setChecked(false); mScriptSpinner.setSelection(0); }
+                    if (included.equals("latinLetterDef8Dots.uti")) { mEightDotCheck.setChecked(true); mScriptSpinner.setSelection(1); }
+                    else if (included.equals("latinLetterDef6Dots.uti")) { mEightDotCheck.setChecked(false); mScriptSpinner.setSelection(1); }
                     else if (included.equals("digits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_CLASSIC);
                     else if (included.equals("digits6DotsPlusDot6.uti")) mNumSystemSpinner.setSelection(NUM_ANTOINE);
                     else if (included.equals("litdigits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_DROPPED);
@@ -1018,40 +1022,32 @@ public class TableCreatorActivity extends AppCompatActivity {
 
     private void saveTable() {
         String name = mTableNameEdit.getText().toString().trim();
-        if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show(); mTableNameEdit.requestFocus(); return; }
-        if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
-        StringBuilder sb = new StringBuilder("# " + name + "\n");
-        sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
-        int localePos = mLocaleSpinner.getSelectedItemPosition();
-        if (localePos > 0) sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
-        sb.append("\ninclude braille-patterns.cti\ninclude unicode.dis\n\n# --- ").append(getString(R.string.table_section_high)).append(" ---\n");
-        writeCustomMappings(sb, true);
-        sb.append("\n# --- ").append(getString(R.string.table_section_system)).append(" ---\ninclude unicode.dis\n");
-        int basePos = mBaseTableSpinner.getSelectedItemPosition();
-        if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
-        String scriptFile = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
-        sb.append("include ").append(scriptFile).append("\n");
-        if (scriptFile.contains("latin")) sb.append("space \\x0020 0\nspace \\x00a0 0\n");
-        int numSys = mNumSystemSpinner.getSelectedItemPosition();
-        if (numSys == NUM_CLASSIC) sb.append("include digits6Dots.uti\ninclude litdigits6Dots.uti\nnumsign 3456\n");
-        else if (numSys == NUM_ANTOINE) sb.append("include digits6DotsPlusDot6.uti\ninclude litdigits6DotsPlusDot6.uti\nnumsign 6\n");
-        else if (numSys == NUM_DROPPED) sb.append("include litdigits6Dots.uti\n");
-        else if (numSys == NUM_8DOT) sb.append("include digits8Dots.uti\n");
-        sb.append("\n# --- STANDARD PRIORITY ---\n");
-        writeCustomMappings(sb, false);
+        if (name.isEmpty()) {
+            Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show();
+            mTableNameEdit.requestFocus();
+            return;
+        }
+        
+        String tableContent = generateTableContent();
+        if (tableContent.isEmpty()) return;
+
         try {
             CustomTableManager manager = new CustomTableManager(this);
+            if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
             File f = manager.getCustomTableFile(name);
-            try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(sb.toString().getBytes(StandardCharsets.UTF_8)); }
-            Toast.makeText(this, R.string.msg_table_saved, Toast.LENGTH_SHORT).show();
+            try (FileOutputStream fos = new FileOutputStream(f)) {
+                fos.write(tableContent.getBytes(StandardCharsets.UTF_8));
+            }
             
-            // Automatically set the saved table as active
-            int prefKey = mEightDotCheck.isChecked() ? 
-                R.string.pref_braille_computer_table_key : 
+            int prefKey = mEightDotCheck.isChecked() ?
+                R.string.pref_braille_computer_table_key :
                 R.string.pref_braille_literary_table_key;
             Options.writeStringPreference(this, prefKey, "custom:" + name);
             
-        } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_SHORT).show(); }
+            Toast.makeText(this, R.string.msg_table_saved, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void writeCustomMappings(StringBuilder sb, boolean highPriorityOnly) {
@@ -1193,104 +1189,50 @@ public class TableCreatorActivity extends AppCompatActivity {
         mCreateDocumentLauncher.launch(intent);
     }
 
-    private void filterMappings(String query) {
-        if (query == null || query.isEmpty()) {
-            mSearchResultsSummary.setVisibility(View.GONE);
-            refreshSpinner();
-            return;
-        }
-        
-        final String lowerQuery = query.toLowerCase().trim();
-        List<String> filteredNames = new ArrayList<>();
-        List<Mapping> filteredObjects = new ArrayList<>();
-        
-        // SEMANTIC KEYWORDS
-        boolean searchNumbers = lowerQuery.contains("numero") || lowerQuery.contains("cifra") || lowerQuery.contains("num") || lowerQuery.contains("digit");
-        boolean searchCaps = lowerQuery.contains("maiusc") || lowerQuery.contains("cap");
-        boolean searchPunc = lowerQuery.contains("punt") || lowerQuery.contains("punc") || lowerQuery.contains("segno") || lowerQuery.contains("sign");
-        boolean searchMath = lowerQuery.contains("mat") || lowerQuery.contains("math") || lowerQuery.contains("simb") || lowerQuery.contains("sym");
-        
-        // LOGIC FOR SHADOWING (Personal rules win over Base rules)
-        java.util.Set<String> personalCharOpKeys = new java.util.HashSet<>();
-        for (Mapping m : mMappings) {
-            personalCharOpKeys.add(m.opcode + "|" + m.character);
-        }
-
-        // Combine lists for searching (Personal first)
-        List<Mapping> allToSearch = new ArrayList<>(mMappings);
-        for (Mapping m : mBaseMappings) {
-            // Shadowing: don't show base rule if a personal rule exists for same char/opcode
-            if (!personalCharOpKeys.contains(m.opcode + "|" + m.character)) {
-                allToSearch.add(m);
-            }
-        }
-
-        boolean isNumericPattern = lowerQuery.matches("[1-8-]+");
-        boolean isSingleChar = query.length() == 1 && !isNumericPattern;
-
-        for (Mapping m : allToSearch) {
+        private void filterMappings(String q) {
+        if (q == null || q.isEmpty()) { mSearchResultsSummary.setVisibility(View.GONE); refreshSpinner(); return; }
+        final String lQ = q.toLowerCase().trim(); List<Mapping> fO = new ArrayList<>();
+        boolean sN = lQ.matches(".*(numero|cifra|num|digit).*"), sC = lQ.matches(".*(maiusc|cap).*"), sP = lQ.matches(".*(punt|punc|segno|sign).*"), sM = lQ.matches(".*(mat|math|simb|sym).*");
+        java.util.Set<String> pK = new java.util.HashSet<>(); for (Mapping m : mMappings) pK.add(m.opcode + "|" + m.character);
+        List<Mapping> all = new ArrayList<>(mMappings);
+        for (Mapping m : mBaseMappings) if (!pK.contains(m.opcode + "|" + m.character)) all.add(m);
+        boolean isN = lQ.matches("[1-8-]+"), isS = q.length() == 1 && !isN;
+        for (Mapping m : all) {
             boolean match = false;
-            
-            // 1. Semantic Match
-            if (searchNumbers && (m.opcode.equals("numsign") || m.opcode.equals("digit") || m.opcode.equals("litdigit") || m.opcode.startsWith("begnum"))) match = true;
-            else if (searchCaps && (m.opcode.contains("caps") || m.opcode.equals("letsign"))) match = true;
-            
-            // 2. Pattern/Char/Text Match
+            if (sN && Arrays.asList("numsign", "digit", "litdigit", "begnum").contains(m.opcode)) match = true;
+            else if (sC && (m.opcode.contains("caps") || m.opcode.equals("letsign"))) match = true;
+            else if (sP && (m.opcode.equals("punctuation") || m.opcode.contains("punc") || m.opcode.equals("sign"))) match = true;
+            else if (sM && (m.opcode.equals("math") || m.opcode.contains("sign"))) match = true;
+            if (!match && m.opcode.toLowerCase().contains(lQ)) match = true;
             if (!match) {
-                if (isNumericPattern) {
-                    String dots = getDotsString(m.patterns);
-                    if (dots.equals(lowerQuery) || dots.contains(lowerQuery)) match = true;
-                } else if (isSingleChar) {
-                    if (m.character != null && m.character.equals(query)) match = true;
-                } else {
-                    String display = getMappingDisplayString(m).toLowerCase();
-                    if (display.contains(lowerQuery)) match = true;
-                }
+                if (isN) { String dots = getDotsString(m.patterns); if (dots.equals(lQ) || dots.contains(lQ)) match = true; }
+                else if (isS) { if (m.character != null && m.character.equals(q)) match = true; }
+                else if (getMappingDisplayString(m).toLowerCase().contains(lQ)) match = true;
             }
-
-            if (match) {
-                filteredNames.add(getMappingDisplayString(m));
-                filteredObjects.add(m);
-            }
+            if (match) fO.add(m);
         }
-
-        mDisplayList.clear();
-        mDisplayList.add(getString(R.string.label_mapped_items));
-        mDisplayList.addAll(filteredNames);
-        mCurrentSearchResults = filteredObjects;
-        mAdapter.notifyDataSetChanged();
-
+        if (isN && !fO.isEmpty()) Collections.sort(fO, (m1, m2) -> { String d1 = getDotsString(m1.patterns), d2 = getDotsString(m2.patterns); boolean e1 = d1.equals(lQ), e2 = d2.equals(lQ); if (e1 && !e2) return -1; if (!e1 && e2) return 1; return d1.length() - d2.length(); });
+        mDisplayList.clear(); mDisplayList.add(getString(R.string.label_mapped_items));
+        for (Mapping m : fO) mDisplayList.add(getMappingDisplayString(m));
+        mCurrentSearchResults = fO; mAdapter.notifyDataSetChanged();
         mSearchResultsSummary.setVisibility(View.VISIBLE);
-        if (filteredObjects.isEmpty()) {
-            mSearchResultsSummary.setText("Nessun risultato trovato");
-            mSearchResultsSummary.setTextColor(Color.RED);
-        } else if (filteredObjects.size() == 1) {
-            mSearchResultsSummary.setText("Trovato 1 risultato: " + filteredNames.get(0));
-            mSearchResultsSummary.setTextColor(Color.parseColor("#388E3C")); // Green
-            // Auto-load only if it's not base or if specifically requested? 
-            // Better to load it anyway so user can see it.
-            loadMappingFromObject(filteredObjects.get(0));
-        } else {
-            mSearchResultsSummary.setText("Trovati " + filteredObjects.size() + " risultati");
+        if (fO.isEmpty()) { mSearchResultsSummary.setText("Nessun risultato"); mSearchResultsSummary.setTextColor(Color.RED); }
+        else {
+            mSearchResultsSummary.setText("Trovati " + fO.size() + " risultati");
             mSearchResultsSummary.setTextColor(Color.DKGRAY);
+            if (fO.size() == 1) loadMappingFromObject(fO.get(0));
         }
-        
-        mSearchResultsSummary.announceForAccessibility(mSearchResultsSummary.getText());
     }
 
-    private String getMappingDisplayString(Mapping m) {
-        String friendlyOp = m.opcode;
-        for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { friendlyOp = OPCODE_LABELS[i]; break; }
-        StringBuilder sb = new StringBuilder();
-        if (m.isBase) sb.append("[Ereditata] ");
-        else sb.append("[Personale] ");
-        
+        private String getMappingDisplayString(Mapping m) {
+        String fO = m.opcode;
+        for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { fO = OPCODE_LABELS[i]; break; }
+        StringBuilder sb = new StringBuilder(m.isBase ? "[Ereditata] " : "[Personale] ");
         if (m.isHighPriority) sb.append("[H] ");
-        sb.append(friendlyOp); 
-        if (m.character != null && !m.character.isEmpty()) {
-            sb.append(" '").append(m.character).append("'");
-        }
-        sb.append(" -> ").append(getDotsString(m.patterns));
+        sb.append(fO);
+        if (m.character != null && !m.character.isEmpty()) sb.append(" '").append(m.character).append("'");
+        if (m.baseRelation != null) sb.append(" (").append(m.baseRelation).append(")");
+        if (!m.patterns.isEmpty()) sb.append(" -> ").append(getDotsString(m.patterns));
         return sb.toString();
     }
 
@@ -1336,72 +1278,54 @@ public class TableCreatorActivity extends AppCompatActivity {
         }
     }
 
-    private void parseTableRecursive(File tableFile, File tablesDir, List<Mapping> output, int depth) throws Exception {
-        if (depth > 10) return; // Allow deeper nesting for complex tables
-        
-        Scanner scanner = new Scanner(tableFile, "UTF-8");
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine().trim();
-            if (line.isEmpty() || line.startsWith("#")) continue;
-            
-            if (line.startsWith("include ")) {
-                // Fix: handle comments on the same line as include
-                String includePart = line.substring(8).trim();
-                if (includePart.contains("#")) {
-                    includePart = includePart.split("#")[0].trim();
-                }
-                String includedName = includePart.split("\\s+")[0];
-                
-                // Skip only known display/infrastructure files
-                if (includedName.endsWith(".dis") || includedName.equals("braille-patterns.cti")) {
-                    continue;
-                }
-                File nextFile = new File(tablesDir, includedName);
-                if (nextFile.exists()) {
-                    parseTableRecursive(nextFile, tablesDir, output, depth + 1);
-                }
+    private String parseLiblouisChar(String p) {
+        if (p.startsWith("\\x")) try { return String.valueOf((char)Integer.parseInt(p.substring(2), 16)); } catch (Exception e) {}
+        if (p.equals("\\s")) return " ";
+        if (p.equals("\\t")) return "\t";
+        if (p.equals("\\\\")) return "\\";
+        return p;
+    }
+
+    private void parseTableRecursive(File f, File d, List<Mapping> o, int dp) throws Exception {
+        if (dp > 10) return;
+        Scanner s = new Scanner(f, "UTF-8");
+        while (s.hasNextLine()) {
+            String l = s.nextLine().trim();
+            if (l.isEmpty() || l.startsWith("#")) continue;
+            if (l.startsWith("include ")) {
+                String n = l.substring(8).trim().split("#")[0].trim().split("\\\\s+")[0];
+                if (n.endsWith(".dis") || n.equals("braille-patterns.cti")) continue;
+                File nF = new File(d, n);
+                if (nF.exists()) parseTableRecursive(nF, d, o, dp + 1);
                 continue;
             }
-            
-            String[] parts = line.split("\\s+");
-            if (parts.length < 2) continue;
-            
-            String opcode = parts[0];
-            List<String> validOps = Arrays.asList("lowercase", "uppercase", "letter", "digit", "punctuation", "math", "sign", "always", "word", "partword", "litdigit", "midnum");
-            if (!validOps.contains(opcode)) continue;
-            
-            if (parts.length < 3) continue;
-            String charPart = parts[1];
-            char c = 0;
-            if (charPart.startsWith("\\x")) { 
-                try { c = (char)Integer.parseInt(charPart.substring(2), 16); } catch (Exception e) {} 
-            } else if (charPart.equals("\\s")) {
-                c = ' ';
-            } else if (charPart.length() == 1) {
-                c = charPart.charAt(0);
+            String[] p = l.split("\\\\s+");
+            if (p.length < 2) continue;
+            String op = p[0];
+            List<String> v = Arrays.asList("lowercase", "uppercase", "letter", "digit", "punctuation", "math", "sign", "always", "word", "partword", "litdigit", "midnum", "base", "capsletter", "numsign", "letsign", "context");
+            if (!v.contains(op)) continue;
+            String cP = "", dP = "", bR = null;
+            if (op.equals("base") && p.length >= 4) {
+                cP = parseLiblouisChar(p[2]);
+                bR = "-> " + parseLiblouisChar(p[3]);
+            } else if (Arrays.asList("capsletter", "numsign", "letsign").contains(op)) {
+                dP = p[1];
+            } else if (op.equals("context") && l.contains("[@") && l.contains("]")) {
+                int st = l.indexOf("[@") + 2, ed = l.indexOf("]", st);
+                if (st > 1 && ed > st) { dP = l.substring(st, ed); bR = "Context rule"; }
+            } else if (p.length >= 3) {
+                cP = parseLiblouisChar(p[1]);
+                dP = p[2];
             }
-            
-            // SMART FILTER: Skip technical Braille patterns (U+2800 to U+28FF)
-            // These are infrastructure rules, not linguistic rules.
-            if (c >= 0x2800 && c <= 0x28FF) continue;
-            
-            String dotsPart = parts[2];
-            String finalChar = (c != 0) ? String.valueOf(c) : charPart;
-            
-            // Check for duplicates to maintain priority (keep the first occurrence found at the highest level)
-            boolean isDuplicate = false;
-            for (Mapping existing : output) {
-                if (existing.opcode.equals(opcode) && existing.character.equals(finalChar)) {
-                    isDuplicate = true;
-                    break;
-                }
-            }
-            
-            if (!isDuplicate) {
-                output.add(new Mapping(opcode, finalChar, parseDots(dotsPart), false));
-            }
+            if (cP.isEmpty() && dP.isEmpty()) continue;
+            if (!cP.isEmpty() && cP.charAt(0) >= 0x2800 && cP.charAt(0) <= 0x28FF) continue;
+            Mapping m = new Mapping(op, cP, parseDots(dP), false);
+            m.baseRelation = bR;
+            boolean dup = false;
+            for (Mapping ex : o) if (ex.opcode.equals(m.opcode) && ex.character.equals(m.character)) { dup = true; break; }
+            if (!dup) o.add(m);
         }
-        scanner.close();
+        s.close();
     }
 
     @Override
@@ -1524,17 +1448,17 @@ private void loadBaseTableMappings() {
         if (localePos > 0) sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
         sb.append("\ninclude braille-patterns.cti\ninclude unicode.dis\n\n# --- ").append(getString(R.string.table_section_high)).append(" ---\n");
         writeCustomMappings(sb, true);
-        sb.append("\n# --- ").append(getString(R.string.table_section_system)).append(" ---\ninclude unicode.dis\n");
-        int basePos = mBaseTableSpinner.getSelectedItemPosition();
-        if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
+        sb.append("\n# --- ").append(getString(R.string.table_section_system)).append(" ---\n");
         String scriptFile = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
-        sb.append("include ").append(scriptFile).append("\n");
+        if (!scriptFile.equals("none")) sb.append("include ").append(scriptFile).append("\n");
         if (scriptFile.contains("latin")) sb.append("space \\x0020 0\nspace \\x00a0 0\n");
         int numSys = mNumSystemSpinner.getSelectedItemPosition();
         if (numSys == NUM_CLASSIC) sb.append("include digits6Dots.uti\ninclude litdigits6Dots.uti\nnumsign 3456\n");
         else if (numSys == NUM_ANTOINE) sb.append("include digits6DotsPlusDot6.uti\ninclude litdigits6DotsPlusDot6.uti\nnumsign 6\n");
         else if (numSys == NUM_DROPPED) sb.append("include litdigits6Dots.uti\n");
         else if (numSys == NUM_8DOT) sb.append("include digits8Dots.uti\n");
+        int basePos = mBaseTableSpinner.getSelectedItemPosition();
+        if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
         sb.append("\n# --- STANDARD PRIORITY ---\n");
         writeCustomMappings(sb, false);
         return sb.toString();

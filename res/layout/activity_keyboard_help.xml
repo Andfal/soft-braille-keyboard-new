@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/keyboard_help_instruction"
+        android:textSize="18sp"
+        android:layout_marginBottom="8dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/dots_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/keyboard_help_dots_hint"
+            android:inputType="textNoSuggestions"
+            android:imeOptions="actionSearch"
+            android:singleLine="true"/>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/keyboard_help_search_btn"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/active_table_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/keyboard_help_active_table_label"
+        android:textStyle="italic"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <ListView
+        android:id="@+id/results_list"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"/>
+
+</LinearLayout>

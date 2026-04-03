@@ -386,6 +386,7 @@
     <string name="btn_add">AGGIUNGI</string>
     <string name="btn_save">SALVA</string>
     <string name="btn_update">AGGIORNA</string>
+    <string name="label_none">Nessuno</string>
     <string name="label_mapped_items">Elementi Mappati</string>
     <string name="label_no_mapped_items">Nessun elemento mappato</string>
     <string name="label_n_mapped_items">%d elementi mappati (Tocca per modificare)</string>
@@ -546,4 +547,34 @@
     <string name="msg_sync_success">Accesso alla cartella attivato!</string>
     <string name="msg_sync_error">Errore durante la richiesta di accesso.</string>
     <string name="label_external_synced">[Esterna]</string>
-</resources>
+
+    <!-- Keyboard Help & Enhanced Table Creator (v11) -->
+    <string name="keyboard_help_title">Aiuto Tastiera (Tabella Attiva)</string>
+    <string name="keyboard_help_pref_title">Aiuto Tastiera (Tabella Attiva)</string>
+    <string name="keyboard_help_pref_summary">Scopri cosa fanno i punti Braille nella lingua corrente</string>
+    <string name="keyboard_help_instruction">Inserisci i punti (es. 45) per vedere cosa fanno, o un carattere (es. A) per vedere come scriverlo.</string>
+    <string name="keyboard_help_dots_hint">Punti o carattere</string>
+    <string name="keyboard_help_search_btn">Cerca</string>
+    <string name="keyboard_help_active_table_label">Tabella Attiva: %s</string>
+    <string name="keyboard_help_error_no_table">Errore: Tabella attiva non trovata.</string>
+    <string name="keyboard_help_no_results">Nessun risultato trovato per &quot;%s&quot;</string>
+    <string name="keyboard_help_enter_dots_toast">Inserisci punti o caratteri da cercare</string>
+    <string name="keyboard_help_file_not_available">File tabella non disponibile</string>
+    <string name="keyboard_help_result_line">Riga %1$d</string>
+    <string name="keyboard_help_how_to_write_title">Come si scrive &quot;%1$s&quot;</string>
+    <string name="keyboard_help_dots_result">Punti: %1$s</string>
+    <string name="help_desc_numeric">Regola Ordinale/Numerica: si applica dopo un numero.</string>
+    <string name="help_desc_whole_word">Contrazione parola intera: funziona solo come parola a sé stante.</string>
+    <string name="help_desc_caps_letter">Segnalibro Maiuscola: rende maiuscola la lettera successiva.</string>
+    <string name="help_desc_caps_lock">Blocco Maiuscole: rende maiuscola l\'intera parola.</string>
+    <string name="help_desc_numsign">Segnaposto Numero: attiva la modalità numerica.</string>
+    <string name="help_desc_italic">Indicatore Corsivo.</string>
+    <string name="help_desc_bold">Indicatore Grassetto.</string>
+    <string name="help_desc_underline">Indicatore Sottolineato.</string>
+    <string name="help_desc_autocorrect">Autocorrezione: regola posizione o stile del simbolo.</string>
+    <string name="help_desc_diacritic">Segno Diacritico: modifica il carattere precedente o successivo.</string>
+    <string name="help_desc_latin_mode">Passa alla modalità Latina (Internazionale).</string>
+    <string name="help_desc_greek_mode">Passa alla modalità Greca.</string>
+    <string name="help_desc_state_change">Cambio stato interno (influisce sui tasti successivi).</string>
+    <string name="help_desc_default">Mappatura per: %s</string>
+    </resources>
