@@ -285,6 +285,7 @@
     <string name="btn_add">AGGIUNGI</string>
     <string name="btn_save">SALVA</string>
     <string name="btn_update">AGGIORNA</string>
+    <string name="label_none">Nessuno</string>
     <string name="label_mapped_items">Elementi Mappati</string>
     <string name="label_no_mapped_items">Nessun elemento mappato</string>
     <string name="label_n_mapped_items">%d elementi mappati (Tocca per modificare)</string>
