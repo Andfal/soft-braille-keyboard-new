@@ -1,0 +1,53 @@
+# liblouis: Greek letter definition, 6 dots.
+# Pure letter definitions extracted from grc-international-en.utb
+
+lowercase \x03b1 1
+lowercase \x03b2 12
+lowercase \x03b3 1245
+lowercase \x03b4 145
+lowercase \x03b5 15
+lowercase \x03b6 1356
+lowercase \x03b7 245
+lowercase \x03b8 125
+lowercase \x03b9 24
+lowercase \x03ba 13
+lowercase \x03bb 123
+lowercase \x03bc 134
+lowercase \x03bd 1345
+lowercase \x03be 1346
+lowercase \x03bf 135
+lowercase \x03c0 1234
+lowercase \x03c1 1235
+lowercase \x03c2 234
+lowercase \x03c3 234
+lowercase \x03c4 2345
+lowercase \x03c5 136
+lowercase \x03c6 124
+lowercase \x03c7 1256
+lowercase \x03c8 12346
+lowercase \x03c9 2456
+
+base uppercase \x0391 \x03b1
+base uppercase \x0392 \x03b2
+base uppercase \x0393 \x03b3
+base uppercase \x0394 \x03b4
+base uppercase \x0395 \x03b5
+base uppercase \x0396 \x03b6
+base uppercase \x0397 \x03b7
+base uppercase \x0398 \x03b8
+base uppercase \x0399 \x03b9
+base uppercase \x039a \x03ba
+base uppercase \x039b \x03bb
+base uppercase \x039c \x03bc
+base uppercase \x039d \x03bd
+base uppercase \x039e \x03be
+base uppercase \x039f \x03bf
+base uppercase \x03a0 \x03c0
+base uppercase \x03a1 \x03c1
+base uppercase \x03a3 \x03c3
+base uppercase \x03a4 \x03c4
+base uppercase \x03a5 \x03c5
+base uppercase \x03a6 \x03c6
+base uppercase \x03a7 \x03c7
+base uppercase \x03a8 \x03c8
+base uppercase \x03a9 \x03c9

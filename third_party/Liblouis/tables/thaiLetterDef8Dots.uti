@@ -1,0 +1,74 @@
+# liblouis: Thai letter definition, 8 dots.
+# Consonants and vowels extracted from th-comp8-backward.utb
+# Note: uses '9' suffix for dot 10 simulation as per original table.
+
+# Thai Consonants
+letter \x0e01 12459 # ก
+letter \x0e02 139 # ข
+letter \x0e03 13789 # ฃ
+letter \x0e04 1369 # ค
+letter \x0e05 13689 # ฅ
+letter \x0e06 13679 # ฆ
+letter \x0e07 124569 # ง
+letter \x0e08 2459 # จ
+letter \x0e09 349 # ฉ
+letter \x0e0a 3469 # ช
+letter \x0e0b 23469 # ซ
+letter \x0e0c 34679 # ฌ
+letter \x0e0d 1345679 # ญ
+letter \x0e0e 14579 # ฎ
+letter \x0e0f 125679 # ฏ
+letter \x0e10 234579 # ฐ
+letter \x0e11 2345679 # ฑ
+letter \x0e12 2345689 # ฒ
+letter \x0e13 134579 # ณ
+letter \x0e14 1459 # ด
+letter \x0e15 12569 # ต
+letter \x0e16 23459 # ถ
+letter \x0e17 234569 # ท
+letter \x0e18 23456789 # ธ
+letter \x0e19 13459 # น
+letter \x0e1a 12369 # บ
+letter \x0e1b 123469 # ป
+letter \x0e1c 12349 # ผ
+letter \x0e1d 13469 # ฝ
+letter \x0e1e 14569 # พ
+letter \x0e1f 12469 # ฟ
+letter \x0e20 145679 # ภ
+letter \x0e21 1349 # ม
+letter \x0e22 134569 # ย
+letter \x0e23 12359 # ร
+letter \x0e25 1239 # ล
+letter \x0e27 24569 # ว
+letter \x0e28 23479 # ศ
+letter \x0e29 23489 # ษ
+letter \x0e2a 2349 # ส
+letter \x0e2b 1259 # ห
+letter \x0e2c 12379 # ฬ
+letter \x0e2d 1359 # อ
+letter \x0e2e 1234569 # ฮ
+
+# Thai vowels
+letter \x0e30 1a # ะ
+letter \x0e31 345a # ั
+letter \x0e47 3a # ็
+letter \x0e32 16a # า
+letter \x0e34 12a # ิ
+letter \x0e35 23a # ี
+letter \x0e38 14a # ุ
+letter \x0e39 25a # ู
+letter \x0e36 246a # ึ
+letter \x0e37 26a # ื
+letter \x0e40 124a # เ
+letter \x0e41 126a # แ
+letter \x0e42 24a # โ
+letter \x0e33 1356a # ำ
+letter \x0e44 156a # ไ
+letter \x0e43 1568a # ใ
+letter \x0e24 12358a # ฤ
+letter \x0e26 1238a # ฦ
+letter \x0e48 35a # ่
+letter \x0e49 256a # ้
+letter \x0e4a 2356a # ๊
+letter \x0e4b 236a # ๋
+letter \x0e4c 356a # ์

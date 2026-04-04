@@ -1,0 +1,138 @@
+# liblouis: Vietnamese letter definition, 6/8 dots.
+# Letter definitions extracted from vi-lettersdef.uti
+
+lowercase đ 2346
+lowercase á 35-1
+lowercase à 56-1
+lowercase ả 26-1
+lowercase ã 36-1
+lowercase ạ 6-1
+lowercase ă 345
+lowercase ắ 35-345
+lowercase ằ 56-345
+lowercase ẳ 26-345
+lowercase ẵ 36-345
+lowercase ặ 6-345
+lowercase â 16
+lowercase ấ 35-16
+lowercase ầ 56-16
+lowercase ẩ 26-16
+lowercase ẫ 36-16
+lowercase ậ 6-16
+lowercase é 35-15
+lowercase è 56-15
+lowercase ẻ 26-15
+lowercase ẽ 36-15
+lowercase ẹ 6-15
+lowercase ê 126
+lowercase ế 35-126
+lowercase ề 56-126
+lowercase ể 26-126
+lowercase ễ 36-126
+lowercase ệ 6-126
+lowercase í 35-24
+lowercase ì 56-24
+lowercase ỉ 26-24
+lowercase ĩ 36-24
+lowercase ị 6-24
+lowercase ó 35-135
+lowercase ò 56-135
+lowercase ỏ 26-135
+lowercase õ 36-135
+lowercase ọ 6-135
+lowercase ô 1456
+lowercase ố 35-1456
+lowercase ồ 56-1456
+lowercase ổ 26-1456
+lowercase ỗ 36-1456
+lowercase ộ 6-1456
+lowercase ơ 246
+lowercase ớ 35-246
+lowercase ờ 56-246
+lowercase ở 26-246
+lowercase ỡ 36-246
+lowercase ợ 6-246
+lowercase ú 35-136
+lowercase ù 56-136
+lowercase ủ 26-136
+lowercase ũ 36-136
+lowercase ụ 6-136
+lowercase ư 1256
+lowercase ứ 35-1256
+lowercase ừ 56-1256
+lowercase ử 26-1256
+lowercase ữ 36-1256
+lowercase ự 6-1256
+lowercase ý 35-13456
+lowercase ỳ 56-13456
+lowercase ỷ 26-13456
+lowercase ỹ 36-13456
+lowercase ỵ 6-13456
+
+base uppercase Đ đ
+base uppercase Á á
+base uppercase À à
+base uppercase Ả ả
+base uppercase Ã ã
+base uppercase Ạ ạ
+base uppercase Ă ă
+base uppercase Ắ ắ
+base uppercase Ằ ằ
+base uppercase Ẳ ẳ
+base uppercase Ẵ ẵ
+base uppercase Ặ ặ
+base uppercase Â â
+base uppercase Ấ ấ
+base uppercase Ầ ầ
+base uppercase Ẩ ẩ
+base uppercase Ẫ ẫ
+base uppercase Ậ ậ
+base uppercase É é
+base uppercase È è
+base uppercase Ẻ ẻ
+base uppercase Ẽ ẽ
+base uppercase Ẹ ẹ
+base uppercase Ê ê
+base uppercase Ế ế
+base uppercase Ề ề
+base uppercase Ể ể
+base uppercase Ễ ễ
+base uppercase Ệ ệ
+base uppercase Í í
+base uppercase Ì ì
+base uppercase Ỉ ỉ
+base uppercase Ĩ ĩ
+base uppercase Ị ị
+base uppercase Ó ó
+base uppercase Ò ò
+base uppercase Ỏ ỏ
+base uppercase Õ õ
+base uppercase Ọ ọ
+base uppercase Ô ô
+base uppercase Ố ố
+base uppercase Ồ ồ
+base uppercase Ổ ổ
+base uppercase Ỗ ỗ
+base uppercase Ộ ộ
+base uppercase Ơ ơ
+base uppercase Ớ ớ
+base uppercase Ờ ờ
+base uppercase Ở ở
+base uppercase Ỡ ỡ
+base uppercase Ợ ợ
+base uppercase Ú ú
+base uppercase Ù ù
+base uppercase Ủ ủ
+base uppercase Ũ ũ
+base uppercase Ụ ụ
+base uppercase Ư ư
+base uppercase Ứ ứ
+base uppercase Ừ ừ
+base uppercase Ử ử
+base uppercase Ữ ữ
+base uppercase Ự ự
+base uppercase Ý ý
+base uppercase Ỳ ỳ
+base uppercase Ỷ ỷ
+base uppercase Ỹ ỹ
+base uppercase Ỵ ỵ

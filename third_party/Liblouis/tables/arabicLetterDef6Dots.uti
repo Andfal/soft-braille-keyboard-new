@@ -1,0 +1,44 @@
+# liblouis: Arabic letter definition, 6 dots.
+# Pure letter definitions extracted from ar-chardefs.cti
+
+lowercase \x0621 3
+lowercase \x0622 345
+lowercase \x0623 34
+lowercase \x0624 1256
+lowercase \x0625 346
+lowercase \x0626 13456
+lowercase \x0627 1
+lowercase \x0628 12
+lowercase \x0629 16
+lowercase \x062a 2345
+lowercase \x062b 1456
+lowercase \x062c 245
+lowercase \x062d 156
+lowercase \x062e 1346
+lowercase \x062f 145
+lowercase \x0630 2346
+lowercase \x0631 1235
+lowercase \x0632 1356
+lowercase \x0633 234
+lowercase \x0634 146
+lowercase \x0635 12346
+lowercase \x0636 1246
+lowercase \x0637 23456
+lowercase \x0638 123456
+lowercase \x0639 12356
+lowercase \x063a 126
+lowercase \x0641 124
+lowercase \x0642 12345
+lowercase \x0643 13
+lowercase \x0644 123
+lowercase \x0645 134
+lowercase \x0646 1345
+lowercase \x0647 125
+lowercase \x0648 2456
+lowercase \x0649 135
+lowercase \x064a 24
+lowercase \x0671 1
+lowercase \x067e 1234
+lowercase \x0686 14
+lowercase \x06a4 1236
+lowercase \x06af 1245
