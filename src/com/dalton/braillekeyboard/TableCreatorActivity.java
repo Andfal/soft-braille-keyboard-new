@@ -88,6 +88,7 @@ public class TableCreatorActivity extends AppCompatActivity {
     private static final int NUM_ANTOINE = 2;
     private static final int NUM_DROPPED = 3;
     private static final int NUM_8DOT = 4;
+    private static final int NUM_LITERARY = 5;
 
     private Spinner mScriptSpinner;
     // We store the internal filename. The label is fetched via resource ID.
@@ -311,7 +312,8 @@ public class TableCreatorActivity extends AppCompatActivity {
         String[] numSystems = {
             getString(R.string.label_none),
             getString(R.string.num_sys_classic), getString(R.string.num_sys_antoine),
-            getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot)
+            getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot),
+            getString(R.string.num_sys_literary)
         };
         mNumSystemSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_number_system_short), numSystems));
         mNumSystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -715,7 +717,8 @@ public class TableCreatorActivity extends AppCompatActivity {
                     else if (included.equals("latinLetterDef6Dots.uti")) { mEightDotCheck.setChecked(false); mScriptSpinner.setSelection(1); }
                     else if (included.equals("digits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_CLASSIC);
                     else if (included.equals("digits6DotsPlusDot6.uti")) mNumSystemSpinner.setSelection(NUM_ANTOINE);
-                    else if (included.equals("litdigits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_DROPPED);
+                    else if (included.equals("loweredDigits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_DROPPED);
+                    else if (included.equals("litdigits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_LITERARY);
                     else if (included.equals("digits8Dots.uti")) mNumSystemSpinner.setSelection(NUM_8DOT);
                     else if (included.endsWith(".utb") || included.endsWith(".ctb")) {
                         boolean found = false;
@@ -1398,10 +1401,11 @@ private void loadBaseTableMappings() {
         // Load number system rules
         int numSys = mNumSystemSpinner != null ? mNumSystemSpinner.getSelectedItemPosition() : NUM_NONE;
         List<String> numFiles = new ArrayList<>();
-        if (numSys == NUM_CLASSIC) { numFiles.add("digits6Dots.uti"); numFiles.add("litdigits6Dots.uti"); }
-        else if (numSys == NUM_ANTOINE) { numFiles.add("digits6DotsPlusDot6.uti"); numFiles.add("litdigits6DotsPlusDot6.uti"); }
-        else if (numSys == NUM_DROPPED) { numFiles.add("litdigits6Dots.uti"); }
-        else if (numSys == NUM_8DOT) { numFiles.add("digits8Dots.uti"); }
+        if (numSys == NUM_CLASSIC) { numFiles.add("digits6Dots.uti"); }
+        else if (numSys == NUM_ANTOINE) { numFiles.add("digits6DotsPlusDot6.uti"); }
+        else if (numSys == NUM_DROPPED) { numFiles.add("loweredDigits6Dots.uti"); }
+        else if (numSys == NUM_8DOT) { numFiles.add("digits6DotsPlusDot6.uti"); }
+        else if (numSys == NUM_LITERARY) { numFiles.add("litdigits6Dots.uti"); }
         
         for (String f : numFiles) {
             File nf = new File(tablesDir, f);
@@ -1453,10 +1457,11 @@ private void loadBaseTableMappings() {
         if (!scriptFile.equals("none")) sb.append("include ").append(scriptFile).append("\n");
         if (scriptFile.contains("latin")) sb.append("space \\x0020 0\nspace \\x00a0 0\n");
         int numSys = mNumSystemSpinner.getSelectedItemPosition();
-        if (numSys == NUM_CLASSIC) sb.append("include digits6Dots.uti\ninclude litdigits6Dots.uti\nnumsign 3456\n");
-        else if (numSys == NUM_ANTOINE) sb.append("include digits6DotsPlusDot6.uti\ninclude litdigits6DotsPlusDot6.uti\nnumsign 6\n");
-        else if (numSys == NUM_DROPPED) sb.append("include litdigits6Dots.uti\n");
-        else if (numSys == NUM_8DOT) sb.append("include digits8Dots.uti\n");
+        if (numSys == NUM_CLASSIC) sb.append("include digits6Dots.uti\nnumsign 3456\n");
+        else if (numSys == NUM_ANTOINE) sb.append("include digits6DotsPlusDot6.uti\nnumsign 6\n");
+        else if (numSys == NUM_DROPPED) sb.append("include loweredDigits6Dots.uti\n");
+        else if (numSys == NUM_8DOT) sb.append("include digits6DotsPlusDot6.uti\n");
+        else if (numSys == NUM_LITERARY) sb.append("include litdigits6Dots.uti\nnumsign 3456\n");
         int basePos = mBaseTableSpinner.getSelectedItemPosition();
         if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
         sb.append("\n# --- STANDARD PRIORITY ---\n");

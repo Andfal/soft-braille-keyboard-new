@@ -429,7 +429,8 @@
     <string name="num_sys_classic">Classico (3456 + a-j)</string>
     <string name="num_sys_antoine">Antoine (Punto 6 + cifre alte)</string>
     <string name="num_sys_dropped">Numeri Ribassati (Nemeth/Bassi)</string>
-    <string name="num_sys_8dot">Computer Braille (8-punti)</string>
+    <string name="num_sys_8dot">Computer Braille (6-punti univoco)</string>
+    <string name="num_sys_literary">Letterario (Contesto G2)</string>
     <string name="num_sys_none">Nessuno / Mappature manuali</string>
     <string name="label_base_script">Alfabeto / Script di base:</string>
     <string name="script_latin">Latino (Europeo)</string>

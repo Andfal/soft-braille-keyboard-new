@@ -429,7 +429,8 @@
     <string name="num_sys_classic">Classic (3456 + a-j)</string>
     <string name="num_sys_antoine">Antoine (Dot 6 + high cells)</string>
     <string name="num_sys_dropped">Dropped Numbers (Nemeth/Low)</string>
-    <string name="num_sys_8dot">Computer Braille (8-dot)</string>
+    <string name="num_sys_8dot">Computer Braille (6-dot univocal)</string>
+    <string name="num_sys_literary">Literary (G2 context)</string>
     <string name="num_sys_none">None / Manual mappings</string>
     <string name="label_base_script">Base Alphabet / Script:</string>
     <string name="script_latin">Latin (European)</string>
