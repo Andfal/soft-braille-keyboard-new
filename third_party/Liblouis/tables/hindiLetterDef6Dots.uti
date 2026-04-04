@@ -1,0 +1,76 @@
+# liblouis: Hindi (Devanagari) letter definition, 6 dots.
+# Pure letter and matra definitions extracted from devanagari.cti
+
+letter \x0901 3 # chandra bindu
+letter \x0902 56 # anuswar
+letter \x0903 6 # visarg
+
+letter \x0905 1 # a
+letter \x0906 345 # aa
+letter \x0907 24 # i
+letter \x0908 35 # ii
+letter \x0909 136 # u
+letter \x090A 1256 # uu
+letter \x090B 5-1235 # RRi
+letter \x090C 5-123 # lri
+letter \x090F 15 # e
+letter \x0910 34 # ai
+letter \x0911 1346 # o as in office
+letter \x0913 135 # o
+letter \x0914 246 # au
+
+letter \x0915 13 # ka
+letter \x0916 46 # kha
+letter \x0917 1245 # ga
+letter \x0918 126 # gha
+letter \x0919 346 # anga
+
+letter \x091A 14 # ca
+letter \x091B 16 # cha
+letter \x091C 245 # ja
+letter \x091D 356 # jha
+letter \x091E 25 # nya
+
+letter \x091F 23456 # tta
+letter \x0920 2456 # ttha
+letter \x0921 1246 # dda
+letter \x0922 123456 # ddha
+letter \x0923 3456 # nna
+
+letter \x0924 2345 # ta
+letter \x0925 1456 # tha
+letter \x0926 145 # da
+letter \x0927 2346 # dha
+letter \x0928 1345 # na
+
+letter \x092A 1234 # pa
+letter \x092B 124 # pha
+letter \x092C 12 # ba
+letter \x092D 45 # bha
+letter \x092E 134 # ma
+
+letter \x092F 13456 # ya
+letter \x0930 1235 # ra
+letter \x0932 123 # la
+letter \x0933 456 # lla
+letter \x0935 1236 # va
+letter \x0936 146 # sha
+letter \x0937 12346 # ssha
+letter \x0938 234 # sa
+letter \x0939 125 # ha
+
+letter \x093c 5 # Nukhta
+letter \x093d 2 # avagrah
+
+# Matras
+letter \x093E 345 # aa matra
+letter \x093F 24 # i matra
+letter \x0940 35 # ii matra
+letter \x0941 136 # u matra
+letter \x0942 1256 # uu matra
+letter \x0943 5-1235 # RRi matra
+letter \x0947 15 # e matra
+letter \x0948 34 # ai matra
+letter \x094B 135 # o matra
+letter \x094C 246 # au matra
+letter \x094D 4 # Halant

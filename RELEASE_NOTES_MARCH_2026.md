@@ -1,3 +1,29 @@
+# Latest Updates - April 3, 2026 (v12)
+
+## 1. Absolute User Priority in Table Creator
+- **Smart Include Ordering:** Re-engineered the table generation engine to prioritize user-selected Alphabet and Number Systems over inherited base tables. If you choose Cyrillic over an Italian base, your Cyrillic characters now correctly override the default Latin ones.
+- **Explicit "None" Options:** Added "None" as the default option for both Alphabet and Number System spinners. This allows experts to build tables from scratch without unwanted system rules interfering.
+- **Consolidated "Export":** The 'Export' feature now uses the exact same generation logic as 'Save', ensuring 100% consistency between local and shared files.
+- **Cleaner Table Files:** Removed redundant system includes (like unicode.dis duplications) for leaner, more professional-looking .ctb files.
+
+## 2. Global Version Synchronization
+- **Parity Achievement:** Successfully aligned the Modern (AndroidX) and Stable (Legacy) branches. Both now share the same feature set, including the v11 Intelligent Keyboard Help and Advanced Rule Search.
+
+---
+
+# Ultimi Aggiornamenti - 3 Aprile 2026 (v12)
+
+## 1. PrioritÃ  Assoluta dell'Utente nel Creatore Tabelle
+- **Ordinamento Include Intelligente:** Riprogettato il motore di generazione per dare precedenza ad Alfabeto e Sistemi Numerici scelti dall'utente rispetto alle tabelle ereditate. Se scegli il Cirillico sopra una base Italiana, i caratteri cirillici ora sovrascrivono correttamente quelli latini predefiniti.
+- **Opzioni "Nessuno" Esplicite:** Aggiunta l'opzione "Nessuno" (None) come scelta predefinita per gli spinner di Alfabeto e Sistema Numerico. Questo permette agli esperti di costruire tabelle da zero senza interferenze non volute.
+- **Esportazione Consistente:** La funzione 'Esporta' ora utilizza la stessa logica di generazione del salvataggio locale, garantendo una coerenza del 100% tra i file.
+- **File Tabella piÃ¹ Puliti:** Rimossa l'inclusione ridondante di unicode.dis nei file generati per ottenere file .ctb piÃ¹ snelli e professionali.
+
+## 2. Sincronizzazione Globale delle Versioni
+- **Raggiungimento ParitÃ :** Allineati i rami Moderno (AndroidX) e Stabile (Legacy). Entrambi ora condividono lo stesso set di funzionalitÃ , inclusi l'Aiuto Tastiera Intelligente e la Ricerca Regole Avanzata della v11.
+
+---
+
 # Latest Updates - March 31, 2026 (v11)
 
 ## 1. Intelligent Keyboard Help

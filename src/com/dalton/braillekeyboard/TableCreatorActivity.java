@@ -58,27 +58,27 @@ public class TableCreatorActivity extends Activity {
     private static final String[][] SCRIPTS_6 = {
         {"label_none", "none"},
         {"label_latin", "latinLetterDef6Dots.uti"},
-        {"label_cyrillic", "ru-comp6.utb"},
-        {"label_greek", "grc-international-en.utb"},
-        {"label_arabic", "ar-ar-g1.utb"},
-        {"label_hebrew", "he-IL.utb"},
-        {"label_hindi", "hi-in-g1.utb"},
-        {"label_korean", "ko-g1.ctb"},
-        {"label_vietnamese", "vi-vn-g0.utb"},
-        {"label_thai", "th-g0.utb"},
+        {"label_cyrillic", "cyrillicLetterDef6Dots.uti"},
+        {"label_greek", "greekLetterDef6Dots.uti"},
+        {"label_arabic", "arabicLetterDef6Dots.uti"},
+        {"label_hebrew", "hebrewLetterDef6Dots.uti"},
+        {"label_hindi", "hindiLetterDef6Dots.uti"},
+        {"label_korean", "koreanLetterDef6Dots.uti"},
+        {"label_vietnamese", "vietnameseLetterDef6Dots.uti"},
+        {"label_thai", "thaiLetterDef6Dots.uti"},
         {"label_unicode_braille", "unicode-braille.utb"}
     };
     private static final String[][] SCRIPTS_8 = {
         {"label_none", "none"},
         {"label_latin", "latinLetterDef8Dots.uti"},
-        {"label_cyrillic", "ru-comp8.utb"},
-        {"label_greek", "gr-pl-comp8.utb"},
-        {"label_arabic", "ar-ar-comp8.utb"},
-        {"label_hebrew", "he-IL-comp8.utb"},
-        {"label_hindi", "hi-in-g1.utb"},
-        {"label_korean", "ko-g1.ctb"},
-        {"label_vietnamese", "vi-cb8.utb"},
-        {"label_thai", "th-comp8-backward.utb"},
+        {"label_cyrillic", "cyrillicLetterDef8Dots.uti"},
+        {"label_greek", "greekLetterDef6Dots.uti"},
+        {"label_arabic", "arabicLetterDef6Dots.uti"},
+        {"label_hebrew", "hebrewLetterDef6Dots.uti"},
+        {"label_hindi", "hindiLetterDef6Dots.uti"},
+        {"label_korean", "koreanLetterDef6Dots.uti"},
+        {"label_vietnamese", "vietnameseLetterDef8Dots.uti"},
+        {"label_thai", "thaiLetterDef8Dots.uti"},
         {"label_unicode_braille", "unicode-braille.utb"}
     };
     

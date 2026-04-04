@@ -1,0 +1,30 @@
+# liblouis: Hebrew letter definition, 6 dots.
+# Pure letter definitions extracted from he-chardefs.cti
+
+lowercase \x05d0 1
+lowercase \x05d1 12
+lowercase \x05d2 1245
+lowercase \x05d3 145
+lowercase \x05d4 125
+lowercase \x05d5 2456
+lowercase \x05d6 1356
+lowercase \x05d7 156
+lowercase \x05d8 23456
+lowercase \x05d9 24
+lowercase \x05da 13
+lowercase \x05db 13
+lowercase \x05dc 123
+lowercase \x05dd 134
+lowercase \x05de 134
+lowercase \x05df 1345
+lowercase \x05e0 1345
+lowercase \x05e1 234
+lowercase \x05e2 12356
+lowercase \x05e3 1234
+lowercase \x05e4 1234
+lowercase \x05e5 12346
+lowercase \x05e6 12346
+lowercase \x05e7 12345
+lowercase \x05e8 1235
+lowercase \x05e9 146
+lowercase \x05ea 2345

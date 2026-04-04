@@ -24,6 +24,10 @@ OFFICIAL_MAPPINGS = [
     ('en-ueb-g1', 6, 1, 'UEB', 'en-ueb-g1.ctb'),
     ('en-ueb-g2', 6, 2, 'UEB', 'en-ueb-g2.ctb'),
     ('en-us-comp8', 8, 0, '', 'en-us-comp8.ctb'),
+    # Spanish
+    ('es-g1', 6, 1, '', 'es-g1.ctb'),
+    ('es-g2', 6, 2, '', 'es-g2.ctb'),
+    ('es-comp8', 8, 0, '', 'Es-Es-G0.utb'),
     # Italian
     ('it-g1', 6, 1, 'table_variant_unofficial', 'it-it-g1.ctb'),
     ('it-comp8', 8, 0, 'table_variant_unofficial', 'it-it-comp8.utb'),

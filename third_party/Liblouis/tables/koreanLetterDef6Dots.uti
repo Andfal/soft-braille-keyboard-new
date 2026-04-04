@@ -1,0 +1,44 @@
+# liblouis: Korean Jamo definition, 6 dots.
+# Basic consonant and vowel Jamo extracted from ko-chars.cti
+
+sign ᄀ 4
+sign ᄁ 6-4
+sign ᄂ 14
+sign ᄃ 24
+sign ᄄ 6-24
+sign ᄅ 5
+sign ᄆ 15
+sign ᄇ 45
+sign ᄈ 6-45
+sign ᄉ 6
+sign ᄊ 6-6
+sign ᄋ 1245
+sign ᄌ 46
+sign ᄍ 6-46
+sign ᄎ 56
+sign ᄏ 124
+sign ᄐ 125
+sign ᄑ 145
+sign ᄒ 245
+
+sign ᅡ 126
+sign ᅢ 1235
+sign ᅣ 345
+sign ᅤ 345-1235
+sign ᅥ 234
+sign ᅦ 1345
+sign ᅧ 156
+sign ᅨ 34
+sign ᅩ 136
+sign ᅪ 1236
+sign ᅫ 1236-1235
+sign ᅬ 13456
+sign ᅭ 346
+sign ᅮ 134
+sign ᅯ 1234
+sign ᅰ 1234-1235
+sign ᅱ 134-1235
+sign ᅲ 146
+sign ᅳ 246
+sign ᅴ 2456
+sign ᅵ 135
