@@ -53,6 +53,7 @@ public class TableCreatorActivity extends Activity {
     private static final int NUM_ANTOINE = 2;
     private static final int NUM_DROPPED = 3;
     private static final int NUM_8DOT = 4;
+    private static final int NUM_LITERARY = 5;
 
     private Spinner mScriptSpinner;
     private static final String[][] SCRIPTS_6 = {
@@ -264,7 +265,8 @@ public class TableCreatorActivity extends Activity {
         String[] numSystems = {
             getString(R.string.label_none),
             getString(R.string.num_sys_classic), getString(R.string.num_sys_antoine),
-            getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot)
+            getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot),
+            getString(R.string.num_sys_literary)
         };
         mNumSystemSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_number_system_short), numSystems));
         mNumSystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -535,7 +537,8 @@ public class TableCreatorActivity extends Activity {
                     else if (included.equals("latinLetterDef6Dots.uti")) { mEightDotCheck.setChecked(false); mScriptSpinner.setSelection(1); }
                     else if (included.equals("digits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_CLASSIC);
                     else if (included.equals("digits6DotsPlusDot6.uti")) mNumSystemSpinner.setSelection(NUM_ANTOINE);
-                    else if (included.equals("litdigits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_DROPPED);
+                    else if (included.equals("loweredDigits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_DROPPED);
+                    else if (included.equals("litdigits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_LITERARY);
                     else if (included.equals("digits8Dots.uti")) mNumSystemSpinner.setSelection(NUM_8DOT);
                     else if (included.endsWith(".utb") || included.endsWith(".ctb")) {
                         boolean found = false;
@@ -797,10 +800,11 @@ public class TableCreatorActivity extends Activity {
         if (script.contains("latin")) sb.append("space \\x0020 0\nspace \\x00a0 0\n");
         
         int ns = mNumSystemSpinner.getSelectedItemPosition();
-        if (ns == NUM_CLASSIC) sb.append("include digits6Dots.uti\ninclude litdigits6Dots.uti\nnumsign 3456\n");
-        else if (ns == NUM_ANTOINE) sb.append("include digits6DotsPlusDot6.uti\ninclude litdigits6DotsPlusDot6.uti\nnumsign 6\n");
-        else if (ns == NUM_DROPPED) sb.append("include litdigits6Dots.uti\n");
-        else if (ns == NUM_8DOT) sb.append("include digits8Dots.uti\n");
+        if (ns == NUM_CLASSIC) sb.append("include digits6Dots.uti\nnumsign 3456\n");
+        else if (ns == NUM_ANTOINE) sb.append("include digits6DotsPlusDot6.uti\nnumsign 6\n");
+        else if (ns == NUM_DROPPED) sb.append("include loweredDigits6Dots.uti\n");
+        else if (ns == NUM_8DOT) sb.append("include digits6DotsPlusDot6.uti\n");
+        else if (ns == NUM_LITERARY) sb.append("include litdigits6Dots.uti\nnumsign 3456\n");
 
         int basePos = mBaseTableSpinner.getSelectedItemPosition();
         if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
@@ -985,7 +989,7 @@ public class TableCreatorActivity extends Activity {
         int p = mBaseTableSpinner.getSelectedItemPosition(); if (p > 0 && p < mSystemTableFiles.size()) { File f = new File(d, mSystemTableFiles.get(p)); if (f.exists()) try { parseTableRecursive(f, d, mBaseMappings, 0); } catch (Exception e) {} }
         int s = mScriptSpinner.getSelectedItemPosition(); File sF = new File(d, mEightDotCheck.isChecked() ? SCRIPTS_8[s][1] : SCRIPTS_6[s][1]); if (sF.exists()) try { parseTableRecursive(sF, d, mBaseMappings, 0); } catch (Exception e) {}
         int n = mNumSystemSpinner.getSelectedItemPosition(); List<String> nF = new ArrayList<>();
-        if (n == NUM_CLASSIC) { nF.add("digits6Dots.uti"); nF.add("litdigits6Dots.uti"); } else if (n == NUM_ANTOINE) { nF.add("digits6DotsPlusDot6.uti"); nF.add("litdigits6DotsPlusDot6.uti"); } else if (n == NUM_DROPPED) nF.add("litdigits6Dots.uti"); else if (n == NUM_8DOT) nF.add("digits8Dots.uti");
+        if (n == NUM_CLASSIC) { nF.add("digits6Dots.uti"); } else if (n == NUM_ANTOINE) { nF.add("digits6DotsPlusDot6.uti"); } else if (n == NUM_DROPPED) nF.add("loweredDigits6Dots.uti"); else if (n == NUM_8DOT) { nF.add("digits6DotsPlusDot6.uti"); } else if (n == NUM_LITERARY) { nF.add("litdigits6Dots.uti"); }
         for (String f : nF) { File nf = new File(d, f); if (nf.exists()) try { parseTableRecursive(nf, d, mBaseMappings, 0); } catch (Exception e) {} }
         for (Mapping m : mBaseMappings) m.isBase = true; refreshSpinner();
     }
