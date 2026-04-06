@@ -161,7 +161,7 @@
     <string name="label_e_grave">e grave</string>
     <string name="label_error_prefix">Error: %s</string>
     <string name="label_external_synced">[External]</string>
-    <string name="label_found_rules">Found %d rules out of %d</string>
+    <string name="label_found_rules">Found %1$d rules out of %2$d</string>
     <string name="label_greek">Greek</string>
     <string name="label_hebrew">Hebrew</string>
     <string name="label_high_priority">High Priority (Write BEFORE system set)</string>

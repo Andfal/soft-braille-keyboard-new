@@ -162,7 +162,7 @@
     <string name="label_e_grave">e grave</string>
     <string name="label_error_prefix">Errore: %s</string>
     <string name="label_external_synced">[Esterna]</string>
-    <string name="label_found_rules">Trovate %d regole su %d</string>
+    <string name="label_found_rules">Trovate %1$d regole su %2$d</string>
     <string name="label_greek">Greco</string>
     <string name="label_hebrew">Ebraico</string>
     <string name="label_high_priority">Priorità Alta (Scrivi PRIMA del set di sistema)</string>
