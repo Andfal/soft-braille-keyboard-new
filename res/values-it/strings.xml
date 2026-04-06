@@ -554,7 +554,7 @@
     <string name="unknown_character">Carattere sconosciuto</string>
     <string name="unset_mark">Marcatore non impostato</string>
     <string name="voice_input_enable">Esegui questo gesto due volte rapidamente. Verrà visualizzata una finestra di dialogo. Usa TalkBack per accettare il permesso, per consentier il funzionamento della dettatura vocale.</string>
-    <string name="voice_input_error">Si è verificato un errore nel motore di sintesi vocale. Codice: %d</string>
+    <string name="voice_input_error">Si è verificato un errore nel riconoscimento vocale. Codice: %d</string>
     <string name="voice_input_is_not_available">La dettatura vocale non è disponibile su questo dispositivo.</string>
     <string name="voice_input_permission_message">è necessario consentire la registrazione audio perché la dettatura vocale possa funzionare.</string>
     <string name="voice_input_permission_title">Permesso per dettatura vocale</string>
