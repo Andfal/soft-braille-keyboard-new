@@ -185,7 +185,7 @@
     <string name="label_o_grave">o grave</string>
     <string name="label_opcode">Opcode Liblouis:</string>
     <string name="label_opcode_short">Regola</string>
-    <string name="label_priority_short">P</string>
+    <string name="label_priority_short">Priorità</string>
     <string name="label_results_count">Risultati: %d</string>
     <string name="label_show_visual_picker">Mostra selettore visuale celle</string>
     <string name="label_source">Sorgente</string>

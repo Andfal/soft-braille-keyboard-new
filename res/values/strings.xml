@@ -184,7 +184,7 @@
     <string name="label_o_grave">o grave</string>
     <string name="label_opcode">Liblouis Opcode:</string>
     <string name="label_opcode_short">Rule</string>
-    <string name="label_priority_short">H</string>
+    <string name="label_priority_short">Priority</string>
     <string name="label_results_count">Results: %d</string>
     <string name="label_show_visual_picker">Show visual cell picker</string>
     <string name="label_source">Source</string>
