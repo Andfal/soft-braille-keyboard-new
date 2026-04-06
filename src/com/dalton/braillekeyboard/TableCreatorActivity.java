@@ -104,6 +104,10 @@ public class TableCreatorActivity extends Activity {
     private boolean mIsTemplateUsed = false;
     private boolean mIsUpdatingUI = false;
 
+    private EditText mRawEditor;
+    private CheckBox mExpertModeCheck;
+    private boolean mIsExpertMode = false;
+
     private static class LabeledSpinnerAdapter extends ArrayAdapter<String> {
         private String label;
         public LabeledSpinnerAdapter(Context context, String label, List<String> objects) {
@@ -140,6 +144,7 @@ public class TableCreatorActivity extends Activity {
         boolean isFixed = false;
         boolean isBase = false;
         String baseRelation = null;
+        String comment = null;
         
         Mapping(String op, String ch, List<Integer> pts, boolean high) { 
             this(op, ch, pts, high, false);
@@ -242,12 +247,18 @@ public class TableCreatorActivity extends Activity {
         updateSystemTables();
         
         Button importRulesBtn = new Button(this);
-        importRulesBtn.setText(R.string.btn_import_base_rules);
+        importRulesBtn.setText("Importa (Visuale)");
         importRulesBtn.setTextSize(12);
         importRulesBtn.setOnClickListener(v -> importBaseRules());
         
+                Button cloneTableBtn = new Button(this);
+        cloneTableBtn.setText("Clona Tabella");
+        cloneTableBtn.setTextSize(12);
+        cloneTableBtn.setOnClickListener(v -> cloneBaseTable());
+        
         baseTableLayout.addView(mBaseTableSpinner);
         baseTableLayout.addView(importRulesBtn);
+        baseTableLayout.addView(cloneTableBtn);
         mAdvancedSettingsLayout.addView(baseTableLayout);
 
         mScriptSpinner = new Spinner(this);
@@ -273,8 +284,27 @@ public class TableCreatorActivity extends Activity {
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) { loadBaseTableMappings(); }
             @Override public void onNothingSelected(AdapterView<?> parent) {}
         });
-        mAdvancedSettingsLayout.addView(mNumSystemSpinner);
+                mAdvancedSettingsLayout.addView(mNumSystemSpinner);
         topContent.addView(mAdvancedSettingsLayout);
+
+        mExpertModeCheck = new CheckBox(this);
+        mExpertModeCheck.setText("Modalità Esperto (Modifica Struttura Originale)");
+        mExpertModeCheck.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            mIsExpertMode = isChecked;
+            mRawEditor.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+        });
+        topContent.addView(mExpertModeCheck);
+
+        mRawEditor = new EditText(this);
+        mRawEditor.setHint("Struttura originale della tabella...\n(Usa 'Clona Tabella' per popolare quest'area)");
+        mRawEditor.setGravity(Gravity.TOP | Gravity.START);
+        mRawEditor.setSingleLine(false);
+        mRawEditor.setHorizontallyScrolling(false);
+        mRawEditor.setTypeface(android.graphics.Typeface.MONOSPACE);
+        mRawEditor.setVisibility(View.GONE);
+        mRawEditor.setMinLines(10);
+        mRawEditor.setMaxLines(30);
+        topContent.addView(mRawEditor);
 
         mShowVisualPickerCheck = new CheckBox(this);
         mShowVisualPickerCheck.setText(R.string.label_show_visual_picker);
@@ -328,7 +358,7 @@ public class TableCreatorActivity extends Activity {
         mDotsEdit.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_DONE);
         mDotsEdit.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE || 
-                (event != null && event.getKeyCode() == android.view.KeyEvent.KEYCODE_ENTER)) {
+                (event != null && event.getKeyCode() == android.view.KeyEvent.KEYCODE_ENTER && event.getAction() == android.view.KeyEvent.ACTION_DOWN)) {
                 addOrUpdateMapping();
                 return true;
             }
@@ -410,12 +440,19 @@ public class TableCreatorActivity extends Activity {
         exportBtn.setOnClickListener(v -> exportTable());
         exportBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
 
+        Button exportFlatBtn = new Button(this);
+        exportFlatBtn.setText("Esp. Regole");
+        exportFlatBtn.setBackgroundColor(Color.parseColor("#9C27B0"));
+        exportFlatBtn.setTextColor(Color.WHITE);
+        exportFlatBtn.setOnClickListener(v -> exportFlattenedTable());
+        exportFlatBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
+
         Button removeMappingBtn = new Button(this);
         removeMappingBtn.setText(R.string.btn_remove_mapping);
         removeMappingBtn.setOnClickListener(v -> deleteSelected());
         removeMappingBtn.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f));
 
-        actionRow.addView(mMappedItemsSpinner); actionRow.addView(mAddMappingBtn); actionRow.addView(removeMappingBtn); actionRow.addView(saveBtn); actionRow.addView(exportBtn);
+        actionRow.addView(mMappedItemsSpinner); actionRow.addView(mAddMappingBtn); actionRow.addView(removeMappingBtn); actionRow.addView(saveBtn); actionRow.addView(exportBtn); actionRow.addView(exportFlatBtn);
         bottomPanel.addView(actionRow);
 
         mainContainer.addView(bottomPanel);
@@ -470,7 +507,7 @@ public class TableCreatorActivity extends Activity {
                 label += " [" + fileName + "]"; mSystemTableLabels.add(label);
             }
         }
-        mBaseTableSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_base_table_short), mSystemTableLabels));
+        mBaseTableSpinner.setAdapter(new LabeledSpinnerAdapter(this, "Sorgente", mSystemTableLabels));
     }
 
     private List<Integer> parseDots(String dotsStr) {
@@ -516,6 +553,10 @@ public class TableCreatorActivity extends Activity {
             File f = manager.getCustomTableFile(fileName); if (!f.exists()) { mIsUpdatingUI = false; return; }
             mTableNameEdit.setText(fileName); mMappings.clear(); mNumSystemSpinner.setSelection(NUM_NONE);
             boolean currentlyHighPriority = true; Scanner scanner = new Scanner(f, "UTF-8");
+            String lastMappingComment = null;
+            boolean hasAntoineNumsign = false;
+            boolean hasPlusDot6Digits = false;
+
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim(); if (line.isEmpty()) continue;
                 if (line.startsWith("#")) {
@@ -529,6 +570,7 @@ public class TableCreatorActivity extends Activity {
                         }
                         if (idx != -1) mLocaleSpinner.setSelection(idx);
                     } else if (line.contains("SYSTEM INCLUDES")) currentlyHighPriority = false;
+                    else if (!line.startsWith("# ---") && !line.startsWith("##")) lastMappingComment = line.substring(1).trim();
                     continue;
                 }
                 if (line.startsWith("include ")) {
@@ -536,7 +578,7 @@ public class TableCreatorActivity extends Activity {
                     if (included.equals("latinLetterDef8Dots.uti")) { mEightDotCheck.setChecked(true); mScriptSpinner.setSelection(1); }
                     else if (included.equals("latinLetterDef6Dots.uti")) { mEightDotCheck.setChecked(false); mScriptSpinner.setSelection(1); }
                     else if (included.equals("digits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_CLASSIC);
-                    else if (included.equals("digits6DotsPlusDot6.uti")) mNumSystemSpinner.setSelection(NUM_ANTOINE);
+                    else if (included.equals("digits6DotsPlusDot6.uti")) hasPlusDot6Digits = true;
                     else if (included.equals("loweredDigits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_DROPPED);
                     else if (included.equals("litdigits6Dots.uti")) mNumSystemSpinner.setSelection(NUM_LITERARY);
                     else if (included.equals("digits8Dots.uti")) mNumSystemSpinner.setSelection(NUM_8DOT);
@@ -550,6 +592,8 @@ public class TableCreatorActivity extends Activity {
                 }
                 String[] parts = line.split("\\s+"); if (parts.length < 2) continue;
                 String opcode = parts[0], charPart = "", dotsPart = "";
+                if (opcode.equals("numsign") && parts[1].equals("6")) hasAntoineNumsign = true;
+
                 boolean stand = Arrays.asList("numsign", "capsletter", "letsign", "space").contains(opcode) || opcode.startsWith("beg") || opcode.startsWith("end");
                 if (stand) dotsPart = parts[1];
                 else if (parts.length >= 3) {
@@ -557,9 +601,15 @@ public class TableCreatorActivity extends Activity {
                     if (charPart.startsWith("\\x")) try { charPart = String.valueOf((char)Integer.parseInt(charPart.substring(2), 16)); } catch (Exception e) {}
                     dotsPart = parts[2];
                 }
-                if (!dotsPart.isEmpty()) mMappings.add(new Mapping(opcode, charPart, parseDots(dotsPart), currentlyHighPriority));
+                if (!dotsPart.isEmpty()) {
+                    Mapping m = new Mapping(opcode, charPart, parseDots(dotsPart), currentlyHighPriority);
+                    m.comment = lastMappingComment; lastMappingComment = null;
+                    mMappings.add(m);
+                }
             }
-            scanner.close(); refreshSpinner(); mIsUpdatingUI = false; initPresets();
+            scanner.close();
+            if (hasPlusDot6Digits) mNumSystemSpinner.setSelection(hasAntoineNumsign ? NUM_ANTOINE : NUM_8DOT);
+            refreshSpinner(); mIsUpdatingUI = false; initPresets();
         } catch (Exception e) { Log.e(TAG, "Load error", e); mIsUpdatingUI = false; }
     }
 
@@ -597,17 +647,56 @@ public class TableCreatorActivity extends Activity {
 
     private String findDuplicateInPresets(String dots) { return mPresetLookup.get(dots); }
 
-    private void showDuplicateDialog(final Mapping newMapping, final int existingIndex) { showDuplicateDialogInternal(newMapping, getDotsString(newMapping.patterns), mMappings.get(existingIndex).character, false); }
+    private void showDuplicateDialog(final Mapping newMapping, final int existingIndex) { 
+        showDuplicateDialogInternal(newMapping, getDotsString(newMapping.patterns), mMappings.get(existingIndex).character, existingIndex); 
+    }
 
-    private void showDuplicateDialogInternal(final Mapping newMapping, String dots, String existingName, boolean isPreset) {
+    private void showDuplicateDialogInternal(final Mapping newMapping, String dots, String existingName, final int existingIndex) {
+        boolean isPreset = existingIndex == -1;
         String msg = String.format(getString(R.string.msg_duplicate_dots), dots, existingName);
         if (isPreset) msg += "\n\n(" + getString(R.string.msg_standard_char_override) + ")";
-        new AlertDialog.Builder(this).setTitle(R.string.title_duplicate_combination).setMessage(msg)
-            .setNegativeButton(R.string.btn_cancel, null)
-            .setPositiveButton(isPreset ? R.string.btn_overwrite : R.string.btn_add_anyway, (dialog, which) -> {
-                if (mEditingIndex != -1) mMappings.remove(mEditingIndex); mMappings.add(newMapping); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
-            })
-            .setNeutralButton(R.string.btn_add_prefix, (dialog, which) -> showPrefixSelector(newMapping)).show();
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+            .setTitle(R.string.title_duplicate_combination)
+            .setMessage(msg)
+            .setNegativeButton(R.string.btn_cancel, null);
+
+        // Option 1: Overwrite/Replace (The most common choice)
+        builder.setPositiveButton(R.string.btn_overwrite, (dialog, which) -> {
+            if (mEditingIndex != -1) {
+                // If we were editing, remove the old one being edited
+                mMappings.remove(mEditingIndex);
+            }
+            if (!isPreset) {
+                // Replace the existing mapping that caused the collision
+                mMappings.set(existingIndex, newMapping);
+            } else {
+                // It was a preset, just add the new one (it will override because of order)
+                mMappings.add(newMapping);
+            }
+            mEditingIndex = -1;
+            mAddMappingBtn.setText(R.string.btn_add);
+            finishMappingAction();
+        });
+
+        // Option 2: Add Prefix
+        builder.setNeutralButton(R.string.btn_add_prefix, (dialog, which) -> showPrefixSelector(newMapping));
+        
+        // Option 3: Add anyway (for multiple characters with same dots, Liblouis order applies)
+        if (!isPreset) {
+            builder.setNeutralButton(R.string.btn_add_anyway, (dialog, which) -> {
+                if (mEditingIndex != -1) {
+                    mMappings.set(mEditingIndex, newMapping);
+                } else {
+                    mMappings.add(newMapping);
+                }
+                mEditingIndex = -1;
+                mAddMappingBtn.setText(R.string.btn_add);
+                finishMappingAction();
+            });
+        }
+
+        builder.show();
     }
 
     private void showPrefixSelector(final Mapping mapping) {
@@ -668,14 +757,16 @@ public class TableCreatorActivity extends Activity {
 
     private void addOrUpdateMapping() {
         String character = sanitizeCharacter(mCharEdit.getText().toString()); mCharEdit.setText(character);
-        String opcode = OPCODES[mOpcodeSpinner.getSelectedItemPosition()], sug = getSuggestedOpcode(character);
-        if (mEditingIndex == -1 && sug != null) { opcode = sug; updateSpinnerToOpcode(opcode); }
+        String opcode = OPCODES[mOpcodeSpinner.getSelectedItemPosition()];
+        // Only suggest opcode if we haven't manually selected one other than 'always' or if it's the first time
+        // Actually, better: if user changed the spinner, we should respect it.
+        // The simplest fix for the reported issue is to check if we are in 'always' mode or other manual mode.
         List<Integer> patterns = mIsTemplateUsed || !mDotsEdit.getText().toString().isEmpty() ? parseDots(mDotsEdit.getText().toString()) : new ArrayList<>(mCurrentPatterns);
         if (patterns.isEmpty()) return; Mapping m = new Mapping(opcode, character, patterns, mMappingPriorityCheck.isChecked());
         String dots = getDotsString(m.patterns); int dupIdx = findDuplicateDots(dots);
         if (mEditingIndex != -1 && dupIdx == mEditingIndex) { mMappings.set(mEditingIndex, m); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); return; }
         if (dupIdx != -1) { showDuplicateDialog(m, dupIdx); return; }
-        String preset = findDuplicateInPresets(dots); if (preset != null) { showDuplicateDialogInternal(m, dots, preset, true); return; }
+        String preset = findDuplicateInPresets(dots); if (preset != null) { showDuplicateDialogInternal(m, dots, preset, -1); return; }
         if (mEditingIndex != -1) mMappings.set(mEditingIndex, m); else mMappings.add(m);
         mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
     }
@@ -789,8 +880,19 @@ public class TableCreatorActivity extends Activity {
         int localePos = mLocaleSpinner.getSelectedItemPosition();
         if (localePos > 0) sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
         
-        sb.append("\ninclude braille-patterns.cti\ninclude unicode.dis\n\n# --- ")
-          .append(getString(R.string.table_section_high)).append(" ---\n");
+        if (mIsExpertMode && mRawEditor.getText().length() > 0) {
+            sb.append("\n# --- REGOLE PERSONALIZZATE (Visual Editor) ---\n");
+            writeCustomMappings(sb, true);
+            writeCustomMappings(sb, false);
+            sb.append("\n# --- STRUTTURA ORIGINALE CLONATA ---\n");
+            sb.append(mRawEditor.getText().toString());
+            return sb.toString();
+        }
+
+        // Foundation: character definitions only (dots definitions moved to bottom)
+        sb.append("\ninclude unicode.dis\n");
+
+        // High priority mappings: defined before system alphabets and dot patterns
         writeCustomMappings(sb, true);
         
         sb.append("\n# --- ").append(getString(R.string.table_section_system)).append(" ---\n");
@@ -805,12 +907,12 @@ public class TableCreatorActivity extends Activity {
         else if (ns == NUM_DROPPED) sb.append("include loweredDigits6Dots.uti\n");
         else if (ns == NUM_8DOT) sb.append("include digits6DotsPlusDot6.uti\n");
         else if (ns == NUM_LITERARY) sb.append("include litdigits6Dots.uti\nnumsign 3456\n");
-
-        int basePos = mBaseTableSpinner.getSelectedItemPosition();
-        if (basePos > 0) sb.append("include ").append(mSystemTableFiles.get(basePos)).append("\n");
         
-        sb.append("\n# --- STANDARD PRIORITY ---\n");
+        // Standard mappings after system includes
         writeCustomMappings(sb, false);
+        
+        // Final foundation: dots definitions MUST be at the bottom to allow overrides
+        sb.append("\ninclude braille-patterns.cti\n");
         
         return sb.toString();
     }
@@ -846,39 +948,113 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void writeCustomMappings(StringBuilder sb, boolean high) {
-        List<String> b = new ArrayList<>(); List<Character> a = new ArrayList<>(); StringBuilder br = new StringBuilder();
-        if (high) { for (Mapping m : mMappings) if (m.isHighPriority) writeSingleMapping(sb, m, b, a, br); }
-        else {
-            writeOpcodeGroup(sb, false, new String[]{"lowercase", "uppercase", "letter", "base"}, b, a, br);
-            writeOpcodeGroup(sb, false, new String[]{"digit", "litdigit", "numsign", "capsletter", "letsign", "begnum", "endnum"}, b, a, br);
-            writeOpcodeGroup(sb, false, new String[]{"punctuation", "math", "sign", "always", "word", "partword", "space"}, b, a, br);
-            writeOpcodeGroup(sb, false, new String[]{"prepunc", "postpunc", "begcaps", "endcaps", "begcapsword", "endcapsword", "midnum"}, b, a, br);
-        }
-        if (br.length() > 0) sb.append("\n# Base rules\n").append(br.toString());
-    }
-
-    private void writeOpcodeGroup(StringBuilder sb, boolean high, String[] ops, List<String> b, List<Character> a, StringBuilder br) {
-        List<String> list = Arrays.asList(ops); for (Mapping m : mMappings) if (m.isHighPriority == high && list.contains(m.opcode)) writeSingleMapping(sb, m, b, a, br);
-    }
-
-    private void writeSingleMapping(StringBuilder sb, Mapping m, List<String> b, List<Character> a, StringBuilder br) {
-        StringBuilder dots = new StringBuilder(); for (int i=0; i<m.patterns.size(); i++) { if (i > 0) dots.append("-"); dots.append(patternToDotsString(m.patterns.get(i))); }
-        if (Arrays.asList("numsign", "capsletter", "letsign", "space").contains(m.opcode) || m.opcode.startsWith("beg") || m.opcode.startsWith("end")) sb.append(m.opcode).append(" ").append(dots).append("\n");
-        else {
-            if (m.character == null || m.character.isEmpty()) return;
-            if (m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) {
-                char c = m.character.charAt(0);
-                if (Character.isLetter(c)) {
-                    char low = Character.toLowerCase(c), up = Character.toUpperCase(c);
-                    if (low != up) {
-                        if (c == up && !isCharacterMapped(low) && !a.contains(low)) { sb.append("lowercase ").append(String.format("\\x%04x", (int)low)).append(" ").append(dots).append("\n"); a.add(low); }
-                        String pair = up + "-" + low; if (!b.contains(pair)) { br.append("base uppercase ").append(String.format("\\x%04x", (int)up)).append(" ").append(String.format("\\x%04x", (int)low)).append("\n"); b.add(pair); }
-                    }
+        List<String> writtenPairs = new ArrayList<>();
+        List<Character> writtenLows = new ArrayList<>();
+        List<String> writtenOpcodes = new ArrayList<>(); // format "opcode:char"
+        
+        if (high) {
+            for (Mapping m : mMappings) {
+                if (m.isHighPriority) {
+                    writeSingleMapping(sb, m, writtenPairs, writtenLows, writtenOpcodes);
                 }
             }
-            String cP = m.character; if (cP.length() == 1) { char c = cP.charAt(0); if (c == ' ') cP = "\\s"; else if (c == '\t') cP = "\\t"; else if (c == '\\') cP = "\\\\"; else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c); }
-            sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append("\n");
+        } else {
+            writeOpcodeGroup(sb, false, new String[]{"lowercase", "uppercase", "letter", "base"}, writtenPairs, writtenLows, writtenOpcodes);
+            writeOpcodeGroup(sb, false, new String[]{"digit", "litdigit", "numsign", "capsletter", "letsign", "begnum", "endnum"}, writtenPairs, writtenLows, writtenOpcodes);
+            writeOpcodeGroup(sb, false, new String[]{"punctuation", "math", "sign", "always", "word", "partword", "space"}, writtenPairs, writtenLows, writtenOpcodes);
+            writeOpcodeGroup(sb, false, new String[]{"prepunc", "postpunc", "begcaps", "endcaps", "begcapsword", "endcapsword", "midnum"}, writtenPairs, writtenLows, writtenOpcodes);
         }
+    }
+
+    private void writeOpcodeGroup(StringBuilder sb, boolean high, String[] ops, List<String> writtenPairs, List<Character> writtenLows, List<String> writtenOpcodes) {
+        List<String> list = Arrays.asList(ops);
+        for (Mapping m : mMappings) {
+            if (m.isHighPriority == high && list.contains(m.opcode)) {
+                writeSingleMapping(sb, m, writtenPairs, writtenLows, writtenOpcodes);
+            }
+        }
+    }
+
+    private void writeSingleMapping(StringBuilder sb, Mapping m, List<String> writtenPairs, List<Character> writtenLows, List<String> writtenOpcodes) {
+        if (m.character != null && !m.character.isEmpty()) {
+            String key = m.opcode + ":" + m.character;
+            if (writtenOpcodes.contains(key)) return;
+        }
+
+        StringBuilder dots = new StringBuilder();
+        for (int i = 0; i < m.patterns.size(); i++) {
+            if (i > 0) dots.append("-");
+            dots.append(patternToDotsString(m.patterns.get(i)));
+        }
+
+        // Automatic base uppercase and lowercase linkage
+        if (m.character != null && m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) {
+            char c = m.character.charAt(0);
+            if (Character.isLetter(c)) {
+                char low = Character.toLowerCase(c), up = Character.toUpperCase(c);
+                if (low != up) {
+                    // Ensure lowercase is defined in the table (required by Liblouis for base uppercase)
+                    // If not mapped by user, we define it with 0 dots to satisfy the engine without affecting typing
+                    if (c == up && !isCharacterMapped(low) && !writtenLows.contains(low)) {
+                        sb.append("# ").append(getCharLabel(String.valueOf(low))).append(" (auto-link)\n");
+                        sb.append("lowercase ").append(String.format("\\x%04x", (int)low)).append(" 0\n");
+                        writtenLows.add(low);
+                        writtenOpcodes.add("lowercase:" + low);
+                    }
+                    
+                    // Link uppercase and lowercase
+                    String pair = up + "-" + low;
+                    if (!writtenPairs.contains(pair)) {
+                        sb.append("base uppercase ").append(String.format("\\x%04x", (int)up)).append(" ").append(String.format("\\x%04x", (int)low)).append("\n");
+                        writtenPairs.add(pair);
+                    }
+                    
+                    if (c == low) writtenLows.add(low);
+                }
+            }
+        }
+
+        // Write comment and then the code (strictly followed)
+        if (m.comment != null && !m.comment.isEmpty()) {
+            sb.append("# ").append(m.comment).append("\n");
+        } else if (m.character != null && !m.character.isEmpty()) {
+            String label = getCharLabel(m.character);
+            if (label != null) sb.append("# ").append(label).append("\n");
+        }
+
+        if (Arrays.asList("numsign", "capsletter", "letsign", "space").contains(m.opcode) || m.opcode.startsWith("beg") || m.opcode.startsWith("end")) {
+            sb.append(m.opcode).append(" ").append(dots).append("\n");
+        } else {
+            if (m.character == null || m.character.isEmpty()) return;
+            
+            String cP = m.character;
+            if (cP.length() == 1) {
+                char c = cP.charAt(0);
+                if (c == ' ') cP = "\\s";
+                else if (c == '\t') cP = "\\t";
+                else if (c == '\\') cP = "\\\\";
+                else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c);
+            }
+            sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append("\n");
+            writtenOpcodes.add(m.opcode + ":" + m.character);
+        }
+    }
+
+    private String getCharLabel(String s) {
+        if (s == null || s.isEmpty()) return null;
+        if (s.length() > 1) return s;
+        char c = s.charAt(0);
+        if (c == ' ') return "spazio";
+        int resId = getResources().getIdentifier("label_" + String.format("%04x", (int)c), "string", getPackageName());
+        if (resId != 0) return getString(resId);
+        // Fallback for Italian standard accented if defined in strings.xml
+        if (c == 'à') return getString(R.string.label_a_grave);
+        if (c == 'è') return getString(R.string.label_e_grave);
+        if (c == 'é') return getString(R.string.label_e_acute);
+        if (c == 'ì') return getString(R.string.label_i_grave);
+        if (c == 'ò') return getString(R.string.label_o_grave);
+        if (c == 'ù') return getString(R.string.label_u_grave);
+        return s;
     }
 
     private boolean isCharacterMapped(char c) { String s = String.valueOf(c); for (Mapping m : mMappings) if (s.equals(m.character)) return true; return false; }
@@ -1007,9 +1183,23 @@ public class TableCreatorActivity extends Activity {
 
     private void parseTableRecursive(File f, File d, List<Mapping> o, int dp) throws Exception {
         if (dp > 10) return; Scanner s = new Scanner(f, "UTF-8");
+        String lastComment = null;
         while (s.hasNextLine()) {
-            String l = s.nextLine().trim(); if (l.isEmpty() || l.startsWith("#")) continue;
-            if (l.startsWith("include ")) { String n = l.substring(8).trim().split("#")[0].trim().split("\\s+")[0]; if (n.endsWith(".dis") || n.equals("braille-patterns.cti")) continue; File nF = new File(d, n); if (nF.exists()) parseTableRecursive(nF, d, o, dp + 1); continue; }
+            String l = s.nextLine().trim(); 
+            if (l.isEmpty()) continue;
+            if (l.startsWith("#")) {
+                if (!l.startsWith("# ---") && !l.startsWith("##")) {
+                    lastComment = l.substring(1).trim();
+                }
+                continue;
+            }
+            if (l.startsWith("include ")) { 
+                String n = l.substring(8).trim().split("#")[0].trim().split("\\s+")[0]; 
+                if (n.endsWith(".dis") || n.equals("braille-patterns.cti")) continue; 
+                File nF = new File(d, n); 
+                if (nF.exists()) parseTableRecursive(nF, d, o, dp + 1); 
+                continue; 
+            }
             String[] p = l.split("\\s+"); if (p.length < 2) continue; String op = p[0];
             List<String> v = Arrays.asList("lowercase", "uppercase", "letter", "digit", "punctuation", "math", "sign", "always", "word", "partword", "litdigit", "midnum", "base", "capsletter", "numsign", "letsign", "context");
             if (!v.contains(op)) continue; String cP = "", dP = "", bR = null;
@@ -1017,8 +1207,16 @@ public class TableCreatorActivity extends Activity {
             else if (Arrays.asList("capsletter", "numsign", "letsign").contains(op)) dP = p[1];
             else if (op.equals("context") && l.contains("[@") && l.contains("]")) { int st = l.indexOf("[@") + 2, ed = l.indexOf("]", st); if (st > 1 && ed > st) { dP = l.substring(st, ed); bR = "Context rule"; } }
             else if (p.length >= 3) { cP = parseLiblouisChar(p[1]); dP = p[2]; }
-            if (cP.isEmpty() && dP.isEmpty()) continue; if (!cP.isEmpty() && cP.charAt(0) >= 0x2800 && cP.charAt(0) <= 0x28FF) continue;
-            Mapping m = new Mapping(op, cP, parseDots(dP), false); m.baseRelation = bR; boolean dup = false;
+            
+            if (cP.isEmpty() && dP.isEmpty()) continue; 
+            if (!cP.isEmpty() && cP.charAt(0) >= 0x2800 && cP.charAt(0) <= 0x28FF) continue;
+            
+            Mapping m = new Mapping(op, cP, parseDots(dP), false); 
+            m.baseRelation = bR;
+            m.comment = lastComment;
+            lastComment = null;
+
+            boolean dup = false;
             for (Mapping ex : o) if (ex.opcode.equals(m.opcode) && ex.character.equals(m.character)) { dup = true; break; }
             if (!dup) o.add(m);
         }
@@ -1026,4 +1224,113 @@ public class TableCreatorActivity extends Activity {
     }
 
     private String parseLiblouisChar(String p) { if (p.startsWith("\\x")) try { return String.valueOf((char)Integer.parseInt(p.substring(2), 16)); } catch (Exception e) {} if (p.equals("\\s")) return " "; return p; }
+
+    private void cloneBaseTable() {
+        int p = mBaseTableSpinner.getSelectedItemPosition();
+        if (p <= 0) {
+            Toast.makeText(this, "Seleziona una tabella base prima di clonare.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables");
+        File f = new File(d, mSystemTableFiles.get(p));
+        if (!f.exists()) {
+            Toast.makeText(this, "File tabella non trovato.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        try {
+            Scanner s = new Scanner(f, "UTF-8");
+            StringBuilder raw = new StringBuilder();
+            while (s.hasNextLine()) {
+                String line = s.nextLine();
+                String trimmed = line.trim();
+                if (trimmed.startsWith("#")) {
+                    if (trimmed.startsWith("#+") || trimmed.startsWith("##") || trimmed.startsWith("# ---")) {
+                        raw.append(line).append("\n");
+                    }
+                } else {
+                    raw.append(line).append("\n");
+                }
+            }
+            s.close();
+            mRawEditor.setText(raw.toString());
+            mExpertModeCheck.setChecked(true);
+            Toast.makeText(this, "Tabella CLONATA nel Raw Editor (Modalità Esperto).", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Errore clonazione: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+        private void exportFlattenedTable() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M && android.os.Build.VERSION.SDK_INT <= android.os.Build.VERSION_CODES.P) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+                return;
+            }
+        }
+        
+        String name = mTableNameEdit.getText().toString().trim();
+        if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show(); mTableNameEdit.requestFocus(); return; }
+        if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
+        name = name.replace(".ctb", "_flat.ctb").replace(".utb", "_flat.utb");
+        
+        List<Mapping> flatMappings = new ArrayList<>(mMappings);
+        
+        if (!mIsExpertMode) {
+             File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables");
+             int p = mBaseTableSpinner.getSelectedItemPosition(); 
+             if (p > 0 && p < mSystemTableFiles.size()) { 
+                 File f = new File(d, mSystemTableFiles.get(p)); 
+                 if (f.exists()) try { parseTableRecursive(f, d, flatMappings, 0); } catch (Exception e) {} 
+             }
+             int s = mScriptSpinner.getSelectedItemPosition(); File sF = new File(d, mEightDotCheck.isChecked() ? SCRIPTS_8[s][1] : SCRIPTS_6[s][1]); if (sF.exists()) try { parseTableRecursive(sF, d, flatMappings, 0); } catch (Exception e) {}
+             int n = mNumSystemSpinner.getSelectedItemPosition(); List<String> nF = new ArrayList<>();
+             if (n == 1) { nF.add("digits6Dots.uti"); } else if (n == 2) { nF.add("digits6DotsPlusDot6.uti"); } else if (n == 3) nF.add("loweredDigits6Dots.uti"); else if (n == 4) { nF.add("digits6DotsPlusDot6.uti"); } else if (n == 5) { nF.add("litdigits6Dots.uti"); }
+             for (String fl : nF) { File nf = new File(d, fl); if (nf.exists()) try { parseTableRecursive(nf, d, flatMappings, 0); } catch (Exception e) {} }
+        } else {
+             Toast.makeText(this, "L'esportazione appiattita non supporta pienamente il Raw Editor. Usa l'esportazione standard.", Toast.LENGTH_LONG).show();
+             return;
+        }
+
+        StringBuilder sb = new StringBuilder("# " + name + "\n");
+        sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
+        int localePos = mLocaleSpinner.getSelectedItemPosition();
+        if (localePos > 0) sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
+        
+        sb.append("\ninclude unicode.dis\n");
+        sb.append("\n# --- REGOLE APPIATTITE (FLATTENED) ---\n");
+        for (Mapping m : flatMappings) {
+             sb.append(m.opcode).append(" ");
+             if (m.character != null && !m.character.isEmpty()) {
+                  String cP = m.character;
+                  if (cP.length() == 1) {
+                      char c = cP.charAt(0);
+                      if (c == ' ') cP = "\\s";
+                      else if (c == '\t') cP = "\\t";
+                      else if (c == '\\') cP = "\\\\";
+                      else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c);
+                  }
+                  sb.append(cP).append(" ");
+             }
+             StringBuilder dots = new StringBuilder();
+             for (int i = 0; i < m.patterns.size(); i++) {
+                 if (i > 0) dots.append("-");
+                 dots.append(patternToDotsString(m.patterns.get(i)));
+             }
+             sb.append(dots).append("\n");
+        }
+        sb.append("\ninclude braille-patterns.cti\n");
+
+        try {
+            File dir = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "soft-braille");
+            if (!dir.exists() && !dir.mkdirs()) return;
+            File outFile = new File(dir, name);
+            try (FileOutputStream fos = new FileOutputStream(outFile)) {
+                fos.write(sb.toString().getBytes(StandardCharsets.UTF_8));
+            }
+            Toast.makeText(this, "Esportata in Downloads/soft-braille", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Errore: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
 }
