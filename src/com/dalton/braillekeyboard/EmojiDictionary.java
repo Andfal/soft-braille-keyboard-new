@@ -45,20 +45,20 @@ public class EmojiDictionary {
         List<EmojiEntry> newDict = new ArrayList<EmojiEntry>();
         try {
             String fileName = "emojis/" + lang + ".json";
-            InputStream is = context.getAssets().open(fileName);
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            String json = new String(buffer, "UTF-8");
-            JSONArray array = new JSONArray(json);
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject obj = array.getJSONObject(i);
-                String emoji = obj.getString("e");
-                String name = obj.optString("n", "");
-                JSONArray keywords = obj.getJSONArray("k");
-                for (int j = 0; j < keywords.length(); j++) {
-                    newDict.add(new EmojiEntry(keywords.getString(j).toLowerCase(), emoji, name));
+            try (InputStream is = context.getAssets().open(fileName)) {
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                String json = new String(buffer, "UTF-8");
+                JSONArray array = new JSONArray(json);
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject obj = array.getJSONObject(i);
+                    String emoji = obj.getString("e");
+                    String name = obj.optString("n", "");
+                    JSONArray keywords = obj.getJSONArray("k");
+                    for (int j = 0; j < keywords.length(); j++) {
+                        newDict.add(new EmojiEntry(keywords.getString(j).toLowerCase(), emoji, name));
+                    }
                 }
             }
             Collections.sort(newDict);

@@ -209,15 +209,16 @@ public class PreferenceIME extends PreferenceActivity {
             try {
                 File logFile = new File(getActivity().getCacheDir(), "logcat.txt");
                 Process process = Runtime.getRuntime().exec("logcat -d");
-                InputStream is = process.getInputStream();
-                FileOutputStream fos = new FileOutputStream(logFile);
-                byte[] buffer = new byte[1024];
-                int read;
-                while ((read = is.read(buffer)) != -1) {
-                    fos.write(buffer, 0, read);
+                try (InputStream is = process.getInputStream();
+                     FileOutputStream fos = new FileOutputStream(logFile)) {
+                    byte[] buffer = new byte[1024];
+                    int read;
+                    while ((read = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, read);
+                    }
+                } finally {
+                    process.destroy();
                 }
-                fos.close();
-                is.close();
 
                 Uri contentUri = FileProvider.getUriForFile(getActivity(),
                         getActivity().getPackageName() + ".fileprovider", logFile);

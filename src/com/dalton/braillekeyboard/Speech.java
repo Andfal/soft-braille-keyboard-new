@@ -224,6 +224,11 @@ public class Speech {
             tts.shutdown();
             canSpeak = false;
         }
+        if (soundPool != null) {
+            soundPool.release();
+            soundPool = null;
+            soundIdMap.clear();
+        }
         tts = null;
     }
 
@@ -502,13 +507,22 @@ public class Speech {
             String[] files = context.getAssets().list("sounds");
             if (files != null) {
                 for (String file : files) {
+                    AssetFileDescriptor afd = null;
                     try {
-                        AssetFileDescriptor afd = context.getAssets().openFd("sounds/" + file);
+                        afd = context.getAssets().openFd("sounds/" + file);
                         int soundId = soundPool.load(afd, 1);
                         String key = file.replace(".wav", "");
                         soundIdMap.put(key, soundId);
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } finally {
+                        if (afd != null) {
+                            try {
+                                afd.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                     }
                 }
             }

@@ -74,16 +74,12 @@ public class TableList {
     ));
 
     private void loadLiblouisFiles(Context context) {
-        try {
-            java.io.InputStream is = context.getAssets().open("liblouis_files.txt");
-            if (is != null) {
-                java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(is, "UTF-8"));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.trim().isEmpty()) continue;
-                    processCertifiedTable(line.trim());
-                }
-                reader.close();
+        try (java.io.InputStream is = context.getAssets().open("liblouis_files.txt");
+             java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(is, "UTF-8"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().isEmpty()) continue;
+                processCertifiedTable(line.trim());
             }
         } catch (IOException e) {
             Log.e(LOG_TAG, "Error loading liblouis_files.txt", e);
