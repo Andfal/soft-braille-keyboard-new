@@ -12,19 +12,21 @@
     <string name="blank">Blank</string>
     <string name="braille_ime">Soft Braille Keyboard</string>
     <string name="btn_add">ADD</string>
-    <string name="btn_add_anyway">Add to end (High priority)</string>
-    <string name="btn_add_cell">Add Braille cell</string>
-    <string name="btn_add_cell_description">Add another braille cell for this character</string>
-    <string name="btn_add_mapping">Add new character mapping</string>
+    <string name="btn_add_anyway">Add anyway</string>
     <string name="btn_add_prefix">Add prefix...</string>
-    <string name="btn_add_selected">Add selected directly</string>
     <string name="btn_append_cell">+ Append Cell</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_clear_dots">Clear</string>
     <string name="btn_clone_table">Clone Source</string>
+    <string name="btn_move_up">Move Up</string>
+    <string name="btn_move_down">Move Down</string>
+    <string name="btn_move_top">To Top (After fixed)</string>
+    <string name="btn_insert_above">Insert above this rule</string>
+    <string name="title_order_actions">Reorder Action</string>
+    <string name="msg_already_top">Already at top</string>
+    <string name="msg_already_bottom">Already at bottom</string>
     <string name="btn_create_table">Create custom table</string>
     <string name="btn_delete">Delete</string>
-    <string name="btn_disable">Disable</string>
     <string name="btn_export_system_table">Export System Table</string>
     <string name="btn_export_table">Export to Download</string>
     <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
@@ -32,7 +34,6 @@
     <string name="btn_import_base_rules">Import All Rules</string>
     <string name="btn_import_table">Import existing table file</string>
     <string name="btn_import_visual">Import Rules</string>
-    <string name="btn_insert_before">Insert before (Low priority)</string>
     <string name="btn_load_template">Load Template</string>
     <string name="btn_ok">OK</string>
 
@@ -40,7 +41,6 @@
     <string name="btn_overwrite">Overwrite / Proceed</string>
     <string name="btn_remove_mapping">Remove this mapping</string>
     <string name="btn_save">SAVE</string>
-    <string name="btn_save_table">Save Table</string>
     <string name="btn_set_cell">Set Cell</string>
     <string name="btn_sync_folder">Grant folder access for scanning</string>
     <string name="btn_update">UPDATE</string>
@@ -80,7 +80,6 @@
     <string name="grade_computer">Computer Braille</string>
     <string name="grade_literary">Literary Braille</string>
     <string name="grade_table">Grade %s</string>
-    <string name="header_system_section"># --- SYSTEM SECTION ---</string>
     <string name="help_desc_autocorrect">Auto-correction: adjusts the position or style of this symbol.</string>
     <string name="help_desc_bold">Bold Mode Indicator.</string>
     <string name="help_desc_caps_letter">Capitalization Indicator: makes the next letter uppercase.</string>
@@ -104,7 +103,6 @@
     <string name="hint_description">Table description</string>
     <string name="hint_dots_format">Dots (e.g. 123-45)</string>
     <string name="hint_enter_dots">Enter dots (e.g. 123)</string>
-    <string name="hint_priority_desc">Enable this for each character you want to override in the standard alphabet. High priority mappings are written before the system rules, while standard ones are added after.</string>
     <string name="hint_search_rules">Search character or dots...</string>
     <string name="hint_table_name">Enter table name (e.g. my_table)</string>
     <string name="info_url">https://docs.google.com/document/d/1OX6yFjkK61VfROdU9uQNxjEZ_QNWxiMnUY_1ECnIyRQ/pub</string>
@@ -151,8 +149,6 @@
     <string name="label_auto_link">(auto-link)</string>
     <string name="label_base_script">Base Alphabet / Script:</string>
     <string name="label_base_script_short">Alphabet</string>
-    <string name="label_base_table">Inherit from system table (Optional):</string>
-    <string name="label_base_table_short">Inherit from</string>
     <string name="label_class_prefix">[CLASS] class </string>
     <string name="label_cyrillic">Cyrillic</string>
     <string name="label_dot">Dot %d</string>
@@ -164,7 +160,6 @@
     <string name="label_found_rules">Found %1$d rules out of %2$d</string>
     <string name="label_greek">Greek</string>
     <string name="label_hebrew">Hebrew</string>
-    <string name="label_high_priority">High Priority (Write BEFORE system set)</string>
     <string name="label_hindi">Hindi</string>
     <string name="label_i_grave">i grave</string>
     <string name="label_korean">Korean</string>
@@ -203,8 +198,6 @@
     <string name="medium">Medium</string>
     <string name="menu_delete">Delete</string>
     <string name="menu_share">Share</string>
-    <string name="msg_ask_disable_inherited">Would you like to disable this character by creating an override with empty points?</string>
-    <string name="msg_cannot_delete_inherited">Inherited rules cannot be deleted directly because they belong to a system file.</string>
     <string name="msg_char_empty">Character field is empty</string>
     <string name="msg_confirm_clone">Replace current list with the content of the source table?</string>
 <string name="msg_confirm_template">Applying a template will clear current mappings. Continue?</string>
@@ -532,7 +525,6 @@
     <string name="table_section_base">Base Rules</string>
     <string name="table_section_high">HIGH PRIORITY</string>
     <string name="table_section_standard">STANDARD PRIORITY</string>
-    <string name="table_section_system">SYSTEM INCLUDES</string>
     <string name="table_variant_unofficial">Unofficial</string>
     <string name="title_duplicate_combination">Duplicate Combination</string>
     <string name="title_select_prefix">Select prefix (e.g. dot 4, 5 or 6)</string>

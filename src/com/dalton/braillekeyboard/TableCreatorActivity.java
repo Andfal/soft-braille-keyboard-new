@@ -150,6 +150,7 @@ public class TableCreatorActivity extends Activity {
 
     private final java.util.Map<String, String> mPresetLookup = new java.util.HashMap<>();
     private TextView mSearchResultsSummary;
+    private EditText mSearchEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,7 +244,17 @@ public class TableCreatorActivity extends Activity {
         mScriptSpinner = new Spinner(this);
         updateScriptSpinner(false);
         mScriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { initPresets(); }
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { 
+                initPresets();
+                if (pos > 0 && !mIsUpdatingUI) {
+                    String file = mEightDotCheck.isChecked() ? SCRIPTS_8[pos][1] : SCRIPTS_6[pos][1];
+                    if (!file.equals("none")) {
+                        mMappings.add(new Mapping("include", file, new ArrayList<>(), mMappingPriorityCheck.isChecked()));
+                        refreshSpinner();
+                        Toast.makeText(TableCreatorActivity.this, getString(R.string.msg_structure_cloned), 0).show();
+                    }
+                }
+            }
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
         mAdvancedSettingsLayout.addView(mScriptSpinner);
@@ -251,6 +262,25 @@ public class TableCreatorActivity extends Activity {
         mNumSystemSpinner = new Spinner(this);
         String[] numSystems = { getString(R.string.label_none), getString(R.string.num_sys_classic), getString(R.string.num_sys_antoine), getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot), getString(R.string.num_sys_literary) };
         mNumSystemSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_number_system_short), numSystems));
+        mNumSystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
+                if (pos > 0 && !mIsUpdatingUI) {
+                    List<Mapping> rules = new ArrayList<>();
+                    if (pos == NUM_CLASSIC) { rules.add(new Mapping("include", "digits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); }
+                    else if (pos == NUM_ANTOINE) { rules.add(new Mapping("include", "digits6DotsPlusDot6.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); rules.add(new Mapping("numsign", "", parseDots("6"), mMappingPriorityCheck.isChecked())); }
+                    else if (pos == NUM_DROPPED) { rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); }
+                    else if (pos == NUM_8DOT) { rules.add(new Mapping("include", "digits6DotsPlusDot6.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); }
+                    else if (pos == NUM_LITERARY) { rules.add(new Mapping("include", "litdigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); }
+                    
+                    if (!rules.isEmpty()) {
+                        mMappings.addAll(rules);
+                        refreshSpinner();
+                        Toast.makeText(TableCreatorActivity.this, getString(R.string.msg_structure_cloned), 0).show();
+                    }
+                }
+            }
+            @Override public void onNothingSelected(AdapterView<?> p) {}
+        });
         mAdvancedSettingsLayout.addView(mNumSystemSpinner);
         topContent.addView(mAdvancedSettingsLayout);
 
@@ -300,13 +330,13 @@ public class TableCreatorActivity extends Activity {
         settingsRow.addView(mOpcodeSpinner); settingsRow.addView(mMappingPriorityCheck);
         bottomPanel.addView(settingsRow);
 
-        EditText searchEdit = new EditText(this); searchEdit.setHint(R.string.hint_search_rules);
-        searchEdit.addTextChangedListener(new android.text.TextWatcher() {
+        mSearchEdit = new EditText(this); mSearchEdit.setHint(R.string.hint_search_rules);
+        mSearchEdit.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int st, int c, int af) {}
             @Override public void onTextChanged(CharSequence s, int st, int b, int c) { filterMappings(s.toString()); }
             @Override public void afterTextChanged(android.text.Editable s) {}
         });
-        bottomPanel.addView(searchEdit);
+        bottomPanel.addView(mSearchEdit);
 
         mSearchResultsSummary = new TextView(this); mSearchResultsSummary.setPadding(10, 5, 10, 5); mSearchResultsSummary.setTextSize(12); mSearchResultsSummary.setTextColor(getResources().getColor(R.color.color_text_secondary)); mSearchResultsSummary.setVisibility(View.GONE);
         bottomPanel.addView(mSearchResultsSummary);
@@ -327,6 +357,17 @@ public class TableCreatorActivity extends Activity {
                 else if (pos - 1 < mMappings.size()) loadMapping(pos - 1);
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
+        });
+
+        mMappedItemsSpinner.setOnLongClickListener(v -> {
+            int pos = mMappedItemsSpinner.getSelectedItemPosition();
+            if (pos <= 0) return false;
+            Mapping target;
+            if (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty() && pos - 1 < mCurrentSearchResults.size()) target = mCurrentSearchResults.get(pos - 1);
+            else if (pos - 1 < mMappings.size()) target = mMappings.get(pos - 1);
+            else return false;
+            showOrderActionsDialog(target);
+            return true;
         });
 
         mAddMappingBtn = new Button(this); mAddMappingBtn.setText(R.string.btn_add); mAddMappingBtn.setOnClickListener(v -> addOrUpdateMapping());
@@ -436,16 +477,14 @@ public class TableCreatorActivity extends Activity {
                     else if (line.startsWith("#+locale: ")) {
                         String code = line.substring(10).trim(); int idx = mLocaleCodes.indexOf(code);
                         if (idx != -1) mLocaleSpinner.setSelection(idx);
-                    } else if (line.contains("SYSTEM INCLUDES")) currentlyHighPriority = false;
+                    } else if (line.contains("SYSTEM INCLUDES") || line.contains("SYSTEM SECTION")) currentlyHighPriority = false;
                     else if (!line.startsWith("# ---") && !line.startsWith("##")) lastMappingComment = line.substring(1).trim();
                     continue;
                 }
                 if (line.startsWith("include ")) {
                     String included = line.substring(8).trim().split("#")[0].trim();
-                    if (included.equals("unicode.dis") || included.equals("braille-patterns.cti")) continue;
-                    File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables");
-                    File incFile = new File(d, included);
-                    if (incFile.exists()) try { parseTableRecursive(incFile, d, mMappings, 0); } catch (Exception e) {}
+                    Mapping m = new Mapping("include", included, new ArrayList<Integer>(), currentlyHighPriority);
+                    m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m);
                     continue;
                 }
                 String[] parts = line.split("\\s+"); if (parts.length < 2) continue;
@@ -497,12 +536,16 @@ public class TableCreatorActivity extends Activity {
         if (isPreset) msg += "\n\n(" + getString(R.string.msg_standard_char_override) + ")";
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.title_duplicate_combination).setMessage(msg).setNegativeButton(R.string.btn_cancel, null);
         builder.setPositiveButton(R.string.btn_overwrite, (dialog, which) -> { if (mEditingIndex != -1) mMappings.remove(mEditingIndex); if (!isPreset) mMappings.set(existingIndex, newMapping); else mMappings.add(newMapping); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); });
-        builder.setNeutralButton(R.string.btn_add_prefix, (dialog, which) -> showPrefixSelector(newMapping));
-        if (!isPreset) builder.setNeutralButton(R.string.btn_add_anyway, (dialog, which) -> { if (mEditingIndex != -1) mMappings.set(mEditingIndex, newMapping); else mMappings.add(newMapping); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); });
+        builder.setNeutralButton(R.string.btn_add_prefix, (dialog, which) -> showPrefixSelector(newMapping, existingIndex));
+        if (!isPreset) builder.setNeutralButton(R.string.btn_add_anyway, (dialog, which) -> { 
+            if (mEditingIndex != -1) { Mapping old = mMappings.remove(mEditingIndex); int currentIdx = mMappings.indexOf(mMappings.get(existingIndex < mEditingIndex ? existingIndex : existingIndex - 1)); mMappings.add(currentIdx, newMapping); }
+            else mMappings.add(existingIndex, newMapping);
+            mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); 
+        });
         builder.show();
     }
 
-    private void showPrefixSelector(final Mapping mapping) {
+    private void showPrefixSelector(final Mapping mapping, final int targetIndex) {
         int dotCount = mEightDotCheck.isChecked() ? 8 : 6;
         AlertDialog.Builder b = new AlertDialog.Builder(this); b.setTitle(R.string.title_select_prefix);
         LinearLayout layout = new LinearLayout(this); layout.setOrientation(LinearLayout.VERTICAL); layout.setPadding(40, 20, 40, 20);
@@ -516,7 +559,22 @@ public class TableCreatorActivity extends Activity {
             g.addView(boxes[i]);
         }
         layout.addView(g); b.setView(layout);
-        b.setPositiveButton(R.string.btn_ok, (d, w) -> { int p = 0; for (char c : dotEdit.getText().toString().toCharArray()) p |= (1 << (Character.getNumericValue(c) - 1)); if (p > 0) { List<Integer> pts = new ArrayList<>(); pts.add(p); pts.addAll(mapping.patterns); if (mEditingIndex != -1) mMappings.remove(mEditingIndex); mMappings.add(new Mapping(mapping.opcode, mapping.character, pts, mapping.isHighPriority)); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); } });
+        b.setPositiveButton(R.string.btn_ok, (d, w) -> { 
+            int p = 0; for (char c : dotEdit.getText().toString().toCharArray()) p |= (1 << (Character.getNumericValue(c) - 1)); 
+            if (p > 0) { 
+                List<Integer> pts = new ArrayList<>(); pts.add(p); pts.addAll(mapping.patterns); 
+                if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
+                if (targetIndex != -1) {
+                    int insertAt = targetIndex + 1; if (mEditingIndex != -1 && mEditingIndex < insertAt) insertAt--;
+                    if (insertAt > mMappings.size()) insertAt = mMappings.size();
+                    mMappings.add(insertAt, new Mapping(mapping.opcode, mapping.character, pts, mapping.isHighPriority));
+                } else {
+                    if (mapping.isHighPriority) mMappings.add(0, new Mapping(mapping.opcode, mapping.character, pts, mapping.isHighPriority));
+                    else mMappings.add(new Mapping(mapping.opcode, mapping.character, pts, mapping.isHighPriority));
+                }
+                mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); 
+            } 
+        });
         b.setNegativeButton(R.string.btn_cancel, null); b.show();
     }
 
@@ -534,6 +592,14 @@ public class TableCreatorActivity extends Activity {
     private void suggestOpcodeFromChar() { String s = sanitizeCharacter(mCharEdit.getText().toString()), sug = getSuggestedOpcode(s); if (sug == null) return; mIsUpdatingUI = true; if (mEditingIndex == -1) updateSpinnerToOpcode(sug); mIsUpdatingUI = false; }
 
     private void updateSpinnerToOpcode(String opcode) { for (int i = 0; i < OPCODES.length; i++) if (OPCODES[i].equals(opcode)) { mOpcodeSpinner.setSelection(i); break; } }
+
+    private Mapping createMappingFromInput() {
+        String character = sanitizeCharacter(mCharEdit.getText().toString());
+        String opcode = OPCODES[mOpcodeSpinner.getSelectedItemPosition()];
+        List<Integer> patterns = mIsTemplateUsed || !mDotsEdit.getText().toString().isEmpty() ? parseDots(mDotsEdit.getText().toString()) : new ArrayList<>(mCurrentPatterns);
+        if (patterns.isEmpty() && !opcode.equals("include")) return null;
+        return new Mapping(opcode, character, patterns, mMappingPriorityCheck.isChecked());
+    }
 
     private void addOrUpdateMapping() {
         String character = sanitizeCharacter(mCharEdit.getText().toString()); mCharEdit.setText(character); String opcode = OPCODES[mOpcodeSpinner.getSelectedItemPosition()];
@@ -591,6 +657,61 @@ public class TableCreatorActivity extends Activity {
         mMappedItemsSpinner.setAdapter(mAdapter);
     }
 
+    private void showOrderActionsDialog(final Mapping mapping) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.title_order_actions);
+        LinearLayout layout = new LinearLayout(this); layout.setOrientation(LinearLayout.VERTICAL); layout.setPadding(40, 20, 40, 20);
+        Button upBtn = new Button(this); upBtn.setText(R.string.btn_move_up);
+        Button downBtn = new Button(this); downBtn.setText(R.string.btn_move_down);
+        Button topBtn = new Button(this); topBtn.setText(R.string.btn_move_top);
+        Button delBtn = new Button(this); delBtn.setText(R.string.btn_remove_mapping); delBtn.setTextColor(Color.RED);
+        layout.addView(upBtn); layout.addView(downBtn); layout.addView(topBtn); layout.addView(delBtn); builder.setView(layout);
+        builder.setNegativeButton(R.string.btn_cancel, null);
+        final AlertDialog dialog = builder.create(); dialog.show();
+        Runnable updateUI = () -> {
+            String query = mSearchEdit.getText().toString();
+            if (!query.isEmpty()) {
+                filterMappings(query);
+                int newPos = -1; for (int i=0; i<mCurrentSearchResults.size(); i++) if (mCurrentSearchResults.get(i) == mapping) { newPos = i+1; break; }
+                if (newPos != -1) mMappedItemsSpinner.setSelection(newPos);
+            } else {
+                refreshSpinner();
+                int newPos = mMappings.indexOf(mapping);
+                if (newPos != -1) mMappedItemsSpinner.setSelection(newPos + 1);
+            }
+        };
+        upBtn.setOnClickListener(v -> {
+            int idx = mMappings.indexOf(mapping);
+            if (idx > 0) {
+                if (mMappings.get(idx-1).isFixed) { Toast.makeText(this, R.string.msg_already_top, 0).show(); return; }
+                Collections.swap(mMappings, idx, idx - 1);
+                updateUI.run();
+            } else Toast.makeText(this, R.string.msg_already_top, 0).show();
+        });
+        downBtn.setOnClickListener(v -> {
+            int idx = mMappings.indexOf(mapping);
+            if (idx < mMappings.size() - 1) {
+                Collections.swap(mMappings, idx, idx + 1);
+                updateUI.run();
+            } else Toast.makeText(this, R.string.msg_already_bottom, 0).show();
+        });
+        topBtn.setOnClickListener(v -> {
+            int idx = mMappings.indexOf(mapping); int firstNonFixed = 0;
+            while (firstNonFixed < mMappings.size() && mMappings.get(firstNonFixed).isFixed) firstNonFixed++;
+            if (idx > firstNonFixed) {
+                Mapping m = mMappings.remove(idx); mMappings.add(firstNonFixed, m);
+                updateUI.run();
+            } else Toast.makeText(this, R.string.msg_already_top, 0).show();
+        });
+        delBtn.setOnClickListener(v -> {
+            if (mapping.isFixed) { Toast.makeText(this, R.string.msg_fixed_mapping, 0).show(); return; }
+            mMappings.remove(mapping);
+            String query = mSearchEdit.getText().toString();
+            if (!query.isEmpty()) filterMappings(query); else refreshSpinner();
+            mMappedItemsSpinner.setSelection(0); dialog.dismiss();
+            Toast.makeText(this, R.string.msg_rule_removed, 0).show();
+        });
+    }
+
     private String patternToDotsString(int pattern) { if (pattern == 0) return "0"; StringBuilder sb = new StringBuilder(); for (int i=0; i<8; i++) if ((pattern & (1 << i)) != 0) sb.append(i + 1); return sb.toString(); }
 
     private void loadMappingFromObject(Mapping m) {
@@ -612,16 +733,51 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void filterMappings(String query) {
-        mCurrentSearchResults.clear(); if (query.isEmpty()) { mSearchResultsSummary.setVisibility(View.GONE); refreshSpinner(); return; }
-        String q = query.toLowerCase();
+        if (query == null || query.trim().isEmpty()) { mCurrentSearchResults.clear(); mSearchResultsSummary.setVisibility(View.GONE); refreshSpinner(); return; }
+        String q = query.trim().toLowerCase();
+        // Se la query sembra una combinazione di punti (solo numeri e trattini), la puliamo per il confronto
+        String qDots = q.replace("-", "").replace(" ", "");
+        
+        List<Mapping> exact = new ArrayList<>(), starts = new ArrayList<>(), contains = new ArrayList<>();
+        
         for (Mapping m : mMappings) {
+            String dots = getDotsString(m.patterns).toLowerCase();
+            String dotsClean = dots.replace("-", "");
+            String charPart = (m.character != null) ? m.character.toLowerCase() : "";
             String display = getMappingDisplayString(m).toLowerCase();
-            if (display.contains(q) || (m.character != null && m.character.toLowerCase().contains(q))) mCurrentSearchResults.add(m);
+            
+            // Corrispondenza Esatta
+            if (charPart.equals(q) || dots.equals(q) || dotsClean.equals(qDots)) {
+                exact.add(m);
+            } 
+            // Inizia con...
+            else if (charPart.startsWith(q) || dots.startsWith(q) || dotsClean.startsWith(qDots)) {
+                starts.add(m);
+            }
+            // Contiene...
+            else if (display.contains(q) || dots.contains(q) || dotsClean.contains(qDots)) {
+                contains.add(m);
+            }
         }
-        mDisplayList.clear(); mDisplayList.add(String.format(getString(R.string.label_results_count), mCurrentSearchResults.size()));
+        
+        mCurrentSearchResults.clear();
+        mCurrentSearchResults.addAll(exact);
+        mCurrentSearchResults.addAll(starts);
+        mCurrentSearchResults.addAll(contains);
+        
+        mDisplayList.clear();
+        mDisplayList.add(String.format(getString(R.string.label_results_count), mCurrentSearchResults.size()));
         for (Mapping m : mCurrentSearchResults) mDisplayList.add(getMappingDisplayString(m));
+        
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mDisplayList);
         mMappedItemsSpinner.setAdapter(mAdapter);
+        
+        if (!mCurrentSearchResults.isEmpty()) {
+            mMappedItemsSpinner.setSelection(1);
+            // Carica automaticamente i dati della prima corrispondenza trovata per permettere modifiche veloci
+            loadMappingFromObject(mCurrentSearchResults.get(0));
+        }
+        
         mSearchResultsSummary.setText(String.format(getString(R.string.label_found_rules), mCurrentSearchResults.size(), mMappings.size()));
         mSearchResultsSummary.setVisibility(View.VISIBLE);
     }
@@ -646,10 +802,9 @@ public class TableCreatorActivity extends Activity {
                 File nF = new File(d, n); if (nF.exists()) parseTableRecursive(nF, d, o, dp + 1); continue; 
             }
             String[] p = l.split("\\s+"); if (p.length < 2) continue; String op = p[0];
-            List<String> v = Arrays.asList("lowercase", "uppercase", "letter", "digit", "punctuation", "math", "sign", "always", "word", "partword", "litdigit", "midnum", "base", "capsletter", "numsign", "letsign", "context", "class");
+            List<String> v = Arrays.asList("lowercase", "uppercase", "letter", "digit", "punctuation", "math", "sign", "always", "word", "partword", "litdigit", "midnum", "capsletter", "numsign", "letsign", "context", "class", "begcaps", "endcaps", "begcapsword", "endcapsword", "prepunc", "postpunc", "begnum", "endnum", "numericmodechars", "midendnumericmodechars", "space");
             if (!v.contains(op)) continue; String cP = "", dP = "";
-            if (op.equals("base") && p.length >= 4) { cP = parseLiblouisChar(p[2]); }
-            else if (Arrays.asList("capsletter", "numsign", "letsign", "space").contains(op)) dP = p[1];
+            if (Arrays.asList("capsletter", "numsign", "letsign", "space").contains(op)) dP = p[1];
             else if (op.equals("context") || op.equals("class")) { if (p.length >= 3) { cP = p[1]; dP = p[2]; } }
             else if (p.length >= 3) { cP = parseLiblouisChar(p[1]); dP = p[2]; }
             if (cP.isEmpty() && dP.isEmpty()) continue; if (!cP.isEmpty() && cP.length() == 1 && cP.charAt(0) >= 0x2800 && cP.charAt(0) <= 0x28FF) continue;
@@ -725,8 +880,16 @@ public class TableCreatorActivity extends Activity {
                 }
                 
                 if (m != null) {
-                    // Use line-above comment if present, otherwise trailing comment
-                    m.comment = (lastMappingComment != null) ? lastMappingComment : trailingComment;
+                    // Capture trailing comment if no line-above comment
+                    if (lastMappingComment == null && line.contains("#")) {
+                        String[] commentSplit = line.split("#", 2);
+                        if (commentSplit.length > 1) {
+                            String c = commentSplit[1].trim();
+                            if (!c.isEmpty()) m.comment = c;
+                        }
+                    } else {
+                        m.comment = lastMappingComment;
+                    }
                     lastMappingComment = null;
                     mMappings.add(m);
                 }
@@ -749,16 +912,7 @@ public class TableCreatorActivity extends Activity {
         for (Mapping m : mMappings) { if (m.opcode.equals("include")) { if (m.character.equals("unicode.dis")) hasUnicode = true; if (m.character.equals("braille-patterns.cti")) hasPatterns = true; } }
         if (!hasUnicode) sb.append("\ninclude unicode.dis\n");
         writeCustomMappings(sb, true);
-        sb.append("\n").append(getString(R.string.header_system_section)).append("\n");
-        String script = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
-        if (!script.equals("none")) sb.append("include ").append(script).append("\n");
-        if (script.contains("latin")) sb.append("space \\x0020 0\nspace \\x00a0 0\n");
-        int ns = mNumSystemSpinner.getSelectedItemPosition();
-        if (ns == 1) sb.append("include digits6Dots.uti\nnumsign 3456\n");
-        else if (ns == 2) sb.append("include digits6DotsPlusDot6.uti\nnumsign 6\n");
-        else if (ns == 3) sb.append("include loweredDigits6Dots.uti\n");
-        else if (ns == 4) sb.append("include digits6DotsPlusDot6.uti\n");
-        else if (ns == 5) sb.append("include litdigits6Dots.uti\nnumsign 3456\n");
+        sb.append("\n# --- SYSTEM SECTION ---\n");
         writeCustomMappings(sb, false);
         if (!hasPatterns) sb.append("\ninclude braille-patterns.cti\n");
         return sb.toString();
@@ -772,11 +926,8 @@ public class TableCreatorActivity extends Activity {
 
     private void writeCustomMappings(StringBuilder sb, boolean high) {
         List<String> writtenPairs = new ArrayList<>(); List<Character> writtenLows = new ArrayList<>(); List<String> writtenOpcodes = new ArrayList<>();
-        if (high) { for (Mapping m : mMappings) if (m.isHighPriority) writeSingleMapping(sb, m, writtenPairs, writtenLows, writtenOpcodes); }
-        else { writeOpcodeGroup(sb, false, new String[]{"lowercase", "uppercase", "letter", "base"}, writtenPairs, writtenLows, writtenOpcodes); writeOpcodeGroup(sb, false, new String[]{"digit", "litdigit", "numsign", "capsletter", "letsign", "begnum", "endnum"}, writtenPairs, writtenLows, writtenOpcodes); writeOpcodeGroup(sb, false, new String[]{"punctuation", "math", "sign", "always", "word", "partword", "space"}, writtenPairs, writtenLows, writtenOpcodes); writeOpcodeGroup(sb, false, new String[]{"prepunc", "postpunc", "begcaps", "endcaps", "begcapsword", "endcapsword", "midnum"}, writtenPairs, writtenLows, writtenOpcodes); }
+        for (Mapping m : mMappings) if (m.isHighPriority == high) writeSingleMapping(sb, m, writtenPairs, writtenLows, writtenOpcodes);
     }
-
-    private void writeOpcodeGroup(StringBuilder sb, boolean high, String[] ops, List<String> writtenPairs, List<Character> writtenLows, List<String> writtenOpcodes) { List<String> list = Arrays.asList(ops); for (Mapping m : mMappings) if (m.isHighPriority == high && list.contains(m.opcode)) writeSingleMapping(sb, m, writtenPairs, writtenLows, writtenOpcodes); }
 
     private void writeSingleMapping(StringBuilder sb, Mapping m, List<String> writtenPairs, List<Character> writtenLows, List<String> writtenOpcodes) {
         if (m.opcode.equals("include")) { sb.append("include ").append(m.character).append("\n"); return; }

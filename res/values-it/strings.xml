@@ -11,19 +11,21 @@
     <string name="blank">Vuoto</string>
     <string name="braille_ime">Soft Braille Keyboard</string>
     <string name="btn_add">AGGIUNGI</string>
-    <string name="btn_add_anyway">Aggiungi in coda (Priorità alta)</string>
-    <string name="btn_add_cell">Aggiungi cella Braille</string>
-    <string name="btn_add_cell_description">Aggiungi un\'altra cella braille per questo carattere</string>
-    <string name="btn_add_mapping">Aggiungi nuova mappatura caratteri</string>
+    <string name="btn_add_anyway">Aggiungi comunque</string>
     <string name="btn_add_prefix">Aggiungi prefisso...</string>
-    <string name="btn_add_selected">Aggiungi selezionati direttamente</string>
     <string name="btn_append_cell">+ Aggiungi Cella</string>
     <string name="btn_cancel">Annulla</string>
     <string name="btn_clear_dots">Cancella</string>
     <string name="btn_clone_table">Clona Sorgente</string>
+    <string name="btn_move_up">Sposta Su</string>
+    <string name="btn_move_down">Sposta Giù</string>
+    <string name="btn_move_top">In Cima (Dopo fissi)</string>
+    <string name="btn_insert_above">Inserisci sopra questa regola</string>
+    <string name="title_order_actions">Azioni Ordine</string>
+    <string name="msg_already_top">Già in cima</string>
+    <string name="msg_already_bottom">Già in fondo</string>
     <string name="btn_create_table">Crea tabella personalizzata</string>
     <string name="btn_delete">Elimina</string>
-    <string name="btn_disable">Disattiva</string>
     <string name="btn_export_system_table">Esporta Tabella di Sistema</string>
     <string name="btn_export_table">Esporta in Download</string>
     <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
@@ -31,7 +33,6 @@
     <string name="btn_import_base_rules">Importa tutte le regole</string>
     <string name="btn_import_table">Importa file tabella esistente</string>
     <string name="btn_import_visual">Importa Regole</string>
-    <string name="btn_insert_before">Inserisci prima (Priorità bassa)</string>
     <string name="btn_load_template">Carica Template</string>
     <string name="btn_ok">OK</string>
 
@@ -39,7 +40,6 @@
     <string name="btn_overwrite">Sovrascrivi / Procedi</string>
     <string name="btn_remove_mapping">Rimuovi questa mappatura</string>
     <string name="btn_save">SALVA</string>
-    <string name="btn_save_table">Salva Tabella</string>
     <string name="btn_set_cell">Imposta Cella</string>
     <string name="btn_sync_folder">Dai accesso alla cartella per la scansione</string>
     <string name="btn_update">AGGIORNA</string>
@@ -79,7 +79,6 @@
     <string name="grade_computer">Braille a 8 punti</string>
     <string name="grade_literary">Braille a 6 punti</string>
     <string name="grade_table">Grado %s</string>
-    <string name="header_system_section"># --- SEZIONE SISTEMA ---</string>
     <string name="help_desc_autocorrect">Correzione Automatica: regola la posizione o lo stile di questo simbolo.</string>
     <string name="help_desc_bold">Indicatore Grassetto.</string>
     <string name="help_desc_caps_letter">Indicatore Maiuscola: rende maiuscola la lettera successiva.</string>
@@ -103,7 +102,6 @@
     <string name="hint_description">Descrizione tabella</string>
     <string name="hint_dots_format">Punti (es. 123-45)</string>
     <string name="hint_enter_dots">Digita i punti (es. 123)</string>
-    <string name="hint_priority_desc">Attiva questa opzione per ogni carattere che vuoi sovrascrivere nell\'alfabeto standard. Le mappature ad alta priorità vengono scritte prima degli \'include\' di sistema, quelle standard dopo.</string>
 
     
     <string name="hint_search_rules">Cerca carattere o punti...</string>
@@ -152,8 +150,6 @@
     <string name="label_auto_link">(auto-link)</string>
     <string name="label_base_script">Alfabeto / Script di base:</string>
     <string name="label_base_script_short">Alfabeto</string>
-    <string name="label_base_table">Eredita da tabella di sistema (Opzionale):</string>
-    <string name="label_base_table_short">Eredita da</string>
     <string name="label_class_prefix">[CLASSE] class </string>
     <string name="label_cyrillic">Cirillico</string>
     <string name="label_dot">Punto %d</string>
@@ -165,7 +161,6 @@
     <string name="label_found_rules">Trovate %1$d regole su %2$d</string>
     <string name="label_greek">Greco</string>
     <string name="label_hebrew">Ebraico</string>
-    <string name="label_high_priority">Priorità Alta (Scrivi PRIMA del set di sistema)</string>
     <string name="label_hindi">Hindi</string>
     <string name="label_i_grave">i grave</string>
     <string name="label_korean">Coreano</string>
@@ -204,8 +199,6 @@
     <string name="medium">Media</string>
     <string name="menu_delete">Elimina</string>
     <string name="menu_share">Condividi</string>
-    <string name="msg_ask_disable_inherited">Vuoi disattivare questo carattere creando una sovrascrittura con punti vuoti?</string>
-    <string name="msg_cannot_delete_inherited">Le regole ereditate non possono essere eliminate direttamente perché appartengono a un file di sistema.</string>
     <string name="msg_char_empty">Il campo carattere è vuoto</string>
     <string name="msg_confirm_clone">Sostituire la lista attuale con il contenuto della tabella sorgente?</string>
 <string name="msg_confirm_template">L\'applicazione di un template cancellerà le mappature attuali. Continuare?</string>
@@ -538,7 +531,6 @@
     <string name="table_section_base">Regole di Base</string>
     <string name="table_section_high">ALTA PRIORITÀ</string>
     <string name="table_section_standard">PRIORITÀ STANDARD</string>
-    <string name="table_section_system">INCLUSIONI DI SISTEMA</string>
     <string name="table_variant_unofficial">Non ufficiale</string>
     <string name="title_duplicate_combination">Combinazione Duplicata</string>
     <string name="title_select_prefix">Scegli prefisso (es. punto 4, 5 o 6)</string>
