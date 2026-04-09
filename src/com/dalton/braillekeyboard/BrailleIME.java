@@ -1,14 +1,14 @@
 /*
  * Copyright (C) 2016 The Soft Braille Keyboard Authors
  *
- * Licensed under the Apache License, Version 2.0 (the \"License\");
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an \"AS IS\" BASIS,
+ * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
@@ -80,6 +80,47 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     @Override
+    public void onStartInput(EditorInfo info, boolean restarting) {
+        super.onStartInput(info, restarting);
+        mIsFinishing = false;
+        selectAll = false;
+        mark = -1;
+        predictionOn = false;
+        
+        cells.clear();
+        composingText.setLength(0);
+        
+        mAccessibilityHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateShiftState();
+            }
+        }, 50);
+        
+        if (!BrailleAccessibilityService.isServiceEnabled() && !BrailleAccessibilityService.isJieshuoActive(this)) {
+            boolean hasAskedAcc = Options.getBooleanPreference(this, R.string.pref_has_asked_accessibility_service_key, false);
+            if (!hasAskedAcc) {
+                Intent intent = new Intent(this, IntentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction("com.dalton.braillekeyboard.ACTION_ENABLE_ACCESSIBILITY");
+                startActivity(intent);
+                Options.switchBooleanPreference(this, R.string.pref_has_asked_accessibility_service_key, false);
+                return;
+            }
+        }
+
+        if (!Options.getBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false)) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent(this, IntentActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(getString(R.string.action_record_audio_permission));
+                startActivity(intent);
+            }
+            Options.switchBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false);
+        }
+    }
+
+    @Override
     public void onWindowShown() {
         super.onWindowShown();
         mIsFinishing = false;
@@ -141,47 +182,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             brailleView.addOnLayoutChangeListener(mLayoutChangeListener);
         }
         return brailleView;
-    }
-
-    @Override
-    public void onStartInput(EditorInfo info, boolean restarting) {
-        super.onStartInput(info, restarting);
-        mIsFinishing = false;
-        selectAll = false;
-        mark = -1;
-        predictionOn = false;
-        
-        cells.clear();
-        composingText.setLength(0);
-        
-        mAccessibilityHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                updateShiftState();
-            }
-        }, 50);
-        
-        if (!BrailleAccessibilityService.isServiceEnabled() && !BrailleAccessibilityService.isJieshuoActive(this)) {
-            boolean hasAskedAcc = Options.getBooleanPreference(this, R.string.pref_has_asked_accessibility_service_key, false);
-            if (!hasAskedAcc) {
-                Intent intent = new Intent(this, IntentActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction("com.dalton.braillekeyboard.ACTION_ENABLE_ACCESSIBILITY");
-                startActivity(intent);
-                Options.switchBooleanPreference(this, R.string.pref_has_asked_accessibility_service_key, false);
-                return;
-            }
-        }
-
-        if (!Options.getBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false)) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                Intent intent = new Intent(this, IntentActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction(getString(R.string.action_record_audio_permission));
-                startActivity(intent);
-            }
-            Options.switchBooleanPreference(this, R.string.pref_has_asked_record_audio_key, false);
-        }
     }
 
     @Override

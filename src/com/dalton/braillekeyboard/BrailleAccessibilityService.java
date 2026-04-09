@@ -50,7 +50,15 @@ public class BrailleAccessibilityService extends AccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        // Not used
+        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            CharSequence packageName = event.getPackageName();
+            // Se la finestra che prende il focus non è la nostra tastiera, puliamo il passthrough
+            // per evitare di rubare il focus a finestre di sistema o altre app.
+            if (packageName != null && !packageName.toString().equals("com.dalton.braillekeyboard")) {
+                Log.d(TAG, "Window changed to: " + packageName + ". Clearing passthrough to prevent focus stealing.");
+                clearPassthroughRegion();
+            }
+        }
     }
 
     @Override
