@@ -581,7 +581,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
 
     @Override
     public EditingUtilities.Word handleBackspace() {
-        if (cells.size() > 1) { // We have at least one character cell (index 0 is the space/null)
+        if (cells.size() > 0) { // We have at least one character cell
             int cursor = getCursor();
             String deletedChar = "";
             InputConnection ic = getCurrentInputConnection();
@@ -604,7 +604,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             }
 
             // Restore the composingText state for the remaining cells
-            if (cells.size() > 1) {
+            if (cells.size() > 0) {
                 String text = brailleParser.backTranslate(this, cells.toArray(new Byte[cells.size()]));
                 if (text != null) {
                     composingText.setLength(0);
@@ -644,7 +644,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     private void setCells(byte dots) {
-        if (cells.size() == 0) cells.add((byte) 0);
         cells.add(dots);
     }
 
@@ -680,7 +679,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     public String translateOnly(byte dots) {
         if (brailleParser != null) {
             List<Byte> localCells = new ArrayList<Byte>();
-            localCells.add((byte) 0);
             localCells.add(dots);
             return brailleParser.backTranslate(this, localCells.toArray(new Byte[localCells.size()]));
         }
