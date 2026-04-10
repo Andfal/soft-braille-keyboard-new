@@ -238,10 +238,12 @@
     <string name="no_suggestions">Nessun suggerimento disponibile</string>
     <string name="none_selected">--- Nessuno selezionato ---</string>
     <string name="nothing_to_delete">Niente da cancellare</string>
-    <string name="num_sys_8dot">Computer Braille (6-punti univoco)</string>
-    <string name="num_sys_antoine">Antoine (Punto 6 + cifre alte)</string>
-    <string name="num_sys_classic">Classico (3456 + a-j)</string>
-    <string name="num_sys_dropped">Numeri Ribassati (Nemeth/Bassi)</string>
+    <string name="num_sys_6dot_univocal">Braille Informatico (6-pt, stile Antoine, 1=16)</string>
+    <string name="num_sys_8dot_standard">Braille 8-punti Standard (punto 8 aggiunto, 1=18)</string>
+    <string name="num_sys_8dot_computer_lowered">Braille Informatico (8-pt, ribassati, 1=2)</string>
+    <string name="num_sys_antoine">Antoine (Punto 6 + Letterario, 1=16)</string>
+    <string name="num_sys_classic">Classico (3456 + a-j, 1=1)</string>
+    <string name="num_sys_dropped">Numeri Ribassati (3456 + Bassi, 1=2)</string>
     <string name="num_sys_literary">Letterario (Contesto G2)</string>
     <string name="num_sys_none">Nessuno / Mappature manuali</string>
     <string name="opcode_always">Sostituzione forzata (Sempre)</string>

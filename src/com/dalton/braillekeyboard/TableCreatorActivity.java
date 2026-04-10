@@ -51,9 +51,11 @@ public class TableCreatorActivity extends Activity {
     private static final int NUM_NONE = 0;
     private static final int NUM_CLASSIC = 1;
     private static final int NUM_ANTOINE = 2;
-    private static final int NUM_DROPPED = 3;
-    private static final int NUM_8DOT = 4;
-    private static final int NUM_LITERARY = 5;
+    private static final int NUM_6DOT_UNIVOCAL = 3;
+    private static final int NUM_8DOT_STANDARD = 4;
+    private static final int NUM_8DOT_COMPUTER_LOWERED = 5;
+    private static final int NUM_DROPPED = 6;
+    private static final int NUM_LITERARY = 7;
 
     private Spinner mScriptSpinner;
     private static final String[][] SCRIPTS_6 = {
@@ -260,17 +262,46 @@ public class TableCreatorActivity extends Activity {
         mAdvancedSettingsLayout.addView(mScriptSpinner);
 
         mNumSystemSpinner = new Spinner(this);
-        String[] numSystems = { getString(R.string.label_none), getString(R.string.num_sys_classic), getString(R.string.num_sys_antoine), getString(R.string.num_sys_dropped), getString(R.string.num_sys_8dot), getString(R.string.num_sys_literary) };
+        String[] numSystems = { 
+            getString(R.string.label_none), 
+            getString(R.string.num_sys_classic), 
+            getString(R.string.num_sys_antoine), 
+            getString(R.string.num_sys_6dot_univocal), 
+            getString(R.string.num_sys_8dot_standard),
+            getString(R.string.num_sys_8dot_computer_lowered),
+            getString(R.string.num_sys_dropped),
+            getString(R.string.num_sys_literary) 
+        };
         mNumSystemSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_number_system_short), numSystems));
         mNumSystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
                 if (pos > 0 && !mIsUpdatingUI) {
                     List<Mapping> rules = new ArrayList<>();
-                    if (pos == NUM_CLASSIC) { rules.add(new Mapping("include", "digits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); }
-                    else if (pos == NUM_ANTOINE) { rules.add(new Mapping("include", "digits6DotsPlusDot6.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); rules.add(new Mapping("numsign", "", parseDots("6"), mMappingPriorityCheck.isChecked())); }
-                    else if (pos == NUM_DROPPED) { rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); }
-                    else if (pos == NUM_8DOT) { rules.add(new Mapping("include", "digits6DotsPlusDot6.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); }
-                    else if (pos == NUM_LITERARY) { rules.add(new Mapping("include", "litdigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); }
+                    if (pos == NUM_CLASSIC) { 
+                        rules.add(new Mapping("include", "digits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                        rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); 
+                    }
+                    else if (pos == NUM_ANTOINE) { 
+                        rules.add(new Mapping("include", "litdigits6DotsPlusDot6.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                        rules.add(new Mapping("numsign", "", parseDots("6"), mMappingPriorityCheck.isChecked())); 
+                    }
+                    else if (pos == NUM_6DOT_UNIVOCAL) { 
+                        rules.add(new Mapping("include", "digits6DotsPlusDot6.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                    }
+                    else if (pos == NUM_8DOT_STANDARD) { 
+                        rules.add(new Mapping("include", "digits8Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                    }
+                    else if (pos == NUM_8DOT_COMPUTER_LOWERED) { 
+                        rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                    }
+                    else if (pos == NUM_DROPPED) { 
+                        rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                        rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); 
+                    }
+                    else if (pos == NUM_LITERARY) { 
+                        rules.add(new Mapping("include", "litdigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                        rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); 
+                    }
                     
                     if (!rules.isEmpty()) {
                         mMappings.addAll(rules);

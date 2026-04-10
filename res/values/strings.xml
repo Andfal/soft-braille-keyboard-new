@@ -233,10 +233,12 @@
     <string name="no_suggestions">No suggestions available</string>
     <string name="none_selected">--- None selected ---</string>
     <string name="nothing_to_delete">Nothing to delete</string>
-    <string name="num_sys_8dot">Computer Braille (6-dot univocal)</string>
-    <string name="num_sys_antoine">Antoine (Dot 6 + high cells)</string>
-    <string name="num_sys_classic">Classic (3456 + a-j)</string>
-    <string name="num_sys_dropped">Dropped Numbers (Nemeth/Low)</string>
+    <string name="num_sys_6dot_univocal">Computer Braille (6-pt, Antoine-style)</string>
+    <string name="num_sys_8dot_standard">Standard 8-dot (dot 8 added, 1=18)</string>
+    <string name="num_sys_8dot_computer_lowered">Computer Braille (8-pt, lowered, 1=2)</string>
+    <string name="num_sys_antoine">Antoine (Dot 6 + Literary, 1=16)</string>
+    <string name="num_sys_classic">Classic (3456 + a-j, 1=1)</string>
+    <string name="num_sys_dropped">Dropped Numbers (3456 + Low, 1=2)</string>
     <string name="num_sys_literary">Literary (G2 context)</string>
     <string name="num_sys_none">None / Manual mappings</string>
     <string name="opcode_always">Override (Always)</string>
