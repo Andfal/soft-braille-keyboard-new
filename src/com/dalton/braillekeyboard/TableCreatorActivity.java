@@ -251,7 +251,8 @@ public class TableCreatorActivity extends Activity {
                 if (pos > 0 && !mIsUpdatingUI) {
                     String file = mEightDotCheck.isChecked() ? SCRIPTS_8[pos][1] : SCRIPTS_6[pos][1];
                     if (!file.equals("none")) {
-                        mMappings.add(new Mapping("include", file, new ArrayList<>(), mMappingPriorityCheck.isChecked()));
+                        // Inserisce in cima per massima priorità
+                        mMappings.add(0, new Mapping("include", file, new ArrayList<>(), mMappingPriorityCheck.isChecked()));
                         refreshSpinner();
                         Toast.makeText(TableCreatorActivity.this, getString(R.string.msg_structure_cloned), 0).show();
                     }
@@ -276,38 +277,35 @@ public class TableCreatorActivity extends Activity {
         mNumSystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
                 if (pos > 0 && !mIsUpdatingUI) {
-                    List<Mapping> rules = new ArrayList<>();
+                    boolean high = mMappingPriorityCheck.isChecked();
+                    // Inseriamo in ordine inverso all'indice 0 per mantenere l'ordine logico (include prima di numsign)
                     if (pos == NUM_CLASSIC) { 
-                        rules.add(new Mapping("include", "digits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
-                        rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); 
+                        mMappings.add(0, new Mapping("numsign", "", parseDots("3456"), high)); 
+                        mMappings.add(0, new Mapping("include", "digits6Dots.uti", new ArrayList<>(), high)); 
                     }
                     else if (pos == NUM_ANTOINE) { 
-                        rules.add(new Mapping("include", "litdigits6DotsPlusDot6.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
-                        rules.add(new Mapping("numsign", "", parseDots("6"), mMappingPriorityCheck.isChecked())); 
+                        mMappings.add(0, new Mapping("numsign", "", parseDots("6"), high)); 
+                        mMappings.add(0, new Mapping("include", "litdigits6DotsPlusDot6.uti", new ArrayList<>(), high)); 
                     }
                     else if (pos == NUM_6DOT_UNIVOCAL) { 
-                        rules.add(new Mapping("include", "digits6DotsPlusDot6.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                        mMappings.add(0, new Mapping("include", "digits6DotsPlusDot6.uti", new ArrayList<>(), high)); 
                     }
                     else if (pos == NUM_8DOT_STANDARD) { 
-                        rules.add(new Mapping("include", "digits8Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                        mMappings.add(0, new Mapping("include", "digits8Dots.uti", new ArrayList<>(), high)); 
                     }
                     else if (pos == NUM_8DOT_COMPUTER_LOWERED) { 
-                        rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
+                        mMappings.add(0, new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<>(), high)); 
                     }
                     else if (pos == NUM_DROPPED) { 
-                        rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
-                        rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); 
+                        mMappings.add(0, new Mapping("numsign", "", parseDots("3456"), high)); 
+                        mMappings.add(0, new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<>(), high)); 
                     }
                     else if (pos == NUM_LITERARY) { 
-                        rules.add(new Mapping("include", "litdigits6Dots.uti", new ArrayList<>(), mMappingPriorityCheck.isChecked())); 
-                        rules.add(new Mapping("numsign", "", parseDots("3456"), mMappingPriorityCheck.isChecked())); 
+                        mMappings.add(0, new Mapping("numsign", "", parseDots("3456"), high)); 
+                        mMappings.add(0, new Mapping("include", "litdigits6Dots.uti", new ArrayList<>(), high)); 
                     }
-                    
-                    if (!rules.isEmpty()) {
-                        mMappings.addAll(rules);
-                        refreshSpinner();
-                        Toast.makeText(TableCreatorActivity.this, getString(R.string.msg_structure_cloned), 0).show();
-                    }
+                    refreshSpinner();
+                    Toast.makeText(TableCreatorActivity.this, getString(R.string.msg_structure_cloned), 0).show();
                 }
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
@@ -817,29 +815,87 @@ public class TableCreatorActivity extends Activity {
         int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) return;
         File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables"), f = new File(d, mSystemTableFiles.get(p)); if (!f.exists()) return;
         try {
-            List<Mapping> i = new ArrayList<>(); parseTableRecursive(f, d, i, 0); if (i.isEmpty()) return;
+            List<Mapping> i = new ArrayList<>();
+            
+            // 1. Esplode PRIMA i file degli spinner per dare loro la massima priorità nel blocco
+            if (mScriptSpinner.getSelectedItemPosition() > 0) {
+                String scriptFile = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
+                if (!scriptFile.equals("none")) parseTableRecursive(new File(d, scriptFile), d, i, 0, false);
+            }
+            if (mNumSystemSpinner.getSelectedItemPosition() > 0) {
+                String numFile = null;
+                int nPos = mNumSystemSpinner.getSelectedItemPosition();
+                if (nPos == NUM_CLASSIC) numFile = "digits6Dots.uti";
+                else if (nPos == NUM_ANTOINE) numFile = "litdigits6DotsPlusDot6.uti";
+                else if (nPos == NUM_6DOT_UNIVOCAL) numFile = "digits6DotsPlusDot6.uti";
+                else if (nPos == NUM_8DOT_STANDARD) numFile = "digits8Dots.uti";
+                else if (nPos == NUM_8DOT_COMPUTER_LOWERED || nPos == NUM_DROPPED) numFile = "loweredDigits6Dots.uti";
+                else if (nPos == NUM_LITERARY) numFile = "litdigits6Dots.uti";
+                if (numFile != null) parseTableRecursive(new File(d, numFile), d, i, 0, false);
+            }
+
+            // 2. Esplode DOPO la tabella base con filtro intelligente (le sue regole numeriche/a-z verranno scartate)
+            parseTableRecursive(f, d, i, 0, true);
+
+            if (i.isEmpty()) return;
             new AlertDialog.Builder(this).setTitle(R.string.btn_import_base_rules).setMessage(String.format(getString(R.string.msg_import_rules_confirm), i.size()))
-                .setPositiveButton(R.string.btn_ok, (dialog, w) -> { mMappings.addAll(i); refreshSpinner(); }).setNegativeButton(R.string.btn_cancel, null).show();
+                .setPositiveButton(R.string.btn_ok, (dialog, w) -> {
+                    // Rimuoviamo gli include temporanei generati dagli spinner
+                    for (int idx = mMappings.size() - 1; idx >= 0; idx--) {
+                        if (mMappings.get(idx).opcode.equals("include")) {
+                            String charName = mMappings.get(idx).character;
+                            if (charName.endsWith(".uti") || charName.equals("unicode-braille.utb")) mMappings.remove(idx);
+                        }
+                    }
+                    // Inseriamo tutto il blocco all'inizio per massima priorità reale
+                    mMappings.addAll(0, i); 
+                    refreshSpinner(); 
+                }).setNegativeButton(R.string.btn_cancel, null).show();
         } catch (Exception e) {}
     }
 
-    private void parseTableRecursive(File f, File d, List<Mapping> o, int dp) throws Exception {
+    private void explodeUTI(String fileName) {
+        File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables");
+        File f = new File(d, fileName);
+        if (!f.exists()) return;
+        try {
+            List<Mapping> rules = new ArrayList<>();
+            parseTableRecursive(f, d, rules, 0, false);
+            mMappings.addAll(rules);
+            refreshSpinner();
+        } catch (Exception e) {}
+    }
+
+    private void parseTableRecursive(File f, File d, List<Mapping> o, int dp, boolean applyFilters) throws Exception {
         if (dp > 10) return; Scanner s = new Scanner(f, "UTF-8");
+        boolean filterNumbers = applyFilters && mNumSystemSpinner.getSelectedItemPosition() > 0;
+        boolean filterAlphabet = applyFilters && mScriptSpinner.getSelectedItemPosition() > 0;
+        boolean highPriority = mMappingPriorityCheck.isChecked();
         while (s.hasNextLine()) {
             String l = s.nextLine().trim(); if (l.isEmpty() || l.startsWith("#")) continue;
             if (l.startsWith("include ")) { 
                 String n = l.substring(8).trim().split("#")[0].trim().split("\\s+")[0]; 
                 if (n.equals("unicode.dis") || n.equals("braille-patterns.cti") || n.endsWith(".dis")) continue; 
-                File nF = new File(d, n); if (nF.exists()) parseTableRecursive(nF, d, o, dp + 1); continue; 
+                File nF = new File(d, n); if (nF.exists()) parseTableRecursive(nF, d, o, dp + 1, applyFilters); continue; 
             }
             String[] p = l.split("\\s+"); if (p.length < 2) continue; String op = p[0];
             List<String> v = Arrays.asList("lowercase", "uppercase", "letter", "digit", "punctuation", "math", "sign", "always", "word", "partword", "litdigit", "midnum", "capsletter", "numsign", "letsign", "context", "class", "begcaps", "endcaps", "begcapsword", "endcapsword", "prepunc", "postpunc", "begnum", "endnum", "numericmodechars", "midendnumericmodechars", "space");
-            if (!v.contains(op)) continue; String cP = "", dP = "";
-            if (Arrays.asList("capsletter", "numsign", "letsign", "space").contains(op)) dP = p[1];
-            else if (op.equals("context") || op.equals("class")) { if (p.length >= 3) { cP = p[1]; dP = p[2]; } }
-            else if (p.length >= 3) { cP = parseLiblouisChar(p[1]); dP = p[2]; }
+            if (!v.contains(op)) continue; 
+            if (filterNumbers && Arrays.asList("digit", "litdigit", "numsign", "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum").contains(op)) continue;
+            String cP = "", dP = "";
+            if (Arrays.asList("capsletter", "numsign", "letsign", "space", "begcaps", "endcaps", "begcapsword", "endcapsword", "begnum", "endnum").contains(op)) {
+                dP = p[1];
+                if (filterAlphabet && Arrays.asList("capsletter", "begcaps", "endcaps", "begcapsword", "endcapsword").contains(op)) continue;
+            } else if (op.equals("context") || op.equals("class")) { if (p.length >= 3) { cP = p[1]; dP = p[2]; } }
+            else if (p.length >= 3) { 
+                cP = parseLiblouisChar(p[1]); dP = p[2]; 
+                // Filtro Intelligente (Solo Alfabeto a-z)
+                if (filterAlphabet && cP.length() == 1 && (op.equals("lowercase") || op.equals("uppercase") || op.equals("letter"))) {
+                    char c = cP.charAt(0); if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) continue;
+                }
+            }
             if (cP.isEmpty() && dP.isEmpty()) continue; if (!cP.isEmpty() && cP.length() == 1 && cP.charAt(0) >= 0x2800 && cP.charAt(0) <= 0x28FF) continue;
-            Mapping m = new Mapping(op, cP, parseDots(dP), false); boolean dup = false; for (Mapping ex : o) if (ex.opcode.equals(m.opcode) && ex.character.equals(m.character)) { dup = true; break; } if (!dup) o.add(m);
+            Mapping m = new Mapping(op, cP, parseDots(dP), highPriority); boolean dup = false; for (Mapping ex : o) if (ex.opcode.equals(m.opcode) && ex.character.equals(m.character)) { dup = true; break; } if (!dup) o.add(m);
         }
         s.close();
     }
@@ -864,6 +920,8 @@ public class TableCreatorActivity extends Activity {
     private void performClone(File f) {
         mMappings.clear();
         mIsUpdatingUI = true;
+        boolean filterNumbers = mNumSystemSpinner.getSelectedItemPosition() > 0;
+        boolean filterAlphabet = mScriptSpinner.getSelectedItemPosition() > 0;
         try {
             Scanner scanner = new Scanner(f, "UTF-8");
             String lastMappingComment = null;
@@ -888,26 +946,29 @@ public class TableCreatorActivity extends Activity {
                 if (parts.length < 1) continue;
                 String opcode = parts[0];
                 
-                // Capture trailing comment from current line if any
-                String trailingComment = null;
-                if (line.contains("#")) {
-                    String[] commentSplit = line.split("#", 2);
-                    if (commentSplit.length > 1) {
-                        String c = commentSplit[1].trim();
-                        if (!c.isEmpty()) trailingComment = c;
-                    }
-                }
+                // Filtro Intelligente per la Clonazione
+                if (filterNumbers && Arrays.asList("digit", "litdigit", "numsign", "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum").contains(opcode)) continue;
+                if (filterAlphabet && Arrays.asList("capsletter", "begcaps", "endcaps", "begcapsword", "endcapsword").contains(opcode)) continue;
 
+                boolean high = mMappingPriorityCheck.isChecked();
                 Mapping m = null;
                 if (opcode.equals("include") && parts.length >= 2) {
-                    String included = line.substring(8).trim().split("#")[0].trim();
-                    m = new Mapping("include", included, new ArrayList<Integer>(), false);
+                    String included = line.substring(8).trim().split("#")[0].trim().split("\\s+")[0];
+                    // Salta inclusioni standard di alfabeto o numeri se lo spinner corrispondente è attivo
+                    if (filterAlphabet && (included.contains("LetterDef") || included.equals("unicode-braille.utb"))) continue;
+                    if (filterNumbers && included.contains("digits")) continue;
+                    m = new Mapping("include", included, new ArrayList<Integer>(), high);
                 } else if (Arrays.asList("context", "class").contains(opcode) && parts.length >= 3) {
-                    m = new Mapping(opcode, parts[1], parseDots(parts[2].split("#")[0].trim()), false);
+                    m = new Mapping(opcode, parts[1], parseDots(parts[2].split("#")[0].trim()), high);
                 } else if (parts.length >= 3) {
-                    m = new Mapping(opcode, parseLiblouisChar(parts[1]), parseDots(parts[2].split("#")[0].trim()), false);
+                    String charPart = parseLiblouisChar(parts[1]);
+                    // Filtra le lettere a-z se lo spinner alfabeto è attivo
+                    if (filterAlphabet && (opcode.equals("lowercase") || opcode.equals("uppercase") || opcode.equals("letter"))) {
+                        if (charPart.length() == 1) { char c = charPart.charAt(0); if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) continue; }
+                    }
+                    m = new Mapping(opcode, charPart, parseDots(parts[2].split("#")[0].trim()), high);
                 } else if (parts.length >= 2 && (Arrays.asList("numsign", "capsletter", "letsign", "space").contains(opcode) || opcode.startsWith("beg") || opcode.startsWith("end"))) {
-                    m = new Mapping(opcode, "", parseDots(parts[1].split("#")[0].trim()), false);
+                    m = new Mapping(opcode, "", parseDots(parts[1].split("#")[0].trim()), high);
                 }
                 
                 if (m != null) {

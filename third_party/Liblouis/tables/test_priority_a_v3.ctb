@@ -1,5 +1,0 @@
-# test_priority_a_v3.ctb
-# a grave (Vera priorità alta)
-always \x00e0 1234
-
-include it-it-g1.ctb
