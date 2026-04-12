@@ -18,13 +18,6 @@
     <string name="btn_cancel">Cancel</string>
     <string name="btn_clear_dots">Clear</string>
     <string name="btn_clone_table">Clone Source</string>
-    <string name="btn_move_up">Move Up</string>
-    <string name="btn_move_down">Move Down</string>
-    <string name="btn_move_top">To Top (After fixed)</string>
-    <string name="btn_insert_above">Insert above this rule</string>
-    <string name="title_order_actions">Reorder Action</string>
-    <string name="msg_already_top">Already at top</string>
-    <string name="msg_already_bottom">Already at bottom</string>
     <string name="btn_create_table">Create custom table</string>
     <string name="btn_delete">Delete</string>
     <string name="btn_export_system_table">Export System Table</string>
@@ -34,13 +27,21 @@
     <string name="btn_import_base_rules">Import All Rules</string>
     <string name="btn_import_table">Import existing table file</string>
     <string name="btn_import_visual">Import Rules</string>
+    <string name="btn_insert_above">Insert above this rule</string>
+    <string name="btn_insert_alphabet_here">Insert Alphabet (%s) here</string>
+    <string name="btn_insert_numeric_here">Insert Numbers (%s) here</string>
     <string name="btn_load_template">Load Template</string>
+    <string name="btn_move_down">Move Down</string>
+    <string name="btn_move_to_pos">Move to row...</string>
+    <string name="btn_move_top">To Top (After fixed)</string>
+    <string name="btn_move_up">Move Up</string>
     <string name="btn_ok">OK</string>
 
     
     <string name="btn_overwrite">Overwrite / Proceed</string>
     <string name="btn_remove_mapping">Remove this mapping</string>
     <string name="btn_save">SAVE</string>
+    <string name="btn_select_mass">Select...</string>
     <string name="btn_set_cell">Set Cell</string>
     <string name="btn_sync_folder">Grant folder access for scanning</string>
     <string name="btn_update">UPDATE</string>
@@ -103,6 +104,7 @@
     <string name="hint_description">Table description</string>
     <string name="hint_dots_format">Dots (e.g. 123-45)</string>
     <string name="hint_enter_dots">Enter dots (e.g. 123)</string>
+    <string name="hint_enter_pos">Enter row (1 to %d)</string>
     <string name="hint_search_rules">Search character or dots...</string>
     <string name="hint_table_name">Enter table name (e.g. my_table)</string>
     <string name="info_url">https://docs.google.com/document/d/1OX6yFjkK61VfROdU9uQNxjEZ_QNWxiMnUY_1ECnIyRQ/pub</string>
@@ -181,6 +183,7 @@
     <string name="label_opcode_short">Rule</string>
     <string name="label_priority_short">Priority</string>
     <string name="label_results_count">Results: %d</string>
+    <string name="label_select_all">Select All</string>
     <string name="label_show_visual_picker">Show visual cell picker</string>
     <string name="label_source">Source</string>
     <string name="label_spazio">space</string>
@@ -198,9 +201,12 @@
     <string name="medium">Medium</string>
     <string name="menu_delete">Delete</string>
     <string name="menu_share">Share</string>
+    <string name="msg_already_bottom">Already at bottom</string>
+    <string name="msg_already_top">Already at top</string>
     <string name="msg_char_empty">Character field is empty</string>
     <string name="msg_confirm_clone">Replace current list with the content of the source table?</string>
-<string name="msg_confirm_template">Applying a template will clear current mappings. Continue?</string>
+<string name="msg_confirm_delete_mass">Delete %d selected rules?</string>
+    <string name="msg_confirm_template">Applying a template will clear current mappings. Continue?</string>
     <string name="msg_delete_external">Also delete from external folder</string>
 
     
@@ -213,9 +219,12 @@
     <string name="msg_fixed_mapping">This is a fixed system mapping and cannot be removed.</string>
     <string name="msg_import_rules_confirm">Import %d rules?</string>
     <string name="msg_imported">Imported %s</string>
+    <string name="msg_invalid_pos">Invalid position</string>
     <string name="msg_logs_cleared">Logs cleared successfully</string>
+    <string name="msg_no_deletable_rules">No deletable rules found.</string>
     <string name="msg_rule_removed">Rule removed.</string>
-    <string name="msg_select_source_first">Select a source table before cloning.</string>
+    <string name="msg_rules_filtered">rules filtered</string>
+<string name="msg_select_source_first">Select a source table before cloning.</string>
     <string name="msg_standard_char_override">Standard character of the selected set. Your choice will take precedence.</string>
     <string name="msg_structure_cloned">Original structure cloned to the list.</string>
     <string name="msg_sync_desc">Select the \'soft-braille\' folder to grant permanent access and automatically load files within it.</string>
@@ -234,8 +243,8 @@
     <string name="none_selected">--- None selected ---</string>
     <string name="nothing_to_delete">Nothing to delete</string>
     <string name="num_sys_6dot_univocal">Computer Braille (6-pt, Antoine-style)</string>
-    <string name="num_sys_8dot_standard">Standard 8-dot (dot 8 added, 1=18)</string>
     <string name="num_sys_8dot_computer_lowered">Computer Braille (8-pt, lowered, 1=2)</string>
+    <string name="num_sys_8dot_standard">Standard 8-dot (dot 8 added, 1=18)</string>
     <string name="num_sys_antoine">Antoine (Dot 6 + Literary, 1=16)</string>
     <string name="num_sys_classic">Classic (3456 + a-j, 1=1)</string>
     <string name="num_sys_dropped">Dropped Numbers (3456 + Low, 1=2)</string>
@@ -528,7 +537,11 @@
     <string name="table_section_high">HIGH PRIORITY</string>
     <string name="table_section_standard">STANDARD PRIORITY</string>
     <string name="table_variant_unofficial">Unofficial</string>
+    <string name="title_activity_table_creator">Table Creator</string>
+    <string name="title_confirm_delete">Confirm Delete</string>
     <string name="title_duplicate_combination">Duplicate Combination</string>
+    <string name="title_mass_actions">Mass Actions</string>
+    <string name="title_order_actions">Reorder Action</string>
     <string name="title_select_prefix">Select prefix (e.g. dot 4, 5 or 6)</string>
     <string name="title_select_table_file">Select Braille Table file</string>
     <string name="title_select_template">Select Template</string>
@@ -556,5 +569,4 @@
     
 
     
-        <string name="title_activity_table_creator">Table Creator</string>
-</resources>
+        </resources>

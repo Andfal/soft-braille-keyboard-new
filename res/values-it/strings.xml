@@ -17,13 +17,6 @@
     <string name="btn_cancel">Annulla</string>
     <string name="btn_clear_dots">Cancella</string>
     <string name="btn_clone_table">Clona Sorgente</string>
-    <string name="btn_move_up">Sposta Su</string>
-    <string name="btn_move_down">Sposta Giù</string>
-    <string name="btn_move_top">In Cima (Dopo fissi)</string>
-    <string name="btn_insert_above">Inserisci sopra questa regola</string>
-    <string name="title_order_actions">Azioni Ordine</string>
-    <string name="msg_already_top">Già in cima</string>
-    <string name="msg_already_bottom">Già in fondo</string>
     <string name="btn_create_table">Crea tabella personalizzata</string>
     <string name="btn_delete">Elimina</string>
     <string name="btn_export_system_table">Esporta Tabella di Sistema</string>
@@ -33,13 +26,21 @@
     <string name="btn_import_base_rules">Importa tutte le regole</string>
     <string name="btn_import_table">Importa file tabella esistente</string>
     <string name="btn_import_visual">Importa Regole</string>
+    <string name="btn_insert_above">Inserisci sopra questa regola</string>
+    <string name="btn_insert_alphabet_here">Inserisci Alfabeto (%s) qui</string>
+    <string name="btn_insert_numeric_here">Inserisci Numeri (%s) qui</string>
     <string name="btn_load_template">Carica Template</string>
+    <string name="btn_move_down">Sposta Giù</string>
+    <string name="btn_move_to_pos">Sposta alla riga...</string>
+    <string name="btn_move_top">In Cima (Dopo fissi)</string>
+    <string name="btn_move_up">Sposta Su</string>
     <string name="btn_ok">OK</string>
 
     
     <string name="btn_overwrite">Sovrascrivi / Procedi</string>
     <string name="btn_remove_mapping">Rimuovi questa mappatura</string>
     <string name="btn_save">SALVA</string>
+    <string name="btn_select_mass">Seleziona...</string>
     <string name="btn_set_cell">Imposta Cella</string>
     <string name="btn_sync_folder">Dai accesso alla cartella per la scansione</string>
     <string name="btn_update">AGGIORNA</string>
@@ -104,6 +105,7 @@
     <string name="hint_enter_dots">Digita i punti (es. 123)</string>
 
     
+    <string name="hint_enter_pos">Inserisci riga (da 1 a %d)</string>
     <string name="hint_search_rules">Cerca carattere o punti...</string>
     <string name="hint_table_name">Inserisci nome tabella (es. mia_tabella)</string>
     <string name="info_url">https://docs.google.com/document/d/1Ic7gRAJ84EXR5cOLpVy8rAHgoYlMMZNgS1XgWMNNyiU/pub</string>
@@ -182,6 +184,7 @@
     <string name="label_opcode_short">Regola</string>
     <string name="label_priority_short">Priorità</string>
     <string name="label_results_count">Risultati: %d</string>
+    <string name="label_select_all">Seleziona Tutto</string>
     <string name="label_show_visual_picker">Mostra selettore visuale celle</string>
     <string name="label_source">Sorgente</string>
     <string name="label_spazio">spazio</string>
@@ -199,9 +202,12 @@
     <string name="medium">Media</string>
     <string name="menu_delete">Elimina</string>
     <string name="menu_share">Condividi</string>
+    <string name="msg_already_bottom">Già in fondo</string>
+    <string name="msg_already_top">Già in cima</string>
     <string name="msg_char_empty">Il campo carattere è vuoto</string>
     <string name="msg_confirm_clone">Sostituire la lista attuale con il contenuto della tabella sorgente?</string>
-<string name="msg_confirm_template">L\'applicazione di un template cancellerà le mappature attuali. Continuare?</string>
+<string name="msg_confirm_delete_mass">Eliminare %d regole selezionate?</string>
+    <string name="msg_confirm_template">L\'applicazione di un template cancellerà le mappature attuali. Continuare?</string>
 
     
 
@@ -218,9 +224,12 @@
     <string name="msg_fixed_mapping">Questa è una mappatura di sistema fissa e non può essere rimossa.</string>
     <string name="msg_import_rules_confirm">Importa %d regole?</string>
     <string name="msg_imported">Importato %s</string>
+    <string name="msg_invalid_pos">Posizione non valida</string>
     <string name="msg_logs_cleared">Log cancellati con successo</string>
+    <string name="msg_no_deletable_rules">Nessuna regola eliminabile trovata.</string>
     <string name="msg_rule_removed">Regola rimossa.</string>
-    <string name="msg_select_source_first">Seleziona una tabella sorgente prima di clonare.</string>
+    <string name="msg_rules_filtered">regole filtrate</string>
+<string name="msg_select_source_first">Seleziona una tabella sorgente prima di clonare.</string>
     <string name="msg_standard_char_override">Carattere standard del set selezionato. La tua scelta avrà la precedenza.</string>
     <string name="msg_structure_cloned">Struttura originale clonata nella lista.</string>
     <string name="msg_sync_desc">Seleziona la cartella \'soft-braille\' per concedere l\'accesso permanente e caricare automaticamente i file al suo interno.</string>
@@ -239,8 +248,8 @@
     <string name="none_selected">--- Nessuno selezionato ---</string>
     <string name="nothing_to_delete">Niente da cancellare</string>
     <string name="num_sys_6dot_univocal">Braille Informatico (6-pt, stile Antoine, 1=16)</string>
-    <string name="num_sys_8dot_standard">Braille 8-punti Standard (punto 8 aggiunto, 1=18)</string>
     <string name="num_sys_8dot_computer_lowered">Braille Informatico (8-pt, ribassati, 1=2)</string>
+    <string name="num_sys_8dot_standard">Braille 8-punti Standard (punto 8 aggiunto, 1=18)</string>
     <string name="num_sys_antoine">Antoine (Punto 6 + Letterario, 1=16)</string>
     <string name="num_sys_classic">Classico (3456 + a-j, 1=1)</string>
     <string name="num_sys_dropped">Numeri Ribassati (3456 + Bassi, 1=2)</string>
@@ -534,7 +543,11 @@
     <string name="table_section_high">ALTA PRIORITÀ</string>
     <string name="table_section_standard">PRIORITÀ STANDARD</string>
     <string name="table_variant_unofficial">Non ufficiale</string>
+    <string name="title_activity_table_creator">Creatore Tabelle</string>
+    <string name="title_confirm_delete">Conferma Eliminazione</string>
     <string name="title_duplicate_combination">Combinazione Duplicata</string>
+    <string name="title_mass_actions">Azioni di Massa</string>
+    <string name="title_order_actions">Azioni Ordine</string>
     <string name="title_select_prefix">Scegli prefisso (es. punto 4, 5 o 6)</string>
     <string name="title_select_table_file">Seleziona file Tabella Braille</string>
     <string name="title_select_template">Seleziona Template</string>
@@ -558,5 +571,4 @@
     <string name="word_misspelled">Errato</string>
     
     
-        <string name="title_activity_table_creator">Creatore Tabelle</string>
-</resources>
+        </resources>
