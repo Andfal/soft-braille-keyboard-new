@@ -104,15 +104,12 @@ public class ZipResourceExtractor extends AsyncTask<Void, Void, Integer> {
             // Ensure the target path exists.
             outputFile.getParentFile().mkdirs();
 
-            final FileOutputStream outputStream =
-                    new FileOutputStream(outputFile);
-
-            while (!isCancelled()
-                    && (bytesRead = zipStream.read(buffer)) != -1) {
-                outputStream.write(buffer, 0, bytesRead);
+            try (FileOutputStream outputStream = new FileOutputStream(outputFile)) {
+                while (!isCancelled()
+                        && (bytesRead = zipStream.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
             }
-
-            outputStream.close();
             zipStream.closeEntry();
 
             // Make sure the output file is readable.

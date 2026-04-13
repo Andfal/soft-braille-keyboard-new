@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.dalton.braillekeyboard"
-        minSdk 26
+        minSdk 30
         targetSdk 34
         versionCode 57
         versionName "4.01"

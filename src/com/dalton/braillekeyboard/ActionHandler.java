@@ -409,6 +409,10 @@ public class ActionHandler {
         case FIVE_DOWN:
             if (fastDoubleSwipe) {
                 message = context.getString(R.string.show_input_switcher);
+                // Forziamo la pulizia della regione prima di aprire il selettore tastiere
+                if (BrailleAccessibilityService.isServiceEnabled()) {
+                    BrailleAccessibilityService.getInstance().clearPassthroughRegion();
+                }
                 inputManager.showInputMethodPicker();
             } else {
                 message = context.getString(R.string.swipe_confirm_input);

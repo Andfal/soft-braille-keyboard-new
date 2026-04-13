@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accessibilityEventTypes=""
-    android:accessibilityFeedbackType=""
-    android:accessibilityFlags="flagDefault|flagIncludeNotImportantViews|flagRetrieveInteractiveWindows"
+    android:description="@string/accessibility_service_description"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeViewFocused|typeViewClicked"
+    android:accessibilityFeedbackType="feedbackAllMask"
+    android:accessibilityFlags="flagDefault|flagIncludeNotImportantViews|flagRetrieveInteractiveWindows|flagRequestFilterKeyEvents"
     android:canRetrieveWindowContent="true"
     android:canRequestTouchExplorationMode="true"
+    android:canRequestFilterKeyEvents="true"
     android:packageNames="com.dalton.braillekeyboard"
-    android:description="@string/accessibility_service_description" />
+    android:notificationTimeout="100" />

@@ -92,7 +92,7 @@ public class BrailleAccessibilityService extends AccessibilityService {
             return;
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= 30) {
+        if (true) { // API 30+ Native
             if (width > 0 && height > 0) {
                 // Request control dynamically
                 setTouchExplorationEnabled(true);
@@ -120,7 +120,7 @@ public class BrailleAccessibilityService extends AccessibilityService {
             return;
         }
 
-        if (android.os.Build.VERSION.SDK_INT >= 30) {
+        if (true) { // API 30+ Native
             Log.d(TAG, "Clearing passthrough region");
             try {
                 setTouchExplorationPassthroughRegion(Display.DEFAULT_DISPLAY, new Region());
@@ -154,8 +154,8 @@ public class BrailleAccessibilityService extends AccessibilityService {
 
     private void provideFeedback() {
         Vibrator v;
-        if (android.os.Build.VERSION.SDK_INT >= 31) {
-            android.os.VibratorManager vm = getSystemService(android.os.VibratorManager.class);
+        if (true) { // API 31+ Native
+            android.os.VibratorManager vm = (android.os.VibratorManager) getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
             v = vm != null ? vm.getDefaultVibrator() : null;
         } else {
             v = getSystemService(Vibrator.class);

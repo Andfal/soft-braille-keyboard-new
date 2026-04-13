@@ -62,18 +62,30 @@ public class CustomTableManager {
     }
 
     private Locale parseLocale(File file) {
+        String name = file.getName().toLowerCase(Locale.US);
         try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("#+locale: ")) {
                     String code = line.substring(10).trim();
-                    String[] parts = code.split("-");
+                    String[] parts = code.split("[-_]");
                     if (parts.length == 1) return new Locale(parts[0]);
-                    if (parts.length == 2) return new Locale(parts[0], parts[1]);
+                    if (parts.length >= 2) return new Locale(parts[0], parts[1]);
                 }
                 if (!line.startsWith("#") && !line.isEmpty()) break;
             }
         } catch (java.io.IOException e) {}
+
+        // Guess from filename if no header
+        if (name.startsWith("it")) return new Locale("it", "IT");
+        if (name.startsWith("en")) return new Locale("en", "US");
+        if (name.startsWith("es")) return new Locale("es", "ES");
+        if (name.startsWith("fr")) return new Locale("fr", "FR");
+        if (name.startsWith("de")) return new Locale("de", "DE");
+        if (name.startsWith("pt")) return new Locale("pt", "PT");
+        if (name.startsWith("ru")) return new Locale("ru", "RU");
+        if (name.startsWith("ar")) return new Locale("ar");
+
         return Locale.getDefault();
     }
 

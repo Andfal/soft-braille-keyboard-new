@@ -121,7 +121,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     private void updatePassthroughRegion() {
         if (brailleView == null || !brailleView.isShown() || brailleView.getVisibility() != View.VISIBLE) return;
 
-        if (android.os.Build.VERSION.SDK_INT >= 30) {
+        if (true) { // API 30+ Native
             BrailleAccessibilityService accService = BrailleAccessibilityService.getInstance();
             if (accService != null) {
                 if (brailleView.getShrinkKeyboard()) {
@@ -152,7 +152,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     public View onCreateInputView() {
         super.onCreateInputView();
         brailleView = (BrailleView) getLayoutInflater().inflate(R.layout.keyboard, null);
-        if (android.os.Build.VERSION.SDK_INT >= 30) {
+        if (true) { // API 30+ Native
             brailleView.removeOnLayoutChangeListener(mLayoutChangeListener);
             brailleView.addOnLayoutChangeListener(mLayoutChangeListener);
         }
@@ -244,7 +244,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     private void clearAccessibilityState() {
-        if (android.os.Build.VERSION.SDK_INT >= 30) {
+        if (true) { // API 30+ Native
             BrailleAccessibilityService accService = BrailleAccessibilityService.getInstance();
             if (accService != null) {
                 accService.clearPassthroughRegion();

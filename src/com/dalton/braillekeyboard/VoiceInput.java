@@ -16,19 +16,6 @@
 
 package com.dalton.braillekeyboard;
 
-import com.dalton.braillekeyboard.R;
-import com.dalton.braillekeyboard.Pad.Swipe;
-import com.dalton.braillekeyboard.Pad.Coords;
-import com.dalton.braillekeyboard.BrailleParser.BrailleType;
-import com.dalton.braillekeyboard.Options.KeyboardFeedback;
-import com.dalton.braillekeyboard.Options.KeyboardEcho;
-import com.dalton.braillekeyboard.Options.KeyboardType;
-import com.dalton.braillekeyboard.Options.OptionList;
-import com.dalton.braillekeyboard.EditingUtilities.Word;
-import com.dalton.braillekeyboard.EmojiDictionary.EmojiEntry;
-import com.dalton.braillekeyboard.SpellChecker.Suggestion;
-import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
-
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -77,6 +64,7 @@ public class VoiceInput {
 
     // Recognition listener for Android's SpeechRecognizer.
     private final RecognitionListener listener = new RecognitionListener() {
+        private static final String TAG = "VoiceInput.Listener";
 
         @Override
         public void onRmsChanged(float rmsdB) {
@@ -84,18 +72,24 @@ public class VoiceInput {
 
         @Override
         public void onResults(Bundle results) {
+            android.util.Log.i(TAG, "onResults");
             ArrayList<String> resultsList = results
                     .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 
-            // Send the best match to our callback, or the empty string if there
-            // is none.
-            textReadyListener.onTextReady(resultsList.size() > 0 ? resultsList
-                    .get(0) : "");
-            isListening = false; // update state
+            if (resultsList != null && resultsList.size() > 0) {
+                String bestMatch = resultsList.get(0);
+                android.util.Log.d(TAG, "Best match: " + bestMatch);
+                textReadyListener.onTextReady(bestMatch);
+            } else {
+                android.util.Log.w(TAG, "No results found");
+                textReadyListener.onTextReady("");
+            }
+            isListening = false;
         }
 
         @Override
         public void onReadyForSpeech(Bundle params) {
+            android.util.Log.i(TAG, "onReadyForSpeech");
         }
 
         @Override
@@ -108,6 +102,7 @@ public class VoiceInput {
 
         @Override
         public void onError(int error) {
+            android.util.Log.e(TAG, "onError: " + error);
             // There seems to be a bug where this gets called with
             // SpeechRecognizer.ERROR_NO_MATCH every time, but the very first
             // time voice input is done.
@@ -121,7 +116,8 @@ public class VoiceInput {
 
         @Override
         public void onEndOfSpeech() {
-            isListening = false;
+            android.util.Log.i(TAG, "onEndOfSpeech");
+            // Do NOT set isListening = false here, wait for onResults or onError
         }
 
         @Override
@@ -130,6 +126,7 @@ public class VoiceInput {
 
         @Override
         public void onBeginningOfSpeech() {
+            android.util.Log.i(TAG, "onBeginningOfSpeech");
         }
     };
 
@@ -172,7 +169,13 @@ public class VoiceInput {
                 intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                         RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 if (locale != null) {
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, locale.toString());
+                    // Use a hyphen instead of underscore for the locale string (BCP 47).
+                    // This is more standard for speech recognizers.
+                    String langTag = locale.toString().replace('_', '-');
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langTag);
+                    android.util.Log.i("VoiceInput", "Starting listening with locale: " + langTag);
+                } else {
+                    android.util.Log.i("VoiceInput", "Starting listening with default locale");
                 }
                 recognizer.startListening(intent);
                 isListening = true;
@@ -202,6 +205,3 @@ public class VoiceInput {
         }
     }
 }
-
-
-

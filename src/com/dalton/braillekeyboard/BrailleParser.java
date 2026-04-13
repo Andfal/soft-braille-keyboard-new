@@ -449,7 +449,8 @@ public class BrailleParser {
      *         possible.
      */
     public String backTranslate(Context context, Byte[] cellBytes) {
-        // Alignment with Vortex: Always use padding spaces for back-translation
+        // Ensure Liblouis receives exactly one leading space and one trailing space for context.
+        // This is essential for correct Grade 2/3 translation and numeric mode stability.
         byte[] cells = new byte[cellBytes.length + 2];
         cells[0] = 0;
         cells[cells.length - 1] = 0;
