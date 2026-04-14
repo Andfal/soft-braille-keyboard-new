@@ -370,6 +370,9 @@ public class BrailleParser {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(context.getString(R.string.pref_braille_type_key),
                 String.valueOf(brailleType.prefValue()));
+        // Sincronizziamo anche la preferenza per la visualizzazione degli 8 punti
+        editor.putBoolean(context.getString(R.string.pref_use_eight_dots_key), 
+                brailleType == BrailleType.COMPUTER);
         editor.commit();
         setTranslator(context);
         return brailleType;

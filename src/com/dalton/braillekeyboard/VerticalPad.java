@@ -60,7 +60,8 @@ public class VerticalPad extends Pad {
                 TypedValue.COMPLEX_UNIT_DIP, MAX_COLUMN_WIDTH_DP, context
                         .getResources().getDisplayMetrics());
         sortKeys(keys, maxColumnWidth, portrait);
-        if (useEightDots) {
+        // Se abbiamo già 8 punti (calibrati manualmente), non dobbiamo "inventarne" di nuovi.
+        if (useEightDots && keys.size() < 8) {
             insertSpecialDots(portrait);
         }
     }
@@ -135,20 +136,36 @@ public class VerticalPad extends Pad {
         }
         Collections.sort(leftList, comparatorY);
         Collections.sort(rightList, comparatorY);
+        
         keys.clear();
+        
         if (!portrait) {
-            keys.addAll(leftList);
-            keys.addAll(rightList);
+            // Landscape: LEFT (0,1,2), RIGHT (3,4,5)
+            for (int i=0; i<3; i++) keys.add(leftList.size() > i ? leftList.get(i) : null);
+            for (int i=0; i<3; i++) keys.add(rightList.size() > i ? rightList.get(i) : null);
+            keys.add(leftList.size() > 3 ? leftList.get(3) : null); // index 6 (Dot 7)
+            keys.add(rightList.size() > 3 ? rightList.get(3) : null); // index 7 (Dot 8)
         } else {
             if (invert) {
+                // Portrait Invert: LEFT (0,1,2), RIGHT (3,4,5) - invertiti
                 Collections.reverse(leftList);
                 Collections.reverse(rightList);
-                keys.addAll(leftList);
-                keys.addAll(rightList);
+                for (int i=0; i<3; i++) keys.add(leftList.size() > i ? leftList.get(i) : null);
+                for (int i=0; i<3; i++) keys.add(rightList.size() > i ? rightList.get(i) : null);
+                keys.add(leftList.size() > 3 ? leftList.get(3) : null); // index 6 (Dot 7)
+                keys.add(rightList.size() > 3 ? rightList.get(3) : null); // index 7 (Dot 8)
             } else {
-                keys.addAll(rightList);
-                keys.addAll(leftList);
+                // Portrait Normal: RIGHT (0,1,2), LEFT (3,4,5)
+                for (int i=0; i<3; i++) keys.add(rightList.size() > i ? rightList.get(i) : null);
+                for (int i=0; i<3; i++) keys.add(leftList.size() > i ? leftList.get(i) : null);
+                keys.add(leftList.size() > 3 ? leftList.get(3) : null); // index 6 (Dot 7)
+                keys.add(rightList.size() > 3 ? rightList.get(3) : null); // index 7 (Dot 8)
             }
+        }
+        
+        // Rimuoviamo i null solo se sono in fondo (per calibrazione a 6 punti)
+        while(!keys.isEmpty() && keys.get(keys.size() - 1) == null) {
+            keys.remove(keys.size() - 1);
         }
     }
 

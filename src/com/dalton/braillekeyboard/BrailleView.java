@@ -100,6 +100,8 @@ public class BrailleView extends View {
         @Override
         public void onSetLocale(Locale locale) {
             setLocale(locale);
+            loadDefaultPad(getWidth(), getHeight());
+            invalidate();
         }
 
         @Override
@@ -511,27 +513,32 @@ public class BrailleView extends View {
     }
 
     private boolean setPad(int id, int width, int height, boolean autoRotate) {
-        int totalDots = listener.getDots();
-        if (totalDots == -1) totalDots = 6;
-        final int ONE_SIDE = 3;
-        
-        // For whatever reason we won't be able to set a pad
-        int dotsDownCount = countDotsDown(dotsDown);
-        if (requiredTouchTime > System.currentTimeMillis()
-                || (dotsDownCount != ONE_SIDE && dotsDownCount != totalDots)) {
-            return false;
-        }
+    int totalDots = listener.getDots();
+    if (totalDots == -1) totalDots = 6;
 
-        // Trigger manual calibration mode
-        mIsManualCalibrating = true;
-        mCurrentCalibrationStep = 0;
-        mManualCalibrationDots.clear();
-        
-        // If triggered with all fingers, we can do instant calibration
-        if (dotsDownCount == totalDots) {
-            finishManualCalibrationInstant(id, width, height);
-            return true;
-        }
+    // Per attivare la calibrazione punto per punto, accettiamo solo 3 dita
+    // per coerenza tra le modalità 6 e 8 punti.
+    // Per la calibrazione istantanea, accettiamo il numero totale di punti.
+    int dotsDownCount = countDotsDown(dotsDown);
+
+    boolean canStartStepByStep = (dotsDownCount == 3);
+    boolean canStartInstant = (dotsDownCount == totalDots);
+
+    if (requiredTouchTime > System.currentTimeMillis()
+    || (!canStartStepByStep && !canStartInstant)) {
+    return false;
+    }
+
+    // Trigger manual calibration mode
+    mIsManualCalibrating = true;
+    mCurrentCalibrationStep = 0;
+    mManualCalibrationDots.clear();
+
+    // If triggered with all fingers, we can do instant calibration
+    if (canStartInstant) {
+    finishManualCalibrationInstant(id, width, height);
+    return true;
+    }
 
         // Else start step-by-step
         speech.speak(getContext(), getContext().getString(R.string.calibration_init_message), Speech.QUEUE_FLUSH);
@@ -836,5 +843,4 @@ public class BrailleView extends View {
         }
     }
 }
-
 
