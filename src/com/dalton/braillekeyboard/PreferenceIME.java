@@ -174,6 +174,26 @@ public class PreferenceIME extends PreferenceActivity {
                     }
                 });
             }
+
+            final ListPreference brailleTypePref = (ListPreference) findPreference(getString(R.string.pref_braille_type_key));
+            final CheckBoxPreference useEightDotsPref = (CheckBoxPreference) findPreference(getString(R.string.pref_use_eight_dots_key));
+
+            if (brailleTypePref != null && useEightDotsPref != null) {
+                brailleTypePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        try {
+                            int value = Integer.parseInt((String) newValue);
+                            boolean isComputer = (value == 0); // 0 = COMPUTER in BrailleType.prefValue()
+                            useEightDotsPref.setChecked(isComputer);
+                            Options.writeBooleanPreference(getActivity(), R.string.pref_use_eight_dots_key, isComputer);
+                        } catch (Exception e) {
+                            android.util.Log.e("PreferenceIME", "Error syncing braille type and 8 dots", e);
+                        }
+                        return true;
+                    }
+                });
+            }
         }
 
         @Override

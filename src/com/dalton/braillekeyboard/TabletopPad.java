@@ -16,6 +16,7 @@
 
 package com.dalton.braillekeyboard;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -108,29 +109,63 @@ public class TabletopPad extends Pad {
     private void sortKeys(List<Coords> coords, boolean portrait, boolean invert,
             boolean useEightDots) {
         Collections.sort(keys, comparatorX);
-        if (invert) {
-            // Mapping for 180-degree rotation (speaker on left)
-            // Screen L->R: Dot 6, Dot 5, Dot 4, Dot 1, Dot 2, Dot 3
-            // So that User L->R (after 180 rotation) is: Dot 3, Dot 2, Dot 1, Dot 4, Dot 5, Dot 6
-            Coords d1 = keys.get(3);
-            Coords d2 = keys.get(4);
-            Coords d3 = keys.get(5);
-            Coords d4 = keys.get(2);
-            Coords d5 = keys.get(1);
-            Coords d6 = keys.get(0);
-            keys.set(0, d1);
-            keys.set(1, d2);
-            keys.set(2, d3);
-            keys.set(3, d4);
-            keys.set(4, d5);
-            keys.set(5, d6);
-        } else {
-            // Standard Perkins (speaker on right)
-            // Screen L->R: Dot 3, Dot 2, Dot 1, Dot 4, Dot 5, Dot 6
-            Collections.swap(keys, 0, 2);
-        }
-        if (useEightDots) {
-            insertSpecialDots();
+        if (keys.size() == 6) {
+            // Standard Perkins: 3, 2, 1, 4, 5, 6 (ordinati per X)
+            if (invert) {
+                // Mapping per rotazione 180 gradi
+                Coords d1 = keys.get(3);
+                Coords d2 = keys.get(4);
+                Coords d3 = keys.get(5);
+                Coords d4 = keys.get(2);
+                Coords d5 = keys.get(1);
+                Coords d6 = keys.get(0);
+                keys.set(0, d1);
+                keys.set(1, d2);
+                keys.set(2, d3);
+                keys.set(3, d4);
+                keys.set(4, d5);
+                keys.set(5, d6);
+            } else {
+                // Standard Perkins (altoparlante a destra)
+                // Vogliamo: Index 0=Dot1, 1=Dot2, 2=Dot3, 3=Dot4, 4=Dot5, 5=Dot6
+                // keys attualmente: 0=Dot3, 1=Dot2, 2=Dot1, 3=Dot4, 4=Dot5, 5=Dot6
+                Collections.swap(keys, 0, 2);
+            }
+            if (useEightDots) {
+                insertSpecialDots();
+            }
+        } else if (keys.size() == 8) {
+            // Se abbiamo 8 punti (ordinati per X): 7, 3, 2, 1, 4, 5, 6, 8
+            // Vogliamo mappare agli indici corretti per Pad.getColumn:
+            // LEFT: Index 0=Dot1, 1=Dot2, 2=Dot3, 6=Dot7
+            // RIGHT: Index 3=Dot4, 4=Dot5, 5=Dot6, 7=Dot8
+            
+            // Creiamo una copia per non sovrascrivere mentre assegniamo
+            List<Coords> sorted = new ArrayList<Coords>(keys);
+            keys.clear();
+            for (int i=0; i<8; i++) keys.add(null);
+            
+            if (invert) {
+                // Invertito (Altoparlante a sinistra): 8, 6, 5, 4, 1, 2, 3, 7 (X crescente)
+                keys.set(0, sorted.get(4)); // Dot 1
+                keys.set(1, sorted.get(5)); // Dot 2
+                keys.set(2, sorted.get(6)); // Dot 3
+                keys.set(3, sorted.get(3)); // Dot 4
+                keys.set(4, sorted.get(2)); // Dot 5
+                keys.set(5, sorted.get(1)); // Dot 6
+                keys.set(6, sorted.get(7)); // Dot 7
+                keys.set(7, sorted.get(0)); // Dot 8
+            } else {
+                // Standard (Altoparlante a destra): 7, 3, 2, 1, 4, 5, 6, 8 (X crescente)
+                keys.set(0, sorted.get(3)); // Dot 1
+                keys.set(1, sorted.get(2)); // Dot 2
+                keys.set(2, sorted.get(1)); // Dot 3
+                keys.set(3, sorted.get(4)); // Dot 4
+                keys.set(4, sorted.get(5)); // Dot 5
+                keys.set(5, sorted.get(6)); // Dot 6
+                keys.set(6, sorted.get(0)); // Dot 7
+                keys.set(7, sorted.get(7)); // Dot 8
+            }
         }
     }
 

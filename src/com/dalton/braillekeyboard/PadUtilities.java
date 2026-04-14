@@ -92,7 +92,8 @@ public class PadUtilities {
                 }
             }
 
-            if (leftCount == 3 && rightCount == 3) {
+            int expectedOneSide = useEightDots ? 4 : 3;
+            if (leftCount == expectedOneSide && rightCount == expectedOneSide) {
                 pad = new VerticalPad(context, coords, width, height, portrait,
                         invert, useEightDots);
             } else {
