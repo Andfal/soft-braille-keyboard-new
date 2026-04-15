@@ -690,7 +690,19 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         EditorInfo info = getCurrentInputEditorInfo();
         if (info == null) return false;
         int inputType = info.inputType;
-        return (inputType & InputType.TYPE_TEXT_VARIATION_PASSWORD) != 0 || (inputType & InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) != 0 || (inputType & InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD) != 0;
+
+        // Ensure we are dealing with a text class input
+        if ((inputType & InputType.TYPE_MASK_CLASS) != InputType.TYPE_CLASS_TEXT) {
+            return false;
+        }
+
+        // Extract the variation using the appropriate mask
+        int variation = inputType & InputType.TYPE_MASK_VARIATION;
+
+        // Check for exact equality with password variations
+        return variation == InputType.TYPE_TEXT_VARIATION_PASSWORD ||
+               variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD ||
+               variation == InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD;
     }
 
     @Override public int switchBrailleType() { return brailleParser != null ? brailleParser.switchBrailleType(this).dots : -1; }
