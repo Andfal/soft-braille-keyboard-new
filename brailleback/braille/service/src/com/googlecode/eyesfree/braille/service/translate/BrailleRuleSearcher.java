@@ -42,12 +42,12 @@ public class BrailleRuleSearcher {
         String regex = "(?<![1-8])" + Pattern.quote(dotPattern) + "(?![1-8])";
         Pattern pattern = Pattern.compile(regex);
 
-        searchRecursive(dotPattern, startFilePath, pattern, results, visitedFiles);
+        searchRecursive(dotPattern, startFilePath, pattern, results, visitedFiles, null);
         return results;
     }
 
     private void searchRecursive(String dotPattern, String filePath, Pattern pattern, 
-                                List<BrailleRule> results, Set<String> visitedFiles) {
+                                List<BrailleRule> results, Set<String> visitedFiles, String includeChain) {
         File file = new File(filePath);
         String absPath = file.getAbsolutePath();
         
@@ -77,8 +77,14 @@ public class BrailleRuleSearcher {
                     if (parts.length > 1) {
                         String includeName = parts[1];
                         File includeFile = new File(parentDir, includeName);
+                        
+                        // Build the full breadcrumb chain: root -> file1:line -> file2:line
+                        String nextChain = (includeChain == null) 
+                                ? file.getName() + ":" + lineNum
+                                : includeChain + " -> " + file.getName() + ":" + lineNum;
+                                
                         searchRecursive(dotPattern, includeFile.getAbsolutePath(), 
-                                       pattern, results, visitedFiles);
+                                       pattern, results, visitedFiles, nextChain);
                     }
                 }
 
@@ -86,7 +92,13 @@ public class BrailleRuleSearcher {
                 if (matcher.find()) {
                     String type = identifyRuleType(trimmed);
                     String resKey = getResourceKey(trimmed);
-                    results.add(new BrailleRule(file.getName(), lineNum, trimmed, type, resKey));
+                    
+                    // Format the filename with the full inclusion context
+                    String fileNameWithContext = (includeChain != null) 
+                            ? file.getName() + " (-> " + includeChain + ")" 
+                            : file.getName();
+                            
+                    results.add(new BrailleRule(fileNameWithContext, lineNum, trimmed, type, resKey));
                 }
             }
         } catch (IOException e) {
