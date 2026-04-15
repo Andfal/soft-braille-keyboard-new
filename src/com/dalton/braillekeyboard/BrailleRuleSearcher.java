@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Advanced utility to search for Braille dot patterns and sequences 
+ * Advanced utility to search for Braille dot patterns and sequences
  * with localized, user-friendly descriptions.
  */
 public class BrailleRuleSearcher {
@@ -23,10 +23,10 @@ public class BrailleRuleSearcher {
         public final String fileName;
         public final int lineNumber;
         public final String content;
-        public final String type; 
+        public final String type;
         public final String resourceKey; // The key to look up in strings.xml
 
-        public BrailleRule(String fileName, int lineNumber, String content, String type, String resourceKey) {
+        public BrailleRule(String fileName, int lineNumber, String content, String type, String resourceKey) {  
             this.fileName = fileName;
             this.lineNumber = lineNumber;
             this.content = content;
@@ -38,19 +38,19 @@ public class BrailleRuleSearcher {
     public List<BrailleRule> search(String dotPattern, String startFilePath) {
         List<BrailleRule> results = new ArrayList<>();
         Set<String> visitedFiles = new HashSet<>();
-        
+
         String regex = "(?<![1-8])" + Pattern.quote(dotPattern) + "(?![1-8])";
         Pattern pattern = Pattern.compile(regex);
 
-        searchRecursive(dotPattern, startFilePath, pattern, results, visitedFiles);
+        searchRecursive(dotPattern, startFilePath, pattern, results, visitedFiles, null);
         return results;
     }
 
     private void searchRecursive(String dotPattern, String filePath, Pattern pattern, 
-                                List<BrailleRule> results, Set<String> visitedFiles) {
+                                List<BrailleRule> results, Set<String> visitedFiles, String includeChain) {
         File file = new File(filePath);
         String absPath = file.getAbsolutePath();
-        
+
         if (visitedFiles.contains(absPath) || !file.exists()) {
             return;
         }
@@ -58,16 +58,16 @@ public class BrailleRuleSearcher {
 
         File parentDir = file.getParentFile();
         BufferedReader reader = null;
-        
+
         try {
             reader = new BufferedReader(new FileReader(file));
             String line;
             int lineNum = 0;
-            
+
             while ((line = reader.readLine()) != null) {
                 lineNum++;
                 String trimmed = line.trim();
-                
+
                 if (trimmed.isEmpty() || trimmed.startsWith("#")) {
                     continue;
                 }
@@ -77,8 +77,14 @@ public class BrailleRuleSearcher {
                     if (parts.length > 1) {
                         String includeName = parts[1];
                         File includeFile = new File(parentDir, includeName);
-                        searchRecursive(dotPattern, includeFile.getAbsolutePath(), 
-                                       pattern, results, visitedFiles);
+
+                        // Build the full breadcrumb chain: root -> file1:line -> file2:line
+                        String nextChain = (includeChain == null)
+                                ? file.getName() + ":" + lineNum
+                                : includeChain + " -> " + file.getName() + ":" + lineNum;
+
+                        searchRecursive(dotPattern, includeFile.getAbsolutePath(),
+                                       pattern, results, visitedFiles, nextChain);
                     }
                 }
 
@@ -86,7 +92,13 @@ public class BrailleRuleSearcher {
                 if (matcher.find()) {
                     String type = identifyRuleType(trimmed);
                     String resKey = getResourceKey(trimmed);
-                    results.add(new BrailleRule(file.getName(), lineNum, trimmed, type, resKey));
+                    
+                    // Format the filename with the full inclusion context
+                    String fileNameWithContext = (includeChain != null)
+                            ? file.getName() + " (-> " + includeChain + ")"
+                            : file.getName();
+
+                    results.add(new BrailleRule(fileNameWithContext, lineNum, trimmed, type, resKey));
                 }
             }
         } catch (IOException e) {
@@ -120,7 +132,7 @@ public class BrailleRuleSearcher {
         if (line.contains("emphclass bold")) return "help_desc_bold";
         if (line.contains("emphclass underline")) return "help_desc_underline";
         if (line.contains("correct")) {
-            if (line.contains("\"̄\"") || line.contains("\"̅\"")) return "help_desc_diacritic";
+            if (line.contains("\"\u0304\"") || line.contains("\"\u0305\"")) return "help_desc_diacritic";
             return "help_desc_autocorrect";
         }
         if (line.contains("#") && line.contains("=")) {
