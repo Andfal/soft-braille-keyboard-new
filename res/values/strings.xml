@@ -168,13 +168,24 @@
     <string name="swipe_six_right">Dot 6: Swipe Right</string>
     <string name="swipe_six_up">Dot 6: Swipe Up</string>
     <string name="swipe_six_down">Dot 6: Swipe Down</string>
-    <string name="swipe_two_fingers_down">Two Fingers: Swipe Down</string>
+    
+    <string name="swipe_left_two_down">Two Fingers (Left): Swipe Down</string>
+    <string name="swipe_right_two_down">Two Fingers (Right): Swipe Down</string>
     
     <string name="swipe_hold_one_left">Hold Dot 1 &amp; Swipe Left</string>
+
+
     <string name="swipe_hold_one_right">Hold Dot 1 &amp; Swipe Right</string>
     <string name="swipe_hold_one_up">Hold Dot 1 &amp; Swipe Up</string>
     <string name="swipe_hold_one_down">Hold Dot 1 &amp; Swipe Down</string>
+    
+    <string name="swipe_hold_two_left">Hold Dot 2 &amp; Swipe Left</string>
+    <string name="swipe_hold_two_right">Hold Dot 2 &amp; Swipe Right</string>
+    <string name="swipe_hold_two_up">Hold Dot 2 &amp; Swipe Up</string>
+    <string name="swipe_hold_two_down">Hold Dot 2 &amp; Swipe Down</string>
+
     <string name="swipe_hold_three_left">Hold Dot 3 &amp; Swipe Left</string>
+
     <string name="swipe_hold_three_right">Hold Dot 3 &amp; Swipe Right</string>
     <string name="swipe_hold_three_up">Hold Dot 3 &amp; Swipe Up</string>
     <string name="swipe_hold_three_down">Hold Dot 3 &amp; Swipe Down</string>
@@ -182,7 +193,14 @@
     <string name="swipe_hold_four_right">Hold Dot 4 &amp; Swipe Right</string>
     <string name="swipe_hold_four_up">Hold Dot 4 &amp; Swipe Up</string>
     <string name="swipe_hold_four_down">Hold Dot 4 &amp; Swipe Down</string>
+    
+    <string name="swipe_hold_five_left">Hold Dot 5 &amp; Swipe Left</string>
+    <string name="swipe_hold_five_right">Hold Dot 5 &amp; Swipe Right</string>
+    <string name="swipe_hold_five_up">Hold Dot 5 &amp; Swipe Up</string>
+    <string name="swipe_hold_five_down">Hold Dot 5 &amp; Swipe Down</string>
+
     <string name="swipe_hold_six_left">Hold Dot 6 &amp; Swipe Left</string>
+
     <string name="swipe_hold_six_right">Hold Dot 6 &amp; Swipe Right</string>
     <string name="swipe_hold_six_up">Hold Dot 6 &amp; Swipe Up</string>
     <string name="swipe_hold_six_down">Hold Dot 6 &amp; Swipe Down</string>
@@ -195,6 +213,7 @@
     <string name="pref_reset_gestures_confirm">Are you sure you want to reset all gestures to their default assignments?</string>
     
     <string name="pref_group_single_finger">Single Finger Swipes</string>
+    <string name="pref_group_two_fingers">Two-Finger Swipes (Down only)</string>
     <string name="pref_group_hold_swipe">Hold &amp; Swipe Gestures</string>
 
 

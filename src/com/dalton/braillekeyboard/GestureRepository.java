@@ -28,9 +28,10 @@ public class GestureRepository {
         defaultMappings.put(Swipe.TWO_RIGHT, BrailleAction.MOVE_RIGHT_WORD);
         defaultMappings.put(Swipe.TWO_UP, BrailleAction.READ_WORD);
         defaultMappings.put(Swipe.TWO_DOWN, BrailleAction.CYCLE_ECHO_FEEDBACK);
-        
-        defaultMappings.put(Swipe.TWO_FINGERS_DOWN, BrailleAction.CLOSE_KEYBOARD);
-        
+
+        defaultMappings.put(Swipe.LEFT_TWO_DOWN, BrailleAction.CLOSE_KEYBOARD); // Original TWO_FINGERS_DOWN
+        defaultMappings.put(Swipe.RIGHT_TWO_DOWN, BrailleAction.NONE);
+
         defaultMappings.put(Swipe.THREE_LEFT, BrailleAction.MOVE_LEFT_LINE);
         defaultMappings.put(Swipe.THREE_RIGHT, BrailleAction.MOVE_RIGHT_LINE);
         defaultMappings.put(Swipe.THREE_UP, BrailleAction.READ_LINE);
@@ -72,6 +73,16 @@ public class GestureRepository {
         defaultMappings.put(Swipe.HOLD_FOUR_RIGHT, BrailleAction.SPELL_CHECK_RIGHT);
         defaultMappings.put(Swipe.HOLD_FOUR_DOWN, BrailleAction.SPELL_CHECK_NEXT_SUGGESTION);
         defaultMappings.put(Swipe.HOLD_FOUR_UP, BrailleAction.SPELL_CHECK_PREV_SUGGESTION);
+
+        defaultMappings.put(Swipe.HOLD_TWO_LEFT, BrailleAction.NONE);
+        defaultMappings.put(Swipe.HOLD_TWO_RIGHT, BrailleAction.NONE);
+        defaultMappings.put(Swipe.HOLD_TWO_UP, BrailleAction.NONE);
+        defaultMappings.put(Swipe.HOLD_TWO_DOWN, BrailleAction.NONE);
+
+        defaultMappings.put(Swipe.HOLD_FIVE_LEFT, BrailleAction.NONE);
+        defaultMappings.put(Swipe.HOLD_FIVE_RIGHT, BrailleAction.NONE);
+        defaultMappings.put(Swipe.HOLD_FIVE_UP, BrailleAction.NONE);
+        defaultMappings.put(Swipe.HOLD_FIVE_DOWN, BrailleAction.NONE);
     }
 
     public static BrailleAction getActionForSwipe(Context context, Swipe swipe) {

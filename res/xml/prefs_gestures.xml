@@ -132,15 +132,24 @@
             android:title="@string/swipe_six_down"
             android:entries="@array/braille_action_entries"
             android:entryValues="@array/braille_action_values" />
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/pref_group_two_fingers">
+        <ListPreference
+            android:key="gesture_mapping_LEFT_TWO_DOWN"
+            android:title="@string/swipe_left_two_down"
+            android:entries="@array/braille_action_entries"
+            android:entryValues="@array/braille_action_values" />
 
         <ListPreference
-            android:key="gesture_mapping_TWO_FINGERS_DOWN"
-            android:title="@string/swipe_two_fingers_down"
+            android:key="gesture_mapping_RIGHT_TWO_DOWN"
+            android:title="@string/swipe_right_two_down"
             android:entries="@array/braille_action_entries"
             android:entryValues="@array/braille_action_values" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_group_hold_swipe">
+        <!-- Hold Dot 1 -->
         <ListPreference
             android:key="gesture_mapping_HOLD_ONE_LEFT"
             android:title="@string/swipe_hold_one_left"
@@ -162,6 +171,29 @@
             android:entries="@array/braille_action_entries"
             android:entryValues="@array/braille_action_values" />
 
+        <!-- Hold Dot 2 (NEW) -->
+        <ListPreference
+            android:key="gesture_mapping_HOLD_TWO_LEFT"
+            android:title="@string/swipe_hold_two_left"
+            android:entries="@array/braille_action_entries"
+            android:entryValues="@array/braille_action_values" />
+        <ListPreference
+            android:key="gesture_mapping_HOLD_TWO_RIGHT"
+            android:title="@string/swipe_hold_two_right"
+            android:entries="@array/braille_action_entries"
+            android:entryValues="@array/braille_action_values" />
+        <ListPreference
+            android:key="gesture_mapping_HOLD_TWO_UP"
+            android:title="@string/swipe_hold_two_up"
+            android:entries="@array/braille_action_entries"
+            android:entryValues="@array/braille_action_values" />
+        <ListPreference
+            android:key="gesture_mapping_HOLD_TWO_DOWN"
+            android:title="@string/swipe_hold_two_down"
+            android:entries="@array/braille_action_entries"
+            android:entryValues="@array/braille_action_values" />
+
+        <!-- Hold Dot 3 -->
         <ListPreference
             android:key="gesture_mapping_HOLD_THREE_LEFT"
             android:title="@string/swipe_hold_three_left"
@@ -183,6 +215,7 @@
             android:entries="@array/braille_action_entries"
             android:entryValues="@array/braille_action_values" />
 
+        <!-- Hold Dot 4 -->
         <ListPreference
             android:key="gesture_mapping_HOLD_FOUR_LEFT"
             android:title="@string/swipe_hold_four_left"
@@ -204,6 +237,29 @@
             android:entries="@array/braille_action_entries"
             android:entryValues="@array/braille_action_values" />
 
+        <!-- Hold Dot 5 (NEW) -->
+        <ListPreference
+            android:key="gesture_mapping_HOLD_FIVE_LEFT"
+            android:title="@string/swipe_hold_five_left"
+            android:entries="@array/braille_action_entries"
+            android:entryValues="@array/braille_action_values" />
+        <ListPreference
+            android:key="gesture_mapping_HOLD_FIVE_RIGHT"
+            android:title="@string/swipe_hold_five_right"
+            android:entries="@array/braille_action_entries"
+            android:entryValues="@array/braille_action_values" />
+        <ListPreference
+            android:key="gesture_mapping_HOLD_FIVE_UP"
+            android:title="@string/swipe_hold_five_up"
+            android:entries="@array/braille_action_entries"
+            android:entryValues="@array/braille_action_values" />
+        <ListPreference
+            android:key="gesture_mapping_HOLD_FIVE_DOWN"
+            android:title="@string/swipe_hold_five_down"
+            android:entries="@array/braille_action_entries"
+            android:entryValues="@array/braille_action_values" />
+
+        <!-- Hold Dot 6 -->
         <ListPreference
             android:key="gesture_mapping_HOLD_SIX_LEFT"
             android:title="@string/swipe_hold_six_left"

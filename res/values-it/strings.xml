@@ -639,13 +639,24 @@
     <string name="swipe_six_right">Punto 6: Scorri a destra</string>
     <string name="swipe_six_up">Punto 6: Scorri in alto</string>
     <string name="swipe_six_down">Punto 6: Scorri in basso</string>
-    <string name="swipe_two_fingers_down">Due dita: Scorri in basso</string>
+    
+    <string name="swipe_left_two_down">Due dita (Sinistra): Scorri in basso</string>
+    <string name="swipe_right_two_down">Due dita (Destra): Scorri in basso</string>
     
     <string name="swipe_hold_one_left">Tieni Punto 1 e scorri a sinistra</string>
+
+
     <string name="swipe_hold_one_right">Tieni Punto 1 e scorri a destra</string>
     <string name="swipe_hold_one_up">Tieni Punto 1 e scorri in alto</string>
     <string name="swipe_hold_one_down">Tieni Punto 1 e scorri in basso</string>
+    
+    <string name="swipe_hold_two_left">Tieni Punto 2 e scorri a sinistra</string>
+    <string name="swipe_hold_two_right">Tieni Punto 2 e scorri a destra</string>
+    <string name="swipe_hold_two_up">Tieni Punto 2 e scorri in alto</string>
+    <string name="swipe_hold_two_down">Tieni Punto 2 e scorri in basso</string>
+
     <string name="swipe_hold_three_left">Tieni Punto 3 e scorri a sinistra</string>
+
     <string name="swipe_hold_three_right">Tieni Punto 3 e scorri a destra</string>
     <string name="swipe_hold_three_up">Tieni Punto 3 e scorri in alto</string>
     <string name="swipe_hold_three_down">Tieni Punto 3 e scorri in basso</string>
@@ -653,7 +664,14 @@
     <string name="swipe_hold_four_right">Tieni Punto 4 e scorri a destra</string>
     <string name="swipe_hold_four_up">Tieni Punto 4 e scorri in alto</string>
     <string name="swipe_hold_four_down">Tieni Punto 4 e scorri in basso</string>
+    
+    <string name="swipe_hold_five_left">Tieni Punto 5 e scorri a sinistra</string>
+    <string name="swipe_hold_five_right">Tieni Punto 5 e scorri a destra</string>
+    <string name="swipe_hold_five_up">Tieni Punto 5 e scorri in alto</string>
+    <string name="swipe_hold_five_down">Tieni Punto 5 e scorri in basso</string>
+
     <string name="swipe_hold_six_left">Tieni Punto 6 e scorri a sinistra</string>
+
     <string name="swipe_hold_six_right">Tieni Punto 6 e scorri a destra</string>
     <string name="swipe_hold_six_up">Tieni Punto 6 e scorri in alto</string>
     <string name="swipe_hold_six_down">Tieni Punto 6 e scorri in basso</string>
@@ -666,6 +684,7 @@
     <string name="pref_reset_gestures_confirm">Sei sicuro di voler ripristinare tutti i gesti alle assegnazioni predefinite?</string>
     
     <string name="pref_group_single_finger">Scorrimenti a un dito</string>
+    <string name="pref_group_two_fingers">Scorrimenti a due dita (Solo in basso)</string>
     <string name="pref_group_hold_swipe">Gesti tocco prolungato e scorrimento</string>
 
     <!-- BrailleAction Arrays (IT) -->
