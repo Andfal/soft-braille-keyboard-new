@@ -67,6 +67,7 @@
     <table id="ko-g2" locale="ko" dots="6" grade="2" fileName="ko-2006-g2.ctb" />
     <table id="lt-g1" locale="lt" dots="6" grade="1" fileName="lt-6dot.utb" />
     <table id="lt-comp8" locale="lt" dots="8" fileName="lt-8dot.utb" />
+    <table id="lv-g1" locale="lv" dots="6" grade="1" fileName="Lv-Lv-g1.utb" />
     <table id="ml-g1" locale="ml" dots="6" grade="1" fileName="ml-in-g1.utb" />
     <table id="mr-g1" locale="mr" dots="6" grade="1" fileName="mr-in-g1.utb" />
     <table id="nl-comp8" locale="nl" dots="8" fileName="nl-comp8.utb" />
@@ -75,6 +76,7 @@
     <table id="no-g2" locale="no" dots="6" grade="2" fileName="no-no-g2.ctb" />
     <table id="no-g3" locale="no" dots="6" grade="3" fileName="no-no-g3.ctb" />
     <table id="no-comp8" locale="no" dots="8" fileName="no-no-8dot-fallback-6dot-g0.utb" />
+    <table id="pl-g1" locale="pl" dots="6" grade="1" fileName="Pl-Pl-g1.utb" />
     <table id="pl-comp8" locale="pl" dots="8" fileName="pl-pl-comp8.ctb" />
     <table id="pt-g1" locale="pt" dots="6" grade="1" fileName="pt-pt-g1.utb" />
     <table id="pt-g2" locale="pt" dots="6" grade="2" fileName="pt-pt-g2.ctb" />
