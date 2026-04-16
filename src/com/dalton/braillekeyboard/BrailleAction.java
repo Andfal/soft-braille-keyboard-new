@@ -56,6 +56,14 @@ public enum BrailleAction {
     SELECT_TEXT_ACTION(R.string.action_select_text_action),
     EMOJI_MODE_TOGGLE(R.string.action_emoji_mode_toggle),
     
+    // Edit Actions (Direct access)
+    EDIT_SELECT_ALL(R.string.action_edit_select_all),
+    EDIT_COPY(R.string.action_edit_copy),
+    EDIT_CUT(R.string.action_edit_cut),
+    EDIT_PASTE(R.string.action_edit_paste),
+    EDIT_SPEAK(R.string.action_edit_speak),
+    EDIT_DELETE(R.string.action_edit_delete),
+    
     // Spell Check
     SPELL_CHECK_LEFT(R.string.action_spell_check_left),
     SPELL_CHECK_RIGHT(R.string.action_spell_check_right),

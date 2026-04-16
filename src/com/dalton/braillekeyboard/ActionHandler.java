@@ -555,6 +555,25 @@ public class ActionHandler {
             }
             break;
 
+        case EDIT_SELECT_ALL:
+            doSelectAll(context);
+            break;
+        case EDIT_COPY:
+            doCopy(context);
+            break;
+        case EDIT_CUT:
+            doCut(context);
+            break;
+        case EDIT_PASTE:
+            doPaste(context);
+            break;
+        case EDIT_SPEAK:
+            doSpeakSelection(context);
+            break;
+        case EDIT_DELETE:
+            doDeleteSelection(context);
+            break;
+
         case SPELL_CHECK_LEFT:
             doSpellCheck(context, SpellChecker.Direction.LEFT, 0,
                     listener.getCursor());
@@ -682,34 +701,60 @@ public class ActionHandler {
     private void selectAction(Context context) {
         switch (editAction) {
         case COPY:
-            performContextMenuAction(context, true, android.R.id.copy,
-                    R.string.copied, R.string.copy_error);
-            listener.deselect();
+            doCopy(context);
             break;
         case CUT:
-            if (performContextMenuAction(context, true, android.R.id.cut,
-                    android.R.string.cut, R.string.cut_error)) {
-                listener.setCursorToStartOfSelection();
-            }
+            doCut(context);
             break;
         case PASTE:
-            if (performContextMenuAction(context, false, android.R.id.paste,
-                    R.string.pasted, R.string.paste_error)) {
-                int cursor = listener.getCursor();
-                listener.setSelection(cursor);
-            }
+            doPaste(context);
             break;
         case SPEAK:
+            doSpeakSelection(context);
+            break;
         case DELETE:
-            performAction(context, editAction);
+            doDeleteSelection(context);
             break;
         case SELECT_ALL:
-            listener.selectAll();
-            callback.onText("%s", context.getString(R.string.selected_all),
-                    false);
+            doSelectAll(context);
             break;
         default:
         }
+    }
+
+    private void doCopy(Context context) {
+        performContextMenuAction(context, true, android.R.id.copy,
+                R.string.copied, R.string.copy_error);
+        listener.deselect();
+    }
+
+    private void doCut(Context context) {
+        if (performContextMenuAction(context, true, android.R.id.cut,
+                android.R.string.cut, R.string.cut_error)) {
+            listener.setCursorToStartOfSelection();
+        }
+    }
+
+    private void doPaste(Context context) {
+        if (performContextMenuAction(context, false, android.R.id.paste,
+                R.string.pasted, R.string.paste_error)) {
+            int cursor = listener.getCursor();
+            listener.setSelection(cursor);
+        }
+    }
+
+    private void doSpeakSelection(Context context) {
+        performAction(context, EditAction.SPEAK);
+    }
+
+    private void doDeleteSelection(Context context) {
+        performAction(context, EditAction.DELETE);
+    }
+
+    private void doSelectAll(Context context) {
+        listener.selectAll();
+        callback.onText("%s", context.getString(R.string.selected_all),
+                false);
     }
 
     // Handle these actions by using the inbuilt android context menu action

@@ -136,6 +136,12 @@
     <string name="action_next_field_action">Next field / action</string>
     <string name="action_select_text_action">Select / Action</string>
     <string name="action_emoji_mode_toggle">Toggle emoji search mode</string>
+    <string name="action_edit_select_all">Action: Select All</string>
+    <string name="action_edit_copy">Action: Copy</string>
+    <string name="action_edit_cut">Action: Cut</string>
+    <string name="action_edit_paste">Action: Paste</string>
+    <string name="action_edit_speak">Action: Speak selection</string>
+    <string name="action_edit_delete">Action: Delete selection</string>
     <string name="action_spell_check_left">Spell check previous word</string>
     <string name="action_spell_check_right">Spell check next word</string>
     <string name="action_spell_check_next_suggestion">Next spelling suggestion</string>
@@ -724,6 +730,12 @@
         <item>@string/action_next_field_action</item>
         <item>@string/action_select_text_action</item>
         <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_edit_select_all</item>
+        <item>@string/action_edit_copy</item>
+        <item>@string/action_edit_cut</item>
+        <item>@string/action_edit_paste</item>
+        <item>@string/action_edit_speak</item>
+        <item>@string/action_edit_delete</item>
         <item>@string/action_spell_check_left</item>
         <item>@string/action_spell_check_right</item>
         <item>@string/action_spell_check_next_suggestion</item>
@@ -769,6 +781,12 @@
         <item>NEXT_FIELD_ACTION</item>
         <item>SELECT_TEXT_ACTION</item>
         <item>EMOJI_MODE_TOGGLE</item>
+        <item>EDIT_SELECT_ALL</item>
+        <item>EDIT_COPY</item>
+        <item>EDIT_CUT</item>
+        <item>EDIT_PASTE</item>
+        <item>EDIT_SPEAK</item>
+        <item>EDIT_DELETE</item>
         <item>SPELL_CHECK_LEFT</item>
         <item>SPELL_CHECK_RIGHT</item>
         <item>SPELL_CHECK_NEXT_SUGGESTION</item>

@@ -607,6 +607,12 @@
     <string name="action_next_field_action">Campo/azione successivo</string>
     <string name="action_select_text_action">Seleziona / Azione</string>
     <string name="action_emoji_mode_toggle">Attiva/disattiva ricerca emoji</string>
+    <string name="action_edit_select_all">Azione: Seleziona Tutto</string>
+    <string name="action_edit_copy">Azione: Copia</string>
+    <string name="action_edit_cut">Azione: Taglia</string>
+    <string name="action_edit_paste">Azione: Incolla</string>
+    <string name="action_edit_speak">Azione: Leggi selezione</string>
+    <string name="action_edit_delete">Azione: Cancella selezione</string>
     <string name="action_spell_check_left">Controllo ortografico parola precedente</string>
     <string name="action_spell_check_right">Controllo ortografico parola successiva</string>
     <string name="action_spell_check_next_suggestion">Suggerimento ortografico successivo</string>
@@ -725,7 +731,14 @@
         <item>@string/action_next_field_action</item>
         <item>@string/action_select_text_action</item>
         <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_edit_select_all</item>
+        <item>@string/action_edit_copy</item>
+        <item>@string/action_edit_cut</item>
+        <item>@string/action_edit_paste</item>
+        <item>@string/action_edit_speak</item>
+        <item>@string/action_edit_delete</item>
         <item>@string/action_spell_check_left</item>
+
         <item>@string/action_spell_check_right</item>
         <item>@string/action_spell_check_next_suggestion</item>
         <item>@string/action_spell_check_prev_suggestion</item>
