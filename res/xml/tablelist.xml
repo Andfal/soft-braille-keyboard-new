@@ -7,14 +7,14 @@
     <table id="en-ueb-g1" locale="en" dots="6" grade="1" variant="UEB" fileName="en-ueb-g1.ctb" />
     <table id="en-ueb-g2" locale="en" dots="6" grade="2" variant="UEB" fileName="en-ueb-g2.ctb" />
     <table id="en-us-comp8" locale="en_US" dots="8" fileName="en-us-comp8.ctb" />
-    <table id="es-g1" locale="es_ES" dots="6" grade="1" fileName="es-g1.ctb" />
-    <table id="es-g2" locale="es_ES" dots="6" grade="2" fileName="es-g2.ctb" />
-    <table id="es-comp8" locale="es_ES" dots="8" fileName="Es-Es-G0.utb" />
-    <table id="it-g1" locale="it_IT" dots="6" grade="1" variant="table_variant_unofficial" fileName="it-it-g1.ctb" />
-    <table id="it-comp8" locale="it_IT" dots="8" variant="table_variant_unofficial" fileName="it-it-comp8.utb" />
-    <table id="ru-g1" locale="ru_RU" dots="6" grade="1" fileName="ru-litbrl.ctb" />
-    <table id="ru-g2" locale="ru_RU" dots="6" grade="2" variant="Contracted" fileName="ru-ru-g1.ctb" />
-    <table id="ru-comp8" locale="ru_RU" dots="8" fileName="ru-comp8.utb" />
+    <table id="es-g1" locale="es" dots="6" grade="1" fileName="es-g1.ctb" />
+    <table id="es-g2" locale="es" dots="6" grade="2" fileName="es-g2.ctb" />
+    <table id="es-comp8" locale="es" dots="8" fileName="Es-Es-G0.utb" />
+    <table id="it-g1" locale="it" dots="6" grade="1" variant="table_variant_unofficial" fileName="it-it-g1.ctb" />
+    <table id="it-comp8" locale="it" dots="8" variant="table_variant_unofficial" fileName="it-it-comp8.utb" />
+    <table id="ru-g1" locale="ru" dots="6" grade="1" fileName="ru-litbrl.ctb" />
+    <table id="ru-g2" locale="ru" dots="6" grade="2" variant="Contracted" fileName="ru-ru-g1.ctb" />
+    <table id="ru-comp8" locale="ru" dots="8" fileName="ru-comp8.utb" />
     <table id="ckb-g1" locale="ckb" dots="6" grade="1" fileName="ckb-g1.ctb" />
     <table id="cy-g1" locale="cy" dots="6" grade="1" fileName="cy-cy-g1.utb" />
     <table id="cy-g2" locale="cy" dots="6" grade="2" fileName="cy-cy-g2.ctb" />
@@ -39,18 +39,18 @@
     <table id="da-comp8" locale="da" dots="8" fileName="da-dk-g08.ctb" />
     <table id="da-comp8" locale="da" dots="8" fileName="da-dk-g18.ctb" />
     <table id="da-comp8-g2" locale="da" dots="8" fileName="da-dk-g28.ctb" />
-    <table id="de-g0" locale="de_DE" dots="6" grade="0" fileName="de-g0-detailed.utb" />
-    <table id="de-g1" locale="de_DE" dots="6" grade="1" fileName="de-g1.ctb" />
-    <table id="de-g2" locale="de_DE" dots="6" grade="2" fileName="de-g2.ctb" />
-    <table id="de-comp8" locale="de_DE" dots="8" fileName="de-comp6.utb" />
+    <table id="de-g0" locale="de" dots="6" grade="0" fileName="de-g0-detailed.utb" />
+    <table id="de-g1" locale="de" dots="6" grade="1" fileName="de-g1.ctb" />
+    <table id="de-g2" locale="de" dots="6" grade="2" fileName="de-g2.ctb" />
+    <table id="de-comp8" locale="de" dots="8" fileName="de-comp6.utb" />
     <table id="el-g1" locale="el" dots="6" grade="1" fileName="el.ctb" />
     <table id="et-g1" locale="et" dots="6" grade="1" fileName="et-6dot.utb" />
     <table id="et-comp8" locale="et" dots="8" fileName="et-g0.utb" />
     <table id="fi-g1" locale="fi" dots="6" grade="1" fileName="fi.utb" />
     <table id="fi-comp8" locale="fi" dots="8" fileName="fi-fi-8dot.ctb" />
-    <table id="fr-g1" locale="fr_FR" dots="6" grade="1" fileName="fr-bfu-comp6.utb" />
-    <table id="fr-g2" locale="fr_FR" dots="6" grade="2" fileName="fr-bfu-g2.ctb" />
-    <table id="fr-comp8" locale="fr_FR" dots="8" fileName="fr-bfu-comp8.utb" />
+    <table id="fr-g1" locale="fr" dots="6" grade="1" fileName="fr-bfu-comp6.utb" />
+    <table id="fr-g2" locale="fr" dots="6" grade="2" fileName="fr-bfu-g2.ctb" />
+    <table id="fr-comp8" locale="fr" dots="8" fileName="fr-bfu-comp8.utb" />
     <table id="gu-g1" locale="gu" dots="6" grade="1" fileName="gu-in-g1.utb" />
     <table id="he-g1" locale="he" dots="6" grade="1" fileName="he-IL.utb" />
     <table id="he-comp8" locale="he" dots="8" fileName="he-IL-comp8.utb" />
@@ -67,6 +67,7 @@
     <table id="ko-g2" locale="ko" dots="6" grade="2" fileName="ko-2006-g2.ctb" />
     <table id="lt-g1" locale="lt" dots="6" grade="1" fileName="lt-6dot.utb" />
     <table id="lt-comp8" locale="lt" dots="8" fileName="lt-8dot.utb" />
+    <table id="lv-g1" locale="lv" dots="6" grade="1" fileName="Lv-Lv-g1.utb" />
     <table id="ml-g1" locale="ml" dots="6" grade="1" fileName="ml-in-g1.utb" />
     <table id="mr-g1" locale="mr" dots="6" grade="1" fileName="mr-in-g1.utb" />
     <table id="nl-comp8" locale="nl" dots="8" fileName="nl-comp8.utb" />
@@ -75,10 +76,11 @@
     <table id="no-g2" locale="no" dots="6" grade="2" fileName="no-no-g2.ctb" />
     <table id="no-g3" locale="no" dots="6" grade="3" fileName="no-no-g3.ctb" />
     <table id="no-comp8" locale="no" dots="8" fileName="no-no-8dot-fallback-6dot-g0.utb" />
+    <table id="pl-g1" locale="pl" dots="6" grade="1" fileName="Pl-Pl-g1.utb" />
     <table id="pl-comp8" locale="pl" dots="8" fileName="pl-pl-comp8.ctb" />
-    <table id="pt-g1" locale="pt_PT" dots="6" grade="1" fileName="pt-pt-g1.utb" />
-    <table id="pt-g2" locale="pt_PT" dots="6" grade="2" fileName="pt-pt-g2.ctb" />
-    <table id="pt-comp8" locale="pt_PT" dots="8" fileName="pt-comp6.utb" />
+    <table id="pt-g1" locale="pt" dots="6" grade="1" fileName="pt-pt-g1.utb" />
+    <table id="pt-g2" locale="pt" dots="6" grade="2" fileName="pt-pt-g2.ctb" />
+    <table id="pt-comp8" locale="pt" dots="8" fileName="pt-comp6.utb" />
     <table id="ro-g0" locale="ro" dots="6" grade="0" fileName="ro-g0.utb" />
     <table id="ro-comp8" locale="ro" dots="8" fileName="ro.ctb" />
     <table id="se-comp8" locale="se" dots="8" fileName="se-se.ctb" />

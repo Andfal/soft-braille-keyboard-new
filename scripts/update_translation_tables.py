@@ -147,7 +147,7 @@ def generate_tablelist_xml(index_entries):
         if fname in handled_files: continue
         
         # Get language from filename (e.g. ar-ar-g1.utb -> ar)
-        lang = fname.split('-')[0].split('.')[0]
+        lang = fname.split('-')[0].split('.')[0].lower()
         if lang in CORE_LANGUAGES:
             if lang not in candidates: candidates[lang] = {'6': {}, '8': {}}
             d_str = str(dots)
