@@ -98,6 +98,106 @@
     <string name="help_desc_underline">Underline Mode Indicator.</string>
     <string name="help_desc_whole_word">Whole Word Contraction: only works as a standalone word.</string>
     <string name="hide_keyboard">Hiding the keyboard.</string>
+
+    <!-- Braille Actions -->
+    <string name="action_none">None</string>
+    <string name="action_move_left_char">Move left by character</string>
+    <string name="action_move_right_char">Move right by character</string>
+    <string name="action_move_left_word">Move left by word</string>
+    <string name="action_move_right_word">Move right by word</string>
+    <string name="action_move_left_line">Move left by line</string>
+    <string name="action_move_right_line">Move right by line</string>
+    <string name="action_move_left_all">Move to beginning of text</string>
+    <string name="action_move_right_all">Move to end of text</string>
+    <string name="action_backspace_char">Delete character</string>
+    <string name="action_backspace_word">Delete word</string>
+    <string name="action_backspace_line">Delete line</string>
+    <string name="action_backspace_all">Delete all text</string>
+    <string name="action_read_char">Read current character</string>
+    <string name="action_read_word">Read current word</string>
+    <string name="action_read_line">Read current line</string>
+    <string name="action_read_all">Read all text</string>
+    <string name="action_space">Insert space</string>
+    <string name="action_newline">Insert newline</string>
+    <string name="action_voice_input">Voice input</string>
+    <string name="action_toggle_privacy">Toggle privacy mode</string>
+    <string name="action_toggle_auto_caps">Toggle auto-capitalization</string>
+    <string name="action_toggle_echo_passwords">Toggle speak passwords</string>
+    <string name="action_toggle_mark">Toggle selection mark</string>
+    <string name="action_cycle_keyboard_feedback">Cycle keyboard feedback (Sound/Vibrate)</string>
+    <string name="action_cycle_echo_feedback">Cycle echo feedback (Char/Word/None)</string>
+    <string name="action_switch_braille_type">Switch Literary/Computer Braille</string>
+    <string name="action_switch_braille_table">Switch Braille table</string>
+    <string name="action_open_settings">Open keyboard settings</string>
+    <string name="action_open_input_switcher">Open input method picker</string>
+    <string name="action_close_keyboard">Close keyboard</string>
+    <string name="action_shrink_keyboard">Shrink keyboard</string>
+    <string name="action_word_count">Word and character count</string>
+    <string name="action_next_field_action">Next field / action</string>
+    <string name="action_select_text_action">Select / Action</string>
+    <string name="action_emoji_mode_toggle">Toggle emoji search mode</string>
+    <string name="action_spell_check_left">Spell check previous word</string>
+    <string name="action_spell_check_right">Spell check next word</string>
+    <string name="action_spell_check_next_suggestion">Next spelling suggestion</string>
+    <string name="action_spell_check_prev_suggestion">Previous spelling suggestion</string>
+    <string name="action_set_dot_7">Type dot 7</string>
+    <string name="action_set_dot_8">Type dot 8</string>
+
+    <!-- Gesture Names -->
+    <string name="swipe_one_left">Dot 1: Swipe Left</string>
+    <string name="swipe_one_right">Dot 1: Swipe Right</string>
+    <string name="swipe_one_up">Dot 1: Swipe Up</string>
+    <string name="swipe_one_down">Dot 1: Swipe Down</string>
+    <string name="swipe_two_left">Dot 2: Swipe Left</string>
+    <string name="swipe_two_right">Dot 2: Swipe Right</string>
+    <string name="swipe_two_up">Dot 2: Swipe Up</string>
+    <string name="swipe_two_down">Dot 2: Swipe Down</string>
+    <string name="swipe_three_left">Dot 3: Swipe Left</string>
+    <string name="swipe_three_right">Dot 3: Swipe Right</string>
+    <string name="swipe_three_up">Dot 3: Swipe Up</string>
+    <string name="swipe_three_down">Dot 3: Swipe Down</string>
+    <string name="swipe_four_left">Dot 4: Swipe Left</string>
+    <string name="swipe_four_right">Dot 4: Swipe Right</string>
+    <string name="swipe_four_up">Dot 4: Swipe Up</string>
+    <string name="swipe_four_down">Dot 4: Swipe Down</string>
+    <string name="swipe_five_left">Dot 5: Swipe Left</string>
+    <string name="swipe_five_right">Dot 5: Swipe Right</string>
+    <string name="swipe_five_up">Dot 5: Swipe Up</string>
+    <string name="swipe_five_down">Dot 5: Swipe Down</string>
+    <string name="swipe_six_left">Dot 6: Swipe Left</string>
+    <string name="swipe_six_right">Dot 6: Swipe Right</string>
+    <string name="swipe_six_up">Dot 6: Swipe Up</string>
+    <string name="swipe_six_down">Dot 6: Swipe Down</string>
+    <string name="swipe_two_fingers_down">Two Fingers: Swipe Down</string>
+    
+    <string name="swipe_hold_one_left">Hold Dot 1 &amp; Swipe Left</string>
+    <string name="swipe_hold_one_right">Hold Dot 1 &amp; Swipe Right</string>
+    <string name="swipe_hold_one_up">Hold Dot 1 &amp; Swipe Up</string>
+    <string name="swipe_hold_one_down">Hold Dot 1 &amp; Swipe Down</string>
+    <string name="swipe_hold_three_left">Hold Dot 3 &amp; Swipe Left</string>
+    <string name="swipe_hold_three_right">Hold Dot 3 &amp; Swipe Right</string>
+    <string name="swipe_hold_three_up">Hold Dot 3 &amp; Swipe Up</string>
+    <string name="swipe_hold_three_down">Hold Dot 3 &amp; Swipe Down</string>
+    <string name="swipe_hold_four_left">Hold Dot 4 &amp; Swipe Left</string>
+    <string name="swipe_hold_four_right">Hold Dot 4 &amp; Swipe Right</string>
+    <string name="swipe_hold_four_up">Hold Dot 4 &amp; Swipe Up</string>
+    <string name="swipe_hold_four_down">Hold Dot 4 &amp; Swipe Down</string>
+    <string name="swipe_hold_six_left">Hold Dot 6 &amp; Swipe Left</string>
+    <string name="swipe_hold_six_right">Hold Dot 6 &amp; Swipe Right</string>
+    <string name="swipe_hold_six_up">Hold Dot 6 &amp; Swipe Up</string>
+    <string name="swipe_hold_six_down">Hold Dot 6 &amp; Swipe Down</string>
+
+    <string name="pref_category_gestures_title">Gesture Customization</string>
+    <string name="pref_gestures_summary">Assign functions to swipes and hold gestures</string>
+    <string name="pref_gestures_title">Customize Gestures</string>
+    <string name="pref_reset_gestures_title">Reset Gestures to Default</string>
+    <string name="pref_reset_gestures_summary">Restore original gesture assignments</string>
+    <string name="pref_reset_gestures_confirm">Are you sure you want to reset all gestures to their default assignments?</string>
+    
+    <string name="pref_group_single_finger">Single Finger Swipes</string>
+    <string name="pref_group_hold_swipe">Hold &amp; Swipe Gestures</string>
+
+
     <string name="high">High</string>
     <string name="hint_author">Author (e.g. Sergio)</string>
     <string name="hint_char">Char</string>
@@ -566,6 +666,98 @@
     <string name="word_correction_misspelled">%s misspelled</string>
     <string name="word_count">%1$d lines, %2$d words, %3$d characters</string>
     <string name="word_misspelled">Misspelled</string>
+    
+    <!-- BrailleAction Arrays -->
+    <string-array name="braille_action_entries">
+        <item>@string/action_none</item>
+        <item>@string/action_move_left_char</item>
+        <item>@string/action_move_right_char</item>
+        <item>@string/action_move_left_word</item>
+        <item>@string/action_move_right_word</item>
+        <item>@string/action_move_left_line</item>
+        <item>@string/action_move_right_line</item>
+        <item>@string/action_move_left_all</item>
+        <item>@string/action_move_right_all</item>
+        <item>@string/action_backspace_char</item>
+        <item>@string/action_backspace_word</item>
+        <item>@string/action_backspace_line</item>
+        <item>@string/action_backspace_all</item>
+        <item>@string/action_read_char</item>
+        <item>@string/action_read_word</item>
+        <item>@string/action_read_line</item>
+        <item>@string/action_read_all</item>
+        <item>@string/action_space</item>
+        <item>@string/action_newline</item>
+        <item>@string/action_voice_input</item>
+        <item>@string/action_toggle_privacy</item>
+        <item>@string/action_toggle_auto_caps</item>
+        <item>@string/action_toggle_echo_passwords</item>
+        <item>@string/action_toggle_mark</item>
+        <item>@string/action_cycle_keyboard_feedback</item>
+        <item>@string/action_cycle_echo_feedback</item>
+        <item>@string/action_switch_braille_type</item>
+        <item>@string/action_switch_braille_table</item>
+        <item>@string/action_open_settings</item>
+        <item>@string/action_open_input_switcher</item>
+        <item>@string/action_close_keyboard</item>
+        <item>@string/action_shrink_keyboard</item>
+        <item>@string/action_word_count</item>
+        <item>@string/action_next_field_action</item>
+        <item>@string/action_select_text_action</item>
+        <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_spell_check_left</item>
+        <item>@string/action_spell_check_right</item>
+        <item>@string/action_spell_check_next_suggestion</item>
+        <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_set_dot_7</item>
+        <item>@string/action_set_dot_8</item>
+    </string-array>
+
+    <string-array name="braille_action_values">
+        <item>NONE</item>
+        <item>MOVE_LEFT_CHAR</item>
+        <item>MOVE_RIGHT_CHAR</item>
+        <item>MOVE_LEFT_WORD</item>
+        <item>MOVE_RIGHT_WORD</item>
+        <item>MOVE_LEFT_LINE</item>
+        <item>MOVE_RIGHT_LINE</item>
+        <item>MOVE_LEFT_ALL</item>
+        <item>MOVE_RIGHT_ALL</item>
+        <item>BACKSPACE_CHAR</item>
+        <item>BACKSPACE_WORD</item>
+        <item>BACKSPACE_LINE</item>
+        <item>BACKSPACE_ALL</item>
+        <item>READ_CHAR</item>
+        <item>READ_WORD</item>
+        <item>READ_LINE</item>
+        <item>READ_ALL</item>
+        <item>SPACE</item>
+        <item>NEWLINE</item>
+        <item>VOICE_INPUT</item>
+        <item>TOGGLE_PRIVACY</item>
+        <item>TOGGLE_AUTO_CAPS</item>
+        <item>TOGGLE_ECHO_PASSWORDS</item>
+        <item>TOGGLE_MARK</item>
+        <item>CYCLE_KEYBOARD_FEEDBACK</item>
+        <item>CYCLE_ECHO_FEEDBACK</item>
+        <item>SWITCH_BRAILLE_TYPE</item>
+        <item>SWITCH_BRAILLE_TABLE</item>
+        <item>OPEN_SETTINGS</item>
+        <item>OPEN_INPUT_SWITCHER</item>
+        <item>CLOSE_KEYBOARD</item>
+        <item>SHRINK_KEYBOARD</item>
+        <item>WORD_COUNT</item>
+        <item>NEXT_FIELD_ACTION</item>
+        <item>SELECT_TEXT_ACTION</item>
+        <item>EMOJI_MODE_TOGGLE</item>
+        <item>SPELL_CHECK_LEFT</item>
+        <item>SPELL_CHECK_RIGHT</item>
+        <item>SPELL_CHECK_NEXT_SUGGESTION</item>
+        <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>SET_DOT_7</item>
+        <item>SET_DOT_8</item>
+    </string-array>
+
     
 
     

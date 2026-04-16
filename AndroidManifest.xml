@@ -95,5 +95,9 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <activity
+            android:name="com.dalton.braillekeyboard.GestureSettingsActivity"
+            android:label="@string/pref_category_gestures_title"
+            android:theme="@android:style/Theme.Holo.Light" />
     </application>
 </manifest>

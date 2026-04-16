@@ -287,6 +287,8 @@ public class ActionHandler {
         }
 
         value = normaliseSwipe(value);
+        BrailleAction action = GestureRepository.getActionForSwipe(context, value);
+        
         String message = null;
         boolean notify = true;
         boolean setDots = false;
@@ -295,85 +297,121 @@ public class ActionHandler {
         boolean dots[] = { false, false };
         boolean fastDoubleSwipe = fastDoubleSwipe(value, DOUBLE_TOUCH_THRESHOLD);
 
-        switch (value) {
-        case ONE_LEFT:
+        // Special handling for Emoji mode overrides
+        if (emojiMode) {
+            boolean emojiHandled = true;
+            switch (value) {
+                case FOUR_LEFT:
+                    if (emojiSearchQuery.length() > 0) {
+                        emojiSearchQuery.setLength(emojiSearchQuery.length() - 1);
+                        updateEmojiResults();
+                        callback.onText("%s", getEmojiSummary(), false);
+                    } else {
+                        callback.onText("%s", context.getString(R.string.emoji_search_query_empty), false);
+                    }
+                    break;
+                case SIX_LEFT:
+                    if (!emojiResults.isEmpty()) {
+                        emojiIndex = (emojiIndex - 1 + emojiResults.size()) % emojiResults.size();
+                        message = getEmojiSummary();
+                    } else {
+                        message = "No emoji results";
+                    }
+                    break;
+                case SIX_RIGHT:
+                    if (!emojiResults.isEmpty()) {
+                        emojiIndex = (emojiIndex + 1) % emojiResults.size();
+                        message = getEmojiSummary();
+                    } else {
+                        message = "No emoji results";
+                    }
+                    break;
+                case SIX_UP:
+                    if (!emojiResults.isEmpty()) {
+                        EmojiEntry entry = emojiResults.get(emojiIndex);
+                        listener.commitText(entry.emoji, 1);
+                        String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
+                        message = context.getString(R.string.emoji_inserted) + displayName;
+                        emojiMode = false;
+                    } else {
+                        message = context.getString(R.string.emoji_no_to_insert);
+                    }
+                    break;
+                case EMOJI_MODE:
+                    emojiMode = false;
+                    message = context.getString(R.string.emoji_search_mode_off);
+                    break;
+                default:
+                    emojiHandled = false;
+            }
+            
+            if (emojiHandled) {
+                callback.onNotify(true, true);
+                if (message != null) {
+                    callback.onText("%s", message, false);
+                }
+                lastSwipe = value;
+                return true;
+            }
+        }
+
+        switch (action) {
+        case MOVE_LEFT_CHAR:
             moveLeft(context, Granularity.CHARACTER);
             break;
-        case ONE_RIGHT:
+        case MOVE_RIGHT_CHAR:
             moveRight(context, Granularity.CHARACTER);
             break;
-        case ONE_DOWN:
-            KeyboardFeedback feedback = KeyboardFeedback.valueOf(Integer
-                    .parseInt(Options.getStringPreference(context,
-                            R.string.pref_keyboard_feedback_key,
-                            KeyboardFeedback.SOUND.getValue())));
-            feedback = KeyboardFeedback.next(feedback);
-            Options.writeStringPreference(context,
-                    R.string.pref_keyboard_feedback_key, feedback.getValue());
-            message = context.getString(feedback.resource);
+        case MOVE_LEFT_WORD:
+            moveLeft(context, Granularity.WORD);
             break;
-        case ONE_UP:
+        case MOVE_RIGHT_WORD:
+            moveRight(context, Granularity.WORD);
+            break;
+        case MOVE_LEFT_LINE:
+            moveLeft(context, Granularity.LINE);
+            break;
+        case MOVE_RIGHT_LINE:
+            moveRight(context, Granularity.LINE);
+            break;
+        case MOVE_LEFT_ALL:
+            moveLeft(context, Granularity.ALL);
+            break;
+        case MOVE_RIGHT_ALL:
+            moveRight(context, Granularity.ALL);
+            break;
+            
+        case BACKSPACE_CHAR:
+            backspace(context, Granularity.CHARACTER, fastDoubleSwipe);
+            break;
+        case BACKSPACE_WORD:
+            backspace(context, Granularity.WORD, fastDoubleSwipe);
+            break;
+        case BACKSPACE_LINE:
+            backspace(context, Granularity.LINE, fastDoubleSwipe);
+            break;
+        case BACKSPACE_ALL:
+            backspace(context, Granularity.ALL, fastDoubleSwipe);
+            break;
+
+        case READ_CHAR:
             message = getInput(Granularity.CHARACTER);
             considerPassword = true;
             break;
-        case TWO_LEFT:
-            moveLeft(context, Granularity.WORD);
-            break;
-        case TWO_RIGHT:
-            moveRight(context, Granularity.WORD);
-            break;
-        case TWO_UP:
+        case READ_WORD:
             message = getInput(Granularity.WORD);
             considerPassword = true;
             break;
-        case TWO_DOWN:
-            KeyboardEcho echo = KeyboardEcho.valueOf(Integer.parseInt(Options
-                    .getStringPreference(context,
-                            R.string.pref_echo_feedback_key,
-                            KeyboardEcho.CHARACTER.getValue())));
-            echo = KeyboardEcho.next(echo);
-            Options.writeStringPreference(context,
-                    R.string.pref_echo_feedback_key, echo.getValue());
-            message = context.getString(echo.resource);
-            break;
-        case TWO_FINGERS_DOWN:
-            message = context.getString(R.string.closing_keyboard);
-            listener.closeKeyboard();
-            break;
-        case DOTS_FOUR_SIX_RIGHT:
-            break;
-        case THREE_LEFT:
-            moveLeft(context, Granularity.LINE);
-            break;
-        case THREE_RIGHT:
-            moveRight(context, Granularity.LINE);
-            break;
-        case THREE_UP:
+        case READ_LINE:
             message = getInput(Granularity.LINE);
             considerPassword = true;
             break;
-        case THREE_DOWN:
-            if (listener.getDots() == 8) {
-                setDots = true;
-                dots[0] = true;
-            } else {
-                message = context.getString(R.string.unknown_character);
-            }
+        case READ_ALL:
+            message = getInput(Granularity.ALL);
+            considerPassword = true;
             break;
-        case FOUR_LEFT:
-            if (emojiMode) {
-                if (emojiSearchQuery.length() > 0) {
-                    emojiSearchQuery.setLength(emojiSearchQuery.length() - 1);
-                    updateEmojiResults();
-                    callback.onText("%s", getEmojiSummary(), false);
-                } else {
-                    callback.onText("%s", context.getString(R.string.emoji_search_query_empty), false);
-                }
-                break;
-            }
-            backspace(context, Granularity.CHARACTER, fastDoubleSwipe);
-            break;
-        case FOUR_RIGHT:
+
+        case SPACE:
             if (fastDoubleSwipe) {
                 if (handleDoubleSpace(context)) {
                     break;
@@ -381,11 +419,15 @@ public class ActionHandler {
             }
             typeCharacter(context, (int) ' ', " ");
             break;
-        case FOUR_DOWN: // newline / enter
+        case NEWLINE:
             typeCharacter(context, Keyboard.KEYCODE_DONE,
                     context.getString(R.string.newline));
             break;
-        case FOUR_UP:
+        case VOICE_INPUT:
+            doVoiceInput(context, fastDoubleSwipe);
+            break;
+
+        case TOGGLE_PRIVACY:
             Options.switchBooleanPreference(context, R.string.pref_privacy_key,
                     Boolean.parseBoolean(context
                             .getString(R.string.pref_privacy_default)));
@@ -396,10 +438,74 @@ public class ActionHandler {
                     .getString(R.string.privacy_enabled) : context
                     .getString(R.string.privacy_disabled);
             break;
-        case FIVE_LEFT:
-            backspace(context, Granularity.WORD, fastDoubleSwipe);
+        case TOGGLE_AUTO_CAPS:
+            Options.switchBooleanPreference(context,
+                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
+                            .getString(R.string.pref_auto_caps_default)));
+            message = Options.getBooleanPreference(context,
+                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
+                            .getString(R.string.pref_auto_caps_default))) ? context
+                    .getString(R.string.auto_caps_enabled) : context
+                    .getString(R.string.auto_caps_disabled);
             break;
-        case FIVE_DOWN:
+        case TOGGLE_ECHO_PASSWORDS:
+            boolean echoPassword = Options.switchBooleanPreference(context,
+                    R.string.pref_echo_passwords_key, false);
+            message = echoPassword ? context
+                    .getString(R.string.speak_passwords) : context
+                    .getString(R.string.no_password_echo);
+            break;
+        case TOGGLE_MARK:
+            message = context
+                    .getString(listener.toggleMark() ? R.string.set_mark
+                            : R.string.unset_mark);
+            break;
+        case CYCLE_KEYBOARD_FEEDBACK:
+            KeyboardFeedback feedback = KeyboardFeedback.valueOf(Integer
+                    .parseInt(Options.getStringPreference(context,
+                            R.string.pref_keyboard_feedback_key,
+                            KeyboardFeedback.SOUND.getValue())));
+            feedback = KeyboardFeedback.next(feedback);
+            Options.writeStringPreference(context,
+                    R.string.pref_keyboard_feedback_key, feedback.getValue());
+            message = context.getString(feedback.resource);
+            break;
+        case CYCLE_ECHO_FEEDBACK:
+            KeyboardEcho echo = KeyboardEcho.valueOf(Integer.parseInt(Options
+                    .getStringPreference(context,
+                            R.string.pref_echo_feedback_key,
+                            KeyboardEcho.CHARACTER.getValue())));
+            echo = KeyboardEcho.next(echo);
+            Options.writeStringPreference(context,
+                    R.string.pref_echo_feedback_key, echo.getValue());
+            message = context.getString(echo.resource);
+            break;
+        case SWITCH_BRAILLE_TYPE:
+            int brailleType = listener.switchBrailleType();
+            message = brailleType == 8 ? context
+                    .getString(R.string.grade_computer) : context
+                    .getString(R.string.grade_literary);
+            callback.onSetLocale(listener.getLocale());
+            break;
+        case SWITCH_BRAILLE_TABLE:
+            message = listener.switchTable();
+            message = message == null ? context
+                    .getString(R.string.no_braille_table) : message;
+            callback.onSetLocale(listener.getLocale());
+            break;
+
+        case OPEN_SETTINGS:
+            if (fastDoubleSwipe) {
+                callback.onSetLocale(Locale.getDefault());
+                message = context.getString(R.string.show_settings);
+                Intent intent = new Intent(context, PreferenceIME.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            } else {
+                message = context.getString(R.string.swipe_confirm_settings);
+            }
+            break;
+        case OPEN_INPUT_SWITCHER:
             if (fastDoubleSwipe) {
                 message = context.getString(R.string.show_input_switcher);
                 // Forziamo la pulizia della regione prima di aprire il selettore tastiere
@@ -411,65 +517,31 @@ public class ActionHandler {
                 message = context.getString(R.string.swipe_confirm_input);
             }
             break;
-        case FIVE_UP:
-            if (fastDoubleSwipe) {
-                callback.onSetLocale(Locale.getDefault());
-                message = context.getString(R.string.show_settings);
-                Intent intent = new Intent(context, PreferenceIME.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            } else {
-                message = context.getString(R.string.swipe_confirm_settings);
+        case CLOSE_KEYBOARD:
+            message = context.getString(R.string.closing_keyboard);
+            listener.closeKeyboard();
+            break;
+        case SHRINK_KEYBOARD:
+            message = context.getString(R.string.keyboard_shrink);
+            callback.onShrink();
+            break;
+
+        case WORD_COUNT:
+            CharSequence text = listener.getAllText().text;
+            if (text != null) {
+                message = String.format(context.getString(R.string.word_count),
+                        EditingUtilities.lineCount(text),
+                        EditingUtilities.wordCount(text),
+                        EditingUtilities.characterCount(text));
             }
             break;
-        case SIX_LEFT:
-            if (emojiMode) {
-                if (!emojiResults.isEmpty()) {
-                    emojiIndex = (emojiIndex - 1 + emojiResults.size()) % emojiResults.size();
-                    message = getEmojiSummary();
-                } else {
-                    message = "No emoji results";
-                }
-                break;
-            }
-            backspace(context, Granularity.LINE, fastDoubleSwipe);
-            break;
-        case SIX_RIGHT:
-            if (emojiMode) {
-                if (!emojiResults.isEmpty()) {
-                    emojiIndex = (emojiIndex + 1) % emojiResults.size();
-                    message = getEmojiSummary();
-                } else {
-                    message = "No emoji results";
-                }
-                break;
-            }
+        case NEXT_FIELD_ACTION:
             nextAction(context);
             break;
-        case SIX_UP:
-            if (emojiMode) {
-                if (!emojiResults.isEmpty()) {
-                    EmojiEntry entry = emojiResults.get(emojiIndex);
-                    listener.commitText(entry.emoji, 1);
-                    String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
-                    message = context.getString(R.string.emoji_inserted) + displayName;
-                    emojiMode = false;
-                } else {
-                    message = context.getString(R.string.emoji_no_to_insert);
-                }
-                break;
-            }
+        case SELECT_TEXT_ACTION:
             selectAction(context);
             break;
-        case SIX_DOWN:
-            if (listener.getDots() == 8) {
-                setDots = true;
-                dots[1] = true;
-            } else {
-                message = context.getString(R.string.unknown_character);
-            }
-            break;
-        case EMOJI_MODE:
+        case EMOJI_MODE_TOGGLE:
             emojiMode = !emojiMode;
             if (emojiMode) {
                 emojiSearchQuery.setLength(0);
@@ -482,85 +554,39 @@ public class ActionHandler {
                 message = context.getString(R.string.emoji_search_mode_off);
             }
             break;
-        case AUTOCAPS_TOGGLE:
-        case HOLD_ONE_DOWN:
-            CharSequence text = listener.getAllText().text;
-            if (text != null) {
-                message = String.format(context.getString(R.string.word_count),
-                        EditingUtilities.lineCount(text),
-                        EditingUtilities.wordCount(text),
-                        EditingUtilities.characterCount(text));
-            }
-            break;
-        case HOLD_ONE_UP:
-            Options.switchBooleanPreference(context,
-                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
-                            .getString(R.string.pref_auto_caps_default)));
-            message = Options.getBooleanPreference(context,
-                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
-                            .getString(R.string.pref_auto_caps_default))) ? context
-                    .getString(R.string.auto_caps_enabled) : context
-                    .getString(R.string.auto_caps_disabled);
-            break;
-        case HOLD_ONE_RIGHT:
-            message = context
-                    .getString(listener.toggleMark() ? R.string.set_mark
-                            : R.string.unset_mark);
-            break;
-        case HOLD_ONE_LEFT:
-            message = context.getString(R.string.keyboard_shrink);
-            callback.onShrink();
-            break;
-        case HOLD_SIX_LEFT:
-            moveLeft(context, Granularity.ALL);
-            break;
-        case HOLD_SIX_RIGHT:
-            moveRight(context, Granularity.ALL);
-            break;
-        case HOLD_SIX_DOWN:
-            boolean echoPassword = Options.switchBooleanPreference(context,
-                    R.string.pref_echo_passwords_key, false);
-            message = echoPassword ? context
-                    .getString(R.string.speak_passwords) : context
-                    .getString(R.string.no_password_echo);
-            break;
-        case HOLD_SIX_UP:
-            message = getInput(Granularity.ALL);
-            considerPassword = true;
-            break;
-        case HOLD_THREE_LEFT:
-            backspace(context, Granularity.ALL, fastDoubleSwipe);
-            break;
-        case HOLD_THREE_RIGHT:
-            int brailleType = listener.switchBrailleType();
-            message = brailleType == 8 ? context
-                    .getString(R.string.grade_computer) : context
-                    .getString(R.string.grade_literary);
-            callback.onSetLocale(listener.getLocale());
-            break;
-        case HOLD_THREE_DOWN:
-            message = listener.switchTable();
-            message = message == null ? context
-                    .getString(R.string.no_braille_table) : message;
-            callback.onSetLocale(listener.getLocale());
-            break;
-        case HOLD_THREE_UP:
-            doVoiceInput(context, fastDoubleSwipe);
-            break;
-        case HOLD_FOUR_LEFT:
+
+        case SPELL_CHECK_LEFT:
             doSpellCheck(context, SpellChecker.Direction.LEFT, 0,
                     listener.getCursor());
             break;
-        case HOLD_FOUR_RIGHT:
+        case SPELL_CHECK_RIGHT:
             doSpellCheck(context, SpellChecker.Direction.RIGHT, 0,
                     listener.getCursor());
             break;
-        case HOLD_FOUR_DOWN:
+        case SPELL_CHECK_NEXT_SUGGESTION:
             nextSpellCheckSuggestion(context);
             break;
-        case HOLD_FOUR_UP:
+        case SPELL_CHECK_PREV_SUGGESTION:
             previousSpellCheckSuggestion(context);
             break;
+
+        case SET_DOT_7:
+            if (listener.getDots() == 8) {
+                setDots = true;
+                dots[0] = true;
+            } else {
+                message = context.getString(R.string.unknown_character);
+            }
+            break;
+        case SET_DOT_8:
+            if (listener.getDots() == 8) {
+                setDots = true;
+                dots[1] = true;
+            } else {
+                message = context.getString(R.string.unknown_character);
+            }
+            break;
+
         case NONE:
             return false;
         default:
@@ -583,6 +609,7 @@ public class ActionHandler {
         lastSwipe = value; // update the last swipe
         return true;
     }
+
 
     /**
      * Handle typing a Braille character into the underlying IME. The character

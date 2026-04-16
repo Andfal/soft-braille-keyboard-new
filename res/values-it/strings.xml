@@ -569,6 +569,151 @@
     <string name="word_correction_misspelled">%s errato</string>
     <string name="word_count">%1$d righe, %2$d parole, %3$d caratteri</string>
     <string name="word_misspelled">Errato</string>
+
+    <!-- Braille Actions (IT) -->
+    <string name="action_none">Nessuna</string>
+    <string name="action_move_left_char">Sposta a sinistra di un carattere</string>
+    <string name="action_move_right_char">Sposta a destra di un carattere</string>
+    <string name="action_move_left_word">Sposta a sinistra di una parola</string>
+    <string name="action_move_right_word">Sposta a destra di una parola</string>
+    <string name="action_move_left_line">Sposta a sinistra di una riga</string>
+    <string name="action_move_right_line">Sposta a destra di una riga</string>
+    <string name="action_move_left_all">Sposta all\'inizio del testo</string>
+    <string name="action_move_right_all">Sposta alla fine del testo</string>
+    <string name="action_backspace_char">Cancella carattere</string>
+    <string name="action_backspace_word">Cancella parola</string>
+    <string name="action_backspace_line">Cancella riga</string>
+    <string name="action_backspace_all">Cancella tutto il testo</string>
+    <string name="action_read_char">Leggi carattere corrente</string>
+    <string name="action_read_word">Leggi parola corrente</string>
+    <string name="action_read_line">Leggi riga corrente</string>
+    <string name="action_read_all">Leggi tutto il testo</string>
+    <string name="action_space">Inserisci spazio</string>
+    <string name="action_newline">Inserisci nuova riga</string>
+    <string name="action_voice_input">Dettatura vocale</string>
+    <string name="action_toggle_privacy">Attiva/disattiva schermo privacy</string>
+    <string name="action_toggle_auto_caps">Attiva/disattiva maiuscole automatiche</string>
+    <string name="action_toggle_echo_passwords">Attiva/disattiva pronuncia password</string>
+    <string name="action_toggle_mark">Attiva/disattiva marcatore selezione</string>
+    <string name="action_cycle_keyboard_feedback">Cambia feedback tastiera (Suono/Vibrazione)</string>
+    <string name="action_cycle_echo_feedback">Cambia eco tastiera (Car/Parola/Nessuno)</string>
+    <string name="action_switch_braille_type">Cambia Braille Letterario/Informatico</string>
+    <string name="action_switch_braille_table">Cambia tabella Braille</string>
+    <string name="action_open_settings">Apri impostazioni tastiera</string>
+    <string name="action_open_input_switcher">Apri selettore tastiere</string>
+    <string name="action_close_keyboard">Chiudi tastiera</string>
+    <string name="action_shrink_keyboard">Riduci tastiera</string>
+    <string name="action_word_count">Conteggio parole e caratteri</string>
+    <string name="action_next_field_action">Campo/azione successivo</string>
+    <string name="action_select_text_action">Seleziona / Azione</string>
+    <string name="action_emoji_mode_toggle">Attiva/disattiva ricerca emoji</string>
+    <string name="action_spell_check_left">Controllo ortografico parola precedente</string>
+    <string name="action_spell_check_right">Controllo ortografico parola successiva</string>
+    <string name="action_spell_check_next_suggestion">Suggerimento ortografico successivo</string>
+    <string name="action_spell_check_prev_suggestion">Suggerimento ortografico precedente</string>
+    <string name="action_set_dot_7">Inserisci punto 7</string>
+    <string name="action_set_dot_8">Inserisci punto 8</string>
+
+    <!-- Gesture Names (IT) -->
+    <string name="swipe_one_left">Punto 1: Scorri a sinistra</string>
+    <string name="swipe_one_right">Punto 1: Scorri a destra</string>
+    <string name="swipe_one_up">Punto 1: Scorri in alto</string>
+    <string name="swipe_one_down">Punto 1: Scorri in basso</string>
+    <string name="swipe_two_left">Punto 2: Scorri a sinistra</string>
+    <string name="swipe_two_right">Punto 2: Scorri a destra</string>
+    <string name="swipe_two_up">Punto 2: Scorri in alto</string>
+    <string name="swipe_two_down">Punto 2: Scorri in basso</string>
+    <string name="swipe_three_left">Punto 3: Scorri a sinistra</string>
+    <string name="swipe_three_right">Punto 3: Scorri a destra</string>
+    <string name="swipe_three_up">Punto 3: Scorri in alto</string>
+    <string name="swipe_three_down">Punto 3: Scorri in basso</string>
+    <string name="swipe_four_left">Punto 4: Scorri a sinistra</string>
+    <string name="swipe_four_right">Punto 4: Scorri a destra</string>
+    <string name="swipe_four_up">Punto 4: Scorri in alto</string>
+    <string name="swipe_four_down">Punto 4: Scorri in basso</string>
+    <string name="swipe_five_left">Punto 5: Scorri a sinistra</string>
+    <string name="swipe_five_right">Punto 5: Scorri a destra</string>
+    <string name="swipe_five_up">Punto 5: Scorri in alto</string>
+    <string name="swipe_five_down">Punto 5: Scorri in basso</string>
+    <string name="swipe_six_left">Punto 6: Scorri a sinistra</string>
+    <string name="swipe_six_right">Punto 6: Scorri a destra</string>
+    <string name="swipe_six_up">Punto 6: Scorri in alto</string>
+    <string name="swipe_six_down">Punto 6: Scorri in basso</string>
+    <string name="swipe_two_fingers_down">Due dita: Scorri in basso</string>
+    
+    <string name="swipe_hold_one_left">Tieni Punto 1 e scorri a sinistra</string>
+    <string name="swipe_hold_one_right">Tieni Punto 1 e scorri a destra</string>
+    <string name="swipe_hold_one_up">Tieni Punto 1 e scorri in alto</string>
+    <string name="swipe_hold_one_down">Tieni Punto 1 e scorri in basso</string>
+    <string name="swipe_hold_three_left">Tieni Punto 3 e scorri a sinistra</string>
+    <string name="swipe_hold_three_right">Tieni Punto 3 e scorri a destra</string>
+    <string name="swipe_hold_three_up">Tieni Punto 3 e scorri in alto</string>
+    <string name="swipe_hold_three_down">Tieni Punto 3 e scorri in basso</string>
+    <string name="swipe_hold_four_left">Tieni Punto 4 e scorri a sinistra</string>
+    <string name="swipe_hold_four_right">Tieni Punto 4 e scorri a destra</string>
+    <string name="swipe_hold_four_up">Tieni Punto 4 e scorri in alto</string>
+    <string name="swipe_hold_four_down">Tieni Punto 4 e scorri in basso</string>
+    <string name="swipe_hold_six_left">Tieni Punto 6 e scorri a sinistra</string>
+    <string name="swipe_hold_six_right">Tieni Punto 6 e scorri a destra</string>
+    <string name="swipe_hold_six_up">Tieni Punto 6 e scorri in alto</string>
+    <string name="swipe_hold_six_down">Tieni Punto 6 e scorri in basso</string>
+
+    <string name="pref_category_gestures_title">Personalizzazione Gesti</string>
+    <string name="pref_gestures_summary">Assegna funzioni agli scorrimenti e ai gesti combinati</string>
+    <string name="pref_gestures_title">Personalizza Gesti</string>
+    <string name="pref_reset_gestures_title">Ripristina Gesti Predefiniti</string>
+    <string name="pref_reset_gestures_summary">Ripristina le assegnazioni originali dei gesti</string>
+    <string name="pref_reset_gestures_confirm">Sei sicuro di voler ripristinare tutti i gesti alle assegnazioni predefinite?</string>
+    
+    <string name="pref_group_single_finger">Scorrimenti a un dito</string>
+    <string name="pref_group_hold_swipe">Gesti tocco prolungato e scorrimento</string>
+
+    <!-- BrailleAction Arrays (IT) -->
+    <string-array name="braille_action_entries">
+        <item>@string/action_none</item>
+        <item>@string/action_move_left_char</item>
+        <item>@string/action_move_right_char</item>
+        <item>@string/action_move_left_word</item>
+        <item>@string/action_move_right_word</item>
+        <item>@string/action_move_left_line</item>
+        <item>@string/action_move_right_line</item>
+        <item>@string/action_move_left_all</item>
+        <item>@string/action_move_right_all</item>
+        <item>@string/action_backspace_char</item>
+        <item>@string/action_backspace_word</item>
+        <item>@string/action_backspace_line</item>
+        <item>@string/action_backspace_all</item>
+        <item>@string/action_read_char</item>
+        <item>@string/action_read_word</item>
+        <item>@string/action_read_line</item>
+        <item>@string/action_read_all</item>
+        <item>@string/action_space</item>
+        <item>@string/action_newline</item>
+        <item>@string/action_voice_input</item>
+        <item>@string/action_toggle_privacy</item>
+        <item>@string/action_toggle_auto_caps</item>
+        <item>@string/action_toggle_echo_passwords</item>
+        <item>@string/action_toggle_mark</item>
+        <item>@string/action_cycle_keyboard_feedback</item>
+        <item>@string/action_cycle_echo_feedback</item>
+        <item>@string/action_switch_braille_type</item>
+        <item>@string/action_switch_braille_table</item>
+        <item>@string/action_open_settings</item>
+        <item>@string/action_open_input_switcher</item>
+        <item>@string/action_close_keyboard</item>
+        <item>@string/action_shrink_keyboard</item>
+        <item>@string/action_word_count</item>
+        <item>@string/action_next_field_action</item>
+        <item>@string/action_select_text_action</item>
+        <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_spell_check_left</item>
+        <item>@string/action_spell_check_right</item>
+        <item>@string/action_spell_check_next_suggestion</item>
+        <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_set_dot_7</item>
+        <item>@string/action_set_dot_8</item>
+    </string-array>
+
     
     
         </resources>
