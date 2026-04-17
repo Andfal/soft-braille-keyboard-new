@@ -6,6 +6,16 @@
         android:title="@string/pref_reset_gestures_title"
         android:summary="@string/pref_reset_gestures_summary" />
 
+    <Preference
+        android:key="export_gestures"
+        android:title="@string/pref_export_gestures_title"
+        android:summary="@string/pref_export_gestures_summary" />
+
+    <Preference
+        android:key="import_gestures"
+        android:title="@string/pref_import_gestures_title"
+        android:summary="@string/pref_import_gestures_summary" />
+
     <PreferenceCategory android:title="@string/pref_group_single_finger">
         <ListPreference
             android:key="gesture_mapping_ONE_LEFT"

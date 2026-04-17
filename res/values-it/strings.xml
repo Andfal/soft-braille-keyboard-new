@@ -688,6 +688,16 @@
     <string name="pref_reset_gestures_title">Ripristina Gesti Predefiniti</string>
     <string name="pref_reset_gestures_summary">Ripristina le assegnazioni originali dei gesti</string>
     <string name="pref_reset_gestures_confirm">Sei sicuro di voler ripristinare tutti i gesti alle assegnazioni predefinite?</string>
+    <string name="pref_export_gestures_title">Esporta Gesti</string>
+    <string name="pref_export_gestures_summary">Salva la tua mappa dei gesti personalizzata in un file</string>
+    <string name="pref_import_gestures_title">Importa Gesti</string>
+    <string name="pref_import_gestures_summary">Carica una mappa dei gesti da un file</string>
+    <string name="pref_gesture_default_format">Predefinito: %1$s</string>
+    <string name="export_success">Gesti esportati con successo in %1$s</string>
+    <string name="export_error">Errore durante l\'esportazione dei gesti: %1$s</string>
+    <string name="import_success">Gesti importati con successo</string>
+    <string name="import_error">Errore durante l\'importazione dei gesti: %1$s</string>
+    <string name="import_no_valid_data">Nessun dato valido per i gesti trovato nel file</string>
     
     <string name="pref_group_single_finger">Scorrimenti a un dito</string>
     <string name="pref_group_two_fingers">Scorrimenti a due dita (Solo in basso)</string>

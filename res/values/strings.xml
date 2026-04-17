@@ -217,6 +217,16 @@
     <string name="pref_reset_gestures_title">Reset Gestures to Default</string>
     <string name="pref_reset_gestures_summary">Restore original gesture assignments</string>
     <string name="pref_reset_gestures_confirm">Are you sure you want to reset all gestures to their default assignments?</string>
+    <string name="pref_export_gestures_title">Export Gestures</string>
+    <string name="pref_export_gestures_summary">Save your custom gesture map to a file</string>
+    <string name="pref_import_gestures_title">Import Gestures</string>
+    <string name="pref_import_gestures_summary">Load a gesture map from a file</string>
+    <string name="pref_gesture_default_format">Default: %1$s</string>
+    <string name="export_success">Gestures exported successfully to %1$s</string>
+    <string name="export_error">Error exporting gestures: %1$s</string>
+    <string name="import_success">Gestures imported successfully</string>
+    <string name="import_error">Error importing gestures: %1$s</string>
+    <string name="import_no_valid_data">No valid gesture data found in file</string>
     
     <string name="pref_group_single_finger">Single Finger Swipes</string>
     <string name="pref_group_two_fingers">Two-Finger Swipes (Down only)</string>

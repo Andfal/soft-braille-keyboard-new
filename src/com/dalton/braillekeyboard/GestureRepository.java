@@ -119,4 +119,9 @@ public class GestureRepository {
         }
         editor.apply();
     }
+
+    public static BrailleAction getDefaultActionForSwipe(Swipe swipe) {
+        BrailleAction defaultAction = defaultMappings.get(swipe);
+        return defaultAction != null ? defaultAction : BrailleAction.NONE;
+    }
 }
