@@ -51,7 +51,7 @@ public class GestureRepository {
         defaultMappings.put(Swipe.SIX_UP, BrailleAction.SELECT_TEXT_ACTION);
         defaultMappings.put(Swipe.SIX_DOWN, BrailleAction.SET_DOT_8);
         
-        defaultMappings.put(Swipe.EMOJI_MODE, BrailleAction.EMOJI_MODE_TOGGLE);
+        defaultMappings.put(Swipe.EMOJI_MODE, BrailleAction.NONE);
         defaultMappings.put(Swipe.AUTOCAPS_TOGGLE, BrailleAction.WORD_COUNT);
         
         defaultMappings.put(Swipe.HOLD_ONE_DOWN, BrailleAction.WORD_COUNT);
@@ -77,7 +77,7 @@ public class GestureRepository {
         defaultMappings.put(Swipe.HOLD_TWO_LEFT, BrailleAction.NONE);
         defaultMappings.put(Swipe.HOLD_TWO_RIGHT, BrailleAction.NONE);
         defaultMappings.put(Swipe.HOLD_TWO_UP, BrailleAction.NONE);
-        defaultMappings.put(Swipe.HOLD_TWO_DOWN, BrailleAction.NONE);
+        defaultMappings.put(Swipe.HOLD_TWO_DOWN, BrailleAction.EMOJI_MODE_TOGGLE);
 
         defaultMappings.put(Swipe.HOLD_FIVE_LEFT, BrailleAction.NONE);
         defaultMappings.put(Swipe.HOLD_FIVE_RIGHT, BrailleAction.NONE);

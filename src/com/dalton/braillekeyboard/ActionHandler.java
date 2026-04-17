@@ -337,10 +337,6 @@ public class ActionHandler {
                         message = context.getString(R.string.emoji_no_to_insert);
                     }
                     break;
-                case EMOJI_MODE:
-                    emojiMode = false;
-                    message = context.getString(R.string.emoji_search_mode_off);
-                    break;
                 default:
                     emojiHandled = false;
             }
