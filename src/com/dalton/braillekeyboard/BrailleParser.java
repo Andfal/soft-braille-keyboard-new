@@ -456,6 +456,56 @@ public class BrailleParser {
         return text != null ? text.trim() : text;
     }
 
+    /**
+     * Back translate an array of Braille dots to text using Grade 1 (uncontracted)
+     * table if the current table is Grade 2 or 3. This is essential for search modes
+     * like Emoji search where literal letters are expected.
+     *
+     * @param context The application context.
+     * @param cellBytes An array of bytes representing Braille dot patterns.
+     * @return The back translation String or null if failed.
+     */
+    public String backTranslateLiteral(Context context, Byte[] cellBytes) {
+        if (status != STATUS_OK || client == null) {
+            return null;
+        }
+
+        TableInfo currentTable = getTable(context);
+        TableInfo targetTable = currentTable;
+
+        // If the current table is Grade 2 or 3 (contracted), find the Grade 1 alternative
+        if (currentTable != null && currentTable.getGrade() > 1) {
+            String currentLang = currentTable.getLocale().getLanguage();
+            List<TableInfo> allTables = getTables(BrailleType.LITERARY);
+            if (allTables != null) {
+                for (TableInfo table : allTables) {
+                    if (table.getLocale().getLanguage().equals(currentLang)
+                            && (table.getGrade() == 1 || table.getGrade() == 0)
+                            && !table.isEightDot()) {
+                        targetTable = table;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (targetTable == null) {
+            return null;
+        }
+
+        byte[] cells = new byte[cellBytes.length + 2];
+        cells[0] = 0;
+        cells[cells.length - 1] = 0;
+        for (int i = 0; i < cellBytes.length; i++) {
+            cells[i + 1] = cellBytes[i] != null ? cellBytes[i].byteValue() : 0;
+        }
+
+        // Use the client directly with the specific table ID to bypass the main translator's table
+        String text = client.backTranslate(cells, targetTable.getId());
+        text = handleUnknownPatterns(context, text, cells);
+        return text != null ? text.trim() : text;
+    }
+
     // Called when the BrailleTranslator becomes ready.
     private void ready(Context context, int translatorClientStatus) {
         android.util.Log.i("BrailleParser", "Translator ready status: " + translatorClientStatus);

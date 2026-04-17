@@ -273,4 +273,12 @@ public interface KeyboardListener {
      * @return The translated text, or null if translation failed.
      */
     String translateOnly(byte dots);
+
+    /**
+     * Translates the Braille dots to text using a literal (Grade 1) table if available.
+     * Useful for search modes like Emoji search.
+     * @param dots The Braille dots.
+     * @return The translated text, or null if translation failed.
+     */
+    String translateLiteral(byte dots);
 }

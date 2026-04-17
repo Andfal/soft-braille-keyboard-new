@@ -686,6 +686,16 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     @Override
+    public String translateLiteral(byte dots) {
+        if (brailleParser != null) {
+            List<Byte> localCells = new ArrayList<Byte>();
+            localCells.add(dots);
+            return brailleParser.backTranslateLiteral(this, localCells.toArray(new Byte[localCells.size()]));
+        }
+        return null;
+    }
+
+    @Override
     public boolean isPasswordField() {
         EditorInfo info = getCurrentInputEditorInfo();
         if (info == null) return false;

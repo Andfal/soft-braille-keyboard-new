@@ -647,7 +647,7 @@ public class ActionHandler {
         }
 
         if (emojiMode) {
-            String translated = listener.translateOnly(value);
+            String translated = listener.translateLiteral(value);
             if (translated != null && translated.length() > 0) {
                 emojiSearchQuery.append(translated);
                 updateEmojiResults();
