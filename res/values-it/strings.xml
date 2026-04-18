@@ -646,8 +646,8 @@
     <string name="swipe_six_up">Punto 6: Scorri in alto</string>
     <string name="swipe_six_down">Punto 6: Scorri in basso</string>
     
-    <string name="swipe_left_two_down">Due dita (Sinistra): Scorri in basso</string>
-    <string name="swipe_right_two_down">Due dita (Destra): Scorri in basso</string>
+    <string name="swipe_left_two_down">Scorri in basso punti 12</string>
+    <string name="swipe_right_two_down">Scorri in basso punti 45</string>
     
     <string name="swipe_hold_one_left">Tieni Punto 1 e scorri a sinistra</string>
 

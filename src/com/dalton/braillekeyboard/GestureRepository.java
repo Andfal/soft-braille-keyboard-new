@@ -39,6 +39,7 @@ public class GestureRepository {
         
         defaultMappings.put(Swipe.FOUR_LEFT, BrailleAction.BACKSPACE_CHAR);
         defaultMappings.put(Swipe.FOUR_RIGHT, BrailleAction.SPACE);
+        defaultMappings.put(Swipe.FIVE_RIGHT, BrailleAction.SPACE);
         defaultMappings.put(Swipe.FOUR_DOWN, BrailleAction.NEWLINE);
         defaultMappings.put(Swipe.FOUR_UP, BrailleAction.TOGGLE_PRIVACY);
         

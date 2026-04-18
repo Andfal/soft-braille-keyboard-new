@@ -286,7 +286,6 @@ public class ActionHandler {
             return true;
         }
 
-        value = normaliseSwipe(value);
         BrailleAction action = GestureRepository.getActionForSwipe(context, value);
         
         String message = null;
@@ -1115,15 +1114,6 @@ public class ActionHandler {
             return word;
         }
         return null;
-    }
-
-    // Some swipe actions should resolve to the same thing eg. dots 4 and 5
-    // swipe right.
-    private static Swipe normaliseSwipe(Swipe swipe) {
-        if (swipe == Swipe.FIVE_RIGHT) {
-            return Swipe.FOUR_RIGHT;
-        }
-        return swipe;
     }
 
     private void doSpellCheck(final Context context,

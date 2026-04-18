@@ -175,8 +175,8 @@
     <string name="swipe_six_up">Dot 6: Swipe Up</string>
     <string name="swipe_six_down">Dot 6: Swipe Down</string>
     
-    <string name="swipe_left_two_down">Two Fingers (Left): Swipe Down</string>
-    <string name="swipe_right_two_down">Two Fingers (Right): Swipe Down</string>
+    <string name="swipe_left_two_down">Swipe down dots 12</string>
+    <string name="swipe_right_two_down">Swipe down dots 45</string>
     
     <string name="swipe_hold_one_left">Hold Dot 1 &amp; Swipe Left</string>
 
