@@ -201,6 +201,22 @@
          android:summary="@string/pref_privacy_summary"
          android:defaultValue="@string/pref_privacy_default" />
          <CheckBoxPreference
+         android:key="@string/pref_abbreviations_enabled_key"
+         android:title="@string/pref_abbreviations_enabled_title"
+         android:summary="@string/pref_abbreviations_enabled_summary"
+         android:defaultValue="@string/pref_abbreviations_enabled_default" />
+         <Preference
+         android:key="pref_manage_abbreviations_key"
+         android:title="@string/pref_abbreviations_manage_title">
+             <intent
+                 android:action="android.intent.action.MAIN"
+                 android:targetPackage="com.dalton.braillekeyboard"
+                 android:targetClass="com.dalton.braillekeyboard.AbbreviationEditorActivity" />
+         </Preference>
+         <Preference
+             android:key="pref_storage_manager_key"
+             android:title="@string/title_storage_manager" />
+         <CheckBoxPreference
          android:key="@string/pref_voice_shortcut_key"
          android:title="@string/pref_voice_shortcut_title"
          android:summary="@string/pref_voice_shortcut_summary"

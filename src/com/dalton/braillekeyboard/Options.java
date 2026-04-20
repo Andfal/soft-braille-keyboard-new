@@ -198,6 +198,26 @@ public class Options {
         editor.apply();
     }
 
+    public static void writeBooleanPreferenceStringKey(Context context, String key,
+            boolean value) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public static boolean switchBooleanPreferenceStringKey(Context context,
+            String key, boolean defaultValue) {
+        if (context == null) return defaultValue;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return defaultValue;
+        boolean pref = sharedPref.getBoolean(key, defaultValue);
+        sharedPref.edit().putBoolean(key, !pref).apply();
+        return !pref;
+    }
+
     public static int getIntPreference(Context context, int resource, int defaultValue) {
         if (context == null) return defaultValue;
         SharedPreferences sharedPref = getSharedPreferences(context);

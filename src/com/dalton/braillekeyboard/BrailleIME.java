@@ -48,6 +48,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
 
     private BrailleParser brailleParser;
     private BrailleView brailleView = null;
+    private AbbreviationManager abbreviationManager;
     private int caps;
     private int cursor = -1;
     private int mark = -1;
@@ -68,6 +69,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public void onCreate() {
         super.onCreate();
+        abbreviationManager = AbbreviationManager.getInstance(this);
         if (brailleParser == null) {
             brailleParser = new BrailleParser(this,
                     new BrailleParser.BrailleParserListener() {
@@ -436,6 +438,53 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     @Override
+    public byte[] getDotsForText(String text) {
+        return brailleParser != null ? brailleParser.getDotsForText(text) : null;
+    }
+
+    @Override
+    public byte[] getDotsForTextLiteral(String text) {
+        return brailleParser != null ? brailleParser.getDotsForTextLiteral(this, text) : null;
+    }
+
+    @Override
+    public String backTranslate(byte[] cells) {
+        return brailleParser != null ? brailleParser.backTranslate(this, cells) : null;
+    }
+
+    @Override
+    public void checkAndExpandAbbreviation() {
+        // 1. Controllo immediato: se disattivata, esci subito
+        if (!Options.getBooleanPreference(this, R.string.pref_abbreviations_enabled_key, 
+                Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default)))) {
+            return;
+        }
+
+        // 2. Analisi del buffer in composizione locale
+        if (composingText.length() > 0) {
+            String word = composingText.toString();
+            String expansion = abbreviationManager.getExpansion(word, this);
+            
+            // 3. Modifica SOLO se viene trovata un'espansione
+            if (expansion != null) {
+                InputConnection ic = getCurrentInputConnection();
+                if (ic != null) {
+                    ic.beginBatchEdit();
+                    // Cancelliamo esattamente il numero di caratteri che compongono la scorciatoia
+                    ic.deleteSurroundingText(word.length(), 0);
+                    // Inseriamo l'espansione esatta (sostituzione atomica)
+                    ic.commitText(expansion, 1);
+                    ic.endBatchEdit();
+                    
+                    // Puliamo i buffer locali per la parola successiva
+                    composingText.setLength(0);
+                    cells.clear();
+                }
+            }
+        }
+    }
+
+    @Override
     public String handleTypedCharacter(byte dots) {
         if (brailleParser != null) {
             InputConnection ic = getCurrentInputConnection();
@@ -445,8 +494,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 if (before != null) snapshot = before.toString();
             }
 
-            // If dots is 0 (space) or contains space-like behavior, finish composition
+            // If dots is 0 (space) or contains space-like behavior, check abbreviations and finish composition
             if (dots == 0) {
+                checkAndExpandAbbreviation();
                 finishComposingText(true);
                 return " ";
             }
@@ -508,6 +558,12 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 }
                 composingText.setLength(0);
                 composingText.append(text);
+
+                // ESPANSIONE ISTANTANEA
+                if (Options.getBooleanPreference(this, R.string.pref_abbreviations_enabled_key, false) &&
+                    Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_INSTANT", false)) {
+                    checkAndExpandAbbreviation();
+                }
             }
         } finally { ic.endBatchEdit(); }
         return text.toString();
@@ -527,6 +583,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
         if (selectAll) { toggleMark(); selectAll = false; }
+        checkAndExpandAbbreviation();
         finishComposingText();
         switch (keyCode) {
         case Keyboard.KEYCODE_DELETE: keyDownUp(ic, KeyEvent.KEYCODE_DEL); break;

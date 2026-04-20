@@ -439,21 +439,77 @@ public class BrailleParser {
      *         possible.
      */
     public String backTranslate(Context context, Byte[] cellBytes) {
-        // Ensure Liblouis receives exactly one leading space and one trailing space for context.
-        // This is essential for correct Grade 2/3 translation and numeric mode stability.
-        byte[] cells = new byte[cellBytes.length + 2];
-        cells[0] = 0;
-        cells[cells.length - 1] = 0;
+        byte[] cells = new byte[cellBytes.length];
         for (int i = 0; i < cellBytes.length; i++) {
-            cells[i + 1] = cellBytes[i] != null ? cellBytes[i].byteValue() : 0;
+            cells[i] = cellBytes[i] != null ? cellBytes[i].byteValue() : 0;
         }
+        return backTranslate(context, cells);
+    }
+
+    /**
+     * Versione interna di backTranslate che accetta byte[] crudi e gestisce il contesto Liblouis.
+     */
+    public String backTranslate(Context context, byte[] cellBytes) {
+        // Ensure Liblouis receives exactly one leading space and one trailing space for context.
+        byte[] cellsWithContext = new byte[cellBytes.length + 2];
+        cellsWithContext[0] = 0;
+        cellsWithContext[cellsWithContext.length - 1] = 0;
+        System.arraycopy(cellBytes, 0, cellsWithContext, 1, cellBytes.length);
 
         String text = null;
         if (status == STATUS_OK && translator != null) {
-            text = translator.backTranslate(cells);
-            text = handleUnknownPatterns(context, text, cells);
+            text = translator.backTranslate(cellsWithContext);
+            text = handleUnknownPatterns(context, text, cellsWithContext);
         }
         return text != null ? text.trim() : text;
+    }
+
+    /**
+     * Traduce il testo in punti Braille usando la tabella corrente.
+     */
+    public byte[] getDotsForText(String text) {
+        if (status == STATUS_OK && translator != null) {
+            com.googlecode.eyesfree.braille.translate.TranslationResult result = 
+                translator.translate(text, 0);
+            if (result != null) {
+                return result.getCells();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Traduce il testo in punti Braille usando una tabella letterale (Grado 1).
+     */
+    public byte[] getDotsForTextLiteral(Context context, String text) {
+        if (status != STATUS_OK || client == null) return null;
+        
+        TableInfo currentTable = getTable(context);
+        TableInfo targetTable = currentTable;
+
+        if (currentTable != null && currentTable.getGrade() > 1) {
+            String currentLang = currentTable.getLocale().getLanguage();
+            List<TableInfo> allTables = getTables(BrailleType.LITERARY);
+            if (allTables != null) {
+                for (TableInfo table : allTables) {
+                    if (table.getLocale().getLanguage().equals(currentLang)
+                            && (table.getGrade() == 1 || table.getGrade() == 0)
+                            && !table.isEightDot()) {
+                        targetTable = table;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (targetTable != null) {
+            com.googlecode.eyesfree.braille.translate.TranslationResult result = 
+                client.translate(text, targetTable.getId(), 0, false);
+            if (result != null) {
+                return result.getCells();
+            }
+        }
+        return null;
     }
 
     /**

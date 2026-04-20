@@ -619,68 +619,110 @@
     <string name="action_spell_check_prev_suggestion">Suggerimento ortografico precedente</string>
     <string name="action_set_dot_7">Inserisci punto 7</string>
     <string name="action_set_dot_8">Inserisci punto 8</string>
+    <string name="action_toggle_abbreviations">Attiva/disattiva abbreviazioni</string>
+    <string name="action_toggle_instant_abbreviations">Attiva/disattiva espansione istantanea</string>
+
+    <!-- Abbreviations (IT) -->
+    <string name="pref_abbreviations_instant_title">Espansione istantanea</string>
+    <string name="pref_abbreviations_instant_summary">Sostituisce le scorciatoie non appena vengono digitate, senza attendere lo spazio.</string>
+    <string name="abbreviations_instant_enabled">Espansione istantanea attivata</string>
+    <string name="abbreviations_instant_disabled">Espansione istantanea disattivata</string>
+    <string name="pref_abbreviations_enabled_title">Espansione testo (Abbreviazioni)</string>
+    <string name="pref_abbreviations_enabled_summary">Sostituisce le scorciatoie (es. ccs o 6-s) con il testo completo (es. Ciao, come stai?) durante la digitazione.</string>
+    <string name="pref_abbreviations_manage_title">Gestisci Abbreviazioni</string>
+    <string name="abbreviations_enabled">Abbreviazioni attivate</string>
+    <string name="abbreviations_disabled">Abbreviazioni disattivate</string>
+    <string name="title_abbreviation_editor">Editor Abbreviazioni</string>
+    <string name="hint_shortcut">Scorciatoia (es. ccs o 6-s)</string>
+    <string name="hint_expansion">Testo espanso (es. Ciao, come stai?)</string>
+    <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
+    <string name="pref_abbreviations_enabled_default">false</string>
 
     <!-- Gesture Names (IT) -->
-    <string name="swipe_one_left">Punto 1: Scorri a sinistra</string>
-    <string name="swipe_one_right">Punto 1: Scorri a destra</string>
-    <string name="swipe_one_up">Punto 1: Scorri in alto</string>
-    <string name="swipe_one_down">Punto 1: Scorri in basso</string>
-    <string name="swipe_two_left">Punto 2: Scorri a sinistra</string>
-    <string name="swipe_two_right">Punto 2: Scorri a destra</string>
-    <string name="swipe_two_up">Punto 2: Scorri in alto</string>
-    <string name="swipe_two_down">Punto 2: Scorri in basso</string>
-    <string name="swipe_three_left">Punto 3: Scorri a sinistra</string>
-    <string name="swipe_three_right">Punto 3: Scorri a destra</string>
-    <string name="swipe_three_up">Punto 3: Scorri in alto</string>
-    <string name="swipe_three_down">Punto 3: Scorri in basso</string>
-    <string name="swipe_four_left">Punto 4: Scorri a sinistra</string>
-    <string name="swipe_four_right">Punto 4: Scorri a destra</string>
-    <string name="swipe_four_up">Punto 4: Scorri in alto</string>
-    <string name="swipe_four_down">Punto 4: Scorri in basso</string>
-    <string name="swipe_five_left">Punto 5: Scorri a sinistra</string>
-    <string name="swipe_five_right">Punto 5: Scorri a destra</string>
-    <string name="swipe_five_up">Punto 5: Scorri in alto</string>
-    <string name="swipe_five_down">Punto 5: Scorri in basso</string>
-    <string name="swipe_six_left">Punto 6: Scorri a sinistra</string>
-    <string name="swipe_six_right">Punto 6: Scorri a destra</string>
-    <string name="swipe_six_up">Punto 6: Scorri in alto</string>
-    <string name="swipe_six_down">Punto 6: Scorri in basso</string>
-    
-    <string name="swipe_left_two_down">Scorri in basso punti 12</string>
-    <string name="swipe_right_two_down">Scorri in basso punti 45</string>
-    
-    <string name="swipe_hold_one_left">Tieni Punto 1 e scorri a sinistra</string>
+    <string name="swipe_one_left">Punto 1: Scorri a sinistra.</string>
+    <string name="swipe_one_right">Punto 1: Scorri a destra.</string>
+    <string name="swipe_one_up">Punto 1: Scorri in alto.</string>
+    <string name="swipe_one_down">Punto 1: Scorri in basso.</string>
+    <string name="swipe_two_left">Punto 2: Scorri a sinistra.</string>
+    <string name="swipe_two_right">Punto 2: Scorri a destra.</string>
+    <string name="swipe_two_up">Punto 2: Scorri in alto.</string>
+    <string name="swipe_two_down">Punto 2: Scorri in basso.</string>
+    <string name="swipe_three_left">Punto 3: Scorri a sinistra.</string>
+    <string name="swipe_three_right">Punto 3: Scorri a destra.</string>
+    <string name="swipe_three_up">Punto 3: Scorri in alto.</string>
+    <string name="swipe_three_down">Punto 3: Scorri in basso.</string>
+    <string name="swipe_four_left">Punto 4: Scorri a sinistra.</string>
+    <string name="swipe_four_right">Punto 4: Scorri a destra.</string>
+    <string name="swipe_four_up">Punto 4: Scorri in alto.</string>
+    <string name="swipe_four_down">Punto 4: Scorri in basso.</string>
+    <string name="swipe_five_left">Punto 5: Scorri a sinistra.</string>
+    <string name="swipe_five_right">Punto 5: Scorri a destra.</string>
+    <string name="swipe_five_up">Punto 5: Scorri in alto.</string>
+    <string name="swipe_five_down">Punto 5: Scorri in basso.</string>
+    <string name="swipe_six_left">Punto 6: Scorri a sinistra.</string>
+    <string name="swipe_six_right">Punto 6: Scorri a destra.</string>
+    <string name="swipe_six_up">Punto 6: Scorri in alto.</string>
+    <string name="swipe_six_down">Punto 6: Scorri in basso.</string>
 
+    <string name="swipe_left_two_down">Scorri in basso punti 12.</string>
+    <string name="swipe_right_two_down">Scorri in basso punti 45.</string>
 
-    <string name="swipe_hold_one_right">Tieni Punto 1 e scorri a destra</string>
-    <string name="swipe_hold_one_up">Tieni Punto 1 e scorri in alto</string>
-    <string name="swipe_hold_one_down">Tieni Punto 1 e scorri in basso</string>
-    
-    <string name="swipe_hold_two_left">Tieni Punto 2 e scorri a sinistra</string>
-    <string name="swipe_hold_two_right">Tieni Punto 2 e scorri a destra</string>
-    <string name="swipe_hold_two_up">Tieni Punto 2 e scorri in alto</string>
-    <string name="swipe_hold_two_down">Tieni Punto 2 e scorri in basso</string>
+    <string name="swipe_hold_one_left">Tieni Punto 1 e scorri a sinistra.</string>
+    <string name="swipe_hold_one_right">Tieni Punto 1 e scorri a destra.</string>
+    <string name="swipe_hold_one_up">Tieni Punto 1 e scorri in alto.</string>
+    <string name="swipe_hold_one_down">Tieni Punto 1 e scorri in basso.</string>
 
-    <string name="swipe_hold_three_left">Tieni Punto 3 e scorri a sinistra</string>
+    <string name="swipe_hold_two_left">Tieni Punto 2 e scorri a sinistra.</string>
+    <string name="swipe_hold_two_right">Tieni Punto 2 e scorri a destra.</string>
+    <string name="swipe_hold_two_up">Tieni Punto 2 e scorri in alto.</string>
+    <string name="swipe_hold_two_down">Tieni Punto 2 e scorri in basso.</string>
 
-    <string name="swipe_hold_three_right">Tieni Punto 3 e scorri a destra</string>
-    <string name="swipe_hold_three_up">Tieni Punto 3 e scorri in alto</string>
-    <string name="swipe_hold_three_down">Tieni Punto 3 e scorri in basso</string>
-    <string name="swipe_hold_four_left">Tieni Punto 4 e scorri a sinistra</string>
-    <string name="swipe_hold_four_right">Tieni Punto 4 e scorri a destra</string>
-    <string name="swipe_hold_four_up">Tieni Punto 4 e scorri in alto</string>
-    <string name="swipe_hold_four_down">Tieni Punto 4 e scorri in basso</string>
-    
-    <string name="swipe_hold_five_left">Tieni Punto 5 e scorri a sinistra</string>
-    <string name="swipe_hold_five_right">Tieni Punto 5 e scorri a destra</string>
-    <string name="swipe_hold_five_up">Tieni Punto 5 e scorri in alto</string>
-    <string name="swipe_hold_five_down">Tieni Punto 5 e scorri in basso</string>
+    <string name="swipe_hold_three_left">Tieni Punto 3 e scorri a sinistra.</string>
+    <string name="swipe_hold_three_right">Tieni Punto 3 e scorri a destra.</string>
+    <string name="swipe_hold_three_up">Tieni Punto 3 e scorri in alto.</string>
+    <string name="swipe_hold_three_down">Tieni Punto 3 e scorri in basso.</string>
 
-    <string name="swipe_hold_six_left">Tieni Punto 6 e scorri a sinistra</string>
+    <string name="swipe_hold_four_left">Tieni Punto 4 e scorri a sinistra.</string>
+    <string name="swipe_hold_four_right">Tieni Punto 4 e scorri a destra.</string>
+    <string name="swipe_hold_four_up">Tieni Punto 4 e scorri in alto.</string>
+    <string name="swipe_hold_four_down">Tieni Punto 4 e scorri in basso.</string>
 
-    <string name="swipe_hold_six_right">Tieni Punto 6 e scorri a destra</string>
-    <string name="swipe_hold_six_up">Tieni Punto 6 e scorri in alto</string>
-    <string name="swipe_hold_six_down">Tieni Punto 6 e scorri in basso</string>
+    <string name="swipe_hold_five_left">Tieni Punto 5 e scorri a sinistra.</string>
+    <string name="swipe_hold_five_right">Tieni Punto 5 e scorri a destra.</string>
+    <string name="swipe_hold_five_up">Tieni Punto 5 e scorri in alto.</string>
+    <string name="swipe_hold_five_down">Tieni Punto 5 e scorri in basso.</string>
+
+    <string name="swipe_hold_six_left">Tieni Punto 6 e scorri a sinistra.</string>
+    <string name="swipe_hold_six_right">Tieni Punto 6 e scorri a destra.</string>
+    <string name="swipe_hold_six_up">Tieni Punto 6 e scorri in alto.</string>
+    <string name="swipe_hold_six_down">Tieni Punto 6 e scorri in basso.</string>
+
+    <!-- Storage Manager (Universal) -->
+    <string name="label_active_abbreviations">[Dizionario Abbreviazioni Attivo]</string>
+    <string name="label_active_gestures">[Schema Gesti Attivo]</string>
+    <string name="msg_confirm_clear_active">Sei sicuro di voler svuotare tutti i dati attivi della tastiera? Questa azione non può essere annullata.</string>
+    <string name="checkbox_delete_backup_file">Elimina anche il file di backup nella cartella soft-braille</string>
+    <string name="btn_setup_sync_folder">Dai accesso alla cartella per la sincronizzazione</string>
+    <string name="title_storage_manager">Gestore Risorse</string>
+    <string name="btn_create_new_table">Crea Nuova Tabella</string>
+    <string name="label_file_type_tables">Tabelle Braille</string>
+    <string name="label_file_type_abbreviations">Dizionario Abbreviazioni</string>
+    <string name="label_file_type_gestures">Schema Gesti</string>
+    <string name="msg_confirm_import_generic">Vuoi importare questa risorsa? I dati attuali potrebbero essere sovrascritti.</string>
+    <string name="msg_sync_folder">Cartella Sincronizzata</string>
+    <string name="msg_download_folder">Cartella Download</string>
+    <string name="pref_sync_folder_title">Sincronizzazione Cartella</string>
+    <string name="pref_sync_folder_summary">Scegli una cartella per sincronizzare tabelle e backup</string>
+
+    <!-- Backup & Restore (IT) -->
+    <string name="btn_export">Esporta</string>
+    <string name="btn_import">Importa</string>
+    <string name="msg_exported_to">Backup salvato in: %s</string>
+    <string name="msg_import_success">Dati importati con successo!</string>
+    <string name="msg_import_error">Errore di importazione: %s</string>
+    <string name="title_select_backup">Seleziona Backup</string>
+    <string name="msg_no_backups">Nessun backup trovato in soft-braille.</string>
+    <string name="msg_confirm_import">Sovrascrivere i dati attuali con questo backup?</string>
 
     <string name="pref_category_gestures_title">Personalizzazione Gesti</string>
     <string name="pref_gestures_summary">Assegna funzioni agli scorrimenti e ai gesti combinati</string>
@@ -752,8 +794,63 @@
         <item>@string/action_spell_check_right</item>
         <item>@string/action_spell_check_next_suggestion</item>
         <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_instant_abbreviations</item>
         <item>@string/action_set_dot_7</item>
         <item>@string/action_set_dot_8</item>
+    </string-array>
+
+    <string-array name="braille_action_values">
+        <item>NONE</item>
+        <item>MOVE_LEFT_CHAR</item>
+        <item>MOVE_RIGHT_CHAR</item>
+        <item>MOVE_LEFT_WORD</item>
+        <item>MOVE_RIGHT_WORD</item>
+        <item>MOVE_LEFT_LINE</item>
+        <item>MOVE_RIGHT_LINE</item>
+        <item>MOVE_LEFT_ALL</item>
+        <item>MOVE_RIGHT_ALL</item>
+        <item>BACKSPACE_CHAR</item>
+        <item>BACKSPACE_WORD</item>
+        <item>BACKSPACE_LINE</item>
+        <item>BACKSPACE_ALL</item>
+        <item>READ_CHAR</item>
+        <item>READ_WORD</item>
+        <item>READ_LINE</item>
+        <item>READ_ALL</item>
+        <item>SPACE</item>
+        <item>NEWLINE</item>
+        <item>VOICE_INPUT</item>
+        <item>TOGGLE_PRIVACY</item>
+        <item>TOGGLE_AUTO_CAPS</item>
+        <item>TOGGLE_ECHO_PASSWORDS</item>
+        <item>TOGGLE_MARK</item>
+        <item>CYCLE_KEYBOARD_FEEDBACK</item>
+        <item>CYCLE_ECHO_FEEDBACK</item>
+        <item>SWITCH_BRAILLE_TYPE</item>
+        <item>SWITCH_BRAILLE_TABLE</item>
+        <item>OPEN_SETTINGS</item>
+        <item>OPEN_INPUT_SWITCHER</item>
+        <item>CLOSE_KEYBOARD</item>
+        <item>SHRINK_KEYBOARD</item>
+        <item>WORD_COUNT</item>
+        <item>NEXT_FIELD_ACTION</item>
+        <item>SELECT_TEXT_ACTION</item>
+        <item>EMOJI_MODE_TOGGLE</item>
+        <item>EDIT_SELECT_ALL</item>
+        <item>EDIT_COPY</item>
+        <item>EDIT_CUT</item>
+        <item>EDIT_PASTE</item>
+        <item>EDIT_SPEAK</item>
+        <item>EDIT_DELETE</item>
+        <item>SPELL_CHECK_LEFT</item>
+        <item>SPELL_CHECK_RIGHT</item>
+        <item>SPELL_CHECK_NEXT_SUGGESTION</item>
+        <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>SET_DOT_7</item>
+        <item>SET_DOT_8</item>
     </string-array>
 
     

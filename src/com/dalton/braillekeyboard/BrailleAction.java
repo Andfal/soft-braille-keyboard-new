@@ -39,6 +39,8 @@ public enum BrailleAction {
     TOGGLE_AUTO_CAPS(R.string.action_toggle_auto_caps),
     TOGGLE_ECHO_PASSWORDS(R.string.action_toggle_echo_passwords),
     TOGGLE_MARK(R.string.action_toggle_mark),
+    TOGGLE_ABBREVIATIONS(R.string.action_toggle_abbreviations),
+    TOGGLE_INSTANT_ABBREVIATIONS(R.string.action_toggle_instant_abbreviations),
     CYCLE_KEYBOARD_FEEDBACK(R.string.action_cycle_keyboard_feedback),
     CYCLE_ECHO_FEEDBACK(R.string.action_cycle_echo_feedback),
     SWITCH_BRAILLE_TYPE(R.string.action_switch_braille_type),

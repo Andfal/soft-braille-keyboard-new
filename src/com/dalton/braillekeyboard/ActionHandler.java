@@ -455,6 +455,19 @@ public class ActionHandler {
                     .getString(listener.toggleMark() ? R.string.set_mark
                             : R.string.unset_mark);
             break;
+        case TOGGLE_ABBREVIATIONS:
+            boolean abbrEnabled = Options.switchBooleanPreference(context,
+                    R.string.pref_abbreviations_enabled_key,
+                    Boolean.parseBoolean(context.getString(R.string.pref_abbreviations_enabled_default)));
+            message = context.getString(abbrEnabled ? R.string.abbreviations_enabled
+                    : R.string.abbreviations_disabled);
+            break;
+        case TOGGLE_INSTANT_ABBREVIATIONS:
+            boolean instantEnabled = Options.switchBooleanPreferenceStringKey(context,
+                    "ABBREVIATIONS_INSTANT", false);
+            message = context.getString(instantEnabled ? R.string.abbreviations_instant_enabled
+                    : R.string.abbreviations_instant_disabled);
+            break;
         case CYCLE_KEYBOARD_FEEDBACK:
             KeyboardFeedback feedback = KeyboardFeedback.valueOf(Integer
                     .parseInt(Options.getStringPreference(context,
@@ -956,6 +969,7 @@ public class ActionHandler {
 
     // Insert a certain character like a ' ' or '\n'
     private void typeCharacter(Context context, int code, String charName) {
+        listener.checkAndExpandAbbreviation();
         listener.finishComposingText();
         Word word = EditingUtilities.getWord(listener);
         String message = word == null ? null : word.word.substring(0,

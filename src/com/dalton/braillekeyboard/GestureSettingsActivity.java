@@ -73,6 +73,19 @@ public class GestureSettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.prefs_gestures);
 
+            String syncUri = Options.getSharedPreferences(getActivity()).getString("sync_folder_uri", null);
+            if (syncUri == null) {
+                Preference setupPref = new Preference(getActivity());
+                setupPref.setKey("setup_folder_pref");
+                setupPref.setTitle(R.string.btn_setup_sync_folder);
+                setupPref.setOrder(-1); 
+                setupPref.setOnPreferenceClickListener(preference -> {
+                    startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE), 1001);
+                    return true;
+                });
+                getPreferenceScreen().addPreference(setupPref);
+            }
+
             // Bind summaries for all ListPreferences
             bindPreferenceSummaries();
 
@@ -131,8 +144,7 @@ public class GestureSettingsActivity extends PreferenceActivity {
                     ListPreference listPref = (ListPreference) pref;
                     listPref.setOnPreferenceChangeListener(this);
                     
-                    String savedValue = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity())
+                    String savedValue = Options.getSharedPreferences(getActivity())
                             .getString(listPref.getKey(), null);
                     
                     if (savedValue == null) {
@@ -155,8 +167,13 @@ public class GestureSettingsActivity extends PreferenceActivity {
                     String swipeName = key.substring(PREF_GESTURE_PREFIX.length());
                     try {
                         Swipe swipe = Swipe.valueOf(swipeName);
+                        // Save the new value using the correct SharedPreferences
+                        Options.getSharedPreferences(getActivity()).edit()
+                                .putString(key, newValue.toString())
+                                .apply();
                         // When changed, it's now explicit
                         updateSummary((ListPreference) preference, newValue.toString(), swipe, true);
+                        return false; // We handled the save manually
                     } catch (IllegalArgumentException e) {
                         updateSummary((ListPreference) preference, newValue.toString(), null, true);
                     }
@@ -203,93 +220,63 @@ public class GestureSettingsActivity extends PreferenceActivity {
         }
 
         private void startExportFlow() {
-            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("application/json");
-            intent.putExtra(Intent.EXTRA_TITLE, "sbk_gestures_backup.json");
-            startActivityForResult(intent, REQUEST_CODE_EXPORT);
+            String syncUriStr = Options.getSharedPreferences(getActivity()).getString("sync_folder_uri", null);
+            if (syncUriStr != null) {
+                try {
+                    android.support.v4.provider.DocumentFile root = android.support.v4.provider.DocumentFile.fromTreeUri(getActivity(), Uri.parse(syncUriStr));
+                    if (root != null && root.exists()) {
+                        android.support.v4.provider.DocumentFile file = root.findFile("gestures_backup.json");
+                        if (file == null) file = root.createFile("application/json", "gestures_backup.json");
+                        if (file != null) {
+                            java.io.OutputStream os = getActivity().getContentResolver().openOutputStream(file.getUri());
+                            if (GestureRepository.exportToJson(getActivity(), new java.io.File(getActivity().getCacheDir(), "temp"))) {
+                                // Re-implementing export logic here for SAF stream
+                                org.json.JSONObject json = new org.json.JSONObject();
+                                android.content.SharedPreferences prefs = Options.getSharedPreferences(getActivity());
+                                java.util.Map<String, ?> allEntries = prefs.getAll();
+                                for (java.util.Map.Entry<String, ?> entry : allEntries.entrySet()) {
+                                    if (entry.getKey().startsWith("gesture_mapping_")) {
+                                        json.put(entry.getKey(), entry.getValue());
+                                    }
+                                }
+                                os.write(json.toString(2).getBytes("UTF-8"));
+                                os.close();
+                                Toast.makeText(getActivity(), String.format(getString(R.string.msg_exported_to), "Hub Sincronizzato"), Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        }
+                    }
+                } catch (Exception e) { android.util.Log.e("GestureSettings", "SAF export error", e); }
+            }
+
+            java.io.File downloadsDir = android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS);
+            java.io.File softBrailleDir = new java.io.File(downloadsDir, "soft-braille");
+            if (!softBrailleDir.exists()) softBrailleDir.mkdirs();
+
+            java.io.File backupFile = new java.io.File(softBrailleDir, "gestures_backup.json");
+            if (GestureRepository.exportToJson(getActivity(), backupFile)) {
+                Toast.makeText(getActivity(), String.format(getString(R.string.msg_exported_to), backupFile.getAbsolutePath()), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "Export failed", Toast.LENGTH_SHORT).show();
+            }
         }
 
         private void startImportFlow() {
-            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("application/json");
+            Intent intent = new Intent(getActivity(), StorageManagerActivity.class);
+            intent.putExtra(StorageManagerActivity.EXTRA_MODE, StorageManagerActivity.MODE_GESTURES);
             startActivityForResult(intent, REQUEST_CODE_IMPORT);
         }
 
         @Override
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            if (resultCode != Activity.RESULT_OK || data == null || data.getData() == null) {
-                return;
-            }
-
-            Uri uri = data.getData();
-            if (requestCode == REQUEST_CODE_EXPORT) {
-                exportGestures(uri);
-            } else if (requestCode == REQUEST_CODE_IMPORT) {
-                importGestures(uri);
-            }
-        }
-
-        private void exportGestures(Uri uri) {
-            try {
-                JSONObject json = new JSONObject();
-                Map<String, ?> allPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity()).getAll();
-                for (Map.Entry<String, ?> entry : allPrefs.entrySet()) {
-                    if (entry.getKey().startsWith(PREF_GESTURE_PREFIX)) {
-                        json.put(entry.getKey(), entry.getValue());
-                    }
-                }
-
-                OutputStream outputStream = getActivity().getContentResolver().openOutputStream(uri);
-                if (outputStream != null) {
-                    outputStream.write(json.toString(2).getBytes());
-                    outputStream.close();
-                    Toast.makeText(getActivity(), getString(R.string.export_success, uri.getLastPathSegment()), Toast.LENGTH_LONG).show();
-                }
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), getString(R.string.export_error, e.getMessage()), Toast.LENGTH_LONG).show();
-            }
-        }
-
-        private void importGestures(Uri uri) {
-            try {
-                InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
-                if (inputStream == null) return;
-                
-                BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-                StringBuilder stringBuilder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    stringBuilder.append(line);
-                }
-                inputStream.close();
-
-                JSONObject json = new JSONObject(stringBuilder.toString());
-                if (json.length() == 0) {
-                    Toast.makeText(getActivity(), R.string.import_no_valid_data, Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                android.content.SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-                // Clear only gesture mappings
-                for (Swipe swipe : Swipe.values()) {
-                    editor.remove(PREF_GESTURE_PREFIX + swipe.name());
-                }
-                
-                Iterator<String> keys = json.keys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    if (key.startsWith(PREF_GESTURE_PREFIX)) {
-                        editor.putString(key, json.getString(key));
-                    }
-                }
-                editor.apply();
-
-                Toast.makeText(getActivity(), R.string.import_success, Toast.LENGTH_SHORT).show();
+            if (requestCode == 1001 && resultCode == Activity.RESULT_OK && data != null) {
+                Uri uri = data.getData();
+                getActivity().getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                Options.writeStringPreferenceStringKey(getActivity(), "sync_folder_uri", uri.toString());
+                Preference p = findPreference("setup_folder_pref");
+                if (p != null) getPreferenceScreen().removePreference(p);
+            } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_IMPORT) {
                 getActivity().recreate();
-            } catch (Exception e) {
-                Toast.makeText(getActivity(), getString(R.string.import_error, e.getMessage()), Toast.LENGTH_LONG).show();
             }
         }
     }

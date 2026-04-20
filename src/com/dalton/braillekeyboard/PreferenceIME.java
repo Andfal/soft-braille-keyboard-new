@@ -93,7 +93,21 @@ public class PreferenceIME extends PreferenceActivity {
                 importTable.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
-                        Intent intent = new Intent(getActivity(), TableManagerActivity.class);
+                        Intent intent = new Intent(getActivity(), StorageManagerActivity.class);
+                        intent.putExtra(StorageManagerActivity.EXTRA_MODE, StorageManagerActivity.MODE_TABLES);
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+            }
+
+            Preference storageManager = findPreference("pref_storage_manager_key");
+            if (storageManager != null) {
+                storageManager.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(getActivity(), StorageManagerActivity.class);
+                        intent.putExtra(StorageManagerActivity.EXTRA_MODE, StorageManagerActivity.MODE_GENERAL);
                         startActivity(intent);
                         return true;
                     }

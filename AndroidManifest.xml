@@ -44,7 +44,7 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".TableManagerActivity" android:label="Manage Custom Braille Tables" android:exported="true">
+        <activity android:name=".StorageManagerActivity" android:label="@string/title_storage_manager" android:theme="@android:style/Theme.Holo.Light" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -98,6 +98,10 @@
         <activity
             android:name="com.dalton.braillekeyboard.GestureSettingsActivity"
             android:label="@string/pref_category_gestures_title"
+            android:theme="@android:style/Theme.Holo.Light" />
+        <activity
+            android:name="com.dalton.braillekeyboard.AbbreviationEditorActivity"
+            android:label="@string/title_abbreviation_editor"
             android:theme="@android:style/Theme.Holo.Light" />
     </application>
 </manifest>

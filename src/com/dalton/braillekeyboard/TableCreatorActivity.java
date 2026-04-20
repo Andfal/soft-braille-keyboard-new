@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2026 The Soft Braille Keyboard Authors
+ */
+
 package com.dalton.braillekeyboard;
 
 import android.app.Activity;
@@ -410,8 +414,19 @@ public class TableCreatorActivity extends Activity {
         });
 
         String tableId = getIntent().getStringExtra("table_id");
-        if (tableId != null) loadTableData(tableId);
-        else { if (mLocaleNames.size() > 1) mLocaleSpinner.setSelection(1); }
+        if (tableId != null && !tableId.isEmpty()) {
+            loadTableData(tableId);
+        } else {
+            if (mLocaleNames.size() > 1) mLocaleSpinner.setSelection(1);
+        }
+    }
+
+    private void returnToManager() {
+        Intent intent = new Intent(this, StorageManagerActivity.class);
+        intent.putExtra(StorageManagerActivity.EXTRA_MODE, StorageManagerActivity.MODE_TABLES);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     private void updateSystemTables() {
@@ -679,8 +694,8 @@ public class TableCreatorActivity extends Activity {
             g.addView(boxes[i]);
         }
         dotEdit.addTextChangedListener(new android.text.TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int st, int c, int af) {}
-            @Override public void onTextChanged(CharSequence s, int st, int b, int c) {}
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override public void afterTextChanged(android.text.Editable s) { if (mIsUpdatingUI) return; mIsUpdatingUI = true; for (int i=0; i<dotCount; i++) boxes[i].setChecked(s.toString().contains(String.valueOf(order[i]))); mIsUpdatingUI = false; }
         });
         layout.addView(g); b.setView(layout);
@@ -1228,6 +1243,6 @@ public class TableCreatorActivity extends Activity {
         String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, 0).show(); return; }
         if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
         String tableContent = generateTableContent(); if (tableContent.isEmpty()) return;
-        try { File dir = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "soft-braille"); if (!dir.exists() && !dir.mkdirs()) return; File outFile = new File(dir, name); try (FileOutputStream fos = new FileOutputStream(outFile)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); } Toast.makeText(this, R.string.msg_table_exported, 0).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
+        try { File dir = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "soft-braille"); if (!dir.exists() && !dir.mkdirs()) return; File outFile = new File(dir, name); try (FileOutputStream fos = new FileOutputStream(outFile)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); } Toast.makeText(this, String.format(getString(R.string.msg_exported_to), outFile.getAbsolutePath()), 0).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
     }
 }

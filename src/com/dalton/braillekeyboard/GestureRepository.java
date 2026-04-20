@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 
 import com.dalton.braillekeyboard.Pad.Swipe;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,7 +85,7 @@ public class GestureRepository {
         defaultMappings.put(Swipe.HOLD_FIVE_LEFT, BrailleAction.NONE);
         defaultMappings.put(Swipe.HOLD_FIVE_RIGHT, BrailleAction.NONE);
         defaultMappings.put(Swipe.HOLD_FIVE_UP, BrailleAction.NONE);
-        defaultMappings.put(Swipe.HOLD_FIVE_DOWN, BrailleAction.NONE);
+        defaultMappings.put(Swipe.HOLD_FIVE_DOWN, BrailleAction.TOGGLE_ABBREVIATIONS);
     }
 
     public static BrailleAction getActionForSwipe(Context context, Swipe swipe) {
@@ -91,7 +93,7 @@ public class GestureRepository {
             return BrailleAction.NONE;
         }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = Options.getSharedPreferences(context);
         String actionName = prefs.getString(PREF_GESTURE_PREFIX + swipe.name(), null);
 
         if (actionName != null) {
@@ -108,12 +110,12 @@ public class GestureRepository {
     }
 
     public static void setActionForSwipe(Context context, Swipe swipe, BrailleAction action) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = Options.getSharedPreferences(context);
         prefs.edit().putString(PREF_GESTURE_PREFIX + swipe.name(), action.name()).apply();
     }
     
     public static void resetToDefaults(Context context) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences prefs = Options.getSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         for (Swipe swipe : Swipe.values()) {
             editor.remove(PREF_GESTURE_PREFIX + swipe.name());
@@ -124,5 +126,55 @@ public class GestureRepository {
     public static BrailleAction getDefaultActionForSwipe(Swipe swipe) {
         BrailleAction defaultAction = defaultMappings.get(swipe);
         return defaultAction != null ? defaultAction : BrailleAction.NONE;
+    }
+
+    public static boolean exportToJson(Context context, java.io.File file) {
+        try {
+            JSONObject json = new JSONObject();
+            android.content.SharedPreferences prefs = Options.getSharedPreferences(context);
+            java.util.Map<String, ?> allEntries = prefs.getAll();
+            for (java.util.Map.Entry<String, ?> entry : allEntries.entrySet()) {
+                if (entry.getKey().startsWith("gesture_mapping_")) {
+                    json.put(entry.getKey(), entry.getValue());
+                }
+            }
+            java.io.FileOutputStream fos = new java.io.FileOutputStream(file);
+            fos.write(json.toString(2).getBytes("UTF-8"));
+            fos.close();
+            return true;
+        } catch (Exception e) {
+            android.util.Log.e("GestureRepository", "Export error", e);
+            return false;
+        }
+    }
+
+    public static boolean importFromJson(Context context, java.io.File file) {
+        try {
+            java.io.FileInputStream fis = new java.io.FileInputStream(file);
+            byte[] data = new byte[(int) file.length()];
+            fis.read(data);
+            fis.close();
+            String jsonStr = new String(data, "UTF-8");
+            JSONObject json = new JSONObject(jsonStr);
+            
+            android.content.SharedPreferences.Editor editor = Options.getSharedPreferences(context).edit();
+            // Reset existing mappings first
+            for (Swipe swipe : Swipe.values()) {
+                editor.remove("gesture_mapping_" + swipe.name());
+            }
+            
+            java.util.Iterator<String> keys = json.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                if (key.startsWith("gesture_mapping_")) {
+                    editor.putString(key, json.getString(key));
+                }
+            }
+            editor.apply();
+            return true;
+        } catch (Exception e) {
+            android.util.Log.e("GestureRepository", "Import error", e);
+            return false;
+        }
     }
 }

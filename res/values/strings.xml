@@ -147,69 +147,113 @@
     <string name="action_spell_check_next_suggestion">Next spelling suggestion</string>
     <string name="action_spell_check_prev_suggestion">Previous spelling suggestion</string>
     <string name="action_set_dot_7">Type dot 7</string>
-    <string name="action_set_dot_8">Type dot 8</string>
+    <string name="action_set_dot_8">Insert dot 8</string>
+    <string name="action_toggle_abbreviations">Toggle abbreviations</string>
+    <string name="action_toggle_instant_abbreviations">Toggle instant expansion</string>
+
+    <!-- Abbreviations -->
+    <string name="pref_abbreviations_instant_title">Instant expansion</string>
+    <string name="pref_abbreviations_instant_summary">Replaces shortcuts as soon as they are typed, without waiting for space.</string>
+    <string name="abbreviations_instant_enabled">Instant expansion enabled</string>
+    <string name="abbreviations_instant_disabled">Instant expansion disabled</string>
+    <string name="pref_abbreviations_enabled_title">Text Expansion (Abbreviations)</string>
+    <string name="pref_abbreviations_enabled_summary">Replaces shortcuts (e.g., hru or 6-s) with full text (e.g., How are you?) while typing.</string>
+    <string name="pref_abbreviations_manage_title">Manage Abbreviations</string>
+    <string name="abbreviations_enabled">Abbreviations enabled</string>
+    <string name="abbreviations_disabled">Abbreviations disabled</string>
+    <string name="title_abbreviation_editor">Abbreviation Editor</string>
+    <string name="hint_shortcut">Shortcut (e.g., hru or 6-s)</string>
+    <string name="hint_expansion">Expanded text (e.g., How are you?)</string>
+    <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
+    <string name="pref_abbreviations_enabled_default">false</string>
 
     <!-- Gesture Names -->
-    <string name="swipe_one_left">Dot 1: Swipe Left</string>
-    <string name="swipe_one_right">Dot 1: Swipe Right</string>
-    <string name="swipe_one_up">Dot 1: Swipe Up</string>
-    <string name="swipe_one_down">Dot 1: Swipe Down</string>
-    <string name="swipe_two_left">Dot 2: Swipe Left</string>
-    <string name="swipe_two_right">Dot 2: Swipe Right</string>
-    <string name="swipe_two_up">Dot 2: Swipe Up</string>
-    <string name="swipe_two_down">Dot 2: Swipe Down</string>
-    <string name="swipe_three_left">Dot 3: Swipe Left</string>
-    <string name="swipe_three_right">Dot 3: Swipe Right</string>
-    <string name="swipe_three_up">Dot 3: Swipe Up</string>
-    <string name="swipe_three_down">Dot 3: Swipe Down</string>
-    <string name="swipe_four_left">Dot 4: Swipe Left</string>
-    <string name="swipe_four_right">Dot 4: Swipe Right</string>
-    <string name="swipe_four_up">Dot 4: Swipe Up</string>
-    <string name="swipe_four_down">Dot 4: Swipe Down</string>
-    <string name="swipe_five_left">Dot 5: Swipe Left</string>
-    <string name="swipe_five_right">Dot 5: Swipe Right</string>
-    <string name="swipe_five_up">Dot 5: Swipe Up</string>
-    <string name="swipe_five_down">Dot 5: Swipe Down</string>
-    <string name="swipe_six_left">Dot 6: Swipe Left</string>
-    <string name="swipe_six_right">Dot 6: Swipe Right</string>
-    <string name="swipe_six_up">Dot 6: Swipe Up</string>
-    <string name="swipe_six_down">Dot 6: Swipe Down</string>
+    <string name="swipe_one_left">Dot 1: Swipe Left.</string>
+    <string name="swipe_one_right">Dot 1: Swipe Right.</string>
+    <string name="swipe_one_up">Dot 1: Swipe Up.</string>
+    <string name="swipe_one_down">Dot 1: Swipe Down.</string>
+    <string name="swipe_two_left">Dot 2: Swipe Left.</string>
+    <string name="swipe_two_right">Dot 2: Swipe Right.</string>
+    <string name="swipe_two_up">Dot 2: Swipe Up.</string>
+    <string name="swipe_two_down">Dot 2: Swipe Down.</string>
+    <string name="swipe_three_left">Dot 3: Swipe Left.</string>
+    <string name="swipe_three_right">Dot 3: Swipe Right.</string>
+    <string name="swipe_three_up">Dot 3: Swipe Up.</string>
+    <string name="swipe_three_down">Dot 3: Swipe Down.</string>
+    <string name="swipe_four_left">Dot 4: Swipe Left.</string>
+    <string name="swipe_four_right">Dot 4: Swipe Right.</string>
+    <string name="swipe_four_up">Dot 4: Swipe Up.</string>
+    <string name="swipe_four_down">Dot 4: Swipe Down.</string>
+    <string name="swipe_five_left">Dot 5: Swipe Left.</string>
+    <string name="swipe_five_right">Dot 5: Swipe Right.</string>
+    <string name="swipe_five_up">Dot 5: Swipe Up.</string>
+    <string name="swipe_five_down">Dot 5: Swipe Down.</string>
+    <string name="swipe_six_left">Dot 6: Swipe Left.</string>
+    <string name="swipe_six_right">Dot 6: Swipe Right.</string>
+    <string name="swipe_six_up">Dot 6: Swipe Up.</string>
+    <string name="swipe_six_down">Dot 6: Swipe Down.</string>
     
-    <string name="swipe_left_two_down">Swipe down dots 12</string>
-    <string name="swipe_right_two_down">Swipe down dots 45</string>
+    <string name="swipe_left_two_down">Left: Two fingers Down.</string>
+    <string name="swipe_right_two_down">Right: Two fingers Down.</string>
     
-    <string name="swipe_hold_one_left">Hold Dot 1 &amp; Swipe Left</string>
+    <string name="swipe_hold_one_left">Dot 1: Hold and Swipe Left.</string>
+    <string name="swipe_hold_one_right">Dot 1: Hold and Swipe Right.</string>
+    <string name="swipe_hold_one_up">Dot 1: Hold and Swipe Up.</string>
+    <string name="swipe_hold_one_down">Dot 1: Hold and Swipe Down.</string>
 
+    <string name="swipe_hold_two_left">Dot 2: Hold and Swipe Left.</string>
+    <string name="swipe_hold_two_right">Dot 2: Hold and Swipe Right.</string>
+    <string name="swipe_hold_two_up">Dot 2: Hold and Swipe Up.</string>
+    <string name="swipe_hold_two_down">Dot 2: Hold and Swipe Down.</string>
 
-    <string name="swipe_hold_one_right">Hold Dot 1 &amp; Swipe Right</string>
-    <string name="swipe_hold_one_up">Hold Dot 1 &amp; Swipe Up</string>
-    <string name="swipe_hold_one_down">Hold Dot 1 &amp; Swipe Down</string>
-    
-    <string name="swipe_hold_two_left">Hold Dot 2 &amp; Swipe Left</string>
-    <string name="swipe_hold_two_right">Hold Dot 2 &amp; Swipe Right</string>
-    <string name="swipe_hold_two_up">Hold Dot 2 &amp; Swipe Up</string>
-    <string name="swipe_hold_two_down">Hold Dot 2 &amp; Swipe Down</string>
+    <string name="swipe_hold_three_left">Dot 3: Hold and Swipe Left.</string>
+    <string name="swipe_hold_three_right">Dot 3: Hold and Swipe Right.</string>
+    <string name="swipe_hold_three_up">Dot 3: Hold and Swipe Up.</string>
+    <string name="swipe_hold_three_down">Dot 3: Hold and Swipe Down.</string>
 
-    <string name="swipe_hold_three_left">Hold Dot 3 &amp; Swipe Left</string>
+    <string name="swipe_hold_four_left">Dot 4: Hold and Swipe Left.</string>
+    <string name="swipe_hold_four_right">Dot 4: Hold and Swipe Right.</string>
+    <string name="swipe_hold_four_up">Dot 4: Hold and Swipe Up.</string>
+    <string name="swipe_hold_four_down">Dot 4: Hold and Swipe Down.</string>
 
-    <string name="swipe_hold_three_right">Hold Dot 3 &amp; Swipe Right</string>
-    <string name="swipe_hold_three_up">Hold Dot 3 &amp; Swipe Up</string>
-    <string name="swipe_hold_three_down">Hold Dot 3 &amp; Swipe Down</string>
-    <string name="swipe_hold_four_left">Hold Dot 4 &amp; Swipe Left</string>
-    <string name="swipe_hold_four_right">Hold Dot 4 &amp; Swipe Right</string>
-    <string name="swipe_hold_four_up">Hold Dot 4 &amp; Swipe Up</string>
-    <string name="swipe_hold_four_down">Hold Dot 4 &amp; Swipe Down</string>
-    
-    <string name="swipe_hold_five_left">Hold Dot 5 &amp; Swipe Left</string>
-    <string name="swipe_hold_five_right">Hold Dot 5 &amp; Swipe Right</string>
-    <string name="swipe_hold_five_up">Hold Dot 5 &amp; Swipe Up</string>
-    <string name="swipe_hold_five_down">Hold Dot 5 &amp; Swipe Down</string>
+    <string name="swipe_hold_five_left">Dot 5: Hold and Swipe Left.</string>
+    <string name="swipe_hold_five_right">Dot 5: Hold and Swipe Right.</string>
+    <string name="swipe_hold_five_up">Dot 5: Hold and Swipe Up.</string>
+    <string name="swipe_hold_five_down">Dot 5: Hold and Swipe Down.</string>
 
-    <string name="swipe_hold_six_left">Hold Dot 6 &amp; Swipe Left</string>
+    <string name="swipe_hold_six_left">Dot 6: Hold and Swipe Left.</string>
+    <string name="swipe_hold_six_right">Dot 6: Hold and Swipe Right.</string>
+    <string name="swipe_hold_six_up">Dot 6: Hold and Swipe Up.</string>
+    <string name="swipe_hold_six_down">Dot 6: Hold and Swipe Down.</string>
 
-    <string name="swipe_hold_six_right">Hold Dot 6 &amp; Swipe Right</string>
-    <string name="swipe_hold_six_up">Hold Dot 6 &amp; Swipe Up</string>
-    <string name="swipe_hold_six_down">Hold Dot 6 &amp; Swipe Down</string>
+    <!-- Storage Manager (Universal) -->
+    <string name="label_active_abbreviations">[Active Abbreviations Dictionary]</string>
+    <string name="label_active_gestures">[Active Gestures Schema]</string>
+    <string name="msg_confirm_clear_active">Are you sure you want to clear all active data from the keyboard? This action cannot be undone.</string>
+    <string name="checkbox_delete_backup_file">Also delete the backup file in soft-braille folder</string>
+    <string name="btn_setup_sync_folder">Grant folder access for synchronization</string>
+    <string name="title_storage_manager">Storage Manager</string>
+    <string name="btn_create_new_table">Create New Table</string>
+    <string name="label_file_type_tables">Braille Tables</string>
+    <string name="label_file_type_abbreviations">Abbreviations Dictionary</string>
+    <string name="label_file_type_gestures">Gestures Schema</string>
+    <string name="msg_confirm_import_generic">Do you want to import this resource? Current data might be overwritten.</string>
+    <string name="msg_sync_folder">Synced Folder</string>
+    <string name="msg_download_folder">Download Folder</string>
+    <string name="pref_sync_folder_title">Folder Sync</string>
+    <string name="pref_sync_folder_summary">Choose a folder to sync tables and backups</string>
+
+    <!-- Backup & Restore -->
+    <string name="btn_export">Export</string>
+    <string name="btn_import">Import</string>
+    <string name="msg_exported_to">Backup saved to: %s</string>
+    <string name="msg_import_success">Data imported successfully!</string>
+    <string name="msg_import_error">Import error: %s</string>
+    <string name="title_select_backup">Select Backup</string>
+    <string name="msg_no_backups">No backups found in soft-braille.</string>
+    <string name="msg_confirm_import">Overwrite current data with this backup?</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_delete">Delete</string>
 
     <string name="pref_category_gestures_title">Gesture Customization</string>
     <string name="pref_gestures_summary">Assign functions to swipes and hold gestures</string>
@@ -334,8 +378,6 @@
     <string name="low">Low</string>
     <string name="mark_not_set">The mark has not been set</string>
     <string name="medium">Medium</string>
-    <string name="menu_delete">Delete</string>
-    <string name="menu_share">Share</string>
     <string name="msg_already_bottom">Already at bottom</string>
     <string name="msg_already_top">Already at top</string>
     <string name="msg_char_empty">Character field is empty</string>
@@ -750,6 +792,8 @@
         <item>@string/action_spell_check_right</item>
         <item>@string/action_spell_check_next_suggestion</item>
         <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_instant_abbreviations</item>
         <item>@string/action_set_dot_7</item>
         <item>@string/action_set_dot_8</item>
     </string-array>
@@ -801,6 +845,8 @@
         <item>SPELL_CHECK_RIGHT</item>
         <item>SPELL_CHECK_NEXT_SUGGESTION</item>
         <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
         <item>SET_DOT_7</item>
         <item>SET_DOT_8</item>
     </string-array>

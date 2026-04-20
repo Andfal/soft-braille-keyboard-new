@@ -281,4 +281,24 @@ public interface KeyboardListener {
      * @return The translated text, or null if translation failed.
      */
     String translateLiteral(byte dots);
+
+    /**
+     * Controlla se il buffer corrente corrisponde a un'abbreviazione e la espande.
+     */
+    void checkAndExpandAbbreviation();
+
+    /**
+     * Traduce il testo in punti Braille usando la tabella corrente.
+     */
+    byte[] getDotsForText(String text);
+
+    /**
+     * Traduce il testo in punti Braille usando una tabella letterale (Grado 1).
+     */
+    byte[] getDotsForTextLiteral(String text);
+
+    /**
+     * Traduce i punti Braille in testo usando la tabella corrente (senza commit).
+     */
+    String backTranslate(byte[] cells);
 }
