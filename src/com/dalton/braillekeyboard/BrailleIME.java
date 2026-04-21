@@ -68,6 +68,8 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
 
     @Override
     public void onCreate() {
+        // Trigger migration if needed
+        Options.getSharedPreferences(this);
         super.onCreate();
         abbreviationManager = AbbreviationManager.getInstance(this);
         if (brailleParser == null) {

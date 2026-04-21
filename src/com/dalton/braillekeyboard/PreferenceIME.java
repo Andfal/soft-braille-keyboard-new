@@ -64,6 +64,8 @@ public class PreferenceIME extends PreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Trigger migration if needed
+        Options.getSharedPreferences(this);
         super.onCreate(savedInstanceState);
         setTitle(R.string.settings_name);
     }

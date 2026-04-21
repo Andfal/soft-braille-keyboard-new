@@ -42,6 +42,8 @@ import android.view.MenuItem;
 public class StorageManagerActivity extends Activity {
     private static final String TAG = "StorageManager";
     private static final String PREF_SYNC_FOLDER_URI = "sync_folder_uri";
+    private static final String PREF_IMPORTED_ABBR = "imported_abbreviations_file";
+    private static final String PREF_IMPORTED_GEST = "imported_gestures_file";
     private static final int REQUEST_STORAGE_PERMISSION = 100;
     private static final int REQUEST_SYNC_FOLDER = 200;
     
@@ -250,14 +252,22 @@ public class StorageManagerActivity extends Activity {
         mItems.clear();
         mDisplayNames.clear();
 
+        android.content.SharedPreferences prefs = Options.getSharedPreferences(this);
+        String importedAbbr = prefs.getString(PREF_IMPORTED_ABBR, null);
+        String importedGest = prefs.getString(PREF_IMPORTED_GEST, null);
+
         // Aggiunta elementi virtuali (Stato Attivo)
         if (mMode == MODE_GENERAL || mMode == MODE_ABBREVIATIONS) {
-            mItems.add(new StorageItem(getString(R.string.label_active_abbreviations), MODE_ABBREVIATIONS));
-            mDisplayNames.add(getString(R.string.label_active_abbreviations));
+            String label = getString(R.string.label_active_abbreviations);
+            if (importedAbbr != null) label += " (" + importedAbbr + ")";
+            mItems.add(new StorageItem(label, MODE_ABBREVIATIONS));
+            mDisplayNames.add(label);
         }
         if (mMode == MODE_GENERAL || mMode == MODE_GESTURES) {
-            mItems.add(new StorageItem(getString(R.string.label_active_gestures), MODE_GESTURES));
-            mDisplayNames.add(getString(R.string.label_active_gestures));
+            String label = getString(R.string.label_active_gestures);
+            if (importedGest != null) label += " (" + importedGest + ")";
+            mItems.add(new StorageItem(label, MODE_GESTURES));
+            mDisplayNames.add(label);
         }
 
         if (mMode == MODE_TABLES || mMode == MODE_GENERAL) {
@@ -319,8 +329,16 @@ public class StorageManagerActivity extends Activity {
     }
 
     private boolean isAlreadyListed(String name) {
+        android.content.SharedPreferences prefs = Options.getSharedPreferences(this);
+        String importedAbbr = prefs.getString(PREF_IMPORTED_ABBR, null);
+        String importedGest = prefs.getString(PREF_IMPORTED_GEST, null);
+
         for (StorageItem item : mItems) {
-            if (item.isVirtual) continue;
+            if (item.isVirtual) {
+                if (item.virtualType == MODE_ABBREVIATIONS && name.equals(importedAbbr)) return true;
+                if (item.virtualType == MODE_GESTURES && name.equals(importedGest)) return true;
+                continue;
+            }
             if (item.isInternalTable) {
                 if (item.tableInfo.getId().equals("custom:" + name)) return true;
             } else if (item.name != null && item.name.equals(name)) return true;
@@ -362,9 +380,11 @@ public class StorageManagerActivity extends Activity {
                     break;
                 case MODE_ABBREVIATIONS:
                     success = AbbreviationManager.getInstance(this).importFromJson(tempFile);
+                    if (success) Options.getSharedPreferences(this).edit().putString(PREF_IMPORTED_ABBR, item.name).apply();
                     break;
                 case MODE_GESTURES:
                     success = GestureRepository.importFromJson(this, tempFile);
+                    if (success) Options.getSharedPreferences(this).edit().putString(PREF_IMPORTED_GEST, item.name).apply();
                     break;
             }
 
@@ -446,8 +466,8 @@ public class StorageManagerActivity extends Activity {
         dialogLayout.addView(messageText);
 
         final CheckBox cb = new CheckBox(this);
-        cb.setText(R.string.checkbox_delete_backup_file);
-        // La checkbox ha senso se l'elemento è virtuale (per eliminare il backup) 
+        cb.setText(R.string.msg_delete_external);
+        // La checkbox ha senso se l'elemento è virtuale (per eliminare l'origine) 
         // o se stiamo eliminando una tabella interna (per eliminare il file sorgente)
         cb.setVisibility((item.isVirtual || item.isInternalTable) ? View.VISIBLE : View.GONE);
         cb.setPadding(0, padding/2, 0, 0);
@@ -479,12 +499,21 @@ public class StorageManagerActivity extends Activity {
     }
 
     private void deleteVirtualData(int type, boolean deleteBackup) {
+        android.content.SharedPreferences prefs = Options.getSharedPreferences(this);
         if (type == MODE_ABBREVIATIONS) {
             AbbreviationManager.getInstance(this).clearAll();
-            if (deleteBackup) deleteBackupFile("abbreviations_backup.json");
+            if (deleteBackup) {
+                String file = prefs.getString(PREF_IMPORTED_ABBR, "abbreviations_backup.json");
+                deleteBackupFile(file);
+            }
+            prefs.edit().remove(PREF_IMPORTED_ABBR).apply();
         } else {
             GestureRepository.resetToDefaults(this);
-            if (deleteBackup) deleteBackupFile("gestures_backup.json");
+            if (deleteBackup) {
+                String file = prefs.getString(PREF_IMPORTED_GEST, "gestures_backup.json");
+                deleteBackupFile(file);
+            }
+            prefs.edit().remove(PREF_IMPORTED_GEST).apply();
         }
         refreshList();
         Toast.makeText(this, R.string.msg_deleted, Toast.LENGTH_SHORT).show();
@@ -518,6 +547,12 @@ public class StorageManagerActivity extends Activity {
         }
         
         if (deleted) {
+            // Se abbiamo eliminato un file esterno che era quello "attivo", puliamo la preferenza
+            android.content.SharedPreferences prefs = Options.getSharedPreferences(this);
+            if (item.name != null) {
+                if (item.name.equals(prefs.getString(PREF_IMPORTED_ABBR, null))) prefs.edit().remove(PREF_IMPORTED_ABBR).apply();
+                if (item.name.equals(prefs.getString(PREF_IMPORTED_GEST, null))) prefs.edit().remove(PREF_IMPORTED_GEST).apply();
+            }
             refreshList();
             Toast.makeText(this, R.string.msg_deleted, Toast.LENGTH_SHORT).show();
         }

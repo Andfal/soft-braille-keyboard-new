@@ -133,11 +133,44 @@ public class Options {
 
     public static SharedPreferences getSharedPreferences(Context context) {
         if (context == null) return null;
-        Context storageContext = context;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            storageContext = context.createDeviceProtectedStorageContext();
+            Context deContext = context.createDeviceProtectedStorageContext();
+            SharedPreferences migrationTracker = deContext.getSharedPreferences("migration_tracker", Context.MODE_PRIVATE);
+            
+            if (!migrationTracker.getBoolean("pref_migrated", false)) {
+                String prefName = context.getPackageName() + "_preferences";
+                java.io.File ceFile = new java.io.File(context.getDataDir(), "shared_prefs/" + prefName + ".xml");
+                java.io.File deFile = new java.io.File(deContext.getDataDir(), "shared_prefs/" + prefName + ".xml");
+
+                // 1. Migrazione SharedPreferences predefinite
+                if (ceFile.exists() && !deFile.exists()) {
+                    android.util.Log.i("Options", "Migrating default preferences from CE to DE...");
+                    deContext.moveSharedPreferencesFrom(context, prefName);
+                }
+                
+                // 2. Migrazione SharedPreferences custom_tables
+                java.io.File ceTablesPref = new java.io.File(context.getDataDir(), "shared_prefs/custom_tables.xml");
+                java.io.File deTablesPref = new java.io.File(deContext.getDataDir(), "shared_prefs/custom_tables.xml");
+                if (ceTablesPref.exists() && !deTablesPref.exists()) {
+                    deContext.moveSharedPreferencesFrom(context, "custom_tables");
+                }
+
+                // 3. Migrazione CARTELLE fisiche (custom_tables)
+                java.io.File ceFilesDir = context.getFilesDir();
+                java.io.File deFilesDir = deContext.getFilesDir();
+                java.io.File ceCustomTablesDir = new java.io.File(ceFilesDir, "custom_tables");
+                java.io.File deCustomTablesDir = new java.io.File(deFilesDir, "custom_tables");
+
+                if (ceCustomTablesDir.exists() && !deCustomTablesDir.exists()) {
+                    android.util.Log.i("Options", "Migrating custom_tables directory from CE to DE...");
+                    ceCustomTablesDir.renameTo(deCustomTablesDir);
+                }
+                
+                migrationTracker.edit().putBoolean("pref_migrated", true).apply();
+            }
+            return PreferenceManager.getDefaultSharedPreferences(deContext);
         }
-        return PreferenceManager.getDefaultSharedPreferences(storageContext);
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public static boolean getBooleanPreference(Context context, int resource,

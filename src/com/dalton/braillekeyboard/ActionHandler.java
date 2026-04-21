@@ -904,7 +904,7 @@ public class ActionHandler {
             Word space = EditingUtilities.skipSepBackwards(listener,
                     EditingUtilities.WORD_SEPARATORS);
             word = EditingUtilities.getWord(listener);
-            if (word != null) {
+            if (word != null && word.word != null) {
                 if (space != null) {
                     word.charsBefore += space.charsBefore;
                 }
@@ -912,8 +912,7 @@ public class ActionHandler {
                     word.word = word.word.substring(0, word.charsBefore);
                 }
                 EditingUtilities.moveToPreviousWord(listener);
-            }
-            break;
+            }            break;
         case LINE:
             canDelete = isConfirmed(context, fastDoubleTouch);
             if (canDelete) {
