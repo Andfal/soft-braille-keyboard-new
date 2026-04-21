@@ -196,35 +196,35 @@
     <string name="swipe_left_two_down">Left: Two fingers Down.</string>
     <string name="swipe_right_two_down">Right: Two fingers Down.</string>
     
-    <string name="swipe_hold_one_left">Dot 1: Hold and Swipe Left.</string>
-    <string name="swipe_hold_one_right">Dot 1: Hold and Swipe Right.</string>
-    <string name="swipe_hold_one_up">Dot 1: Hold and Swipe Up.</string>
-    <string name="swipe_hold_one_down">Dot 1: Hold and Swipe Down.</string>
+    <string name="swipe_hold_one_left">Dot 1: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_one_right">Dot 1: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_one_up">Dot 1: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_one_down">Dot 1: Hold and Swipe Down with the other hand.</string>
 
-    <string name="swipe_hold_two_left">Dot 2: Hold and Swipe Left.</string>
-    <string name="swipe_hold_two_right">Dot 2: Hold and Swipe Right.</string>
-    <string name="swipe_hold_two_up">Dot 2: Hold and Swipe Up.</string>
-    <string name="swipe_hold_two_down">Dot 2: Hold and Swipe Down.</string>
+    <string name="swipe_hold_two_left">Dot 2: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_two_right">Dot 2: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_two_up">Dot 2: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_two_down">Dot 2: Hold and Swipe Down with the other hand.</string>
 
-    <string name="swipe_hold_three_left">Dot 3: Hold and Swipe Left.</string>
-    <string name="swipe_hold_three_right">Dot 3: Hold and Swipe Right.</string>
-    <string name="swipe_hold_three_up">Dot 3: Hold and Swipe Up.</string>
-    <string name="swipe_hold_three_down">Dot 3: Hold and Swipe Down.</string>
+    <string name="swipe_hold_three_left">Dot 3: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_three_right">Dot 3: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_three_up">Dot 3: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_three_down">Dot 3: Hold and Swipe Down with the other hand.</string>
 
-    <string name="swipe_hold_four_left">Dot 4: Hold and Swipe Left.</string>
-    <string name="swipe_hold_four_right">Dot 4: Hold and Swipe Right.</string>
-    <string name="swipe_hold_four_up">Dot 4: Hold and Swipe Up.</string>
-    <string name="swipe_hold_four_down">Dot 4: Hold and Swipe Down.</string>
+    <string name="swipe_hold_four_left">Dot 4: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_four_right">Dot 4: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_four_up">Dot 4: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_four_down">Dot 4: Hold and Swipe Down with the other hand.</string>
 
-    <string name="swipe_hold_five_left">Dot 5: Hold and Swipe Left.</string>
-    <string name="swipe_hold_five_right">Dot 5: Hold and Swipe Right.</string>
-    <string name="swipe_hold_five_up">Dot 5: Hold and Swipe Up.</string>
-    <string name="swipe_hold_five_down">Dot 5: Hold and Swipe Down.</string>
+    <string name="swipe_hold_five_left">Dot 5: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_five_right">Dot 5: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_five_up">Dot 5: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_five_down">Dot 5: Hold and Swipe Down with the other hand.</string>
 
-    <string name="swipe_hold_six_left">Dot 6: Hold and Swipe Left.</string>
-    <string name="swipe_hold_six_right">Dot 6: Hold and Swipe Right.</string>
-    <string name="swipe_hold_six_up">Dot 6: Hold and Swipe Up.</string>
-    <string name="swipe_hold_six_down">Dot 6: Hold and Swipe Down.</string>
+    <string name="swipe_hold_six_left">Dot 6: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_six_right">Dot 6: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_six_up">Dot 6: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_six_down">Dot 6: Hold and Swipe Down with the other hand.</string>
 
     <!-- Storage Manager (Universal) -->
     <string name="label_active_abbreviations">[Active Abbreviations Dictionary]</string>
@@ -274,7 +274,7 @@
     
     <string name="pref_group_single_finger">Single Finger Swipes</string>
     <string name="pref_group_two_fingers">Two-Finger Swipes (Down only)</string>
-    <string name="pref_group_hold_swipe">Hold &amp; Swipe Gestures</string>
+    <string name="pref_group_hold_swipe">Hold a dot with one hand and swipe with the other</string>
 
 
     <string name="high">High</string>
