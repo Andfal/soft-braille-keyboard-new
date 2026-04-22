@@ -968,7 +968,7 @@ public class ActionHandler {
 
     // Insert a certain character like a ' ' or '\n'
     private void typeCharacter(Context context, int code, String charName) {
-        listener.checkAndExpandAbbreviation();
+        listener.checkAndExpandAbbreviation(false);
         listener.finishComposingText();
         Word word = EditingUtilities.getWord(listener);
         String message = word == null ? null : word.word.substring(0,

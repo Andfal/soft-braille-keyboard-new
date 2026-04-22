@@ -284,8 +284,9 @@ public interface KeyboardListener {
 
     /**
      * Controlla se il buffer corrente corrisponde a un'abbreviazione e la espande.
+     * @param strict Se true, esegue un controllo rigoroso (usato per espansione istantanea).
      */
-    void checkAndExpandAbbreviation();
+    void checkAndExpandAbbreviation(boolean strict);
 
     /**
      * Traduce il testo in punti Braille usando la tabella corrente.

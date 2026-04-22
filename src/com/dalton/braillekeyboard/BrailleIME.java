@@ -455,17 +455,26 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     @Override
-    public void checkAndExpandAbbreviation() {
-        // 1. Controllo immediato: se disattivata, esci subito
-        if (!Options.getBooleanPreference(this, R.string.pref_abbreviations_enabled_key, 
-                Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default)))) {
-            return;
+    public void checkAndExpandAbbreviation(boolean strict) {
+        // 1. Controllo indipendente basato sulla modalità
+        boolean enabled;
+        if (strict) {
+            // Modalità istantanea
+            enabled = Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_INSTANT", false);
+        } else {
+            // Modalità classica (spazio)
+            enabled = Options.getBooleanPreference(this, R.string.pref_abbreviations_enabled_key,
+                    Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default)));
         }
+
+        if (!enabled) return;
 
         // 2. Analisi del buffer in composizione locale
         if (composingText.length() > 0) {
             String word = composingText.toString();
-            String expansion = abbreviationManager.getExpansion(word, this);
+            // In modalità rigorosa (istantanea), passiamo il numero esatto di celle digitate
+            int cellCount = strict ? cells.size() : -1;
+            String expansion = abbreviationManager.getExpansion(word, cellCount, this);
             
             // 3. Modifica SOLO se viene trovata un'espansione
             if (expansion != null) {
@@ -498,7 +507,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
 
             // If dots is 0 (space) or contains space-like behavior, check abbreviations and finish composition
             if (dots == 0) {
-                checkAndExpandAbbreviation();
+                checkAndExpandAbbreviation(false);
                 finishComposingText(true);
                 return " ";
             }
@@ -562,10 +571,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 composingText.append(text);
 
                 // ESPANSIONE ISTANTANEA
-                if (Options.getBooleanPreference(this, R.string.pref_abbreviations_enabled_key, false) &&
-                    Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_INSTANT", false)) {
-                    checkAndExpandAbbreviation();
-                }
+                checkAndExpandAbbreviation(true);
             }
         } finally { ic.endBatchEdit(); }
         return text.toString();
@@ -585,7 +591,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
         if (selectAll) { toggleMark(); selectAll = false; }
-        checkAndExpandAbbreviation();
+        checkAndExpandAbbreviation(false);
         finishComposingText();
         switch (keyCode) {
         case Keyboard.KEYCODE_DELETE: keyDownUp(ic, KeyEvent.KEYCODE_DEL); break;

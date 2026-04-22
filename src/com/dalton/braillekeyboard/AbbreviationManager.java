@@ -137,27 +137,34 @@ public class AbbreviationManager {
     /**
      * Cerca un'espansione per la parola digitata.
      * Gestisce: Case-insensitivity, Prefissi di punteggiatura e Prefissi a punti (es. 6-s).
+     * @param typedCellsCount Se > 0, impone che il numero di celle dell'abbreviazione coincida.
      */
-    private String findMatch(String key, KeyboardListener listener) {
+    private String findMatch(String key, int typedCellsCount, KeyboardListener listener) {
         // Cerchiamo in modo case-insensitive
         for (Map.Entry<String, String> entry : abbreviations.entrySet()) {
             String shortcut = entry.getKey();
             
+            // 1. Controllo preliminare per match testuale diretto
             if (shortcut.equalsIgnoreCase(key)) {
+                if (typedCellsCount > 0) {
+                    // In modalità rigorosa, verifichiamo che il numero di celle prodotte dal shortcut
+                    // letterale corrisponda a quello digitato.
+                    byte[] shortcutDots = (listener != null) ? listener.getDotsForTextLiteral(shortcut) : null;
+                    int shortcutCells = (shortcutDots != null) ? shortcutDots.length : shortcut.length();
+                    if (shortcutCells != typedCellsCount) continue;
+                }
                 return entry.getValue();
             }
             
-            // Supporto notazione punti universale (es. "6-234", "5-1234", "6-s")
+            // 2. Supporto notazione punti universale (es. "6-234", "5-1234", "6-s")
             if (shortcut.contains("-") && listener != null) {
                 String[] parts = shortcut.split("-");
                 java.util.List<Byte> cellList = new java.util.ArrayList<Byte>();
                 
                 for (String part : parts) {
                     if (isNumeric(part)) {
-                        // È una cella espressa in punti (es. "234")
                         cellList.add(parseDots(part));
                     } else {
-                        // È un carattere (es. "s"), otteniamo i suoi punti letterali
                         byte[] dots = listener.getDotsForTextLiteral(part);
                         if (dots != null) {
                             for (byte b : dots) cellList.add(b);
@@ -175,6 +182,11 @@ public class AbbreviationManager {
                     String simulatedResult = listener.backTranslate(combinedCells);
                     
                     if (simulatedResult != null && simulatedResult.equalsIgnoreCase(key)) {
+                        // In modalità rigorosa, il numero di celle deve essere identico.
+                        // Questo evita che "6-a" (2 celle) venga espanso quando si scrive solo "a" (1 cella).
+                        if (typedCellsCount > 0 && combinedCells.length != typedCellsCount) {
+                            continue;
+                        }
                         return entry.getValue();
                     }
                 }
@@ -202,11 +214,19 @@ public class AbbreviationManager {
     }
 
     public String getExpansion(String typedWord, KeyboardListener listener) {
+        return getExpansion(typedWord, -1, listener);
+    }
+
+    public String getExpansion(String typedWord, int typedCellsCount, KeyboardListener listener) {
         if (typedWord == null || typedWord.length() == 0) return null;
 
         // 1. Prova match diretto (con supporto punti dinamico)
-        String expansion = findMatch(typedWord, listener);
+        String expansion = findMatch(typedWord, typedCellsCount, listener);
         if (expansion != null) return expansion;
+
+        // In modalità rigorosa (espansione istantanea), non permettiamo il matching parziale
+        // con rimozione di prefissi/suffissi per evitare falsi positivi durante la digitazione.
+        if (typedCellsCount > 0) return null;
 
         // 2. Prova a rimuovere prefissi di punteggiatura (es. !hl -> hl)
         int firstLetterIdx = 0;
@@ -215,7 +235,6 @@ public class AbbreviationManager {
         }
         
         // Se abbiamo trovato un prefisso, cerchiamo il nucleo.
-        // Se il nucleo ha un'espansione, restituiamo l'espansione ESATTA (rimuovendo il prefisso come richiesto).
         if (firstLetterIdx > 0 && firstLetterIdx < typedWord.length()) {
             String core = typedWord.substring(firstLetterIdx);
             
@@ -228,12 +247,12 @@ public class AbbreviationManager {
             if (lastLetterIdx < core.length() - 1) {
                 String subCore = core.substring(0, lastLetterIdx + 1);
                 String suffix = core.substring(lastLetterIdx + 1);
-                expansion = findMatch(subCore, listener);
+                expansion = findMatch(subCore, -1, listener);
                 if (expansion != null) {
                     return expansion + suffix;
                 }
             } else {
-                expansion = findMatch(core, listener);
+                expansion = findMatch(core, -1, listener);
                 if (expansion != null) return expansion;
             }
         }
@@ -247,7 +266,7 @@ public class AbbreviationManager {
         if (lastLetterIdx < typedWord.length() - 1 && lastLetterIdx >= 0) {
             String core = typedWord.substring(0, lastLetterIdx + 1);
             String suffix = typedWord.substring(lastLetterIdx + 1);
-            expansion = findMatch(core, listener);
+            expansion = findMatch(core, -1, listener);
             if (expansion != null) {
                 return expansion + suffix;
             }
@@ -261,6 +280,6 @@ public class AbbreviationManager {
      * Utile se il testo tradotto dal BrailleParser non è facilmente prevedibile.
      */
     public String getExpansionWithDots(String typedWord, KeyboardListener listener) {
-        return getExpansion(typedWord, listener);
+        return getExpansion(typedWord, -1, listener);
     }
 }

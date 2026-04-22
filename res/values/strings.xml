@@ -152,13 +152,14 @@
     <string name="action_toggle_instant_abbreviations">Toggle instant expansion</string>
 
     <!-- Abbreviations -->
+    <string name="pref_abbreviations_title">Abbreviations</string>
+    <string name="pref_abbreviations_summary">Manage text expansion (via space or instant).</string>
     <string name="pref_abbreviations_instant_title">Instant expansion</string>
-    <string name="pref_abbreviations_instant_summary">Replaces shortcuts as soon as they are typed, without waiting for space.</string>
+    <string name="pref_abbreviations_instant_summary">Replaces shortcuts as soon as they are typed.</string>
     <string name="abbreviations_instant_enabled">Instant expansion enabled</string>
     <string name="abbreviations_instant_disabled">Instant expansion disabled</string>
-    <string name="pref_abbreviations_enabled_title">Text Expansion (Abbreviations)</string>
-    <string name="pref_abbreviations_enabled_summary">Replaces shortcuts (e.g., hru or 6-s) with full text (e.g., How are you?) while typing.</string>
-    <string name="pref_abbreviations_manage_title">Manage Abbreviations</string>
+    <string name="pref_abbreviations_enabled_title">Expansion via Space</string>
+    <string name="pref_abbreviations_enabled_summary">Replaces shortcuts when you type a space.</string>
     <string name="abbreviations_enabled">Abbreviations enabled</string>
     <string name="abbreviations_disabled">Abbreviations disabled</string>
     <string name="title_abbreviation_editor">Abbreviation Editor</string>

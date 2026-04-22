@@ -113,8 +113,24 @@ public class AbbreviationEditorActivity extends Activity {
         btnSetup.setVisibility(syncUri == null ? View.VISIBLE : View.GONE);
         btnSetup.setOnClickListener(v -> startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE), 1001));
 
+        final CheckBox checkSpace = (CheckBox) findViewById(R.id.check_space_expansion);
         final CheckBox checkInstant = (CheckBox) findViewById(R.id.check_instant_expansion);
+
+        // Caricamento stati iniziali
+        String spaceKey = getString(R.string.pref_abbreviations_enabled_key);
+        boolean spaceDefault = Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default));
+        checkSpace.setChecked(Options.getSharedPreferences(this).getBoolean(spaceKey, spaceDefault));
         checkInstant.setChecked(Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_INSTANT", false));
+
+        checkSpace.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Options.getSharedPreferences(AbbreviationEditorActivity.this).edit()
+                        .putBoolean(spaceKey, isChecked)
+                        .apply();
+            }
+        });
+
         checkInstant.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

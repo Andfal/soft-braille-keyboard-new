@@ -623,13 +623,14 @@
     <string name="action_toggle_instant_abbreviations">Attiva/disattiva espansione istantanea</string>
 
     <!-- Abbreviations (IT) -->
+    <string name="pref_abbreviations_title">Abbreviazioni</string>
+    <string name="pref_abbreviations_summary">Gestisci l\'espansione del testo (tramite spazio o istantanea).</string>
     <string name="pref_abbreviations_instant_title">Espansione istantanea</string>
-    <string name="pref_abbreviations_instant_summary">Sostituisce le scorciatoie non appena vengono digitate, senza attendere lo spazio.</string>
+    <string name="pref_abbreviations_instant_summary">Sostituisce le scorciatoie non appena vengono digitate.</string>
     <string name="abbreviations_instant_enabled">Espansione istantanea attivata</string>
     <string name="abbreviations_instant_disabled">Espansione istantanea disattivata</string>
-    <string name="pref_abbreviations_enabled_title">Espansione testo (Abbreviazioni)</string>
-    <string name="pref_abbreviations_enabled_summary">Sostituisce le scorciatoie (es. ccs o 6-s) con il testo completo (es. Ciao, come stai?) durante la digitazione.</string>
-    <string name="pref_abbreviations_manage_title">Gestisci Abbreviazioni</string>
+    <string name="pref_abbreviations_enabled_title">Espansione tramite Spazio</string>
+    <string name="pref_abbreviations_enabled_summary">Sostituisce le scorciatoie quando digiti uno spazio.</string>
     <string name="abbreviations_enabled">Abbreviazioni attivate</string>
     <string name="abbreviations_disabled">Abbreviazioni disattivate</string>
     <string name="title_abbreviation_editor">Editor Abbreviazioni</string>
