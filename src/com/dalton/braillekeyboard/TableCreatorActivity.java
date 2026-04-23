@@ -44,8 +44,11 @@ public class TableCreatorActivity extends Activity {
     private CheckBox mMappingPriorityCheck;
     
     private Spinner mLocaleSpinner;
+    private EditText mSearchLocaleEdit;
     private List<String> mLocaleCodes = new ArrayList<>();
+    private List<String> mFilteredLocaleCodes = new ArrayList<>();
     private List<String> mLocaleNames = new ArrayList<>();
+    private List<String> mFilteredLocaleNames = new ArrayList<>();
 
     private Spinner mBaseTableSpinner;
     private List<String> mSystemTableFiles = new ArrayList<>();
@@ -98,7 +101,9 @@ public class TableCreatorActivity extends Activity {
     private CheckBox mShowVisualPickerCheck;
     
     private LinearLayout mAdvancedSettingsLayout;
+    private LinearLayout mHeaderConfigLayout;
     private LinearLayout mCellPickerButtonsLayout;
+    private Button mToggleHeaderBtn;
 
     private Spinner mMappedItemsSpinner;
     private List<String> mDisplayList = new ArrayList<>();
@@ -161,6 +166,7 @@ public class TableCreatorActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_table_creator);
         setTitle(R.string.title_activity_table_creator);
         
         OPCODE_LABELS = new String[] {
@@ -179,75 +185,104 @@ public class TableCreatorActivity extends Activity {
 
         initPresets();
 
-        LinearLayout mainContainer = new LinearLayout(this);
-        mainContainer.setOrientation(LinearLayout.VERTICAL);
-
-        ScrollView scroll = new ScrollView(this);
-        scroll.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f));
+        // Bind Views from XML
+        mToggleHeaderBtn = (Button) findViewById(R.id.btn_toggle_header);
+        mHeaderConfigLayout = (LinearLayout) findViewById(R.id.layout_header_config);
+        mTableNameEdit = (EditText) findViewById(R.id.edit_table_name);
+        mAuthorEdit = (EditText) findViewById(R.id.edit_author);
+        mDescriptionEdit = (EditText) findViewById(R.id.edit_description);
+        mLocaleSpinner = (Spinner) findViewById(R.id.spinner_locale);
+        mSearchLocaleEdit = (EditText) findViewById(R.id.edit_search_locale);
+        mEightDotCheck = (CheckBox) findViewById(R.id.check_use_8_dots);
+        mAdvancedSettingsLayout = (LinearLayout) findViewById(R.id.layout_advanced_settings);
+        mBaseTableSpinner = (Spinner) findViewById(R.id.spinner_base_table);
+        mScriptSpinner = (Spinner) findViewById(R.id.spinner_script);
+        mNumSystemSpinner = (Spinner) findViewById(R.id.spinner_num_system);
+        mShowVisualPickerCheck = (CheckBox) findViewById(R.id.check_show_visual_picker);
+        mCurrentCellsContainer = (LinearLayout) findViewById(R.id.layout_current_cells);
+        mCellPickerButtonsLayout = (LinearLayout) findViewById(R.id.layout_cell_picker_buttons);
         
-        LinearLayout topContent = new LinearLayout(this);
-        topContent.setOrientation(LinearLayout.VERTICAL);
-        topContent.setPadding(30, 30, 30, 30);
-        scroll.addView(topContent);
+        mCharEdit = (EditText) findViewById(R.id.edit_char);
+        mDotsEdit = (EditText) findViewById(R.id.edit_dots);
+        mOpcodeSpinner = (Spinner) findViewById(R.id.spinner_opcode);
+        mMappingPriorityCheck = (CheckBox) findViewById(R.id.check_priority);
+        mSearchEdit = (EditText) findViewById(R.id.edit_search);
+        mSearchResultsSummary = (TextView) findViewById(R.id.text_search_summary);
+        mMappedItemsSpinner = (Spinner) findViewById(R.id.spinner_mapped_items);
+        mAddMappingBtn = (Button) findViewById(R.id.btn_add_rule);
+        
+        Button loadTemplateBtn = (Button) findViewById(R.id.btn_load_template);
+        Button importRulesBtn = (Button) findViewById(R.id.btn_import_visual);
+        Button cloneTableBtn = (Button) findViewById(R.id.btn_clone_table);
+        Button exportSystemBtn = (Button) findViewById(R.id.btn_export_system);
+        Button setDotsBtn = (Button) findViewById(R.id.btn_set_cell);
+        Button appendDotBtn = (Button) findViewById(R.id.btn_append_cell);
+        Button clearDotsBtn = (Button) findViewById(R.id.btn_clear_dots);
+        Button removeMappingBtn = (Button) findViewById(R.id.btn_remove_rule);
+        Button massActionBtn = (Button) findViewById(R.id.btn_mass_action);
+        Button saveBtn = (Button) findViewById(R.id.btn_save_table);
+        Button exportBtn = (Button) findViewById(R.id.btn_export_table_final);
 
-        mTableNameEdit = new EditText(this);
-        mTableNameEdit.setHint(R.string.hint_table_name);
-        topContent.addView(mTableNameEdit);
+        // Header Logic
+        mToggleHeaderBtn.setOnClickListener(v -> toggleHeader());
 
-        Button templateBtn = new Button(this);
-        templateBtn.setText(R.string.btn_load_template);
-        templateBtn.setOnClickListener(v -> showTemplatePicker());
-        topContent.addView(templateBtn);
-
-        mAuthorEdit = new EditText(this);
-        mAuthorEdit.setHint(getString(R.string.hint_author));
-        topContent.addView(mAuthorEdit);
-
-        mDescriptionEdit = new EditText(this);
-        mDescriptionEdit.setHint(getString(R.string.hint_description));
-        topContent.addView(mDescriptionEdit);
-
-        mLocaleSpinner = new Spinner(this);
+        loadTemplateBtn.setOnClickListener(v -> showTemplatePicker());
+        
         loadLocales();
-        mLocaleSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_locale_short), mLocaleNames));
+        mFilteredLocaleNames.addAll(mLocaleNames);
+        mFilteredLocaleCodes.addAll(mLocaleCodes);
+        final ArrayAdapter<String> localeAdapter = new LabeledSpinnerAdapter(this, getString(R.string.label_locale_short), mFilteredLocaleNames);
+        mLocaleSpinner.setAdapter(localeAdapter);
+        
+        mSearchLocaleEdit.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mFilteredLocaleNames.clear();
+                mFilteredLocaleCodes.clear();
+                String q = s.toString().toLowerCase();
+                for (int i = 0; i < mLocaleNames.size(); i++) {
+                    if (mLocaleNames.get(i).toLowerCase().contains(q)) {
+                        mFilteredLocaleNames.add(mLocaleNames.get(i));
+                        mFilteredLocaleCodes.add(mLocaleCodes.get(i));
+                    }
+                }
+                localeAdapter.notifyDataSetChanged();
+                
+                if (!mFilteredLocaleNames.isEmpty()) {
+                    mLocaleSpinner.setSelection(0);
+                    // Forza l'aggiornamento della logica perché l'indice 0 potrebbe essere lo stesso
+                    // ma il contenuto dell'adattatore a quell'indice è cambiato.
+                    updateSystemTables();
+                    initPresets();
+                    
+                    // Annuncio per screen reader: più esplicito sulla selezione automatica
+                    String selectedName = mFilteredLocaleNames.get(0);
+                    String msg = String.format(getString(R.string.label_found_locales), mFilteredLocaleNames.size()) 
+                                 + ". " + getString(R.string.label_auto_selected) + ": " + selectedName;
+                    mSearchLocaleEdit.announceForAccessibility(msg);
+                } else {
+                    mSearchLocaleEdit.announceForAccessibility(getString(R.string.label_no_results));
+                }
+            }
+            @Override public void afterTextChanged(android.text.Editable s) {}
+        });
+
         mLocaleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { updateSystemTables(); if (!mIsUpdatingUI) initPresets(); }
+            @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { 
+                if (mIsUpdatingUI) return;
+                updateSystemTables(); 
+                initPresets(); 
+            }
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
-        topContent.addView(mLocaleSpinner);
 
-        mEightDotCheck = new CheckBox(this);
-        mEightDotCheck.setText(R.string.label_use_8_dots);
         mEightDotCheck.setOnCheckedChangeListener((bv, isChecked) -> { updateScriptSpinner(isChecked); updateSystemTables(); initPresets(); });
-        topContent.addView(mEightDotCheck);
 
-        mAdvancedSettingsLayout = new LinearLayout(this);
-        mAdvancedSettingsLayout.setOrientation(LinearLayout.VERTICAL);
-        
-        LinearLayout baseTableLayout = new LinearLayout(this);
-        baseTableLayout.setOrientation(LinearLayout.HORIZONTAL);
-        baseTableLayout.setGravity(Gravity.CENTER_VERTICAL);
-
-        mBaseTableSpinner = new Spinner(this);
-        mBaseTableSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1.0f));
         updateSystemTables();
-        
-        Button importRulesBtn = new Button(this);
-        importRulesBtn.setText(R.string.btn_import_visual);
-        importRulesBtn.setTextSize(12);
         importRulesBtn.setOnClickListener(v -> importBaseRules());
-        
-        Button cloneTableBtn = new Button(this);
-        cloneTableBtn.setText(R.string.btn_clone_table);
-        cloneTableBtn.setTextSize(12);
         cloneTableBtn.setOnClickListener(v -> cloneBaseTable());
-        
-        baseTableLayout.addView(mBaseTableSpinner);
-        baseTableLayout.addView(importRulesBtn);
-        baseTableLayout.addView(cloneTableBtn);
-        mAdvancedSettingsLayout.addView(baseTableLayout);
+        exportSystemBtn.setOnClickListener(v -> exportSystemTable());
 
-        mScriptSpinner = new Spinner(this);
         updateScriptSpinner(false);
         mScriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { 
@@ -260,14 +295,13 @@ public class TableCreatorActivity extends Activity {
                         mMappings.add(insertIdx, m);
                         refreshSpinner();
                         Toast.makeText(TableCreatorActivity.this, getString(R.string.msg_structure_cloned), 0).show();
+                        collapseHeader();
                     }
                 }
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
-        mAdvancedSettingsLayout.addView(mScriptSpinner);
 
-        mNumSystemSpinner = new Spinner(this);
         String[] numSystems = { 
             getString(R.string.label_none), 
             getString(R.string.num_sys_classic), 
@@ -289,85 +323,45 @@ public class TableCreatorActivity extends Activity {
                         mMappings.addAll(insertIdx, rules);
                         refreshSpinner();
                         Toast.makeText(TableCreatorActivity.this, getString(R.string.msg_structure_cloned), 0).show();
+                        collapseHeader();
                     }
                 }
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
-        mAdvancedSettingsLayout.addView(mNumSystemSpinner);
-        topContent.addView(mAdvancedSettingsLayout);
 
-        mShowVisualPickerCheck = new CheckBox(this);
-        mShowVisualPickerCheck.setText(R.string.label_show_visual_picker);
-        mShowVisualPickerCheck.setOnCheckedChangeListener((v, isChecked) -> { mCellPickerButtonsLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE); mCurrentCellsContainer.setVisibility(isChecked ? View.VISIBLE : View.GONE); });
-        topContent.addView(mShowVisualPickerCheck);
+        mShowVisualPickerCheck.setOnCheckedChangeListener((v, isChecked) -> { 
+            mCellPickerButtonsLayout.setVisibility(isChecked ? View.VISIBLE : View.GONE); 
+            mCurrentCellsContainer.setVisibility(isChecked ? View.VISIBLE : View.GONE); 
+        });
 
-        mCurrentCellsContainer = new LinearLayout(this);
-        mCurrentCellsContainer.setVisibility(View.GONE);
-        topContent.addView(mCurrentCellsContainer);
+        setDotsBtn.setOnClickListener(v -> showCellEditor(false));
+        appendDotBtn.setOnClickListener(v -> showCellEditor(true));
+        clearDotsBtn.setOnClickListener(v -> { mCurrentPatterns.clear(); updateDotsDisplay(); mDotsEdit.setText(""); });
 
-        mCellPickerButtonsLayout = new LinearLayout(this);
-        mCellPickerButtonsLayout.setOrientation(LinearLayout.HORIZONTAL);
-        mCellPickerButtonsLayout.setVisibility(View.GONE);
-        
-        Button setDotsBtn = new Button(this); setDotsBtn.setText(R.string.btn_set_cell); setDotsBtn.setOnClickListener(v -> showCellEditor(false));
-        Button appendDotBtn = new Button(this); appendDotBtn.setText(R.string.btn_append_cell); appendDotBtn.setOnClickListener(v -> showCellEditor(true));
-        Button clearDots = new Button(this); clearDots.setText(R.string.btn_clear_dots); clearDots.setOnClickListener(v -> { mCurrentPatterns.clear(); updateDotsDisplay(); mDotsEdit.setText(""); });
-        
-        mCellPickerButtonsLayout.addView(setDotsBtn); mCellPickerButtonsLayout.addView(appendDotBtn); mCellPickerButtonsLayout.addView(clearDots);
-        topContent.addView(mCellPickerButtonsLayout);
-
-        mainContainer.addView(scroll);
-
-        LinearLayout bottomPanel = new LinearLayout(this);
-        bottomPanel.setOrientation(LinearLayout.VERTICAL);
-        bottomPanel.setBackgroundColor(getResources().getColor(R.color.color_bottom_panel_bg));
-        bottomPanel.setPadding(20, 20, 20, 20);
-
-        LinearLayout inputRow = new LinearLayout(this);
-        inputRow.setOrientation(LinearLayout.HORIZONTAL);
-        mCharEdit = new EditText(this); mCharEdit.setHint(R.string.hint_char); mCharEdit.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1.0f));
-        mDotsEdit = new EditText(this); mDotsEdit.setHint(R.string.hint_dots_format); mDotsEdit.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1.5f));
         mDotsEdit.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_DONE);
         mDotsEdit.setOnEditorActionListener((v, aId, ev) -> { if (aId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE || (ev != null && ev.getKeyCode() == 66)) { addOrUpdateMapping(); return true; } return false; });
-        inputRow.addView(mCharEdit); inputRow.addView(mDotsEdit);
-        bottomPanel.addView(inputRow);
 
-        LinearLayout settingsRow = new LinearLayout(this);
-        settingsRow.setOrientation(LinearLayout.HORIZONTAL);
-        settingsRow.setGravity(Gravity.CENTER_VERTICAL);
-        mOpcodeSpinner = new Spinner(this);
         mOpcodeSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_opcode_short), OPCODE_LABELS));
-        mOpcodeSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1.0f));
-        mMappingPriorityCheck = new CheckBox(this); mMappingPriorityCheck.setText(getString(R.string.label_priority_short)); mMappingPriorityCheck.setChecked(true);
-        settingsRow.addView(mOpcodeSpinner); settingsRow.addView(mMappingPriorityCheck);
-        bottomPanel.addView(settingsRow);
+        mMappingPriorityCheck.setChecked(true);
 
-        mSearchEdit = new EditText(this); mSearchEdit.setHint(R.string.hint_search_rules);
         mSearchEdit.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int st, int c, int af) {}
             @Override public void onTextChanged(CharSequence s, int st, int b, int c) { filterMappings(s.toString()); }
-            @Override public void afterTextChanged(android.text.Editable s) {}
+            @Override public void afterTextChanged(android.text.Editable s) {
+                if (s.length() > 0) collapseHeader();
+            }
         });
-        bottomPanel.addView(mSearchEdit);
 
-        mSearchResultsSummary = new TextView(this); mSearchResultsSummary.setPadding(10, 5, 10, 5); mSearchResultsSummary.setTextSize(12); mSearchResultsSummary.setTextColor(getResources().getColor(R.color.color_text_secondary)); mSearchResultsSummary.setVisibility(View.GONE);
-        bottomPanel.addView(mSearchResultsSummary);
-
-        LinearLayout mappingRow = new LinearLayout(this);
-        mappingRow.setOrientation(LinearLayout.HORIZONTAL);
-        mappingRow.setGravity(Gravity.CENTER_VERTICAL);
-        
-        mMappedItemsSpinner = new Spinner(this);
         mDisplayList.add(getString(R.string.label_mapped_items));
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mDisplayList);
         mMappedItemsSpinner.setAdapter(mAdapter);
-        mMappedItemsSpinner.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1.0f));
         mMappedItemsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { 
                 if (pos <= 0) return;
                 if (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty() && pos - 1 < mCurrentSearchResults.size()) loadMappingFromObject(mCurrentSearchResults.get(pos - 1));
                 else if (pos - 1 < mMappings.size()) loadMapping(pos - 1);
+                collapseHeader();
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
@@ -383,42 +377,53 @@ public class TableCreatorActivity extends Activity {
             return true;
         });
 
-        mAddMappingBtn = new Button(this); mAddMappingBtn.setText(R.string.btn_add); mAddMappingBtn.setOnClickListener(v -> addOrUpdateMapping());
-        Button removeMappingBtn = new Button(this); removeMappingBtn.setText(R.string.btn_remove_mapping); removeMappingBtn.setOnClickListener(v -> deleteSelected());
-        Button massActionBtn = new Button(this); massActionBtn.setText(R.string.btn_select_mass); massActionBtn.setOnClickListener(v -> showMassActionsDialog());
-        
-        mappingRow.addView(mMappedItemsSpinner); mappingRow.addView(mAddMappingBtn); mappingRow.addView(removeMappingBtn); mappingRow.addView(massActionBtn);
-        bottomPanel.addView(mappingRow);
-
-        LinearLayout systemRow = new LinearLayout(this);
-        systemRow.setOrientation(LinearLayout.HORIZONTAL);
-        systemRow.setGravity(Gravity.CENTER_VERTICAL);
-        
-        Button saveBtn = new Button(this); saveBtn.setText(R.string.btn_save); saveBtn.setBackgroundColor(getResources().getColor(R.color.color_btn_save_bg)); saveBtn.setTextColor(Color.WHITE); saveBtn.setOnClickListener(v -> saveTable());
-        saveBtn.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1.0f));
-        
-        Button exportBtn = new Button(this); exportBtn.setText(R.string.btn_export_table); exportBtn.setBackgroundColor(getResources().getColor(R.color.color_btn_export_bg)); exportBtn.setTextColor(Color.WHITE); exportBtn.setOnClickListener(v -> exportTable());
-        exportBtn.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1.0f));
-        
-        systemRow.addView(saveBtn); systemRow.addView(exportBtn);
-        bottomPanel.addView(systemRow);
-        mainContainer.addView(bottomPanel);
-        setContentView(mainContainer);
+        mAddMappingBtn.setOnClickListener(v -> {
+            addOrUpdateMapping();
+            collapseHeader();
+        });
+        removeMappingBtn.setOnClickListener(v -> deleteSelected());
+        massActionBtn.setOnClickListener(v -> showMassActionsDialog());
+        saveBtn.setOnClickListener(v -> saveTable());
+        exportBtn.setOnClickListener(v -> exportTable());
 
         mCharEdit.addTextChangedListener(new android.text.TextWatcher() {
             private final android.os.Handler handler = new android.os.Handler();
             private Runnable runnable;
             @Override public void beforeTextChanged(CharSequence s, int st, int c, int af) {}
             @Override public void onTextChanged(CharSequence s, int st, int b, int c) {}
-            @Override public void afterTextChanged(final android.text.Editable s) { if (mIsUpdatingUI) return; handler.removeCallbacks(runnable); runnable = () -> { if (mCharEdit.hasFocus() && mCharEdit.getText().length() > 0) suggestOpcodeFromChar(); }; handler.postDelayed(runnable, 200); }
+            @Override public void afterTextChanged(final android.text.Editable s) { 
+                if (mIsUpdatingUI) return; 
+                handler.removeCallbacks(runnable); 
+                runnable = () -> { if (mCharEdit.hasFocus() && mCharEdit.getText().length() > 0) suggestOpcodeFromChar(); }; 
+                handler.postDelayed(runnable, 200); 
+            }
         });
 
         String tableId = getIntent().getStringExtra("table_id");
         if (tableId != null && !tableId.isEmpty()) {
             loadTableData(tableId);
+            collapseHeader();
         } else {
             if (mLocaleNames.size() > 1) mLocaleSpinner.setSelection(1);
         }
+    }
+
+    private void toggleHeader() {
+        if (mHeaderConfigLayout.getVisibility() == View.VISIBLE) {
+            collapseHeader();
+        } else {
+            expandHeader();
+        }
+    }
+
+    private void collapseHeader() {
+        mHeaderConfigLayout.setVisibility(View.GONE);
+        mToggleHeaderBtn.setText(R.string.btn_edit_header);
+    }
+
+    private void expandHeader() {
+        mHeaderConfigLayout.setVisibility(View.VISIBLE);
+        mToggleHeaderBtn.setText(getString(R.string.btn_edit_header) + " (▲)");
     }
 
     private void returnToManager() {
@@ -437,7 +442,10 @@ public class TableCreatorActivity extends Activity {
         for (int i = tables.size() - 1; i >= 0; i--) { TableInfo info = tables.get(i); if (info.getId().startsWith("custom:") || info.isEightDot() != is8DotMode) tables.remove(i); }
         boolean showExtended = Options.getBooleanPreference(this, R.string.pref_show_ext_tables_key, Boolean.parseBoolean(getString(R.string.pref_show_ext_tables_default)));
         if (!showExtended) for (int i = tables.size() - 1; i >= 0; i--) if (tables.get(i).getVariant() != null && tables.get(i).getVariant().contains("[Ext]")) tables.remove(i);
-        String selectedLang = mLocaleSpinner.getSelectedItemPosition() > 0 ? mLocaleCodes.get(mLocaleSpinner.getSelectedItemPosition()) : java.util.Locale.getDefault().getLanguage();
+        
+        int selectedPos = mLocaleSpinner.getSelectedItemPosition();
+        String selectedLang = (selectedPos >= 0 && selectedPos < mFilteredLocaleCodes.size()) ? mFilteredLocaleCodes.get(selectedPos) : java.util.Locale.getDefault().getLanguage();
+        
         final String finalLang = selectedLang.split("-")[0];
         Collections.sort(tables, (t1, t2) -> {
             boolean t1Matches = t1.getLocale().getLanguage().equals(finalLang), t2Matches = t2.getLocale().getLanguage().equals(finalLang);
@@ -501,7 +509,12 @@ public class TableCreatorActivity extends Activity {
                     else if (line.startsWith("# Description: ")) mDescriptionEdit.setText(line.substring(15));
                     else if (line.startsWith("#+locale: ")) {
                         String code = line.substring(10).trim(); int idx = mLocaleCodes.indexOf(code);
-                        if (idx != -1) mLocaleSpinner.setSelection(idx);
+                        if (idx != -1) {
+                            // Troviamo il nome corrispondente al codice e cerchiamolo nella lista filtrata
+                            String name = mLocaleNames.get(idx);
+                            int filteredIdx = mFilteredLocaleNames.indexOf(name);
+                            if (filteredIdx != -1) mLocaleSpinner.setSelection(filteredIdx);
+                        }
                     } else if (line.contains("SYSTEM INCLUDES") || line.contains("SYSTEM SECTION")) currentlyHighPriority = false;
                     else if (!line.startsWith("# ---") && !line.startsWith("##")) lastMappingComment = line.substring(1).trim();
                     continue;
@@ -525,7 +538,10 @@ public class TableCreatorActivity extends Activity {
 
     private void initPresets() {
         mPresetLookup.clear(); String lang = "en";
-        if (mLocaleSpinner != null && mLocaleSpinner.getSelectedItemPosition() > 0) lang = mLocaleCodes.get(mLocaleSpinner.getSelectedItemPosition()).split("-")[0];
+        int selectedPos = mLocaleSpinner != null ? mLocaleSpinner.getSelectedItemPosition() : -1;
+        if (selectedPos >= 0 && selectedPos < mFilteredLocaleCodes.size() && !mFilteredLocaleCodes.get(selectedPos).isEmpty()) {
+            lang = mFilteredLocaleCodes.get(selectedPos).split("-")[0];
+        }
         boolean is8dot = mEightDotCheck != null && mEightDotCheck.isChecked();
         String json = null;
         try { json = loadTemplateFromAssets(lang + (is8dot ? "_standard_8dot.json" : "_standard_6dot.json")); } 
@@ -617,14 +633,6 @@ public class TableCreatorActivity extends Activity {
     private void suggestOpcodeFromChar() { String s = sanitizeCharacter(mCharEdit.getText().toString()), sug = getSuggestedOpcode(s); if (sug == null) return; mIsUpdatingUI = true; if (mEditingIndex == -1) updateSpinnerToOpcode(sug); mIsUpdatingUI = false; }
 
     private void updateSpinnerToOpcode(String opcode) { for (int i = 0; i < OPCODES.length; i++) if (OPCODES[i].equals(opcode)) { mOpcodeSpinner.setSelection(i); break; } }
-
-    private Mapping createMappingFromInput() {
-        String character = sanitizeCharacter(mCharEdit.getText().toString());
-        String opcode = OPCODES[mOpcodeSpinner.getSelectedItemPosition()];
-        List<Integer> patterns = mIsTemplateUsed || !mDotsEdit.getText().toString().isEmpty() ? parseDots(mDotsEdit.getText().toString()) : new ArrayList<>(mCurrentPatterns);
-        if (patterns.isEmpty() && !opcode.equals("include")) return null;
-        return new Mapping(opcode, character, patterns, mMappingPriorityCheck.isChecked());
-    }
 
     private void addOrUpdateMapping() {
         String character = sanitizeCharacter(mCharEdit.getText().toString()); mCharEdit.setText(character); String opcode = OPCODES[mOpcodeSpinner.getSelectedItemPosition()];
@@ -908,49 +916,20 @@ public class TableCreatorActivity extends Activity {
     private void filterMappings(String query) {
         if (query == null || query.trim().isEmpty()) { mCurrentSearchResults.clear(); mSearchResultsSummary.setVisibility(View.GONE); refreshSpinner(); return; }
         String q = query.trim().toLowerCase();
-        // Se la query sembra una combinazione di punti (solo numeri e trattini), la puliamo per il confronto
         String qDots = q.replace("-", "").replace(" ", "");
-        
         List<Mapping> exact = new ArrayList<>(), starts = new ArrayList<>(), contains = new ArrayList<>();
-        
         for (Mapping m : mMappings) {
-            String dots = getDotsString(m.patterns).toLowerCase();
-            String dotsClean = dots.replace("-", "");
-            String charPart = (m.character != null) ? m.character.toLowerCase() : "";
-            String display = getMappingDisplayString(m).toLowerCase();
-            
-            // Corrispondenza Esatta
-            if (charPart.equals(q) || dots.equals(q) || dotsClean.equals(qDots)) {
-                exact.add(m);
-            } 
-            // Inizia con...
-            else if (charPart.startsWith(q) || dots.startsWith(q) || dotsClean.startsWith(qDots)) {
-                starts.add(m);
-            }
-            // Contiene...
-            else if (display.contains(q) || dots.contains(q) || dotsClean.contains(qDots)) {
-                contains.add(m);
-            }
+            String dots = getDotsString(m.patterns).toLowerCase(), dotsClean = dots.replace("-", ""), charPart = (m.character != null) ? m.character.toLowerCase() : "", display = getMappingDisplayString(m).toLowerCase();
+            if (charPart.equals(q) || dots.equals(q) || dotsClean.equals(qDots)) exact.add(m);
+            else if (charPart.startsWith(q) || dots.startsWith(q) || dotsClean.startsWith(qDots)) starts.add(m);
+            else if (display.contains(q) || dots.contains(q) || dotsClean.contains(qDots)) contains.add(m);
         }
-        
-        mCurrentSearchResults.clear();
-        mCurrentSearchResults.addAll(exact);
-        mCurrentSearchResults.addAll(starts);
-        mCurrentSearchResults.addAll(contains);
-        
-        mDisplayList.clear();
-        mDisplayList.add(String.format(getString(R.string.label_results_count), mCurrentSearchResults.size()));
+        mCurrentSearchResults.clear(); mCurrentSearchResults.addAll(exact); mCurrentSearchResults.addAll(starts); mCurrentSearchResults.addAll(contains);
+        mDisplayList.clear(); mDisplayList.add(String.format(getString(R.string.label_results_count), mCurrentSearchResults.size()));
         for (Mapping m : mCurrentSearchResults) mDisplayList.add(getMappingDisplayString(m));
-        
         mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, mDisplayList);
         mMappedItemsSpinner.setAdapter(mAdapter);
-        
-        if (!mCurrentSearchResults.isEmpty()) {
-            mMappedItemsSpinner.setSelection(1);
-            // Carica automaticamente i dati della prima corrispondenza trovata per permettere modifiche veloci
-            loadMappingFromObject(mCurrentSearchResults.get(0));
-        }
-        
+        if (!mCurrentSearchResults.isEmpty()) { mMappedItemsSpinner.setSelection(1); loadMappingFromObject(mCurrentSearchResults.get(0)); }
         mSearchResultsSummary.setText(String.format(getString(R.string.label_found_rules), mCurrentSearchResults.size(), mMappings.size()));
         mSearchResultsSummary.setVisibility(View.VISIBLE);
     }
@@ -958,92 +937,43 @@ public class TableCreatorActivity extends Activity {
     private void importBaseRules() {
         int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) return;
         File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables"), f = new File(d, mSystemTableFiles.get(p)); if (!f.exists()) return;
-
         int insertIdx = mMappedItemsSpinner.getSelectedItemPosition();
         final int finalInsertIdx = (insertIdx <= 0) ? 0 : insertIdx - 1;
-
         try {
             List<Mapping> i = new ArrayList<>();
-            
-            // 1. Esplode PRIMA i file degli spinner per dare loro la massima priorità nel blocco
             if (mScriptSpinner.getSelectedItemPosition() > 0) {
                 String scriptFile = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1];
                 if (!scriptFile.equals("none")) parseTableRecursive(new File(d, scriptFile), d, i, 0, false);
             }
             if (mNumSystemSpinner.getSelectedItemPosition() > 0) {
-                String numFile = null;
-                int nPos = mNumSystemSpinner.getSelectedItemPosition();
-                if (nPos == NUM_CLASSIC) numFile = "digits6Dots.uti";
-                else if (nPos == NUM_ANTOINE) numFile = "litdigits6DotsPlusDot6.uti";
-                else if (nPos == NUM_6DOT_UNIVOCAL) numFile = "digits6DotsPlusDot6.uti";
-                else if (nPos == NUM_8DOT_STANDARD) numFile = "digits8Dots.uti";
-                else if (nPos == NUM_8DOT_COMPUTER_LOWERED || nPos == NUM_DROPPED) numFile = "loweredDigits6Dots.uti";
-                else if (nPos == NUM_LITERARY) numFile = "litdigits6Dots.uti";
+                String numFile = null; int nPos = mNumSystemSpinner.getSelectedItemPosition();
+                if (nPos == NUM_CLASSIC) numFile = "digits6Dots.uti"; else if (nPos == NUM_ANTOINE) numFile = "litdigits6DotsPlusDot6.uti"; else if (nPos == NUM_6DOT_UNIVOCAL) numFile = "digits6DotsPlusDot6.uti"; else if (nPos == NUM_8DOT_STANDARD) numFile = "digits8Dots.uti"; else if (nPos == NUM_8DOT_COMPUTER_LOWERED || nPos == NUM_DROPPED) numFile = "loweredDigits6Dots.uti"; else if (nPos == NUM_LITERARY) numFile = "litdigits6Dots.uti";
                 if (numFile != null) parseTableRecursive(new File(d, numFile), d, i, 0, false);
             }
-
-            // 2. Esplode DOPO la tabella base con filtro intelligente (le sue regole numeriche/a-z verranno scartate)
             parseTableRecursive(f, d, i, 0, true);
-
             if (i.isEmpty()) return;
             new AlertDialog.Builder(this).setTitle(R.string.btn_import_base_rules).setMessage(String.format(getString(R.string.msg_import_rules_confirm), i.size()))
                 .setPositiveButton(R.string.btn_ok, (dialog, w) -> {
-                    // Rimuoviamo gli include temporanei generati dagli spinner
-                    for (int idx = mMappings.size() - 1; idx >= 0; idx--) {
-                        if (mMappings.get(idx).opcode.equals("include")) {
-                            String charName = mMappings.get(idx).character;
-                            if (charName.endsWith(".uti") || charName.equals("unicode-braille.utb")) mMappings.remove(idx);
-                        }
-                    }
-                    // Inserimento alla posizione selezionata
-                    int safeInsertIdx = finalInsertIdx;
-                    if (safeInsertIdx > mMappings.size()) safeInsertIdx = mMappings.size();
-                    mMappings.addAll(safeInsertIdx, i); 
-                    refreshSpinner(); 
+                    for (int idx = mMappings.size() - 1; idx >= 0; idx--) if (mMappings.get(idx).opcode.equals("include")) { String charName = mMappings.get(idx).character; if (charName.endsWith(".uti") || charName.equals("unicode-braille.utb")) mMappings.remove(idx); }
+                    int safeInsertIdx = finalInsertIdx; if (safeInsertIdx > mMappings.size()) safeInsertIdx = mMappings.size();
+                    mMappings.addAll(safeInsertIdx, i); refreshSpinner(); collapseHeader();
                 }).setNegativeButton(R.string.btn_cancel, null).show();
-        } catch (Exception e) {}
-    }
-
-    private void explodeUTI(String fileName) {
-        File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables");
-        File f = new File(d, fileName);
-        if (!f.exists()) return;
-        try {
-            List<Mapping> rules = new ArrayList<>();
-            parseTableRecursive(f, d, rules, 0, false);
-            mMappings.addAll(rules);
-            refreshSpinner();
         } catch (Exception e) {}
     }
 
     private void parseTableRecursive(File f, File d, List<Mapping> o, int dp, boolean applyFilters) throws Exception {
         if (dp > 10) return; Scanner s = new Scanner(f, "UTF-8");
-        boolean filterNumbers = applyFilters && mNumSystemSpinner.getSelectedItemPosition() > 0;
-        boolean filterAlphabet = applyFilters && mScriptSpinner.getSelectedItemPosition() > 0;
-        boolean highPriority = mMappingPriorityCheck.isChecked();
+        boolean filterNumbers = applyFilters && mNumSystemSpinner.getSelectedItemPosition() > 0, filterAlphabet = applyFilters && mScriptSpinner.getSelectedItemPosition() > 0, highPriority = mMappingPriorityCheck.isChecked();
         while (s.hasNextLine()) {
             String l = s.nextLine().trim(); if (l.isEmpty() || l.startsWith("#")) continue;
-            if (l.startsWith("include ")) { 
-                String n = l.substring(8).trim().split("#")[0].trim().split("\\s+")[0]; 
-                if (n.equals("unicode.dis") || n.equals("braille-patterns.cti") || n.endsWith(".dis")) continue; 
-                File nF = new File(d, n); if (nF.exists()) parseTableRecursive(nF, d, o, dp + 1, applyFilters); continue; 
-            }
+            if (l.startsWith("include ")) { String n = l.substring(8).trim().split("#")[0].trim().split("\\s+")[0]; if (n.equals("unicode.dis") || n.equals("braille-patterns.cti") || n.endsWith(".dis")) continue; File nF = new File(d, n); if (nF.exists()) parseTableRecursive(nF, d, o, dp + 1, applyFilters); continue; }
             String[] p = l.split("\\s+"); if (p.length < 2) continue; String op = p[0];
             List<String> v = Arrays.asList("lowercase", "uppercase", "letter", "digit", "punctuation", "math", "sign", "always", "word", "partword", "litdigit", "midnum", "capsletter", "numsign", "letsign", "context", "class", "begcaps", "endcaps", "begcapsword", "endcapsword", "prepunc", "postpunc", "begnum", "endnum", "numericmodechars", "midendnumericmodechars", "space");
-            if (!v.contains(op)) continue; 
-            if (filterNumbers && Arrays.asList("digit", "litdigit", "numsign", "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum").contains(op)) continue;
+            if (!v.contains(op)) continue; if (filterNumbers && Arrays.asList("digit", "litdigit", "numsign", "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum").contains(op)) continue;
             String cP = "", dP = "";
-            if (Arrays.asList("capsletter", "numsign", "letsign", "space", "begcaps", "endcaps", "begcapsword", "endcapsword", "begnum", "endnum").contains(op)) {
-                dP = p[1];
-                if (filterAlphabet && Arrays.asList("capsletter", "begcaps", "endcaps", "begcapsword", "endcapsword").contains(op)) continue;
-            } else if (op.equals("context") || op.equals("class")) { if (p.length >= 3) { cP = p[1]; dP = p[2]; } }
-            else if (p.length >= 3) { 
-                cP = parseLiblouisChar(p[1]); dP = p[2]; 
-                // Filtro Intelligente (Solo Alfabeto a-z)
-                if (filterAlphabet && cP.length() == 1 && (op.equals("lowercase") || op.equals("uppercase") || op.equals("letter"))) {
-                    char c = cP.charAt(0); if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) continue;
-                }
-            }
+            if (Arrays.asList("capsletter", "numsign", "letsign", "space", "begcaps", "endcaps", "begcapsword", "endcapsword", "begnum", "endnum").contains(op)) { dP = p[1]; if (filterAlphabet && Arrays.asList("capsletter", "begcaps", "endcaps", "begcapsword", "endcapsword").contains(op)) continue; }
+            else if (op.equals("context") || op.equals("class")) { if (p.length >= 3) { cP = p[1]; dP = p[2]; } }
+            else if (p.length >= 3) { cP = parseLiblouisChar(p[1]); dP = p[2]; if (filterAlphabet && cP.length() == 1 && (op.equals("lowercase") || op.equals("uppercase") || op.equals("letter"))) { char c = cP.charAt(0); if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) continue; } }
             if (cP.isEmpty() && dP.isEmpty()) continue; if (!cP.isEmpty() && cP.length() == 1 && cP.charAt(0) >= 0x2800 && cP.charAt(0) <= 0x28FF) continue;
             Mapping m = new Mapping(op, cP, parseDots(dP), highPriority); boolean dup = false; for (Mapping ex : o) if (ex.opcode.equals(m.opcode) && ex.character.equals(m.character)) { dup = true; break; } if (!dup) o.add(m);
         }
@@ -1053,182 +983,82 @@ public class TableCreatorActivity extends Activity {
     private String parseLiblouisChar(String p) { if (p.startsWith("\\x")) try { return String.valueOf((char)Integer.parseInt(p.substring(2), 16)); } catch (Exception e) {} if (p.equals("\\s")) return " "; return p; }
 
     private void cloneBaseTable() {
-        int p = mBaseTableSpinner.getSelectedItemPosition(); 
-        if (p <= 0) { Toast.makeText(this, getString(R.string.msg_select_source_first), Toast.LENGTH_SHORT).show(); return; }
-        File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables");
-        final File f = new File(d, mSystemTableFiles.get(p)); 
-        if (!f.exists()) { Toast.makeText(this, getString(R.string.msg_table_file_not_found), Toast.LENGTH_SHORT).show(); return; }
-
-        new AlertDialog.Builder(this)
-            .setTitle(R.string.btn_clone_table)
-            .setMessage(R.string.msg_confirm_clone)
-            .setPositiveButton(R.string.btn_ok, (dialog, which) -> performClone(f))
-            .setNegativeButton(R.string.btn_cancel, null)
-            .show();
+        int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) { Toast.makeText(this, getString(R.string.msg_select_source_first), 0).show(); return; }
+        File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables"); final File f = new File(d, mSystemTableFiles.get(p)); if (!f.exists()) { Toast.makeText(this, getString(R.string.msg_table_file_not_found), 0).show(); return; }
+        new AlertDialog.Builder(this).setTitle(R.string.btn_clone_table).setMessage(R.string.msg_confirm_clone).setPositiveButton(R.string.btn_ok, (dialog, which) -> performClone(f)).setNegativeButton(R.string.btn_cancel, null).show();
     }
 
     private void performClone(File f) {
-        mMappings.clear();
-        mIsUpdatingUI = true;
-        int numPos = mNumSystemSpinner.getSelectedItemPosition();
-        int scriptPos = mScriptSpinner.getSelectedItemPosition();
-        boolean filterNumbers = numPos > 0;
-        boolean filterAlphabet = scriptPos > 0;
-        boolean high = mMappingPriorityCheck.isChecked();
-
+        mMappings.clear(); mIsUpdatingUI = true; int numPos = mNumSystemSpinner.getSelectedItemPosition(), scriptPos = mScriptSpinner.getSelectedItemPosition();
+        boolean filterNumbers = numPos > 0, filterAlphabet = scriptPos > 0, high = mMappingPriorityCheck.isChecked();
         try {
-            Scanner scanner = new Scanner(f, "UTF-8");
-            String lastMappingComment = null;
-            int removedCount = 0;
+            Scanner scanner = new Scanner(f, "UTF-8"); String lastMappingComment = null; int removedCount = 0;
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim();
-                if (line.isEmpty()) continue;
-                if (line.startsWith("#")) {
-                    if (line.startsWith("# Author: ")) mAuthorEdit.setText(line.substring(10));
-                    else if (line.startsWith("# Description: ")) mDescriptionEdit.setText(line.substring(15));
-                    else if (line.contains("dots: 8")) mEightDotCheck.setChecked(true);
-                    else if (line.startsWith("#+locale: ")) {
-                        String code = line.substring(10).trim();
-                        int idx = mLocaleCodes.indexOf(code);
-                        if (idx != -1) mLocaleSpinner.setSelection(idx);
-                    } else if (!line.startsWith("# ---") && !line.startsWith("##")) {
-                        lastMappingComment = line.substring(1).trim();
-                    }
-                    continue;
-                }
-                
-                String[] parts = line.split("\\s+");
-                if (parts.length < 1) continue;
-                String opcode = parts[0];
-                
-                boolean isNumericLine = Arrays.asList("digit", "litdigit", "numsign", "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum").contains(opcode);
-                boolean isAlphabetLine = Arrays.asList("capsletter", "begcaps", "endcaps", "begcapsword", "endcapsword", "lowercase", "uppercase", "letter").contains(opcode);
-                
-                if (opcode.equals("include") && parts.length >= 2) {
-                    String included = parts[1].split("#")[0].trim();
-                    if (included.contains("LetterDef") || included.equals("unicode-braille.utb")) isAlphabetLine = true;
-                    if (included.contains("digits")) isNumericLine = true;
-                }
-
-                if ((filterNumbers && isNumericLine) || (filterAlphabet && isAlphabetLine)) {
-                    removedCount++;
-                    lastMappingComment = null;
-                    continue;
-                }
-
+                String line = scanner.nextLine().trim(); if (line.isEmpty()) continue;
+                if (line.startsWith("#")) { if (line.startsWith("# Author: ")) mAuthorEdit.setText(line.substring(10)); else if (line.startsWith("# Description: ")) mDescriptionEdit.setText(line.substring(15)); else if (line.contains("dots: 8")) mEightDotCheck.setChecked(true); else if (line.startsWith("#+locale: ")) { String code = line.substring(10).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int fIdx = mFilteredLocaleNames.indexOf(name); if (fIdx != -1) mLocaleSpinner.setSelection(fIdx); } } else if (!line.startsWith("# ---") && !line.startsWith("##")) lastMappingComment = line.substring(1).trim(); continue; }
+                String[] parts = line.split("\\s+"); if (parts.length < 1) continue; String opcode = parts[0];
+                boolean isNumericLine = Arrays.asList("digit", "litdigit", "numsign", "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum").contains(opcode), isAlphabetLine = Arrays.asList("capsletter", "begcaps", "endcaps", "begcapsword", "endcapsword", "lowercase", "uppercase", "letter").contains(opcode);
+                if (opcode.equals("include") && parts.length >= 2) { String included = parts[1].split("#")[0].trim(); if (included.contains("LetterDef") || included.equals("unicode-braille.utb")) isAlphabetLine = true; if (included.contains("digits")) isNumericLine = true; }
+                if ((filterNumbers && isNumericLine) || (filterAlphabet && isAlphabetLine)) { removedCount++; lastMappingComment = null; continue; }
                 Mapping m = null;
-                if (opcode.equals("include") && parts.length >= 2) {
-                    String included = line.substring(8).trim().split("#")[0].trim().split("\\s+")[0];
-                    m = new Mapping("include", included, new ArrayList<Integer>(), high);
-                } else if (Arrays.asList("context", "class").contains(opcode) && parts.length >= 3) {
-                    m = new Mapping(opcode, parts[1], parseDots(parts[2].split("#")[0].trim()), high);
-                } else if (parts.length >= 3) {
-                    String charPart = parseLiblouisChar(parts[1]);
-                    m = new Mapping(opcode, charPart, parseDots(parts[2].split("#")[0].trim()), high);
-                } else if (parts.length >= 2 && (Arrays.asList("numsign", "capsletter", "letsign", "space").contains(opcode) || opcode.startsWith("beg") || opcode.startsWith("end"))) {
-                    m = new Mapping(opcode, "", parseDots(parts[1].split("#")[0].trim()), high);
-                }
-                
-                if (m != null) {
-                    if (lastMappingComment == null && line.contains("#")) {
-                        String[] commentSplit = line.split("#", 2);
-                        if (commentSplit.length > 1) {
-                            String c = commentSplit[1].trim();
-                            if (!c.isEmpty()) m.comment = c;
-                        }
-                    } else {
-                        m.comment = lastMappingComment;
-                    }
-                    lastMappingComment = null;
-                    mMappings.add(m);
-                }
+                if (opcode.equals("include") && parts.length >= 2) m = new Mapping("include", line.substring(8).trim().split("#")[0].trim().split("\\s+")[0], new ArrayList<Integer>(), high);
+                else if (Arrays.asList("context", "class").contains(opcode) && parts.length >= 3) m = new Mapping(opcode, parts[1], parseDots(parts[2].split("#")[0].trim()), high);
+                else if (parts.length >= 3) m = new Mapping(opcode, parseLiblouisChar(parts[1]), parseDots(parts[2].split("#")[0].trim()), high);
+                else if (parts.length >= 2 && (Arrays.asList("numsign", "capsletter", "letsign", "space").contains(opcode) || opcode.startsWith("beg") || opcode.startsWith("end"))) m = new Mapping(opcode, "", parseDots(parts[1].split("#")[0].trim()), high);
+                if (m != null) { if (lastMappingComment == null && line.contains("#")) { String[] cs = line.split("#", 2); if (cs.length > 1) { String c = cs[1].trim(); if (!c.isEmpty()) m.comment = c; } } else m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); }
             }
-            scanner.close();
-            refreshSpinner();
-            String msg = getString(R.string.msg_structure_cloned);
-            if (removedCount > 0) msg += " (" + removedCount + " " + getString(R.string.msg_rules_filtered) + ")";
-            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_SHORT).show();
-        } finally {
-            mIsUpdatingUI = false;
-        }
+            scanner.close(); refreshSpinner(); String msg = getString(R.string.msg_structure_cloned); if (removedCount > 0) msg += " (" + removedCount + " " + getString(R.string.msg_rules_filtered) + ")"; Toast.makeText(this, msg, Toast.LENGTH_LONG).show(); collapseHeader();
+        } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); } finally { mIsUpdatingUI = false; }
     }
 
-    private Mapping getScriptMapping(int pos, boolean is8dot, boolean high) {
-        if (pos <= 0) return null;
-        String file = is8dot ? SCRIPTS_8[pos][1] : SCRIPTS_6[pos][1];
-        if (file.equals("none")) return null;
-        return new Mapping("include", file, new ArrayList<Integer>(), high);
-    }
+    private Mapping getScriptMapping(int pos, boolean is8dot, boolean high) { if (pos <= 0) return null; String file = is8dot ? SCRIPTS_8[pos][1] : SCRIPTS_6[pos][1]; if (file.equals("none")) return null; return new Mapping("include", file, new ArrayList<Integer>(), high); }
 
     private List<Mapping> getNumericMappings(int pos, boolean high) {
         List<Mapping> rules = new ArrayList<>();
-        if (pos == NUM_CLASSIC) { 
-            rules.add(new Mapping("include", "digits6Dots.uti", new ArrayList<Integer>(), high)); 
-            rules.add(new Mapping("numsign", "", parseDots("3456"), high)); 
-        }
-        else if (pos == NUM_ANTOINE) { 
-            rules.add(new Mapping("include", "litdigits6DotsPlusDot6.uti", new ArrayList<Integer>(), high)); 
-            rules.add(new Mapping("numsign", "", parseDots("6"), high)); 
-        }
-        else if (pos == NUM_6DOT_UNIVOCAL) { 
-            rules.add(new Mapping("include", "digits6DotsPlusDot6.uti", new ArrayList<Integer>(), high)); 
-        }
-        else if (pos == NUM_8DOT_STANDARD) { 
-            rules.add(new Mapping("include", "digits8Dots.uti", new ArrayList<Integer>(), high)); 
-        }
-        else if (pos == NUM_8DOT_COMPUTER_LOWERED) { 
-            rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<Integer>(), high)); 
-        }
-        else if (pos == NUM_DROPPED) { 
-            rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<Integer>(), high)); 
-            rules.add(new Mapping("numsign", "", parseDots("3456"), high)); 
-        }
-        else if (pos == NUM_LITERARY) { 
-            rules.add(new Mapping("include", "litdigits6Dots.uti", new ArrayList<Integer>(), high)); 
-            rules.add(new Mapping("numsign", "", parseDots("3456"), high)); 
-        }
+        if (pos == NUM_CLASSIC) { rules.add(new Mapping("include", "digits6Dots.uti", new ArrayList<Integer>(), high)); rules.add(new Mapping("numsign", "", parseDots("3456"), high)); }
+        else if (pos == NUM_ANTOINE) { rules.add(new Mapping("include", "litdigits6DotsPlusDot6.uti", new ArrayList<Integer>(), high)); rules.add(new Mapping("numsign", "", parseDots("6"), high)); }
+        else if (pos == NUM_6DOT_UNIVOCAL) rules.add(new Mapping("include", "digits6DotsPlusDot6.uti", new ArrayList<Integer>(), high));
+        else if (pos == NUM_8DOT_STANDARD) rules.add(new Mapping("include", "digits8Dots.uti", new ArrayList<Integer>(), high));
+        else if (pos == NUM_8DOT_COMPUTER_LOWERED) rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<Integer>(), high));
+        else if (pos == NUM_DROPPED) { rules.add(new Mapping("include", "loweredDigits6Dots.uti", new ArrayList<Integer>(), high)); rules.add(new Mapping("numsign", "", parseDots("3456"), high)); }
+        else if (pos == NUM_LITERARY) { rules.add(new Mapping("include", "litdigits6Dots.uti", new ArrayList<Integer>(), high)); rules.add(new Mapping("numsign", "", parseDots("3456"), high)); }
         return rules;
     }
 
     private String generateTableContent() {
         String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) return ""; if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
         StringBuilder sb = new StringBuilder("# " + name + "\n"); sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
-        int localePos = mLocaleSpinner.getSelectedItemPosition(); if (localePos > 0) sb.append("#+locale: ").append(mLocaleCodes.get(localePos)).append("\n");
+        int localePos = mLocaleSpinner.getSelectedItemPosition(); 
+        if (localePos >= 0 && localePos < mFilteredLocaleCodes.size()) sb.append("#+locale: ").append(mFilteredLocaleCodes.get(localePos)).append("\n");
         boolean hasUnicode = false, hasPatterns = false;
-        for (Mapping m : mMappings) { if (m.opcode.equals("include")) { if (m.character.equals("unicode.dis")) hasUnicode = true; if (m.character.equals("braille-patterns.cti")) hasPatterns = true; } }
+        for (Mapping m : mMappings) if (m.opcode.equals("include")) { if (m.character.equals("unicode.dis")) hasUnicode = true; if (m.character.equals("braille-patterns.cti")) hasPatterns = true; }
         if (!hasUnicode) sb.append("\ninclude unicode.dis\n");
-        
-        List<String> writtenPairs = new ArrayList<>(); List<Character> writtenLows = new ArrayList<>(); List<String> writtenOpcodes = new ArrayList<>();
-        for (Mapping m : mMappings) writeSingleMapping(sb, m, writtenPairs, writtenLows, writtenOpcodes);
-        
-        if (!hasPatterns) sb.append("\ninclude braille-patterns.cti\n");
-        return sb.toString();
+        List<String> wP = new ArrayList<>(); List<Character> wL = new ArrayList<>(); List<String> wO = new ArrayList<>();
+        for (Mapping m : mMappings) writeSingleMapping(sb, m, wP, wL, wO);
+        if (!hasPatterns) sb.append("\ninclude braille-patterns.cti\n"); return sb.toString();
     }
 
     private void saveTable() {
-        String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, Toast.LENGTH_SHORT).show(); mTableNameEdit.requestFocus(); return; }
+        String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, 0).show(); mTableNameEdit.requestFocus(); return; }
         String tableContent = generateTableContent(); if (tableContent.isEmpty()) return;
-        try { CustomTableManager manager = new CustomTableManager(this); if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb"; File f = manager.getCustomTableFile(name); try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); } int prefKey = mEightDotCheck.isChecked() ? R.string.pref_braille_computer_table_key : R.string.pref_braille_literary_table_key; Options.writeStringPreference(this, prefKey, "custom:" + name); Toast.makeText(this, R.string.msg_table_saved, Toast.LENGTH_SHORT).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_SHORT).show(); }
+        try { CustomTableManager manager = new CustomTableManager(this); if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb"; File f = manager.getCustomTableFile(name); try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); } int prefKey = mEightDotCheck.isChecked() ? R.string.pref_braille_computer_table_key : R.string.pref_braille_literary_table_key; Options.writeStringPreference(this, prefKey, "custom:" + name); Toast.makeText(this, R.string.msg_table_saved, 0).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
     }
 
-    private void writeSingleMapping(StringBuilder sb, Mapping m, List<String> writtenPairs, List<Character> writtenLows, List<String> writtenOpcodes) {
+    private void writeSingleMapping(StringBuilder sb, Mapping m, List<String> wP, List<Character> wL, List<String> wO) {
         if (m.opcode.equals("include")) { sb.append("include ").append(m.character).append("\n"); return; }
         if (m.opcode.equals("context") || m.opcode.equals("class")) { StringBuilder dots = new StringBuilder(); for (int i = 0; i < m.patterns.size(); i++) { if (i > 0) dots.append("-"); dots.append(patternToDotsString(m.patterns.get(i))); } sb.append(m.opcode).append(" ").append(m.character).append(" ").append(dots).append("\n"); return; }
-        if (m.character != null && !m.character.isEmpty()) { String key = m.opcode + ":" + m.character; if (writtenOpcodes.contains(key)) return; }
+        if (m.character != null && !m.character.isEmpty()) { String key = m.opcode + ":" + m.character; if (wO.contains(key)) return; }
         StringBuilder dots = new StringBuilder(); for (int i = 0; i < m.patterns.size(); i++) { if (i > 0) dots.append("-"); dots.append(patternToDotsString(m.patterns.get(i))); }
-        if (m.character != null && m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) { char c = m.character.charAt(0); if (Character.isLetter(c)) { char low = Character.toLowerCase(c), up = Character.toUpperCase(c); if (low != up) { if (c == up && !isCharacterMapped(low) && !writtenLows.contains(low)) { sb.append("# ").append(getCharLabel(String.valueOf(low))).append(" ").append(getString(R.string.label_auto_link)).append("\n"); sb.append("lowercase ").append(String.format("\\x%04x", (int)low)).append(" 0\n"); writtenLows.add(low); writtenOpcodes.add("lowercase:" + low); } String pair = up + "-" + low; if (!writtenPairs.contains(pair)) { sb.append("base uppercase ").append(String.format("\\x%04x", (int)up)).append(" ").append(String.format("\\x%04x", (int)low)).append("\n"); writtenPairs.add(pair); } if (c == low) writtenLows.add(low); } } }
+        if (m.character != null && m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) { char c = m.character.charAt(0); if (Character.isLetter(c)) { char low = Character.toLowerCase(c), up = Character.toUpperCase(c); if (low != up) { if (c == up && !isCharacterMapped(low) && !wL.contains(low)) { sb.append("# ").append(getCharLabel(String.valueOf(low))).append(" ").append(getString(R.string.label_auto_link)).append("\n"); sb.append("lowercase ").append(String.format("\\x%04x", (int)low)).append(" 0\n"); wL.add(low); wO.add("lowercase:" + low); } String pair = up + "-" + low; if (!wP.contains(pair)) { sb.append("base uppercase ").append(String.format("\\x%04x", (int)up)).append(" ").append(String.format("\\x%04x", (int)low)).append("\n"); wP.add(pair); } if (c == low) wL.add(low); } } }
         if (m.comment != null && !m.comment.isEmpty()) sb.append("# ").append(m.comment).append("\n"); else if (m.character != null && !m.character.isEmpty()) { String label = getCharLabel(m.character); if (label != null) sb.append("# ").append(label).append("\n"); }
         if (Arrays.asList("numsign", "capsletter", "letsign", "space").contains(m.opcode) || m.opcode.startsWith("beg") || m.opcode.startsWith("end")) sb.append(m.opcode).append(" ").append(dots).append("\n");
-        else { if (m.character == null || m.character.isEmpty()) return; String cP = m.character; if (cP.length() == 1) { char c = cP.charAt(0); if (c == ' ') cP = "\\s"; else if (c == '\t') cP = "\\t"; else if (c == '\\') cP = "\\\\"; else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c); } sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append("\n"); writtenOpcodes.add(m.opcode + ":" + m.character); }
+        else { if (m.character == null || m.character.isEmpty()) return; String cP = m.character; if (cP.length() == 1) { char c = cP.charAt(0); if (c == ' ') cP = "\\s"; else if (c == '\t') cP = "\\t"; else if (c == '\\') cP = "\\\\"; else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c); } sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append("\n"); wO.add(m.opcode + ":" + m.character); }
     }
 
     private String getCharLabel(String s) {
         if (s == null || s.isEmpty()) return null; if (s.length() > 1) return s; char c = s.charAt(0); if (c == ' ') return getString(R.string.label_spazio);
         int resId = getResources().getIdentifier("label_" + String.format("%04x", (int)c), "string", getPackageName()); if (resId != 0) return getString(resId);
-        if (c == 'à') return getString(R.string.label_a_grave); if (c == 'è') return getString(R.string.label_e_grave); if (c == 'é') return getString(R.string.label_e_acute); if (c == 'ì') return getString(R.string.label_i_grave); if (c == 'ò') return getString(R.string.label_o_grave); if (c == 'ù') return getString(R.string.label_u_grave);
-        return s;
+        if (c == 'à') return getString(R.string.label_a_grave); if (c == 'è') return getString(R.string.label_e_grave); if (c == 'é') return getString(R.string.label_e_acute); if (c == 'ì') return getString(R.string.label_i_grave); if (c == 'ò') return getString(R.string.label_o_grave); if (c == 'ù') return getString(R.string.label_u_grave); return s;
     }
 
     private boolean isCharacterMapped(char c) { String s = String.valueOf(c); for (Mapping m : mMappings) if (s.equals(m.character)) return true; return false; }
@@ -1236,7 +1066,17 @@ public class TableCreatorActivity extends Activity {
     private void showTemplatePicker() { try { String[] files = getAssets().list("templates"); if (files == null || files.length == 0) return; final List<String> names = new ArrayList<>(), fFiles = new ArrayList<>(); for (String f : files) if (f.endsWith(".json")) { JSONObject o = new JSONObject(loadTemplateFromAssets(f)); names.add(o.getString("templateName")); fFiles.add(f); } new AlertDialog.Builder(this).setTitle(R.string.title_select_template).setItems(names.toArray(new String[0]), (dialog, w) -> confirmTemplateApplication(fFiles.get(w))).show(); } catch (Exception e) {} }
     private String loadTemplateFromAssets(String f) throws Exception { InputStream is = getAssets().open("templates/" + f); byte[] b = new byte[is.available()]; is.read(b); is.close(); return new String(b, "UTF-8"); }
     private void confirmTemplateApplication(final String f) { if (!mMappings.isEmpty()) new AlertDialog.Builder(this).setTitle(R.string.title_select_template).setMessage(R.string.msg_confirm_template).setPositiveButton(android.R.string.yes, (d, w) -> applyTemplate(f)).setNegativeButton(android.R.string.no, null).show(); else applyTemplate(f); }
-    private void applyTemplate(String f) { try { JSONObject o = new JSONObject(loadTemplateFromAssets(f)), s = o.getJSONObject("settings"); JSONArray m = o.getJSONArray("mappings"); mEightDotCheck.setChecked(s.getBoolean("is8Dot")); updateScriptSpinner(mEightDotCheck.isChecked()); int idx = mLocaleCodes.indexOf(s.getString("locale")); if (idx != -1) mLocaleSpinner.setSelection(idx); String script = s.getString("scriptFileName"); String[][] set = mEightDotCheck.isChecked() ? SCRIPTS_8 : SCRIPTS_6; for (int i=0; i<set.length; i++) if (set[i][1].equals(script)) { mScriptSpinner.setSelection(i); break; } mNumSystemSpinner.setSelection(s.getInt("numSystem")); mMappings.clear(); for (int i = 0; i < m.length(); i++) { JSONObject mO = m.getJSONObject(i); mMappings.add(new Mapping(mO.getString("opcode"), mO.getString("char"), parseDots(mO.getString("dots")), mO.getBoolean("high"), mO.getBoolean("fixed"))); } mTableNameEdit.setText(f.replace(".json", "") + "_custom"); refreshSpinner(); mIsTemplateUsed = true; mAdvancedSettingsLayout.setVisibility(View.GONE); mCellPickerButtonsLayout.setVisibility(View.GONE); mCurrentCellsContainer.setVisibility(View.GONE); mEightDotCheck.setVisibility(View.GONE); } catch (Exception e) {} }
+    private void applyTemplate(String f) { try { JSONObject o = new JSONObject(loadTemplateFromAssets(f)), s = o.getJSONObject("settings"); JSONArray m = o.getJSONArray("mappings"); mEightDotCheck.setChecked(s.getBoolean("is8Dot")); updateScriptSpinner(mEightDotCheck.isChecked()); 
+        String locCode = s.getString("locale"); int idx = mLocaleCodes.indexOf(locCode); 
+        if (idx != -1) { String name = mLocaleNames.get(idx); int fIdx = mFilteredLocaleNames.indexOf(name); if (fIdx != -1) mLocaleSpinner.setSelection(fIdx); }
+        String script = s.getString("scriptFileName"); String[][] set = mEightDotCheck.isChecked() ? SCRIPTS_8 : SCRIPTS_6; for (int i=0; i<set.length; i++) if (set[i][1].equals(script)) { mScriptSpinner.setSelection(i); break; } mNumSystemSpinner.setSelection(s.getInt("numSystem")); mMappings.clear(); for (int i = 0; i < m.length(); i++) { JSONObject mO = m.getJSONObject(i); mMappings.add(new Mapping(mO.getString("opcode"), mO.getString("char"), parseDots(mO.getString("dots")), mO.getBoolean("high"), mO.getBoolean("fixed"))); } mTableNameEdit.setText(f.replace(".json", "") + "_custom"); refreshSpinner(); mIsTemplateUsed = true; mAdvancedSettingsLayout.setVisibility(View.GONE); mCellPickerButtonsLayout.setVisibility(View.GONE); mCurrentCellsContainer.setVisibility(View.GONE); mEightDotCheck.setVisibility(View.GONE); collapseHeader(); } catch (Exception e) {} }
+
+    private void exportSystemTable() {
+        int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) { Toast.makeText(this, getString(R.string.msg_select_source_first), 0).show(); return; }
+        String fileName = mSystemTableFiles.get(p); File tableDir = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables"), sourceFile = new File(tableDir, fileName);
+        if (!sourceFile.exists()) { Toast.makeText(this, getString(R.string.msg_table_file_not_found), 0).show(); return; }
+        try { File exportDir = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "soft-braille"); if (!exportDir.exists() && !exportDir.mkdirs()) return; File outFile = new File(exportDir, fileName); try (java.io.FileInputStream fis = new java.io.FileInputStream(sourceFile); FileOutputStream fos = new FileOutputStream(outFile)) { byte[] buffer = new byte[1024]; int len; while ((len = fis.read(buffer)) > 0) fos.write(buffer, 0, len); } Toast.makeText(this, String.format(getString(R.string.msg_exported_to), outFile.getAbsolutePath()), 0).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
+    }
 
     private void exportTable() {
         if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT <= 28) { if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != 0) { requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100); return; } }

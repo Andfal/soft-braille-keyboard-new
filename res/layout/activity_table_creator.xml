@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Toggle Header Button -->
+            <Button
+                android:id="@+id/btn_toggle_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_edit_header"
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Header Section (Collapsable) -->
+            <LinearLayout
+                android:id="@+id/layout_header_config"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <EditText
+                    android:id="@+id/edit_table_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_table_name"
+                    android:inputType="text"/>
+
+                <Button
+                    android:id="@+id/btn_load_template"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/btn_load_template" />
+
+                <EditText
+                    android:id="@+id/edit_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_author"
+                    android:inputType="textPersonName"/>
+
+                <EditText
+                    android:id="@+id/edit_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_description"
+                    android:inputType="text"/>
+
+                <EditText
+                    android:id="@+id/edit_search_locale"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/hint_search_locale"
+                    android:inputType="text"
+                    android:layout_marginTop="8dp"/>
+
+                <Spinner
+                    android:id="@+id/spinner_locale"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"/>
+
+                <CheckBox
+                    android:id="@+id/check_use_8_dots"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_use_8_dots" />
+
+                <!-- Advanced Settings -->
+                <LinearLayout
+                    android:id="@+id/layout_advanced_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <Spinner
+                            android:id="@+id/spinner_base_table"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/btn_import_visual"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/btn_import_visual"
+                            android:textSize="10sp" />
+
+                        <Button
+                            android:id="@+id/btn_clone_table"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/btn_clone_table"
+                            android:textSize="10sp" />
+
+                        <Button
+                            android:id="@+id/btn_export_system"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/btn_export_original"
+                            android:textSize="10sp" />
+                    </LinearLayout>
+
+                    <Spinner
+                        android:id="@+id/spinner_script"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_num_system"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#CCCCCC"
+                android:layout_marginVertical="12dp"/>
+
+            <!-- Cell Picker Section -->
+            <CheckBox
+                android:id="@+id/check_show_visual_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/label_show_visual_picker" />
+
+            <LinearLayout
+                android:id="@+id/layout_current_cells"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:padding="8dp" />
+
+            <LinearLayout
+                android:id="@+id/layout_cell_picker_buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btn_set_cell"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/btn_set_cell"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_append_cell"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/btn_append_cell"
+                    android:textSize="11sp" />
+
+                <Button
+                    android:id="@+id/btn_clear_dots"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/btn_clear_dots"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Panel (Fixed) -->
+    <LinearLayout
+        android:id="@+id/layout_bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/color_bottom_panel_bg"
+        android:padding="8dp"
+        android:elevation="8dp">
+
+        <!-- Input Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/edit_char"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/hint_char"
+                android:inputType="text"/>
+            <EditText
+                android:id="@+id/edit_dots"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:hint="@string/hint_dots_format"
+                android:inputType="textVisiblePassword"
+                android:imeOptions="actionDone"/>
+        </LinearLayout>
+
+        <!-- Opcode Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <Spinner
+                android:id="@+id/spinner_opcode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+            <CheckBox
+                android:id="@+id/check_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_priority_short" />
+        </LinearLayout>
+
+        <!-- Search Row -->
+        <EditText
+            android:id="@+id/edit_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_search_rules"
+            android:textSize="14sp"
+            android:inputType="text"/>
+
+        <TextView
+            android:id="@+id/text_search_summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:textColor="@color/color_text_secondary"
+            android:visibility="gone"
+            android:paddingHorizontal="4dp"/>
+
+        <!-- Dedicated Mapping Spinner Row (POINT 3) -->
+        <Spinner
+            android:id="@+id/spinner_mapped_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="4dp"
+            android:background="@android:drawable/btn_dropdown"/>
+
+        <!-- Action Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_add_rule"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_add"
+                android:textSize="12sp" />
+            <Button
+                android:id="@+id/btn_remove_rule"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_remove_mapping"
+                android:textSize="12sp" />
+            <Button
+                android:id="@+id/btn_mass_action"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_select_mass"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- System Action Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+            <Button
+                android:id="@+id/btn_save_table"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_save"
+                android:backgroundTint="@color/color_btn_save_bg"
+                android:textColor="@android:color/white"/>
+            <Button
+                android:id="@+id/btn_export_table_final"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_export_table"
+                android:backgroundTint="@color/color_btn_export_bg"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

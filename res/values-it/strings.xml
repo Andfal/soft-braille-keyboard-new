@@ -20,20 +20,15 @@
     <string name="btn_create_table">Crea tabella personalizzata</string>
     <string name="btn_delete">Elimina</string>
     <string name="btn_export_system_table">Esporta Tabella di Sistema</string>
-    <string name="btn_export_table">Esporta in Download</string>
+    <string name="btn_export_original">Esporta Originale</string>
+    <string name="btn_export_table">Esporta il Tuo Lavoro</string>
     <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
     <string name="btn_id_enable">BTN_ENABLED</string>
     <string name="btn_import_base_rules">Importa tutte le regole</string>
     <string name="btn_import_table">Importa file tabella esistente</string>
     <string name="btn_import_visual">Importa Regole</string>
     <string name="btn_insert_above">Inserisci sopra questa regola</string>
-    <string name="btn_insert_alphabet_here">Inserisci Alfabeto (%s) qui</string>
-    <string name="btn_insert_numeric_here">Inserisci Numeri (%s) qui</string>
     <string name="btn_load_template">Carica Template</string>
-    <string name="btn_move_down">Sposta Giù</string>
-    <string name="btn_move_to_pos">Sposta alla riga...</string>
-    <string name="btn_move_top">In Cima (Dopo fissi)</string>
-    <string name="btn_move_up">Sposta Su</string>
     <string name="btn_ok">OK</string>
 
     
@@ -105,7 +100,6 @@
     <string name="hint_enter_dots">Digita i punti (es. 123)</string>
 
     
-    <string name="hint_enter_pos">Inserisci riga (da 1 a %d)</string>
     <string name="hint_search_rules">Cerca carattere o punti...</string>
     <string name="hint_table_name">Inserisci nome tabella (es. mia_tabella)</string>
     <string name="info_url">https://docs.google.com/document/d/1Ic7gRAJ84EXR5cOLpVy8rAHgoYlMMZNgS1XgWMNNyiU/pub</string>
@@ -224,7 +218,6 @@
     <string name="msg_fixed_mapping">Questa è una mappatura di sistema fissa e non può essere rimossa.</string>
     <string name="msg_import_rules_confirm">Importa %d regole?</string>
     <string name="msg_imported">Importato %s</string>
-    <string name="msg_invalid_pos">Posizione non valida</string>
     <string name="msg_logs_cleared">Log cancellati con successo</string>
     <string name="msg_no_deletable_rules">Nessuna regola eliminabile trovata.</string>
     <string name="msg_rule_removed">Regola rimossa.</string>
@@ -543,6 +536,15 @@
     <string name="table_section_high">ALTA PRIORITÀ</string>
     <string name="table_section_standard">PRIORITÀ STANDARD</string>
     <string name="table_variant_unofficial">Non ufficiale</string>
+    <string name="btn_edit_header">Modifica Intestazione / Metadati</string>
+    <string name="btn_move_to_pos">Sposta in Posizione</string>
+    <string name="hint_enter_pos">Inserisci posizione (da 1 a %d)</string>
+    <string name="msg_invalid_pos">Posizione non valida</string>
+    <string name="btn_move_up">Sposta Su</string>
+    <string name="btn_move_down">Sposta Giù</string>
+    <string name="btn_move_top">Sposta in Cima</string>
+    <string name="btn_insert_alphabet_here">Inserisci Alfabeto (%s) qui</string>
+    <string name="btn_insert_numeric_here">Inserisci Numeri (%s) qui</string>
     <string name="title_activity_table_creator">Creatore Tabelle</string>
     <string name="title_confirm_delete">Conferma Eliminazione</string>
     <string name="title_duplicate_combination">Combinazione Duplicata</string>
@@ -718,7 +720,15 @@
     <!-- Backup & Restore (IT) -->
     <string name="btn_export">Esporta</string>
     <string name="btn_import">Importa</string>
-    <string name="msg_exported_to">Backup salvato in: %s</string>
+    <string name="hint_search_items">Cerca file...</string>
+    <string name="btn_export_system">Esporta Tabella Originale</string>
+    <string name="hint_search_tables">Cerca tabelle di sistema...</string>
+    <string name="title_export_system">Esporta Tabella Originale Liblouis</string>
+    <string name="label_found_locales">Trovate %d lingue</string>
+    <string name="label_auto_selected">Selezionato automaticamente</string>
+    <string name="label_no_results">Nessun risultato trovato</string>
+    <string name="hint_search_locale">Cerca lingua...</string>
+    <string name="msg_exported_to">File esportato in: %s</string>
     <string name="msg_import_success">Dati importati con successo!</string>
     <string name="msg_import_error">Errore di importazione: %s</string>
     <string name="title_select_backup">Seleziona Backup</string>
