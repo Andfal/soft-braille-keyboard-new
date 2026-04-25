@@ -404,8 +404,8 @@
     <string name="msg_no_deletable_rules">No deletable rules found.</string>
     <string name="msg_rule_removed">Rule removed.</string>
     <string name="msg_rules_filtered">rules filtered</string>
-<string name="msg_select_source_first">Select a source table before cloning.</string>
-    <string name="msg_standard_char_override">Standard character of the selected set. Your choice will take precedence.</string>
+    <string name="msg_select_opcode_first">Please select a Rule/Opcode first</string>
+    <string name="msg_select_source_first">Select a source table before cloning.</string>    <string name="msg_standard_char_override">Standard character of the selected set. Your choice will take precedence.</string>
     <string name="msg_structure_cloned">Original structure cloned to the list.</string>
     <string name="msg_sync_desc">Select the \'soft-braille\' folder to grant permanent access and automatically load files within it.</string>
     <string name="msg_sync_error">Error requesting folder access.</string>

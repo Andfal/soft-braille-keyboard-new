@@ -222,8 +222,8 @@
     <string name="msg_no_deletable_rules">Nessuna regola eliminabile trovata.</string>
     <string name="msg_rule_removed">Regola rimossa.</string>
     <string name="msg_rules_filtered">regole filtrate</string>
-<string name="msg_select_source_first">Seleziona una tabella sorgente prima di clonare.</string>
-    <string name="msg_standard_char_override">Carattere standard del set selezionato. La tua scelta avrà la precedenza.</string>
+    <string name="msg_select_opcode_first">Seleziona prima un Opcode / Regola</string>
+    <string name="msg_select_source_first">Seleziona una tabella sorgente prima di clonare.</string>    <string name="msg_standard_char_override">Carattere standard del set selezionato. La tua scelta avrà la precedenza.</string>
     <string name="msg_structure_cloned">Struttura originale clonata nella lista.</string>
     <string name="msg_sync_desc">Seleziona la cartella \'soft-braille\' per concedere l\'accesso permanente e caricare automaticamente i file al suo interno.</string>
     <string name="msg_sync_error">Errore durante la richiesta di accesso.</string>
