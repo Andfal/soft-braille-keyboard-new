@@ -109,6 +109,7 @@ public class TableCreatorActivity extends Activity {
     private List<String> mDisplayList = new ArrayList<>();
     private ArrayAdapter<String> mAdapter;
     private List<Mapping> mMappings = new ArrayList<>();
+    private List<String> mOriginalHeaderLines = new ArrayList<>();
     
     private List<Mapping> mCurrentSearchResults = new ArrayList<>();
     private int mEditingIndex = -1;
@@ -146,7 +147,7 @@ public class TableCreatorActivity extends Activity {
     };
     private String[] OPCODE_LABELS;
 
-    private static class Mapping {
+    private class Mapping {
         String opcode; String character; List<Integer> patterns = new ArrayList<>();
         boolean isHighPriority = false;
         boolean isFixed = false;
@@ -163,8 +164,23 @@ public class TableCreatorActivity extends Activity {
             this.rawLine = raw;
             this.isFixed = false;
             String[] p = raw.trim().split("\\s+");
-            this.opcode = p.length > 0 ? p[0] : "raw";
-            this.character = "";
+            if (p.length > 0) {
+                this.opcode = p[0];
+                if (this.opcode.equals("include") && p.length >= 2) {
+                    this.character = p[1];
+                } else if (Arrays.asList("numsign", "capsletter", "letsign", "space").contains(this.opcode) || this.opcode.startsWith("beg") || this.opcode.startsWith("end")) {
+                    if (p.length >= 2) this.patterns = parseDots(p[1]);
+                } else if (p.length >= 3) {
+                    this.character = p[1];
+                    if (this.character.startsWith("\\x")) {
+                        try { this.character = String.valueOf((char)Integer.parseInt(this.character.substring(2), 16)); } catch (Exception e) {}
+                    } else if (this.character.equals("\\s")) this.character = " ";
+                    this.patterns = parseDots(p[2]);
+                }
+            } else {
+                this.opcode = "raw";
+                this.character = "";
+            }
         }
     }
 
@@ -217,16 +233,14 @@ public class TableCreatorActivity extends Activity {
         mSearchEdit = (EditText) findViewById(R.id.edit_search);
         mSearchResultsSummary = (TextView) findViewById(R.id.text_search_summary);
         mMappedItemsSpinner = (Spinner) findViewById(R.id.spinner_mapped_items);
-        mAddMappingBtn = (Button) findViewById(R.id.btn_add_rule);
+        mAddMappingBtn = (Button) findViewById(R.id.btn_add_mapping);
         
         Button loadTemplateBtn = (Button) findViewById(R.id.btn_load_template);
-        Button importRulesBtn = (Button) findViewById(R.id.btn_import_visual);
         Button cloneTableBtn = (Button) findViewById(R.id.btn_clone_table);
         Button exportSystemBtn = (Button) findViewById(R.id.btn_export_system);
         Button setDotsBtn = (Button) findViewById(R.id.btn_set_cell);
         Button appendDotBtn = (Button) findViewById(R.id.btn_append_cell);
         Button clearDotsBtn = (Button) findViewById(R.id.btn_clear_dots);
-        Button removeMappingBtn = (Button) findViewById(R.id.btn_remove_rule);
         Button massActionBtn = (Button) findViewById(R.id.btn_mass_action);
         Button saveBtn = (Button) findViewById(R.id.btn_save_table);
         Button exportBtn = (Button) findViewById(R.id.btn_export_table_final);
@@ -259,7 +273,6 @@ public class TableCreatorActivity extends Activity {
         mEightDotCheck.setOnCheckedChangeListener((bv, isChecked) -> { updateScriptSpinner(isChecked); updateSystemTables(); initPresets(); });
 
         updateSystemTables();
-        importRulesBtn.setOnClickListener(v -> importBaseRules());
         cloneTableBtn.setOnClickListener(v -> cloneBaseTable());
         exportSystemBtn.setOnClickListener(v -> exportSystemTable());
 
@@ -324,7 +337,6 @@ public class TableCreatorActivity extends Activity {
         });
 
         mAddMappingBtn.setOnClickListener(v -> { addOrUpdateMapping(); collapseHeader(); });
-        removeMappingBtn.setOnClickListener(v -> deleteSelected());
         massActionBtn.setOnClickListener(v -> showMassActionsDialog());
         saveBtn.setOnClickListener(v -> saveTable());
         exportBtn.setOnClickListener(v -> exportTable());
@@ -409,11 +421,11 @@ public class TableCreatorActivity extends Activity {
             CustomTableManager manager = new CustomTableManager(this); String fileName = tableId;
             if (fileName.startsWith("custom:")) fileName = fileName.substring(7);
             File f = manager.getCustomTableFile(fileName); if (!f.exists()) { mIsUpdatingUI = false; return; }
-            mTableNameEdit.setText(fileName); mMappings.clear(); mNumSystemSpinner.setSelection(NUM_NONE);
+            mTableNameEdit.setText(fileName); mMappings.clear(); mOriginalHeaderLines.clear(); mNumSystemSpinner.setSelection(NUM_NONE);
             boolean currentlyHighPriority = true; Scanner scanner = new Scanner(f, "UTF-8");
-            String lastMappingComment = null;
+            String lastMappingComment = null; boolean inHeader = true;
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim(); if (line.isEmpty()) continue;
+                String line = scanner.nextLine().trim(); if (line.isEmpty()) { if (inHeader) mOriginalHeaderLines.add(""); continue; }
                 if (line.startsWith("#")) {
                     if (line.startsWith("# Author: ")) mAuthorEdit.setText(line.substring(10));
                     else if (line.startsWith("# Description: ")) mDescriptionEdit.setText(line.substring(15));
@@ -425,15 +437,32 @@ public class TableCreatorActivity extends Activity {
                     else if (line.startsWith("#+locale: ")) { String code = line.substring(10).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int filteredIdx = mFilteredLocaleNames.indexOf(name); if (filteredIdx != -1) mLocaleSpinner.setSelection(filteredIdx); } }
                     else if (line.contains("SYSTEM INCLUDES") || line.contains("SYSTEM SECTION")) currentlyHighPriority = false;
                     else if (!line.startsWith("# ---") && !line.startsWith("##")) lastMappingComment = line.substring(1).trim();
+                    
+                    if (inHeader) mOriginalHeaderLines.add(line);
                     continue;
                 }
+                inHeader = false;
                 if (line.startsWith("include ")) { String included = line.substring(8).trim().split("#")[0].trim(); Mapping m = new Mapping("include", included, new ArrayList<Integer>(), currentlyHighPriority); m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); continue; }
                 String[] parts = line.split("\\s+"); if (parts.length < 2) continue;
                 String opcode = parts[0], charPart = "", dotsPart = "";
                 boolean stand = Arrays.asList("numsign", "capsletter", "letsign", "space").contains(opcode) || opcode.startsWith("beg") || opcode.startsWith("end");
-                if (stand) dotsPart = parts[1];
-                else if (parts.length >= 3) { charPart = parts[1]; if (charPart.startsWith("\\x")) try { charPart = String.valueOf((char)Integer.parseInt(charPart.substring(2), 16)); } catch (Exception e) {} dotsPart = parts[2]; }
-                if (!dotsPart.isEmpty()) { Mapping m = new Mapping(opcode, charPart, parseDots(dotsPart), currentlyHighPriority); m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); }
+                if (stand) {
+                    if (parts.length >= 2) dotsPart = parts[1];
+                } else if (parts.length >= 3) {
+                    charPart = parts[1];
+                    if (charPart.startsWith("\\x")) try { charPart = String.valueOf((char)Integer.parseInt(charPart.substring(2), 16)); } catch (Exception e) {}
+                    dotsPart = parts[2];
+                }
+
+                if (!dotsPart.isEmpty()) {
+                    Mapping m = new Mapping(opcode, charPart, parseDots(dotsPart), currentlyHighPriority);
+                    m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m);
+                } else {
+                    // Se la riga ha una struttura sconosciuta (es. nocont, pass2, attribute), 
+                    // la carichiamo come riga grezza per preservarla.
+                    Mapping m = new Mapping(line);
+                    m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m);
+                }
             }
             scanner.close(); refreshSpinner(); mIsUpdatingUI = false; initPresets();
         } catch (Exception e) { mIsUpdatingUI = false; }
@@ -624,6 +653,7 @@ public class TableCreatorActivity extends Activity {
     }
 
     private String getMappingDisplayString(Mapping m) {
+        if (m.opcode.equals("#") || m.opcode.equals("comment")) return m.rawLine != null ? m.rawLine : ("# " + m.character);
         if (m.opcode.equals("include")) return getString(R.string.label_structure_prefix) + m.character;
         if (m.opcode.equals("context")) return getString(R.string.label_logic_prefix) + m.character + " -> " + getDotsString(m.patterns);
         if (m.opcode.equals("class")) return getString(R.string.label_class_prefix) + m.character + " -> " + getDotsString(m.patterns);
@@ -651,37 +681,6 @@ public class TableCreatorActivity extends Activity {
         mSearchResultsSummary.setText(String.format(getString(R.string.label_found_rules), mCurrentSearchResults.size(), mMappings.size())); mSearchResultsSummary.setVisibility(View.VISIBLE);
     }
 
-    private void importBaseRules() {
-        int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) return;
-        File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables"), f = new File(d, mSystemTableFiles.get(p)); if (!f.exists()) return;
-        int insertIdx = mMappedItemsSpinner.getSelectedItemPosition(); final int finalInsertIdx = (insertIdx <= 0) ? 0 : insertIdx - 1;
-        try {
-            mIsCloningMode = false; List<Mapping> i = new ArrayList<>();
-            if (mScriptSpinner.getSelectedItemPosition() > 0) { String scriptFile = mEightDotCheck.isChecked() ? SCRIPTS_8[mScriptSpinner.getSelectedItemPosition()][1] : SCRIPTS_6[mScriptSpinner.getSelectedItemPosition()][1]; if (!scriptFile.equals("none")) parseTableRecursive(new File(d, scriptFile), d, i, 0, false); }
-            if (mNumSystemSpinner.getSelectedItemPosition() > 0) { String numFile = null; int nPos = mNumSystemSpinner.getSelectedItemPosition(); if (nPos == NUM_CLASSIC) numFile = "digits6Dots.uti"; else if (nPos == NUM_ANTOINE) numFile = "litdigits6DotsPlusDot6.uti"; else if (nPos == NUM_6DOT_UNIVOCAL) numFile = "digits6DotsPlusDot6.uti"; else if (nPos == NUM_8DOT_STANDARD) numFile = "digits8Dots.uti"; else if (nPos == NUM_8DOT_COMPUTER_LOWERED || nPos == NUM_DROPPED) numFile = "loweredDigits6Dots.uti"; else if (nPos == NUM_LITERARY) numFile = "litdigits6Dots.uti"; if (numFile != null) parseTableRecursive(new File(d, numFile), d, i, 0, false); }
-            parseTableRecursive(f, d, i, 0, true); if (i.isEmpty()) return;
-            new AlertDialog.Builder(this).setTitle(R.string.btn_import_base_rules).setMessage(String.format(getString(R.string.msg_import_rules_confirm), i.size())).setPositiveButton(R.string.btn_ok, (dialog, w) -> { for (int idx = mMappings.size() - 1; idx >= 0; idx--) if (mMappings.get(idx).opcode.equals("include")) { String charName = mMappings.get(idx).character; if (charName.endsWith(".uti") || charName.equals("unicode-braille.utb")) mMappings.remove(idx); } int safeInsertIdx = finalInsertIdx; if (safeInsertIdx > mMappings.size()) safeInsertIdx = mMappings.size(); mMappings.addAll(safeInsertIdx, i); refreshSpinner(); collapseHeader(); }).setNegativeButton(R.string.btn_cancel, null).show();
-        } catch (Exception e) {}
-    }
-
-    private void parseTableRecursive(File f, File d, List<Mapping> o, int dp, boolean applyFilters) throws Exception {
-        if (dp > 10) return; Scanner s = new Scanner(f, "UTF-8"); boolean filterNumbers = applyFilters && mNumSystemSpinner.getSelectedItemPosition() > 0, filterAlphabet = applyFilters && mScriptSpinner.getSelectedItemPosition() > 0, highPriority = mMappingPriorityCheck.isChecked();
-        while (s.hasNextLine()) {
-            String l = s.nextLine().trim(); if (l.isEmpty() || l.startsWith("#")) continue;
-            if (l.startsWith("include ")) { String n = l.substring(8).trim().split("#")[0].trim().split("\\s+")[0]; if (n.equals("unicode.dis") || n.equals("braille-patterns.cti") || n.endsWith(".dis")) continue; File nF = new File(d, n); if (nF.exists()) parseTableRecursive(nF, d, o, dp + 1, applyFilters); continue; }
-            String[] p = l.split("\\s+"); if (p.length < 2) continue; String op = p[0];
-            List<String> v = Arrays.asList("lowercase", "uppercase", "letter", "digit", "punctuation", "math", "sign", "always", "word", "partword", "litdigit", "midnum", "capsletter", "numsign", "letsign", "context", "class", "begcaps", "endcaps", "begcapsword", "endcapsword", "prepunc", "postpunc", "begnum", "endnum", "numericmodechars", "midendnumericmodechars", "space");
-            if (!v.contains(op)) continue; if (filterNumbers && Arrays.asList("digit", "litdigit", "numsign", "midnum", "numericmodechars", "midendnumericmodechars", "begnum", "endnum").contains(op)) continue;
-            String cP = "", dP = "";
-            if (Arrays.asList("capsletter", "numsign", "letsign", "space", "begcaps", "endcaps", "begcapsword", "endcapsword", "begnum", "endnum").contains(op)) { dP = p[1]; if (filterAlphabet && Arrays.asList("capsletter", "begcaps", "endcaps", "begcapsword", "endcapsword").contains(op)) continue; }
-            else if (op.equals("context") || op.equals("class")) { if (p.length >= 3) { cP = p[1]; dP = p[2]; } }
-            else if (p.length >= 3) { cP = parseLiblouisChar(p[1]); dP = p[2]; if (filterAlphabet && cP.length() == 1 && (op.equals("lowercase") || op.equals("uppercase") || op.equals("letter"))) { char c = cP.charAt(0); if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) continue; } }
-            if (cP.isEmpty() && dP.isEmpty()) continue; if (!cP.isEmpty() && cP.length() == 1 && cP.charAt(0) >= 0x2800 && cP.charAt(0) <= 0x28FF) continue;
-            Mapping m = new Mapping(op, cP, parseDots(dP), highPriority); boolean dup = false; for (Mapping ex : o) if (ex.opcode.equals(m.opcode) && ex.character.equals(m.character)) { dup = true; break; } if (!dup) o.add(m);
-        }
-        s.close();
-    }
-
     private String parseLiblouisChar(String p) { if (p.startsWith("\\x")) try { return String.valueOf((char)Integer.parseInt(p.substring(2), 16)); } catch (Exception e) {} if (p.equals("\\s")) return " "; return p; }
 
     private void cloneBaseTable() {
@@ -691,16 +690,24 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void performClone(File f) {
-        mMappings.clear(); mIsUpdatingUI = true; mIsCloningMode = true;
+        mMappings.clear(); mOriginalHeaderLines.clear(); mIsUpdatingUI = true; mIsCloningMode = true;
         mMappings.add(new Mapping("comment", "+mode:clone", new ArrayList<Integer>(), true, true));
         try {
             Scanner scanner = new Scanner(f, "UTF-8");
+            boolean inHeader = true;
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim(); if (line.isEmpty()) continue;
-                if (line.startsWith("# Author: ")) mAuthorEdit.setText(line.substring(10));
-                else if (line.startsWith("# Description: ")) mDescriptionEdit.setText(line.substring(15));
-                else if (line.contains("dots: 8")) mEightDotCheck.setChecked(true);
-                else if (line.startsWith("#+locale: ")) { String code = line.substring(10).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int fIdx = mFilteredLocaleNames.indexOf(name); if (fIdx != -1) mLocaleSpinner.setSelection(fIdx); } }
+                String line = scanner.nextLine().trim(); if (line.isEmpty()) { if (inHeader) mOriginalHeaderLines.add(""); continue; }
+                if (line.startsWith("#")) {
+                    if (line.startsWith("# Author: ")) mAuthorEdit.setText(line.substring(10));
+                    else if (line.startsWith("# Description: ")) mDescriptionEdit.setText(line.substring(15));
+                    else if (line.contains("dots: 8")) mEightDotCheck.setChecked(true);
+                    else if (line.startsWith("#+locale: ")) { String code = line.substring(10).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int fIdx = mFilteredLocaleNames.indexOf(name); if (fIdx != -1) mLocaleSpinner.setSelection(fIdx); } }
+                    
+                    if (inHeader) mOriginalHeaderLines.add(line);
+                    else mMappings.add(new Mapping(line));
+                    continue;
+                }
+                inHeader = false;
                 mMappings.add(new Mapping(line));
             }
             scanner.close(); refreshSpinner(); Toast.makeText(this, getString(R.string.msg_structure_cloned), Toast.LENGTH_LONG).show(); collapseHeader();
@@ -736,35 +743,26 @@ public class TableCreatorActivity extends Activity {
                             ? "#+locale: " + mFilteredLocaleCodes.get(localePos) + "\n" : "";
 
         if (isClone) {
-            // Identifichiamo la fine dell'header originale (blocchi di commenti iniziali)
-            int firstCodeIdx = -1;
-            for (int i = 0; i < mMappings.size(); i++) {
-                Mapping m = mMappings.get(i);
-                if (m.rawLine != null && !m.rawLine.trim().startsWith("#") && !m.rawLine.trim().isEmpty()) {
-                    firstCodeIdx = i; break;
-                }
-            }
-            if (firstCodeIdx == -1) firstCodeIdx = mMappings.size();
-
-            // 1. Scrittura Commenti/Header originali
-            for (int i = 0; i < firstCodeIdx; i++) {
-                Mapping m = mMappings.get(i);
-                if (m.rawLine != null) writeSingleMapping(sb, m, wP, wL, wO);
+            // 1. Scrittura Header originale (preservato, filtrando metadati sovrascritti)
+            for (String hLine : mOriginalHeaderLines) {
+                if (hLine.startsWith("# Author: ") || hLine.startsWith("# Description: ") 
+                    || hLine.startsWith("#+locale: ") || hLine.contains("+mode:clone")) continue;
+                sb.append(hLine).append("\n");
             }
 
-            // 2. Inserimento Metadati e Firma
+            // 2. Inserimento Metadati moderni e Firma
+            sb.append("# Author: ").append(mAuthorEdit.getText().toString().trim()).append("\n");
+            sb.append("# Description: ").append(mDescriptionEdit.getText().toString().trim()).append("\n");
             if (!localeLine.isEmpty()) sb.append(localeLine);
             if (cloneMarker != null) writeSingleMapping(sb, cloneMarker, wP, wL, wO);
 
-            // 3. Scrittura Personalizzazioni Utente e Codice Originale
-            // Scriviamo prima le regole senza rawLine (personalizzazioni) per la priorità
+            // 3. Scrittura Personalizzazioni Utente
             for (Mapping m : mMappings) {
                 if (m.rawLine == null && m != cloneMarker) writeSingleMapping(sb, m, wP, wL, wO);
             }
-            // Poi scriviamo il resto della tabella originale
-            for (int i = firstCodeIdx; i < mMappings.size(); i++) {
-                Mapping m = mMappings.get(i);
-                if (m.rawLine != null) writeSingleMapping(sb, m, wP, wL, wO);
+            // 4. Scrittura resto del codice originale (tranne ciò che è stato messo nell'header)
+            for (Mapping m : mMappings) {
+                if (m.rawLine != null && m != cloneMarker) writeSingleMapping(sb, m, wP, wL, wO);
             }
             
         } else {
