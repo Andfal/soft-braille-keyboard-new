@@ -117,6 +117,7 @@ public class TableCreatorActivity extends Activity {
     private boolean mIsManagedTable = true;
     private boolean mIsUpdatingUI = false;
     private boolean mIsCloningMode = false;
+    private long mLastMappingClickTime = 0;
 
     private static class LabeledSpinnerAdapter extends ArrayAdapter<String> {
         private String label;
@@ -333,7 +334,14 @@ public class TableCreatorActivity extends Activity {
         clearDotsBtn.setOnClickListener(v -> { mCurrentPatterns.clear(); updateDotsDisplay(); mDotsEdit.setText(""); });
 
         mDotsEdit.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_DONE);
-        mDotsEdit.setOnEditorActionListener((v, aId, ev) -> { if (aId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE || (ev != null && ev.getKeyCode() == 66)) { addOrUpdateMapping(); return true; } return false; });
+        mDotsEdit.setOnEditorActionListener((v, aId, ev) -> { 
+            if (aId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE || 
+               (ev != null && ev.getKeyCode() == 66 && ev.getAction() == android.view.KeyEvent.ACTION_DOWN)) { 
+                addOrUpdateMapping(); 
+                return true; 
+            } 
+            return false; 
+        });
 
         mOpcodeSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_opcode_short), OPCODE_LABELS));
         mMappingPriorityCheck.setChecked(true);
@@ -581,6 +589,10 @@ public class TableCreatorActivity extends Activity {
     private void updateSpinnerToOpcode(String opcode) { for (int i = 0; i < OPCODES.length; i++) if (OPCODES[i].equals(opcode)) { mOpcodeSpinner.setSelection(i); break; } }
 
     private void addOrUpdateMapping() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - mLastMappingClickTime < 500) return;
+        mLastMappingClickTime = currentTime;
+
         int opPos = mOpcodeSpinner.getSelectedItemPosition(); if (opPos == 0) { Toast.makeText(this, R.string.msg_select_opcode_first, 0).show(); return; }
         String character = sanitizeCharacter(mCharEdit.getText().toString()); mCharEdit.setText(character); String opcode = OPCODES[opPos];
         List<Integer> patterns = mIsTemplateUsed || !mDotsEdit.getText().toString().isEmpty() ? parseDots(mDotsEdit.getText().toString()) : new ArrayList<>(mCurrentPatterns);
@@ -588,7 +600,11 @@ public class TableCreatorActivity extends Activity {
         boolean high = mMappingPriorityCheck.isChecked(); Mapping m = new Mapping(opcode, character, patterns, high); String dots = getDotsString(m.patterns); int dupIdx = findDuplicateDots(dots);
         if (mEditingIndex != -1 && dupIdx == mEditingIndex) { mMappings.remove(mEditingIndex); insertMappingWithPriority(m, high, mEditingIndex); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); return; }
         if (dupIdx != -1 && !opcode.equals("include")) { showDuplicateDialog(m, dupIdx); return; }
-        String preset = findDuplicateInPresets(dots); if (preset != null && !opcode.equals("include")) { showDuplicateDialogInternal(m, dots, preset, -1); return; }
+        String preset = findDuplicateInPresets(dots); 
+        if (preset != null && !opcode.equals("include") && mIsTemplateUsed) { 
+            showDuplicateDialogInternal(m, dots, preset, -1); 
+            return; 
+        }
         if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
         insertMappingWithPriority(m, high, mEditingIndex); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
     }
