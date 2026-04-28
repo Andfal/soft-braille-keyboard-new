@@ -114,6 +114,7 @@ public class TableCreatorActivity extends Activity {
     private List<Mapping> mCurrentSearchResults = new ArrayList<>();
     private int mEditingIndex = -1;
     private boolean mIsTemplateUsed = false;
+    private boolean mIsManagedTable = true;
     private boolean mIsUpdatingUI = false;
     private boolean mIsCloningMode = false;
 
@@ -443,6 +444,7 @@ public class TableCreatorActivity extends Activity {
 
     private void loadTableData(String tableId) {
         mIsUpdatingUI = true;
+        mIsTemplateUsed = false;
         try {
             CustomTableManager manager = new CustomTableManager(this); String fileName = tableId;
             if (fileName.startsWith("custom:")) fileName = fileName.substring(7);
@@ -455,6 +457,7 @@ public class TableCreatorActivity extends Activity {
             List<String> lines = new ArrayList<>();
             while (scanner.hasNextLine()) { String l = scanner.nextLine(); lines.add(l); if (l.contains("+mode:managed")) isManaged = true; }
             scanner.close();
+            mIsManagedTable = isManaged;
 
             for (String line : lines) {
                 String trimmed = line.trim();
@@ -732,7 +735,7 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void performClone(File f) {
-        mMappings.clear(); mOriginalHeaderLines.clear(); mIsUpdatingUI = true; mIsCloningMode = true;
+        mMappings.clear(); mOriginalHeaderLines.clear(); mIsUpdatingUI = true; mIsCloningMode = true; mIsManagedTable = false; mIsTemplateUsed = false;
         mMappings.add(new Mapping("comment", "+mode:clone", new ArrayList<Integer>(), true, true));
         try {
             Scanner scanner = new Scanner(f, "UTF-8");
@@ -784,7 +787,9 @@ public class TableCreatorActivity extends Activity {
         String localeLine = (localePos >= 0 && localePos < mFilteredLocaleCodes.size() && !mFilteredLocaleCodes.get(localePos).isEmpty()) 
                             ? "#+locale: " + mFilteredLocaleCodes.get(localePos) + "\n" : "";
 
-        if (isClone) {
+        boolean preserveStructure = (isClone || !mOriginalHeaderLines.isEmpty()) && !mIsTemplateUsed;
+
+        if (preserveStructure) {
             // 1. Scrittura Header originale (preservato, filtrando metadati sovrascritti)
             for (String hLine : mOriginalHeaderLines) {
                 if (hLine.startsWith("# Author: ") || hLine.startsWith("# Description: ") 
@@ -798,7 +803,7 @@ public class TableCreatorActivity extends Activity {
             if (!localeLine.isEmpty()) sb.append(localeLine);
             if (cloneMarker != null) writeSingleMapping(sb, cloneMarker, wP, wL, wO);
 
-            // 3. Scrittura Personalizzazioni Utente
+            // 3. Scrittura Personalizzazioni Utente (Nuove/Modificate)
             for (Mapping m : mMappings) {
                 if (m.rawLine == null && m != cloneMarker) writeSingleMapping(sb, m, wP, wL, wO);
             }
@@ -808,17 +813,25 @@ public class TableCreatorActivity extends Activity {
             }
             
         } else {
-            // Modalità Standard (Crea da zero)
+            // Modalità Standard (Crea da zero o Template)
             if (!localeLine.isEmpty()) sb.append(localeLine);
-            sb.append("#+mode:managed\n");
+            if (mIsTemplateUsed || mIsManagedTable) sb.append("#+mode:managed\n");
             sb.append("# ").append(name).append("\n");
             sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
             
-            boolean hasUnicode = false, hasPatterns = false;
-            for (Mapping m : mMappings) if (m.opcode.equals("include")) { if (m.character.equals("unicode.dis")) hasUnicode = true; if (m.character.equals("braille-patterns.cti")) hasPatterns = true; }
+            boolean hasUnicode = false, hasPatterns = false, hasSpaces = false;
+            for (Mapping m : mMappings) if (m.opcode.equals("include")) { 
+                if (m.character.equals("unicode.dis")) hasUnicode = true; 
+                if (m.character.equals("braille-patterns.cti")) hasPatterns = true; 
+                if (m.character.equals("spaces.uti")) hasSpaces = true;
+            }
             if (!hasUnicode) sb.append("\ninclude unicode.dis\n");
+            if (!hasSpaces) sb.append("include spaces.uti\n");
             
-            for (Mapping m : mMappings) if (m.rawLine == null && m != cloneMarker) writeSingleMapping(sb, m, wP, wL, wO);
+            for (Mapping m : mMappings) {
+                if (m == cloneMarker) continue;
+                writeSingleMapping(sb, m, wP, wL, wO);
+            }
             
             if (!hasPatterns) sb.append("\ninclude braille-patterns.cti\n");
         }
@@ -877,7 +890,9 @@ public class TableCreatorActivity extends Activity {
     private void confirmTemplateApplication(final String f) { if (!mMappings.isEmpty()) new AlertDialog.Builder(this).setTitle(R.string.title_select_template).setMessage(R.string.msg_confirm_template).setPositiveButton(android.R.string.yes, (d, w) -> applyTemplate(f)).setNegativeButton(android.R.string.no, null).show(); else applyTemplate(f); }
     private void applyTemplate(String f) { try { JSONObject o = new JSONObject(loadTemplateFromAssets(f)), s = o.getJSONObject("settings"); JSONArray m = o.getJSONArray("mappings"); mEightDotCheck.setChecked(s.getBoolean("is8Dot")); updateScriptSpinner(mEightDotCheck.isChecked()); 
         String locCode = s.getString("locale"); int idx = mLocaleCodes.indexOf(locCode); if (idx != -1) { String name = mLocaleNames.get(idx); int fIdx = mFilteredLocaleNames.indexOf(name); if (fIdx != -1) mLocaleSpinner.setSelection(fIdx); }
-        String script = s.getString("scriptFileName"); String[][] set = mEightDotCheck.isChecked() ? SCRIPTS_8 : SCRIPTS_6; for (int i=0; i<set.length; i++) if (set[i][1].equals(script)) { mScriptSpinner.setSelection(i); break; } mNumSystemSpinner.setSelection(s.getInt("numSystem")); mMappings.clear(); for (int i = 0; i < m.length(); i++) { JSONObject mO = m.getJSONObject(i); mMappings.add(new Mapping(mO.getString("opcode"), mO.getString("char"), parseDots(mO.getString("dots")), mO.getBoolean("high"), mO.getBoolean("fixed"))); } mTableNameEdit.setText(f.replace(".json", "") + "_custom"); refreshSpinner(); mIsTemplateUsed = true; collapseHeader(); } catch (Exception e) {} }
+        String script = s.getString("scriptFileName"); String[][] set = mEightDotCheck.isChecked() ? SCRIPTS_8 : SCRIPTS_6; for (int i=0; i<set.length; i++) if (set[i][1].equals(script)) { mScriptSpinner.setSelection(i); break; } mNumSystemSpinner.setSelection(s.getInt("numSystem")); 
+        mMappings.clear(); mOriginalHeaderLines.clear();
+        for (int i = 0; i < m.length(); i++) { JSONObject mO = m.getJSONObject(i); mMappings.add(new Mapping(mO.getString("opcode"), mO.getString("char"), parseDots(mO.getString("dots")), mO.getBoolean("high"), mO.getBoolean("fixed"))); } mTableNameEdit.setText(f.replace(".json", "") + "_custom"); refreshSpinner(); mIsTemplateUsed = true; mIsManagedTable = true; collapseHeader(); } catch (Exception e) {} }
 
     private void exportSystemTable() {
         int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) { Toast.makeText(this, getString(R.string.msg_select_source_first), 0).show(); return; }
