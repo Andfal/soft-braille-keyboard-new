@@ -473,12 +473,20 @@ public class TableCreatorActivity extends Activity {
                     continue;
                 }
                 inHeader = false;
+
+                // SE NON E' MANAGED, CARICHIAMO TUTTO COME RAW PER VEDERE IL CODICE REALE
+                if (!isManaged) {
+                    Mapping m = new Mapping(trimmed);
+                    m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m);
+                    continue;
+                }
+
+                // LOGICA PER TABELLE MANAGED (PULIZIA)
                 if (trimmed.startsWith("include ")) { String included = trimmed.substring(8).trim().split("#")[0].trim(); Mapping m = new Mapping("include", included, new ArrayList<Integer>(), currentlyHighPriority); m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); continue; }
                 String[] parts = trimmed.split("\\s+"); if (parts.length < 2) continue;
                 String opcode = parts[0], charPart = "", dotsPart = "";
                 
-                // Se è Managed, applichiamo i filtri di pulizia. Se è Raw (esterna), mostriamo TUTTO.
-                if (isManaged && opcode.equals("base")) continue; 
+                if (opcode.equals("base")) continue; 
                 
                 boolean stand = Arrays.asList("numsign", "capsletter", "letsign", "space").contains(opcode) || opcode.startsWith("beg") || opcode.startsWith("end");
                 if (stand) {
@@ -686,6 +694,7 @@ public class TableCreatorActivity extends Activity {
     }
 
     private String getMappingDisplayString(Mapping m) {
+        if (m.rawLine != null && !m.opcode.equals("comment")) return m.rawLine;
         if (m.opcode.equals("#") || m.opcode.equals("comment")) return m.rawLine != null ? m.rawLine : ("# " + m.character);
         if (m.opcode.equals("include")) return getString(R.string.label_structure_prefix) + m.character;
         if (m.opcode.equals("context")) return getString(R.string.label_logic_prefix) + m.character + " -> " + getDotsString(m.patterns);
