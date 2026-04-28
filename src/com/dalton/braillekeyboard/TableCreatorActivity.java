@@ -280,10 +280,24 @@ public class TableCreatorActivity extends Activity {
         mScriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { 
                 initPresets();
-                if (pos > 0 && !mIsUpdatingUI) {
-                    Mapping m = getScriptMapping(pos, mEightDotCheck.isChecked(), mMappingPriorityCheck.isChecked());
-                    if (m != null) { int insertIdx = mMappedItemsSpinner.getSelectedItemPosition(); insertIdx = (insertIdx <= 0) ? 0 : insertIdx - 1; mMappings.add(insertIdx, m); refreshSpinner(); collapseHeader(); }
+                if (mIsUpdatingUI) return;
+                
+                // Rimuoviamo sempre eventuali include di script precedenti per evitare duplicati
+                for (int i = mMappings.size() - 1; i >= 0; i--) {
+                    Mapping m = mMappings.get(i);
+                    if (m.opcode.equals("include")) {
+                        boolean isScriptFile = false;
+                        for (String[] s : SCRIPTS_6) if (s[1].equals(m.character)) isScriptFile = true;
+                        for (String[] s : SCRIPTS_8) if (s[1].equals(m.character)) isScriptFile = true;
+                        if (isScriptFile) mMappings.remove(i);
+                    }
                 }
+
+                if (pos > 0) {
+                    Mapping m = getScriptMapping(pos, mEightDotCheck.isChecked(), mMappingPriorityCheck.isChecked());
+                    if (m != null) { int insertIdx = mMappedItemsSpinner.getSelectedItemPosition(); insertIdx = (insertIdx <= 0) ? 0 : insertIdx - 1; mMappings.add(insertIdx, m); }
+                }
+                refreshSpinner();
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
@@ -292,10 +306,22 @@ public class TableCreatorActivity extends Activity {
         mNumSystemSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_number_system_short), numSystems));
         mNumSystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
-                if (pos > 0 && !mIsUpdatingUI) {
-                    List<Mapping> rules = getNumericMappings(pos, mMappingPriorityCheck.isChecked());
-                    if (!rules.isEmpty()) { int insertIdx = mMappedItemsSpinner.getSelectedItemPosition(); insertIdx = (insertIdx <= 0) ? 0 : insertIdx - 1; mMappings.addAll(insertIdx, rules); refreshSpinner(); collapseHeader(); }
+                if (mIsUpdatingUI) return;
+
+                // Rimuoviamo sempre i vecchi include numerici e il segnanumero
+                List<String> numFiles = Arrays.asList("digits6Dots.uti", "litdigits6DotsPlusDot6.uti", "digits6DotsPlusDot6.uti", "digits8Dots.uti", "loweredDigits6Dots.uti", "litdigits6Dots.uti");
+                for (int i = mMappings.size() - 1; i >= 0; i--) {
+                    Mapping m = mMappings.get(i);
+                    if ((m.opcode.equals("include") && numFiles.contains(m.character)) || m.opcode.equals("numsign")) {
+                        mMappings.remove(i);
+                    }
                 }
+
+                if (pos > 0) {
+                    List<Mapping> rules = getNumericMappings(pos, mMappingPriorityCheck.isChecked());
+                    if (!rules.isEmpty()) { int insertIdx = mMappedItemsSpinner.getSelectedItemPosition(); insertIdx = (insertIdx <= 0) ? 0 : insertIdx - 1; mMappings.addAll(insertIdx, rules); }
+                }
+                refreshSpinner();
             }
             @Override public void onNothingSelected(AdapterView<?> p) {}
         });
@@ -423,28 +449,37 @@ public class TableCreatorActivity extends Activity {
             File f = manager.getCustomTableFile(fileName); if (!f.exists()) { mIsUpdatingUI = false; return; }
             mTableNameEdit.setText(fileName); mMappings.clear(); mOriginalHeaderLines.clear(); mNumSystemSpinner.setSelection(NUM_NONE);
             boolean currentlyHighPriority = true; Scanner scanner = new Scanner(f, "UTF-8");
-            String lastMappingComment = null; boolean inHeader = true;
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine().trim(); if (line.isEmpty()) { if (inHeader) mOriginalHeaderLines.add(""); continue; }
-                if (line.startsWith("#")) {
-                    if (line.startsWith("# Author: ")) mAuthorEdit.setText(line.substring(10));
-                    else if (line.startsWith("# Description: ")) mDescriptionEdit.setText(line.substring(15));
-                    else if (line.contains("+mode:clone")) {
-                        mIsCloningMode = true;
-                        Mapping m = new Mapping("comment", "+mode:clone", new ArrayList<Integer>(), true, true);
-                        mMappings.add(m);
-                    }
-                    else if (line.startsWith("#+locale: ")) { String code = line.substring(10).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int filteredIdx = mFilteredLocaleNames.indexOf(name); if (filteredIdx != -1) mLocaleSpinner.setSelection(filteredIdx); } }
-                    else if (line.contains("SYSTEM INCLUDES") || line.contains("SYSTEM SECTION")) currentlyHighPriority = false;
-                    else if (!line.startsWith("# ---") && !line.startsWith("##")) lastMappingComment = line.substring(1).trim();
+            String lastMappingComment = null; boolean inHeader = true; boolean isManaged = false;
+            
+            // Primo passo: cerchiamo se è una tabella gestita (managed)
+            List<String> lines = new ArrayList<>();
+            while (scanner.hasNextLine()) { String l = scanner.nextLine(); lines.add(l); if (l.contains("+mode:managed")) isManaged = true; }
+            scanner.close();
+
+            for (String line : lines) {
+                String trimmed = line.trim();
+                if (trimmed.isEmpty()) { if (inHeader) mOriginalHeaderLines.add(""); continue; }
+                if (trimmed.startsWith("#")) {
+                    if (trimmed.startsWith("# Author: ")) mAuthorEdit.setText(trimmed.substring(10));
+                    else if (trimmed.startsWith("# Description: ")) mDescriptionEdit.setText(trimmed.substring(15));
+                    else if (trimmed.contains("+mode:clone")) { mIsCloningMode = true; mMappings.add(new Mapping("comment", "+mode:clone", new ArrayList<Integer>(), true, true)); }
+                    else if (trimmed.contains("+mode:managed")) isManaged = true;
+                    else if (trimmed.startsWith("#+locale: ")) { String code = trimmed.substring(10).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int filteredIdx = mFilteredLocaleNames.indexOf(name); if (filteredIdx != -1) mLocaleSpinner.setSelection(filteredIdx); } }
+                    else if (trimmed.contains("SYSTEM INCLUDES") || trimmed.contains("SYSTEM SECTION")) currentlyHighPriority = false;
+                    else if (!trimmed.startsWith("# ---") && !trimmed.startsWith("##")) lastMappingComment = trimmed.substring(1).trim();
                     
-                    if (inHeader) mOriginalHeaderLines.add(line);
+                    if (inHeader) mOriginalHeaderLines.add(trimmed);
+                    else { Mapping m = new Mapping(trimmed); m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); }
                     continue;
                 }
                 inHeader = false;
-                if (line.startsWith("include ")) { String included = line.substring(8).trim().split("#")[0].trim(); Mapping m = new Mapping("include", included, new ArrayList<Integer>(), currentlyHighPriority); m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); continue; }
-                String[] parts = line.split("\\s+"); if (parts.length < 2) continue;
+                if (trimmed.startsWith("include ")) { String included = trimmed.substring(8).trim().split("#")[0].trim(); Mapping m = new Mapping("include", included, new ArrayList<Integer>(), currentlyHighPriority); m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); continue; }
+                String[] parts = trimmed.split("\\s+"); if (parts.length < 2) continue;
                 String opcode = parts[0], charPart = "", dotsPart = "";
+                
+                // Se è Managed, applichiamo i filtri di pulizia. Se è Raw (esterna), mostriamo TUTTO.
+                if (isManaged && opcode.equals("base")) continue; 
+                
                 boolean stand = Arrays.asList("numsign", "capsletter", "letsign", "space").contains(opcode) || opcode.startsWith("beg") || opcode.startsWith("end");
                 if (stand) {
                     if (parts.length >= 2) dotsPart = parts[1];
@@ -458,13 +493,11 @@ public class TableCreatorActivity extends Activity {
                     Mapping m = new Mapping(opcode, charPart, parseDots(dotsPart), currentlyHighPriority);
                     m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m);
                 } else {
-                    // Se la riga ha una struttura sconosciuta (es. nocont, pass2, attribute), 
-                    // la carichiamo come riga grezza per preservarla.
-                    Mapping m = new Mapping(line);
+                    Mapping m = new Mapping(trimmed);
                     m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m);
                 }
             }
-            scanner.close(); refreshSpinner(); mIsUpdatingUI = false; initPresets();
+            refreshSpinner(); mIsUpdatingUI = false; initPresets();
         } catch (Exception e) { mIsUpdatingUI = false; }
     }
 
@@ -768,6 +801,7 @@ public class TableCreatorActivity extends Activity {
         } else {
             // Modalità Standard (Crea da zero)
             if (!localeLine.isEmpty()) sb.append(localeLine);
+            sb.append("#+mode:managed\n");
             sb.append("# ").append(name).append("\n");
             sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
             
@@ -791,8 +825,34 @@ public class TableCreatorActivity extends Activity {
         StringBuilder dots = new StringBuilder(); for (int i = 0; i < m.patterns.size(); i++) { if (i > 0) dots.append("-"); dots.append(patternToDotsString(m.patterns.get(i))); }
         if (m.character != null && m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) { char c = m.character.charAt(0); if (Character.isLetter(c)) { char low = Character.toLowerCase(c), up = Character.toUpperCase(c); if (low != up) { if (c == up && !isCharacterMapped(low) && !wL.contains(low)) { sb.append("# ").append(getCharLabel(String.valueOf(low))).append(" ").append(getString(R.string.label_auto_link)).append("\n"); sb.append("lowercase ").append(String.format("\\x%04x", (int)low)).append(" 0\n"); wL.add(low); wO.add("lowercase:" + low); } String pair = up + "-" + low; if (!wP.contains(pair)) { sb.append("base uppercase ").append(String.format("\\x%04x", (int)up)).append(" ").append(String.format("\\x%04x", (int)low)).append("\n"); wP.add(pair); } if (c == low) wL.add(low); } } }
         if (m.comment != null && !m.comment.isEmpty()) sb.append("# ").append(m.comment).append("\n"); else if (m.character != null && !m.character.isEmpty()) { String label = getCharLabel(m.character); if (label != null) sb.append("# ").append(label).append("\n"); }
-        if (Arrays.asList("numsign", "capsletter", "letsign", "space").contains(m.opcode) || m.opcode.startsWith("beg") || m.opcode.startsWith("end")) sb.append(m.opcode).append(" ").append(dots).append("\n");
-        else { if (m.character == null || m.character.isEmpty()) return; String cP = m.character; if (cP.length() == 1) { char c = cP.charAt(0); if (c == ' ') cP = "\\s"; else if (c == '\t') cP = "\\t"; else if (c == '\\') cP = "\\\\"; else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c); } sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append("\n"); wO.add(m.opcode + ":" + m.character); }
+        
+        // Opcode che NON richiedono un carattere ma solo i punti (segnatasti, indicatori, ecc.)
+        List<String> standaloneOpcodes = Arrays.asList("numsign", "capsletter", "letsign");
+        
+        if (standaloneOpcodes.contains(m.opcode) || m.opcode.startsWith("beg") || m.opcode.startsWith("end")) {
+            if (!m.opcode.equals("begword") && !m.opcode.equals("endword")) { // begword/endword richiedono un carattere
+                sb.append(m.opcode).append(" ").append(dots).append("\n");
+                return;
+            }
+        }
+        
+        // Per tutti gli altri (lowercase, uppercase, punctuation, math, sign, space, word, ecc.)
+        if (m.character == null || m.character.isEmpty()) {
+            if (m.opcode.equals("space")) m.character = " "; // Default per lo spazio
+            else return; // Non scriviamo regole incomplete
+        }
+        
+        String cP = m.character;
+        if (cP.length() == 1) {
+            char c = cP.charAt(0);
+            if (c == ' ') cP = "\\s";
+            else if (c == '\t') cP = "\\t";
+            else if (c == '\\') cP = "\\\\";
+            else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c);
+        }
+        
+        sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append("\n");
+        wO.add(m.opcode + ":" + m.character);
     }
 
     private String getCharLabel(String s) {
