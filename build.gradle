@@ -6,12 +6,20 @@ android {
     namespace 'com.dalton.braillekeyboard'
     compileSdk 34
 
+    def versionPropsFile = file('version.properties')
+    def versionProps = new Properties()
+    if (versionPropsFile.exists()) {
+        versionProps.load(new FileInputStream(versionPropsFile))
+    }
+    def vCode = versionProps['VERSION_CODE'] ? versionProps['VERSION_CODE'].toInteger() : 1
+    def vName = versionProps['VERSION_NAME'] ?: "1.0.0"
+
     defaultConfig {
         applicationId "com.dalton.braillekeyboard"
         minSdk 19
         targetSdk 34
-        versionCode 57
-        versionName "4.01"
+        versionCode vCode
+        versionName vName
     }
 
     sourceSets {

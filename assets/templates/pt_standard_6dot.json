@@ -214,7 +214,7 @@
     {
       "opcode": "lowercase",
       "char": "à",
-      "dots": "12346",
+      "dots": "1246",
       "high": false,
       "fixed": false
     },
@@ -277,7 +277,7 @@
     {
       "opcode": "punctuation",
       "char": ".",
-      "dots": "3",
+      "dots": "256",
       "high": false,
       "fixed": false
     },

@@ -1,0 +1,70 @@
+File: ar_standard_6dot.json - OK
+
+File: cs_standard_6dot.json
+Conflict: Dots '16' used for 'ch' and 'á'
+Conflict: Dots '1456' used for 'ô' and 'ď'
+Conflict: Dots '12356' used for 'ŕ' and 'ľ'
+Conflict: Dots '1236' used for 'v' and 'ĺ'
+Conflict: Dots '2456' used for 'w' and 'ř'
+
+File: da_no_standard_6dot.json - OK
+
+File: de_standard_6dot.json
+Conflict: Dots '3' used for ''' and '.'
+
+File: el_standard_6dot.json - OK
+
+File: en_standard_6dot.json - OK
+
+File: eo_standard_6dot.json - OK
+
+File: es_standard_6dot.json
+Conflict: Dots '235' used for '¡' and '!'
+Conflict: Dots '26' used for '¿' and '?'
+Conflict: Dots '3' used for ''' and '.'
+
+File: fr_standard_6dot.json - OK
+
+File: he_standard_6dot.json - OK
+
+File: hi_standard_6dot.json - OK
+
+File: hu_standard_6dot.json - OK
+
+File: it_standard_6dot.json - OK
+
+File: ko_standard_6dot.json
+Conflict: Dots '5' used for ',' and 'ㄹ'
+
+File: latin_8dot.json - OK
+
+File: nl_standard_6dot.json - OK
+
+File: pl_standard_6dot.json
+Conflict: Dots '1356' used for 'ó' and 'z'
+
+File: pt_standard_6dot.json
+Conflict: Dots '12346' used for 'ç' and 'à'
+Conflict: Dots '3' used for ''' and '.'
+
+File: ro_standard_6dot.json - OK
+
+File: ru_standard_6dot.json
+Conflict: Dots '245' used for 'ж' and 'в'
+
+File: sh_standard_6dot.json - OK
+
+File: sq_standard_6dot.json
+Conflict: Dots '1246' used for 'nj' and 'ë'
+Conflict: Dots '1456' used for 'th' and 'dh'
+Conflict: Dots '13456' used for 'y' and 'xh'
+
+File: sv_standard_6dot.json
+Conflict: Dots '1235' used for 'å' and 'r'
+
+File: th_standard_6dot.json
+Conflict: Dots '1245' used for 'ฟ' and 'ค'
+
+File: tr_standard_6dot.json - OK
+
+File: vi_standard_6dot.json - OK

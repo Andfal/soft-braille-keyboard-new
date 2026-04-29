@@ -284,20 +284,16 @@ public class TableCreatorActivity extends Activity {
                 initPresets();
                 if (mIsUpdatingUI) return;
                 
-                // Rimuoviamo sempre eventuali include di script precedenti per evitare duplicati
-                for (int i = mMappings.size() - 1; i >= 0; i--) {
-                    Mapping m = mMappings.get(i);
-                    if (m.opcode.equals("include")) {
-                        boolean isScriptFile = false;
-                        for (String[] s : SCRIPTS_6) if (s[1].equals(m.character)) isScriptFile = true;
-                        for (String[] s : SCRIPTS_8) if (s[1].equals(m.character)) isScriptFile = true;
-                        if (isScriptFile) mMappings.remove(i);
-                    }
-                }
+                // 1. Identifichiamo il vecchio script per rimuoverne le mappature
+                // Invece di basarci solo sul file, rimuoviamo tutte le mappature di tipo 'lowercase'/'uppercase' 
+                // che NON sono marcate come 'fixed' e che corrispondono a un set alfabetico standard.
+                // Per semplicità e precisione, usiamo una lista di caratteri dello script precedente se disponibile,
+                // oppure puliamo i blocchi alfabetici noti.
+                
+                removeCurrentAlphabetMappings();
 
                 if (pos > 0) {
-                    Mapping m = getScriptMapping(pos, mEightDotCheck.isChecked(), mMappingPriorityCheck.isChecked());
-                    if (m != null) { int insertIdx = mMappedItemsSpinner.getSelectedItemPosition(); insertIdx = (insertIdx <= 0) ? 0 : insertIdx - 1; mMappings.add(insertIdx, m); }
+                    applyAlphabetScript(pos, mEightDotCheck.isChecked());
                 }
                 refreshSpinner();
             }
@@ -775,7 +771,59 @@ public class TableCreatorActivity extends Activity {
         } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); } finally { mIsUpdatingUI = false; }
     }
 
-    private Mapping getScriptMapping(int pos, boolean is8dot, boolean high) { if (pos <= 0) return null; String file = is8dot ? SCRIPTS_8[pos][1] : SCRIPTS_6[pos][1]; if (file.equals("none")) return null; return new Mapping("include", file, new ArrayList<Integer>(), high); }
+    private void removeCurrentAlphabetMappings() {
+        // Rimuoviamo tutte le mappature di tipo 'lowercase' che appartengono a un alfabeto.
+        // Un trucco per non cancellare i simboli personalizzati o accenti è controllare se il carattere
+        // fa parte dei set alfabetici base.
+        for (int i = mMappings.size() - 1; i >= 0; i--) {
+            Mapping m = mMappings.get(i);
+            if (m.opcode.equals("lowercase") && !m.isFixed) {
+                // Se è un carattere alfabetico base (a-z, cirillico, greco base) lo rimuoviamo
+                char c = m.character.length() == 1 ? m.character.charAt(0) : 0;
+                if ((c >= 'a' && c <= 'z') || (c >= 'а' && c <= 'я') || (c >= 'α' && c <= 'ω')) {
+                    mMappings.remove(i);
+                }
+            }
+            // Rimuoviamo anche eventuali vecchi include di script per pulizia legacy
+            if (m.opcode.equals("include")) {
+                boolean isScriptFile = false;
+                for (String[] s : SCRIPTS_6) if (s[1].equals(m.character)) isScriptFile = true;
+                for (String[] s : SCRIPTS_8) if (s[1].equals(m.character)) isScriptFile = true;
+                if (isScriptFile) mMappings.remove(i);
+            }
+        }
+    }
+
+    private void applyAlphabetScript(int pos, boolean is8dot) {
+        String scriptKey = is8dot ? SCRIPTS_8[pos][1] : SCRIPTS_6[pos][1];
+        String jsonFile = null;
+        if (scriptKey.contains("latin")) jsonFile = "alphabet_latin_6dot.json";
+        else if (scriptKey.contains("cyrillic")) jsonFile = "alphabet_cyrillic_6dot.json";
+        else if (scriptKey.contains("greek")) jsonFile = "alphabet_greek_6dot.json";
+        else if (scriptKey.contains("arabic")) jsonFile = "alphabet_arabic_6dot.json";
+        else if (scriptKey.contains("hebrew")) jsonFile = "alphabet_hebrew_6dot.json";
+        
+        if (jsonFile == null) return;
+
+        try {
+            InputStream is = getAssets().open("scripts/" + jsonFile);
+            byte[] b = new byte[is.available()]; is.read(b); is.close();
+            JSONObject root = new JSONObject(new String(b, "UTF-8"));
+            JSONArray arr = root.getJSONArray("mappings");
+            
+            // Inseriamo i nuovi caratteri all'inizio della lista (ma dopo eventuali header/fixed)
+            int insertPos = 0;
+            while (insertPos < mMappings.size() && mMappings.get(insertPos).isFixed) insertPos++;
+            
+            for (int i = 0; i < arr.length(); i++) {
+                JSONObject obj = arr.getJSONObject(i);
+                mMappings.add(insertPos++, new Mapping(obj.getString("opcode"), obj.getString("char"), parseDots(obj.getString("dots")), false));
+            }
+            Toast.makeText(this, String.format(getString(R.string.msg_imported), root.getString("scriptName")), Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e(TAG, "Error applying script: " + e.getMessage());
+        }
+    }
 
     private List<Mapping> getNumericMappings(int pos, boolean high) {
         List<Mapping> rules = new ArrayList<>();
@@ -844,8 +892,11 @@ public class TableCreatorActivity extends Activity {
             if (!hasUnicode) sb.append("\ninclude unicode.dis\n");
             if (!hasSpaces) sb.append("include spaces.uti\n");
             
+            // Inseriamo le mappature QUI (dopo spaces.uti)
             for (Mapping m : mMappings) {
                 if (m == cloneMarker) continue;
+                // Saltiamo gli include strutturali che abbiamo già gestito o gestiremo
+                if (m.opcode.equals("include") && (m.character.equals("unicode.dis") || m.character.equals("spaces.uti") || m.character.equals("braille-patterns.cti"))) continue;
                 writeSingleMapping(sb, m, wP, wL, wO);
             }
             
@@ -853,6 +904,7 @@ public class TableCreatorActivity extends Activity {
         }
         return sb.toString();
     }
+
 
     private void writeSingleMapping(StringBuilder sb, Mapping m, List<String> wP, List<Character> wL, List<String> wO) {
         if (m.opcode.equals("comment") && "+mode:clone".equals(m.character)) { sb.append("#+mode:clone\n"); return; }
@@ -912,22 +964,105 @@ public class TableCreatorActivity extends Activity {
 
     private void exportSystemTable() {
         int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) { Toast.makeText(this, getString(R.string.msg_select_source_first), 0).show(); return; }
-        String fileName = mSystemTableFiles.get(p); File tableDir = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables"), sourceFile = new File(tableDir, fileName);
+        final String fileName = mSystemTableFiles.get(p); File tableDir = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables");
+        final File sourceFile = new File(tableDir, fileName);
         if (!sourceFile.exists()) { Toast.makeText(this, getString(R.string.msg_table_file_not_found), 0).show(); return; }
-        try { File exportDir = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "soft-braille"); if (!exportDir.exists() && !exportDir.mkdirs()) return; File outFile = new File(exportDir, fileName); try (java.io.FileInputStream fis = new java.io.FileInputStream(sourceFile); FileOutputStream fos = new FileOutputStream(outFile)) { byte[] buffer = new byte[1024]; int len; while ((len = fis.read(buffer)) > 0) fos.write(buffer, 0, len); } Toast.makeText(this, String.format(getString(R.string.msg_exported_to), outFile.getAbsolutePath()), 0).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
+        
+        if (android.os.Build.VERSION.SDK_INT >= 29) {
+            doExportSystemFileMediaStore(sourceFile, fileName);
+        } else {
+            exportSystemTableLegacy(sourceFile, fileName);
+        }
     }
 
-    private void saveTable() {
-        String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, 0).show(); mTableNameEdit.requestFocus(); return; }
-        String tableContent = generateTableContent(); if (tableContent.isEmpty()) return;
-        try { CustomTableManager manager = new CustomTableManager(this); if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb"; File f = manager.getCustomTableFile(name); try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); } int prefKey = mEightDotCheck.isChecked() ? R.string.pref_braille_computer_table_key : R.string.pref_braille_literary_table_key; Options.writeStringPreference(this, prefKey, "custom:" + name); Toast.makeText(this, R.string.msg_table_saved, 0).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
+    private void doExportSystemFileMediaStore(File sourceFile, String fileName) {
+        if (exportToDownloadsMediaStore(fileName, sourceFile, null)) {
+            Toast.makeText(this, String.format(getString(R.string.msg_exported_to), "Download/soft-braille/" + fileName), 0).show();
+        }
+    }
+
+    private void exportSystemTableLegacy(File sourceFile, String fileName) {
+        File exportDir = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "soft-braille");
+        if (!exportDir.exists() && !exportDir.mkdirs()) return;
+        final File outFile = new File(exportDir, fileName);
+        if (outFile.exists()) {
+            new AlertDialog.Builder(this).setTitle(R.string.dialog_overwrite_title).setMessage(String.format(getString(R.string.dialog_overwrite_msg), fileName))
+                .setPositiveButton(R.string.btn_overwrite, (dialog, which) -> doExportSystemFileLegacy(sourceFile, outFile)).setNegativeButton(R.string.btn_cancel, null).show();
+        } else { doExportSystemFileLegacy(sourceFile, outFile); }
+    }
+
+    private void doExportSystemFileLegacy(File sourceFile, File outFile) {
+        try (java.io.FileInputStream fis = new java.io.FileInputStream(sourceFile); FileOutputStream fos = new FileOutputStream(outFile)) {
+            byte[] buffer = new byte[1024]; int len; while ((len = fis.read(buffer)) > 0) fos.write(buffer, 0, len);
+            Toast.makeText(this, String.format(getString(R.string.msg_exported_to), outFile.getAbsolutePath()), 0).show();
+        } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
     }
 
     private void exportTable() {
         if (android.os.Build.VERSION.SDK_INT >= 23 && android.os.Build.VERSION.SDK_INT <= 28) { if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != 0) { requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100); return; } }
         String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, 0).show(); return; }
         if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
+        final String content = generateTableContent(); if (content.isEmpty()) return;
+        final String fileName = name;
+
+        if (android.os.Build.VERSION.SDK_INT >= 29) {
+            if (exportToDownloadsMediaStore(fileName, null, content)) {
+                Toast.makeText(this, String.format(getString(R.string.msg_exported_to), "Download/soft-braille/" + fileName), 0).show();
+            }
+        } else {
+            exportTableLegacy(fileName, content);
+        }
+    }
+
+    private void exportTableLegacy(String fileName, String content) {
+        File dir = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "soft-braille");
+        if (!dir.exists() && !dir.mkdirs()) return;
+        final File outFile = new File(dir, fileName);
+        if (outFile.exists()) {
+            new AlertDialog.Builder(this).setTitle(R.string.dialog_overwrite_title).setMessage(String.format(getString(R.string.dialog_overwrite_msg), fileName))
+                .setPositiveButton(R.string.btn_overwrite, (dialog, which) -> doWriteExportFileLegacy(outFile, content)).setNegativeButton(R.string.btn_cancel, null).show();
+        } else { doWriteExportFileLegacy(outFile, content); }
+    }
+
+    private void doWriteExportFileLegacy(File outFile, String content) {
+        try (FileOutputStream fos = new FileOutputStream(outFile)) {
+            fos.write(content.getBytes(StandardCharsets.UTF_8));
+            Toast.makeText(this, String.format(getString(R.string.msg_exported_to), outFile.getAbsolutePath()), 0).show();
+        } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
+    }
+
+    private void saveTable() {
+        String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, 0).show(); mTableNameEdit.requestFocus(); return; }
         String tableContent = generateTableContent(); if (tableContent.isEmpty()) return;
-        try { File dir = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "soft-braille"); if (!dir.exists() && !dir.mkdirs()) return; File outFile = new File(dir, name); try (FileOutputStream fos = new FileOutputStream(outFile)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); } Toast.makeText(this, String.format(getString(R.string.msg_exported_to), outFile.getAbsolutePath()), 0).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
+        try { CustomTableManager manager = new CustomTableManager(this); if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb"; File f = manager.getCustomTableFile(name); try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); } 
+            Intent intent = new Intent("com.dalton.braillekeyboard.ACTION_TABLE_UPDATED");
+            intent.putExtra("table_file_name", name);
+            sendBroadcast(intent);
+            int prefKey = mEightDotCheck.isChecked() ? R.string.pref_braille_computer_table_key : R.string.pref_braille_literary_table_key; Options.writeStringPreference(this, prefKey, "custom:" + name); Toast.makeText(this, R.string.msg_table_saved, 0).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
+    }
+
+    private boolean exportToDownloadsMediaStore(String fileName, File sourceFile, String content) {
+        android.content.ContentResolver resolver = getContentResolver();
+        android.content.ContentValues values = new android.content.ContentValues();
+        values.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+        // Usiamo un MIME type generico per evitare che Android aggiunga .txt
+        values.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "application/octet-stream");
+        values.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, "Download/soft-braille");
+        android.net.Uri externalUri = android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+        String selection = android.provider.MediaStore.MediaColumns.DISPLAY_NAME + "=? AND " + android.provider.MediaStore.MediaColumns.RELATIVE_PATH + "=?";
+        String[] selectionArgs = new String[] { fileName, "Download/soft-braille/" };
+        android.database.Cursor cursor = resolver.query(externalUri, new String[] { android.provider.MediaStore.MediaColumns._ID }, selection, selectionArgs, null);
+        android.net.Uri uri = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            long id = cursor.getLong(cursor.getColumnIndex(android.provider.MediaStore.MediaColumns._ID));
+            uri = android.content.ContentUris.withAppendedId(externalUri, id);
+            cursor.close();
+        } else { if (cursor != null) cursor.close(); uri = resolver.insert(externalUri, values); }
+        if (uri == null) return false;
+        try (java.io.OutputStream os = resolver.openOutputStream(uri, "wt")) {
+            if (sourceFile != null) { try (java.io.FileInputStream fis = new java.io.FileInputStream(sourceFile)) { byte[] buffer = new byte[1024]; int len; while ((len = fis.read(buffer)) > 0) os.write(buffer, 0, len); } }
+            else if (content != null) { os.write(content.getBytes(StandardCharsets.UTF_8)); }
+            return true;
+        } catch (Exception e) { Log.e(TAG, "MediaStore export failed", e); return false; }
     }
 }

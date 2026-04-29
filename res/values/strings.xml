@@ -34,6 +34,9 @@
 
     
     <string name="btn_overwrite">Overwrite / Proceed</string>
+    <string name="dialog_overwrite_title">Overwrite File?</string>
+    <string name="dialog_overwrite_msg">The file %s already exists. Do you want to overwrite it?</string>
+
     <string name="btn_remove_mapping">Remove this mapping</string>
     <string name="btn_save">SAVE</string>
     <string name="btn_select_mass">Select...</string>

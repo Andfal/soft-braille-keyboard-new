@@ -193,7 +193,7 @@
     {
       "opcode": "lowercase",
       "char": "å",
-      "dots": "1235",
+      "dots": "16",
       "high": false,
       "fixed": false
     },

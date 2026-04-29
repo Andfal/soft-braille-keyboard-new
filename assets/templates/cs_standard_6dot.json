@@ -18,7 +18,7 @@
     {
       "opcode": "lowercase",
       "char": "á",
-      "dots": "16",
+      "dots": "12356",
       "high": false,
       "fixed": false
     },
@@ -144,14 +144,14 @@
     {
       "opcode": "lowercase",
       "char": "ĺ",
-      "dots": "1236",
+      "dots": "123456",
       "high": false,
       "fixed": false
     },
     {
       "opcode": "lowercase",
       "char": "ľ",
-      "dots": "12356",
+      "dots": "46",
       "high": false,
       "fixed": false
     },
@@ -193,7 +193,7 @@
     {
       "opcode": "lowercase",
       "char": "ô",
-      "dots": "1456",
+      "dots": "2356",
       "high": false,
       "fixed": false
     },
@@ -221,7 +221,7 @@
     {
       "opcode": "lowercase",
       "char": "ŕ",
-      "dots": "12356",
+      "dots": "23456",
       "high": false,
       "fixed": false
     },
@@ -291,7 +291,7 @@
     {
       "opcode": "lowercase",
       "char": "w",
-      "dots": "2456",
+      "dots": "456",
       "high": false,
       "fixed": false
     },

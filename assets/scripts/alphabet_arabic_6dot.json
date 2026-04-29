@@ -1,0 +1,33 @@
+{
+  "scriptName": "Arabic",
+  "mappings": [
+    {"opcode": "lowercase", "char": "ا", "dots": "1"},
+    {"opcode": "lowercase", "char": "ب", "dots": "12"},
+    {"opcode": "lowercase", "char": "ت", "dots": "2345"},
+    {"opcode": "lowercase", "char": "ث", "dots": "1456"},
+    {"opcode": "lowercase", "char": "ج", "dots": "245"},
+    {"opcode": "lowercase", "char": "ح", "dots": "156"},
+    {"opcode": "lowercase", "char": "خ", "dots": "1346"},
+    {"opcode": "lowercase", "char": "د", "dots": "145"},
+    {"opcode": "lowercase", "char": "ذ", "dots": "2346"},
+    {"opcode": "lowercase", "char": "ر", "dots": "1235"},
+    {"opcode": "lowercase", "char": "ز", "dots": "1356"},
+    {"opcode": "lowercase", "char": "س", "dots": "234"},
+    {"opcode": "lowercase", "char": "ش", "dots": "146"},
+    {"opcode": "lowercase", "char": "ص", "dots": "12346"},
+    {"opcode": "lowercase", "char": "ض", "dots": "1246"},
+    {"opcode": "lowercase", "char": "ط", "dots": "23456"},
+    {"opcode": "lowercase", "char": "ظ", "dots": "123456"},
+    {"opcode": "lowercase", "char": "ع", "dots": "12356"},
+    {"opcode": "lowercase", "char": "غ", "dots": "126"},
+    {"opcode": "lowercase", "char": "ف", "dots": "124"},
+    {"opcode": "lowercase", "char": "ق", "dots": "12345"},
+    {"opcode": "lowercase", "char": "ك", "dots": "13"},
+    {"opcode": "lowercase", "char": "ل", "dots": "123"},
+    {"opcode": "lowercase", "char": "م", "dots": "134"},
+    {"opcode": "lowercase", "char": "ن", "dots": "1345"},
+    {"opcode": "lowercase", "char": "ه", "dots": "125"},
+    {"opcode": "lowercase", "char": "و", "dots": "2456"},
+    {"opcode": "lowercase", "char": "ي", "dots": "24"}
+  ]
+}

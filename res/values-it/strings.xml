@@ -33,6 +33,9 @@
 
     
     <string name="btn_overwrite">Sovrascrivi / Procedi</string>
+    <string name="dialog_overwrite_title">Sovrascrivere il file?</string>
+    <string name="dialog_overwrite_msg">Il file %s esiste già. Vuoi sovrascriverlo?</string>
+
     <string name="btn_remove_mapping">Rimuovi questa mappatura</string>
     <string name="btn_save">SALVA</string>
     <string name="btn_select_mass">Seleziona...</string>

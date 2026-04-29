@@ -37,6 +37,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_table_name"
+                    android:importantForAutofill="no"
+                    android:autofillHints="none"
                     android:inputType="text"/>
 
                 <Button
@@ -50,6 +52,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_author"
+                    android:importantForAutofill="no"
+                    android:autofillHints="none"
                     android:inputType="textPersonName"/>
 
                 <EditText
@@ -57,7 +61,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_description"
+                    android:importantForAutofill="no"
+                    android:autofillHints="none"
                     android:inputType="text"/>
+
 
                 <EditText
                     android:id="@+id/edit_search_locale"
@@ -205,6 +212,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="@string/hint_char"
+                android:importantForAutofill="no"
+                android:autofillHints="none"
                 android:inputType="text"/>
             <EditText
                 android:id="@+id/edit_dots"
@@ -212,7 +221,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.5"
                 android:hint="@string/hint_dots_format"
-                android:inputType="textVisiblePassword"
+                android:importantForAutofill="no"
+                android:autofillHints="none"
+                android:inputType="textNoSuggestions"
                 android:imeOptions="actionDone"/>
         </LinearLayout>
 
@@ -240,8 +251,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/hint_search_rules"
+            android:importantForAutofill="no"
+            android:autofillHints="none"
             android:textSize="14sp"
             android:inputType="text"/>
+
 
         <TextView
             android:id="@+id/text_search_summary"

@@ -242,7 +242,7 @@
     {
       "opcode": "punctuation",
       "char": ".",
-      "dots": "3",
+      "dots": "256",
       "high": false,
       "fixed": false
     },
