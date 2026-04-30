@@ -95,10 +95,10 @@ public class KeyboardHelpActivity extends AppCompatActivity {
     private void updateActiveTableInfo() {
         Context storageContext = getApplicationContext();
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            storageContext = storageContext.createDeviceProtectedStorageContext();
+            storageContext = createDeviceProtectedStorageContext();
         }
-        
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(storageContext);
+
+        SharedPreferences prefs = Options.getSharedPreferences(storageContext);
         String brailleTypeStr = prefs.getString(getString(R.string.pref_braille_type_key), "0");
         BrailleType type = brailleTypeStr.equals("8") ? BrailleType.COMPUTER : BrailleType.LITERARY;
         String tableKey = (type == BrailleType.COMPUTER) ? getString(R.string.pref_braille_computer_table_key) : getString(R.string.pref_braille_literary_table_key);

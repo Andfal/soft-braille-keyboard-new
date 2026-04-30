@@ -1,0 +1,29 @@
+{
+  "scriptName": "Greek",
+  "mappings": [
+    {"opcode": "lowercase", "char": "α", "dots": "1"},
+    {"opcode": "lowercase", "char": "β", "dots": "12"},
+    {"opcode": "lowercase", "char": "γ", "dots": "1245"},
+    {"opcode": "lowercase", "char": "δ", "dots": "145"},
+    {"opcode": "lowercase", "char": "ε", "dots": "15"},
+    {"opcode": "lowercase", "char": "ζ", "dots": "1356"},
+    {"opcode": "lowercase", "char": "η", "dots": "156"},
+    {"opcode": "lowercase", "char": "θ", "dots": "1456"},
+    {"opcode": "lowercase", "char": "ι", "dots": "24"},
+    {"opcode": "lowercase", "char": "κ", "dots": "13"},
+    {"opcode": "lowercase", "char": "λ", "dots": "123"},
+    {"opcode": "lowercase", "char": "μ", "dots": "134"},
+    {"opcode": "lowercase", "char": "ν", "dots": "1345"},
+    {"opcode": "lowercase", "char": "ξ", "dots": "1346"},
+    {"opcode": "lowercase", "char": "ο", "dots": "135"},
+    {"opcode": "lowercase", "char": "π", "dots": "1234"},
+    {"opcode": "lowercase", "char": "ρ", "dots": "1235"},
+    {"opcode": "lowercase", "char": "σ", "dots": "234"},
+    {"opcode": "lowercase", "char": "τ", "dots": "2345"},
+    {"opcode": "lowercase", "char": "υ", "dots": "136"},
+    {"opcode": "lowercase", "char": "φ", "dots": "124"},
+    {"opcode": "lowercase", "char": "χ", "dots": "125"},
+    {"opcode": "lowercase", "char": "ψ", "dots": "13456"},
+    {"opcode": "lowercase", "char": "ω", "dots": "2456"}
+  ]
+}

@@ -32,7 +32,7 @@
     {
       "opcode": "lowercase",
       "char": "ㄹ",
-      "dots": "5",
+      "dots": "2",
       "high": false,
       "fixed": false
     },

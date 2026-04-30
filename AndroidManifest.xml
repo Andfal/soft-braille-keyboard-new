@@ -49,6 +49,21 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
+        <activity android:name="com.dalton.braillekeyboard.StorageManagerActivity" android:label="@string/title_storage_manager" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="com.dalton.braillekeyboard.AbbreviationEditorActivity" android:label="@string/title_abbreviation_editor" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="com.dalton.braillekeyboard.GestureSettingsActivity" android:label="@string/pref_category_gestures_title" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
         <activity android:name="com.dalton.braillekeyboard.TableCreatorActivity" android:label="Create Braille Table" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

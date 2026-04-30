@@ -13,33 +13,36 @@
     <string name="braille_ime">Soft Braille Keyboard</string>
     <string name="btn_add">ADD</string>
     <string name="btn_add_anyway">Add anyway</string>
-    <string name="btn_add_cell">Add Braille cell</string>
-    <string name="btn_add_cell_description">Add another braille cell for this character</string>
-    <string name="btn_add_mapping">Add new character mapping</string>
     <string name="btn_add_prefix">Add prefix...</string>
-    <string name="btn_add_selected">Add selected directly</string>
     <string name="btn_append_cell">+ Append Cell</string>
     <string name="btn_cancel">Cancel</string>
     <string name="btn_clear_dots">Clear</string>
-    <string name="btn_clone_table">Clone Source</string><string name="btn_create_table">Create custom table</string>
+    <string name="btn_clone_table">Clone Source</string>
+    <string name="btn_create_table">Create custom table</string>
     <string name="btn_delete">Delete</string>
     <string name="btn_export_system_table">Export System Table</string>
-    <string name="btn_export_table">Export to Download</string>
+    <string name="btn_export_original">Export Original</string>
+    <string name="btn_export_table">Export Your Work</string>
     <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
     <string name="btn_id_enable">BTN_ENABLED</string>
     <string name="btn_import_base_rules">Import All Rules</string>
     <string name="btn_import_table">Import existing table file</string>
-    <string name="btn_import_visual">Import Rules</string><string name="btn_insert_above">Insert above this rule</string><string name="btn_insert_alphabet_here">Insert Alphabet (%s) here</string><string name="btn_insert_before">Insert before (Low priority)</string>
-    <string name="btn_insert_numeric_here">Insert Numbers (%s) here</string><string name="btn_load_template">Load Template</string>
-    <string name="btn_move_down">Move Down</string><string name="btn_move_to_pos">Move to row...</string><string name="btn_move_top">To Top (After fixed)</string><string name="btn_move_up">Move Up</string><string name="btn_ok">OK</string>
+    <string name="btn_import_visual">Import Rules</string>
+    <string name="btn_insert_above">Insert above this rule</string>
+    <string name="btn_load_template">Load Template</string>
+    <string name="btn_ok">OK</string>
 
     
     <string name="btn_overwrite">Overwrite / Proceed</string>
+    <string name="dialog_overwrite_title">Overwrite File?</string>
+    <string name="dialog_overwrite_msg">The file %s already exists. Do you want to overwrite it?</string>
+
     <string name="btn_remove_mapping">Remove this mapping</string>
     <string name="btn_save">SAVE</string>
-    <string name="btn_save_table">Save Table</string>
-    <string name="btn_select_mass">Select...</string><string name="btn_set_cell">Set Cell</string>
+    <string name="btn_select_mass">Select...</string>
+    <string name="btn_set_cell">Set Cell</string>
     <string name="btn_sync_folder">Grant folder access for scanning</string>
+    <string name="msg_sync_folder_desc">To synchronize your custom tables across devices or back them up, please select a folder where the app can read and write table files.</string>
     <string name="btn_update">UPDATE</string>
     <string name="button_choose_default_keyboard">Set Soft Braille Keyboard as the default keyboard</string>
     <string name="button_keyboard_settings">Enable Soft Braille Keyboard</string>
@@ -82,6 +85,8 @@
     <string name="help_desc_caps_letter">Capitalization Indicator: makes the next letter uppercase.</string>
     <string name="help_desc_caps_lock">Caps Lock: makes the whole word uppercase.</string>
     <string name="help_desc_default">Mapping for: %s</string>
+
+    
     <string name="help_desc_diacritic">Diacritic Mark: used to modify the previous or next character.</string>
     <string name="help_desc_greek_mode">Switch to Greek mode.</string>
     <string name="help_desc_italic">Italic Mode Indicator.</string>
@@ -92,13 +97,200 @@
     <string name="help_desc_underline">Underline Mode Indicator.</string>
     <string name="help_desc_whole_word">Whole Word Contraction: only works as a standalone word.</string>
     <string name="hide_keyboard">Hiding the keyboard.</string>
+
+    <!-- Braille Actions -->
+    <string name="action_none">None</string>
+    <string name="action_move_left_char">Move left by character</string>
+    <string name="action_move_right_char">Move right by character</string>
+    <string name="action_move_left_word">Move left by word</string>
+    <string name="action_move_right_word">Move right by word</string>
+    <string name="action_move_left_line">Move left by line</string>
+    <string name="action_move_right_line">Move right by line</string>
+    <string name="action_move_left_all">Move to beginning of text</string>
+    <string name="action_move_right_all">Move to end of text</string>
+    <string name="action_backspace_char">Delete character</string>
+    <string name="action_backspace_word">Delete word</string>
+    <string name="action_backspace_line">Delete line</string>
+    <string name="action_backspace_all">Delete all text</string>
+    <string name="action_read_char">Read current character</string>
+    <string name="action_read_word">Read current word</string>
+    <string name="action_read_line">Read current line</string>
+    <string name="action_read_all">Read all text</string>
+    <string name="action_space">Insert space</string>
+    <string name="action_newline">Insert newline</string>
+    <string name="action_voice_input">Voice input</string>
+    <string name="action_toggle_privacy">Toggle privacy mode</string>
+    <string name="action_toggle_auto_caps">Toggle auto-capitalization</string>
+    <string name="action_toggle_echo_passwords">Toggle speak passwords</string>
+    <string name="action_toggle_mark">Toggle selection mark</string>
+    <string name="action_cycle_keyboard_feedback">Cycle keyboard feedback (Sound/Vibrate)</string>
+    <string name="action_cycle_echo_feedback">Cycle echo feedback (Char/Word/None)</string>
+    <string name="action_switch_braille_type">Switch Literary/Computer Braille</string>
+    <string name="action_switch_braille_table">Switch Braille table</string>
+    <string name="action_open_settings">Open keyboard settings</string>
+    <string name="action_open_input_switcher">Open input method picker</string>
+    <string name="action_close_keyboard">Close keyboard</string>
+    <string name="action_shrink_keyboard">Shrink keyboard</string>
+    <string name="action_word_count">Word and character count</string>
+    <string name="action_next_field_action">Next field / action</string>
+    <string name="action_select_text_action">Select / Action</string>
+    <string name="action_emoji_mode_toggle">Toggle emoji search mode</string>
+    <string name="action_edit_select_all">Action: Select All</string>
+    <string name="action_edit_copy">Action: Copy</string>
+    <string name="action_edit_cut">Action: Cut</string>
+    <string name="action_edit_paste">Action: Paste</string>
+    <string name="action_edit_speak">Action: Speak selection</string>
+    <string name="action_edit_delete">Action: Delete selection</string>
+    <string name="action_spell_check_left">Spell check previous word</string>
+    <string name="action_spell_check_right">Spell check next word</string>
+    <string name="action_spell_check_next_suggestion">Next spelling suggestion</string>
+    <string name="action_spell_check_prev_suggestion">Previous spelling suggestion</string>
+    <string name="action_set_dot_7">Type dot 7</string>
+    <string name="action_set_dot_8">Insert dot 8</string>
+    <string name="action_toggle_abbreviations">Toggle abbreviations</string>
+    <string name="action_toggle_instant_abbreviations">Toggle instant expansion</string>
+
+    <!-- Abbreviations -->
+    <string name="pref_abbreviations_title">Abbreviations</string>
+    <string name="pref_abbreviations_summary">Manage text expansion (via space or instant).</string>
+    <string name="pref_abbreviations_instant_title">Instant expansion</string>
+    <string name="pref_abbreviations_instant_summary">Replaces shortcuts as soon as they are typed.</string>
+    <string name="abbreviations_instant_enabled">Instant expansion enabled</string>
+    <string name="abbreviations_instant_disabled">Instant expansion disabled</string>
+    <string name="pref_abbreviations_enabled_title">Expansion via Space</string>
+    <string name="pref_abbreviations_enabled_summary">Replaces shortcuts when you type a space.</string>
+    <string name="abbreviations_enabled">Abbreviations enabled</string>
+    <string name="abbreviations_disabled">Abbreviations disabled</string>
+    <string name="title_abbreviation_editor">Abbreviation Editor</string>
+    <string name="hint_shortcut">Shortcut (e.g., hru or 6-s)</string>
+    <string name="hint_expansion">Expanded text (e.g., How are you?)</string>
+    <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
+    <string name="pref_abbreviations_enabled_default">false</string>
+
+    <!-- Gesture Names -->
+    <string name="swipe_one_left">Dot 1: Swipe Left.</string>
+    <string name="swipe_one_right">Dot 1: Swipe Right.</string>
+    <string name="swipe_one_up">Dot 1: Swipe Up.</string>
+    <string name="swipe_one_down">Dot 1: Swipe Down.</string>
+    <string name="swipe_two_left">Dot 2: Swipe Left.</string>
+    <string name="swipe_two_right">Dot 2: Swipe Right.</string>
+    <string name="swipe_two_up">Dot 2: Swipe Up.</string>
+    <string name="swipe_two_down">Dot 2: Swipe Down.</string>
+    <string name="swipe_three_left">Dot 3: Swipe Left.</string>
+    <string name="swipe_three_right">Dot 3: Swipe Right.</string>
+    <string name="swipe_three_up">Dot 3: Swipe Up.</string>
+    <string name="swipe_three_down">Dot 3: Swipe Down.</string>
+    <string name="swipe_four_left">Dot 4: Swipe Left.</string>
+    <string name="swipe_four_right">Dot 4: Swipe Right.</string>
+    <string name="swipe_four_up">Dot 4: Swipe Up.</string>
+    <string name="swipe_four_down">Dot 4: Swipe Down.</string>
+    <string name="swipe_five_left">Dot 5: Swipe Left.</string>
+    <string name="swipe_five_right">Dot 5: Swipe Right.</string>
+    <string name="swipe_five_up">Dot 5: Swipe Up.</string>
+    <string name="swipe_five_down">Dot 5: Swipe Down.</string>
+    <string name="swipe_six_left">Dot 6: Swipe Left.</string>
+    <string name="swipe_six_right">Dot 6: Swipe Right.</string>
+    <string name="swipe_six_up">Dot 6: Swipe Up.</string>
+    <string name="swipe_six_down">Dot 6: Swipe Down.</string>
+    
+    <string name="swipe_left_two_down">Left: Two fingers Down.</string>
+    <string name="swipe_right_two_down">Right: Two fingers Down.</string>
+    
+    <string name="swipe_hold_one_left">Dot 1: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_one_right">Dot 1: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_one_up">Dot 1: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_one_down">Dot 1: Hold and Swipe Down with the other hand.</string>
+
+    <string name="swipe_hold_two_left">Dot 2: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_two_right">Dot 2: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_two_up">Dot 2: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_two_down">Dot 2: Hold and Swipe Down with the other hand.</string>
+
+    <string name="swipe_hold_three_left">Dot 3: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_three_right">Dot 3: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_three_up">Dot 3: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_three_down">Dot 3: Hold and Swipe Down with the other hand.</string>
+
+    <string name="swipe_hold_four_left">Dot 4: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_four_right">Dot 4: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_four_up">Dot 4: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_four_down">Dot 4: Hold and Swipe Down with the other hand.</string>
+
+    <string name="swipe_hold_five_left">Dot 5: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_five_right">Dot 5: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_five_up">Dot 5: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_five_down">Dot 5: Hold and Swipe Down with the other hand.</string>
+
+    <string name="swipe_hold_six_left">Dot 6: Hold and Swipe Left with the other hand.</string>
+    <string name="swipe_hold_six_right">Dot 6: Hold and Swipe Right with the other hand.</string>
+    <string name="swipe_hold_six_up">Dot 6: Hold and Swipe Up with the other hand.</string>
+    <string name="swipe_hold_six_down">Dot 6: Hold and Swipe Down with the other hand.</string>
+
+    <!-- Storage Manager (Universal) -->
+    <string name="label_active_abbreviations">[Active Abbreviations Dictionary]</string>
+    <string name="label_active_gestures">[Active Gestures Schema]</string>
+    <string name="msg_confirm_clear_active">Are you sure you want to clear all active data from the keyboard? This action cannot be undone.</string>
+    <string name="checkbox_delete_backup_file">Also delete the backup file in soft-braille folder</string>
+    <string name="btn_setup_sync_folder">Grant folder access for synchronization</string>
+    <string name="title_storage_manager">Storage Manager</string>
+    <string name="btn_create_new_table">Create New Table</string>
+    <string name="label_file_type_tables">Braille Tables</string>
+    <string name="label_file_type_abbreviations">Abbreviations Dictionary</string>
+    <string name="label_file_type_gestures">Gestures Schema</string>
+    <string name="msg_confirm_import_generic">Do you want to import this resource? Current data might be overwritten.</string>
+    <string name="msg_sync_folder">Synced Folder</string>
+    <string name="msg_download_folder">Download Folder</string>
+    <string name="pref_sync_folder_title">Folder Sync</string>
+    <string name="pref_sync_folder_summary">Choose a folder to sync tables and backups</string>
+
+    <!-- Backup & Restore -->
+    <string name="btn_export">Export</string>
+    <string name="btn_import">Import</string>
+    <string name="hint_search_items">Search files...</string>
+    <string name="btn_export_system">Export Original Table</string>
+    <string name="hint_search_tables">Search system tables...</string>
+    <string name="title_export_system">Export Original Liblouis Table</string>
+    <string name="label_found_locales">Found %d languages</string>
+    <string name="label_auto_selected">Automatically selected</string>
+    <string name="label_no_results">No results found</string>
+    <string name="hint_search_locale">Search language...</string>
+    <string name="msg_exported_to">File exported to: %s</string>
+    <string name="msg_import_success">Data imported successfully!</string>
+    <string name="msg_import_error">Import error: %s</string>
+    <string name="title_select_backup">Select Backup</string>
+    <string name="msg_no_backups">No backups found in soft-braille.</string>
+    <string name="msg_confirm_import">Overwrite current data with this backup?</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_delete">Delete</string>
+
+    <string name="pref_category_gestures_title">Gesture Customization</string>
+    <string name="pref_gestures_summary">Assign functions to swipes and hold gestures</string>
+    <string name="pref_gestures_title">Customize Gestures</string>
+    <string name="pref_reset_gestures_title">Reset Gestures to Default</string>
+    <string name="pref_reset_gestures_summary">Restore original gesture assignments</string>
+    <string name="pref_reset_gestures_confirm">Are you sure you want to reset all gestures to their default assignments?</string>
+    <string name="pref_export_gestures_title">Export Gestures</string>
+    <string name="pref_export_gestures_summary">Save your custom gesture map to a file</string>
+    <string name="pref_import_gestures_title">Import Gestures</string>
+    <string name="pref_import_gestures_summary">Load a gesture map from a file</string>
+    <string name="pref_gesture_default_format">Default: %1$s</string>
+    <string name="export_success">Gestures exported successfully to %1$s</string>
+    <string name="export_error">Error exporting gestures: %1$s</string>
+    <string name="import_success">Gestures imported successfully</string>
+    <string name="import_error">Error importing gestures: %1$s</string>
+    <string name="import_no_valid_data">No valid gesture data found in file</string>
+    
+    <string name="pref_group_single_finger">Single Finger Swipes</string>
+    <string name="pref_group_two_fingers">Two-Finger Swipes (Down only)</string>
+    <string name="pref_group_hold_swipe">Hold a dot with one hand and swipe with the other</string>
+
+
     <string name="high">High</string>
     <string name="hint_author">Author (e.g. Sergio)</string>
     <string name="hint_char">Char</string>
     <string name="hint_description">Table description</string>
     <string name="hint_dots_format">Dots (e.g. 123-45)</string>
     <string name="hint_enter_dots">Enter dots (e.g. 123)</string>
-    <string name="hint_enter_pos">Enter row (1 to %d)</string><string name="hint_priority_desc">Enable this for each character you want to override in the standard alphabet. High priority mappings are written before the system rules, while standard ones are added after.</string>
     <string name="hint_search_rules">Search character or dots...</string>
     <string name="hint_table_name">Enter table name (e.g. my_table)</string>
     <string name="info_url">https://docs.google.com/document/d/1OX6yFjkK61VfROdU9uQNxjEZ_QNWxiMnUY_1ECnIyRQ/pub</string>
@@ -116,6 +308,8 @@
     <string name="keyboard_help_active_table_label">Active Table: %s</string>
     <string name="keyboard_help_dots_hint">Dots or character</string>
     <string name="keyboard_help_dots_result">Dots: %1$s</string>
+
+    
     <string name="keyboard_help_enter_dots_toast">Please enter dots or characters to search</string>
     <string name="keyboard_help_error_no_table">Error: Active table not found.</string>
     <string name="keyboard_help_file_not_available">Table file not available</string>
@@ -125,6 +319,8 @@
     <string name="keyboard_help_pref_summary">Discover what Braille dots do in the current language</string>
     <string name="keyboard_help_pref_title">Keyboard Help (Active Table)</string>
     <string name="keyboard_help_result_line">Line %1$d</string>
+
+    
     <string name="keyboard_help_search_btn">Search</string>
     <string name="keyboard_help_title">Keyboard Help (Active Table)</string>
     <string name="keyboard_horizontal">Horizontal</string>
@@ -138,29 +334,28 @@
     <string name="keyboard_vertical">Vertical</string>
     <string name="label_a_grave">a grave</string>
     <string name="label_arabic">Arabic</string>
-    <string name="label_auto_link">(auto-link)</string><string name="label_base_script">Base Alphabet / Script:</string>
+    <string name="label_auto_link">(auto-link)</string>
+    <string name="label_base_script">Base Alphabet / Script:</string>
     <string name="label_base_script_short">Alphabet</string>
-    <string name="label_base_table">Inherit from system table (Optional):</string>
-    <string name="label_base_table_short">Inherit from</string>
-    <string name="label_class_prefix">[CLASS] class </string><string name="label_cyrillic">Cyrillic</string>
+    <string name="label_class_prefix">[CLASS] class </string>
+    <string name="label_cyrillic">Cyrillic</string>
     <string name="label_dot">Dot %d</string>
     <string name="label_dots_dialog">Select dots for this cell</string>
     <string name="label_e_acute">e acute</string>
     <string name="label_e_grave">e grave</string>
     <string name="label_error_prefix">Error: %s</string>
     <string name="label_external_synced">[External]</string>
-
-    
-    <string name="label_found_rules">Found %1$d rules out of %2$d</string><string name="label_greek">Greek</string>
+    <string name="label_found_rules">Found %1$d rules out of %2$d</string>
+    <string name="label_greek">Greek</string>
     <string name="label_hebrew">Hebrew</string>
-    <string name="label_high_priority">High Priority (Write BEFORE system set)</string>
     <string name="label_hindi">Hindi</string>
     <string name="label_i_grave">i grave</string>
     <string name="label_korean">Korean</string>
     <string name="label_latin">Latin</string>
     <string name="label_locale">Table Language (Locale):</string>
     <string name="label_locale_short">Language</string>
-    <string name="label_logic_prefix">[LOGIC] context </string><string name="label_long_press_delete">List of custom tables. Long press an item to delete it.</string>
+    <string name="label_logic_prefix">[LOGIC] context </string>
+    <string name="label_long_press_delete">List of custom tables. Long press an item to delete it.</string>
 
     <string name="label_mapped_items">Mapped Items</string>
     <string name="label_mapped_items_short">Mappings</string>
@@ -173,8 +368,13 @@
     <string name="label_opcode">Liblouis Opcode:</string>
     <string name="label_opcode_short">Rule</string>
     <string name="label_priority_short">Priority</string>
-    <string name="label_results_count">Results: %d</string><string name="label_select_all">Select All</string><string name="label_show_visual_picker">Show visual cell picker</string>
-    <string name="label_source">Source</string><string name="label_spazio">space</string><string name="label_structure_prefix">[STRUCTURE] include </string><string name="label_table_locale">Table Language (Locale):</string>
+    <string name="label_results_count">Results: %d</string>
+    <string name="label_select_all">Select All</string>
+    <string name="label_show_visual_picker">Show visual cell picker</string>
+    <string name="label_source">Source</string>
+    <string name="label_spazio">space</string>
+    <string name="label_structure_prefix">[STRUCTURE] include </string>
+    <string name="label_table_locale">Table Language (Locale):</string>
     <string name="label_tap_to_edit">Tap to edit, long press to delete</string>
     <string name="label_thai">Thai</string>
     <string name="label_u_grave">u grave</string>
@@ -185,10 +385,12 @@
     <string name="low">Low</string>
     <string name="mark_not_set">The mark has not been set</string>
     <string name="medium">Medium</string>
-    <string name="menu_delete">Delete</string>
-    <string name="menu_share">Share</string>
-    <string name="msg_already_bottom">Already at bottom</string><string name="msg_already_top">Already at top</string><string name="msg_char_empty">Character field is empty</string>
-    <string name="msg_confirm_clone">Replace current list with the content of the source table?</string><string name="msg_confirm_delete_mass">Delete %d selected rules?</string><string name="msg_confirm_template">Applying a template will clear current mappings. Continue?</string>
+    <string name="msg_already_bottom">Already at bottom</string>
+    <string name="msg_already_top">Already at top</string>
+    <string name="msg_char_empty">Character field is empty</string>
+    <string name="msg_confirm_clone">Replace current list with the content of the source table?</string>
+<string name="msg_confirm_delete_mass">Delete %d selected rules?</string>
+    <string name="msg_confirm_template">Applying a template will clear current mappings. Continue?</string>
     <string name="msg_delete_external">Also delete from external folder</string>
 
     
@@ -199,14 +401,22 @@
     
     <string name="msg_error_logs">Error while handling logs</string>
     <string name="msg_fixed_mapping">This is a fixed system mapping and cannot be removed.</string>
-    <string name="msg_import_rules_confirm">Import %d rules?</string><string name="msg_imported">Imported %s</string>
-    <string name="msg_invalid_pos">Invalid position</string><string name="msg_logs_cleared">Logs cleared successfully</string>
-    <string name="msg_no_deletable_rules">No deletable rules found.</string><string name="msg_rule_removed">Rule removed.</string><string name="msg_rules_filtered">rules filtered</string><string name="msg_select_source_first">Select a source table before cloning.</string><string name="msg_standard_char_override">Standard character of the selected set. Your choice will take precedence.</string>
-    <string name="msg_structure_cloned">Original structure cloned to the list.</string><string name="msg_sync_desc">Select the \'soft-braille\' folder to grant permanent access and automatically load files within it.</string><string name="msg_sync_error">Error requesting folder access.</string>
-    <string name="msg_sync_folder_desc">Select the soft-braille folder to automatically load files.</string>
+    <string name="msg_import_rules_confirm">Import %d rules?</string>
+    <string name="msg_imported">Imported %s</string>
+    <string name="msg_invalid_pos">Invalid position</string>
+    <string name="msg_logs_cleared">Logs cleared successfully</string>
+    <string name="msg_no_deletable_rules">No deletable rules found.</string>
+    <string name="msg_rule_removed">Rule removed.</string>
+    <string name="msg_rules_filtered">rules filtered</string>
+    <string name="msg_select_opcode_first">Please select a Rule/Opcode first</string>
+    <string name="msg_select_source_first">Select a source table before cloning.</string>    <string name="msg_standard_char_override">Standard character of the selected set. Your choice will take precedence.</string>
+    <string name="msg_structure_cloned">Original structure cloned to the list.</string>
+    <string name="msg_sync_desc">Select the \'soft-braille\' folder to grant permanent access and automatically load files within it.</string>
+    <string name="msg_sync_error">Error requesting folder access.</string>
     <string name="msg_sync_success">Folder access activated!</string>
     <string name="msg_table_exported">Table exported to Download/soft-braille</string>
-    <string name="msg_table_file_not_found">Table file not found.</string><string name="msg_table_saved">Table Saved Successfully!</string>
+    <string name="msg_table_file_not_found">Table file not found.</string>
+    <string name="msg_table_saved">Table Saved Successfully!</string>
     <string name="msg_template_applied">Template applied successfully!</string>
     <string name="newline">New line</string>
     <string name="no_braille_table">No tables</string>
@@ -216,8 +426,10 @@
     <string name="no_suggestions">No suggestions available</string>
     <string name="none_selected">--- None selected ---</string>
     <string name="nothing_to_delete">Nothing to delete</string>
-    <string name="num_sys_6dot_univocal">Computer Braille (6-pt, Antoine-style)</string><string name="num_sys_8dot">Computer Braille (6-dot univocal)</string>
-    <string name="num_sys_8dot_computer_lowered">Computer Braille (8-pt, lowered, 1=2)</string><string name="num_sys_8dot_standard">Standard 8-dot (dot 8 added, 1=18)</string><string name="num_sys_antoine">Antoine (Dot 6 + Literary, 1=16)</string>
+    <string name="num_sys_6dot_univocal">Computer Braille (6-pt, Antoine-style)</string>
+    <string name="num_sys_8dot_computer_lowered">Computer Braille (8-pt, lowered, 1=2)</string>
+    <string name="num_sys_8dot_standard">Standard 8-dot (dot 8 added, 1=18)</string>
+    <string name="num_sys_antoine">Antoine (Dot 6 + Literary, 1=16)</string>
     <string name="num_sys_classic">Classic (3456 + a-j, 1=1)</string>
     <string name="num_sys_dropped">Dropped Numbers (3456 + Low, 1=2)</string>
     <string name="num_sys_literary">Literary (G2 context)</string>
@@ -227,13 +439,16 @@
     <string name="opcode_begcapsword">Begin Capitalized Word (begcapsword)</string>
     <string name="opcode_begnum">Numeric prefix</string>
     <string name="opcode_capsletter">Capital Sign (6)</string>
-    <string name="opcode_class">Class</string><string name="opcode_closepunc">Post-word Punctuation (postpunc)</string>
-    <string name="opcode_context">Context</string><string name="opcode_digit">Digit (0-9)</string>
+    <string name="opcode_class">Class</string>
+    <string name="opcode_closepunc">Post-word Punctuation (postpunc)</string>
+    <string name="opcode_context">Context</string>
+    <string name="opcode_digit">Digit (0-9)</string>
     <string name="opcode_endcaps">End All Caps</string>
     <string name="opcode_endcapsword">End Capitalized Word (endcapsword)</string>
     <string name="opcode_endnum">End numeric mode</string>
 
-    <string name="opcode_include">Include</string><string name="opcode_letsign">Letter Sign (5)</string>
+    <string name="opcode_include">Include</string>
+    <string name="opcode_letsign">Letter Sign (5)</string>
     <string name="opcode_letter">Generic Letter</string>
     <string name="opcode_litdigit">Literary Digit</string>
     <string name="opcode_lowercase">Lowercase Letter</string>
@@ -393,6 +608,8 @@
     <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
     <string name="pref_two_hand_calibration_summary">Allow calibrating the keyboard with two separate touches.</string>
     <string name="pref_two_hand_calibration_title">Two-touch calibration</string>
+
+    
     <string name="pref_use_accessibility_volume_default">false</string>
     <string name="pref_use_accessibility_volume_key">USE_ACCESSIBILITY_VOLUME</string>
     <string name="pref_use_accessibility_volume_summary">Use accessibility volume for both TTS and WAV feedback.</string>
@@ -503,10 +720,21 @@
     <string name="table_section_base">Base Rules</string>
     <string name="table_section_high">HIGH PRIORITY</string>
     <string name="table_section_standard">STANDARD PRIORITY</string>
-    <string name="table_section_system">SYSTEM INCLUDES</string>
     <string name="table_variant_unofficial">Unofficial</string>
-    <string name="title_activity_table_creator">Table Creator</string><string name="title_confirm_delete">Confirm Delete</string><string name="title_duplicate_combination">Duplicate Combination</string>
-    <string name="title_mass_actions">Mass Actions</string><string name="title_order_actions">Reorder Action</string><string name="title_select_prefix">Select prefix (e.g. dot 4, 5 or 6)</string>
+    <string name="btn_edit_header">Edit Table Header / Metadata</string>
+    <string name="btn_move_to_pos">Move to Position</string>
+    <string name="hint_enter_pos">Enter position (1 to %d)</string>
+    <string name="btn_move_up">Move Up</string>
+    <string name="btn_move_down">Move Down</string>
+    <string name="btn_move_top">Move to Top</string>
+    <string name="btn_insert_alphabet_here">Insert Alphabet (%s) here</string>
+    <string name="btn_insert_numeric_here">Insert Numbers (%s) here</string>
+    <string name="title_activity_table_creator">Table Creator</string>
+    <string name="title_confirm_delete">Confirm Delete</string>
+    <string name="title_duplicate_combination">Duplicate Combination</string>
+    <string name="title_mass_actions">Mass Actions</string>
+    <string name="title_order_actions">Reorder Action</string>
+    <string name="title_select_prefix">Select prefix (e.g. dot 4, 5 or 6)</string>
     <string name="title_select_table_file">Select Braille Table file</string>
     <string name="title_select_template">Select Template</string>
     <string name="title_share_table">Share Table</string>
@@ -531,6 +759,114 @@
     <string name="word_count">%1$d lines, %2$d words, %3$d characters</string>
     <string name="word_misspelled">Misspelled</string>
     
+    <!-- BrailleAction Arrays -->
+    <string-array name="braille_action_entries">
+        <item>@string/action_none</item>
+        <item>@string/action_move_left_char</item>
+        <item>@string/action_move_right_char</item>
+        <item>@string/action_move_left_word</item>
+        <item>@string/action_move_right_word</item>
+        <item>@string/action_move_left_line</item>
+        <item>@string/action_move_right_line</item>
+        <item>@string/action_move_left_all</item>
+        <item>@string/action_move_right_all</item>
+        <item>@string/action_backspace_char</item>
+        <item>@string/action_backspace_word</item>
+        <item>@string/action_backspace_line</item>
+        <item>@string/action_backspace_all</item>
+        <item>@string/action_read_char</item>
+        <item>@string/action_read_word</item>
+        <item>@string/action_read_line</item>
+        <item>@string/action_read_all</item>
+        <item>@string/action_space</item>
+        <item>@string/action_newline</item>
+        <item>@string/action_voice_input</item>
+        <item>@string/action_toggle_privacy</item>
+        <item>@string/action_toggle_auto_caps</item>
+        <item>@string/action_toggle_echo_passwords</item>
+        <item>@string/action_toggle_mark</item>
+        <item>@string/action_cycle_keyboard_feedback</item>
+        <item>@string/action_cycle_echo_feedback</item>
+        <item>@string/action_switch_braille_type</item>
+        <item>@string/action_switch_braille_table</item>
+        <item>@string/action_open_settings</item>
+        <item>@string/action_open_input_switcher</item>
+        <item>@string/action_close_keyboard</item>
+        <item>@string/action_shrink_keyboard</item>
+        <item>@string/action_word_count</item>
+        <item>@string/action_next_field_action</item>
+        <item>@string/action_select_text_action</item>
+        <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_edit_select_all</item>
+        <item>@string/action_edit_copy</item>
+        <item>@string/action_edit_cut</item>
+        <item>@string/action_edit_paste</item>
+        <item>@string/action_edit_speak</item>
+        <item>@string/action_edit_delete</item>
+        <item>@string/action_spell_check_left</item>
+        <item>@string/action_spell_check_right</item>
+        <item>@string/action_spell_check_next_suggestion</item>
+        <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_set_dot_7</item>
+        <item>@string/action_set_dot_8</item>
+    </string-array>
+
+    <string-array name="braille_action_values">
+        <item>NONE</item>
+        <item>MOVE_LEFT_CHAR</item>
+        <item>MOVE_RIGHT_CHAR</item>
+        <item>MOVE_LEFT_WORD</item>
+        <item>MOVE_RIGHT_WORD</item>
+        <item>MOVE_LEFT_LINE</item>
+        <item>MOVE_RIGHT_LINE</item>
+        <item>MOVE_LEFT_ALL</item>
+        <item>MOVE_RIGHT_ALL</item>
+        <item>BACKSPACE_CHAR</item>
+        <item>BACKSPACE_WORD</item>
+        <item>BACKSPACE_LINE</item>
+        <item>BACKSPACE_ALL</item>
+        <item>READ_CHAR</item>
+        <item>READ_WORD</item>
+        <item>READ_LINE</item>
+        <item>READ_ALL</item>
+        <item>SPACE</item>
+        <item>NEWLINE</item>
+        <item>VOICE_INPUT</item>
+        <item>TOGGLE_PRIVACY</item>
+        <item>TOGGLE_AUTO_CAPS</item>
+        <item>TOGGLE_ECHO_PASSWORDS</item>
+        <item>TOGGLE_MARK</item>
+        <item>CYCLE_KEYBOARD_FEEDBACK</item>
+        <item>CYCLE_ECHO_FEEDBACK</item>
+        <item>SWITCH_BRAILLE_TYPE</item>
+        <item>SWITCH_BRAILLE_TABLE</item>
+        <item>OPEN_SETTINGS</item>
+        <item>OPEN_INPUT_SWITCHER</item>
+        <item>CLOSE_KEYBOARD</item>
+        <item>SHRINK_KEYBOARD</item>
+        <item>WORD_COUNT</item>
+        <item>NEXT_FIELD_ACTION</item>
+        <item>SELECT_TEXT_ACTION</item>
+        <item>EMOJI_MODE_TOGGLE</item>
+        <item>EDIT_SELECT_ALL</item>
+        <item>EDIT_COPY</item>
+        <item>EDIT_CUT</item>
+        <item>EDIT_PASTE</item>
+        <item>EDIT_SPEAK</item>
+        <item>EDIT_DELETE</item>
+        <item>SPELL_CHECK_LEFT</item>
+        <item>SPELL_CHECK_RIGHT</item>
+        <item>SPELL_CHECK_NEXT_SUGGESTION</item>
+        <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>SET_DOT_7</item>
+        <item>SET_DOT_8</item>
+    </string-array>
 
     
-    </resources>
+
+    
+        </resources>

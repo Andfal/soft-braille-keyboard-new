@@ -42,6 +42,10 @@ public class TranslatorService extends Service {
     private static final String LOG_TAG =
             TranslatorService.class.getSimpleName();
 
+    public static final String ACTION_TABLE_UPDATED =
+            "com.dalton.braillekeyboard.ACTION_TABLE_UPDATED";
+    public static final String EXTRA_TABLE_FILE_NAME = "table_file_name";
+
     private static final int FILES_ERROR = -1;
     private static final int FILES_NOT_EXTRACTED = 0;
     private static final int FILES_EXTRACTED = 1;
@@ -50,19 +54,46 @@ public class TranslatorService extends Service {
     private final ServiceImpl mServiceImpl = new ServiceImpl();
     private final Set<ITranslatorServiceCallback> mPendingCallbacks =
             new HashSet<ITranslatorServiceCallback>();
+    private final Set<String> mForcedSyncTables = new HashSet<String>();
     private int mDataFileState = FILES_NOT_EXTRACTED;
     private TableList mTableList;
+
+    private final android.content.BroadcastReceiver mUpdateReceiver =
+            new android.content.BroadcastReceiver() {
+        @Override
+        public void onReceive(android.content.Context context, Intent intent) {
+            if (ACTION_TABLE_UPDATED.equals(intent.getAction())) {
+                String fileName = intent.getStringExtra(EXTRA_TABLE_FILE_NAME);
+                if (fileName != null) {
+                    synchronized (mForcedSyncTables) {
+                        mForcedSyncTables.add(fileName);
+                    }
+                    Log.i(LOG_TAG, "Marked table for forced sync: " + fileName);
+                }
+            }
+        }
+    };
 
     @Override
     public void onCreate() {
         super.onCreate();
         mTableList = new TableList(this);
         extractDataFiles();
+
+        android.content.IntentFilter filter = new android.content.IntentFilter(ACTION_TABLE_UPDATED);
+        // Android 14+ (API 34) requires RECEIVER_EXPORTED or RECEIVER_NOT_EXPORTED for dynamic receivers.
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mUpdateReceiver, filter, android.content.Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            // Secure legacy receiver with permission to prevent external spoofing
+            registerReceiver(mUpdateReceiver, filter, android.Manifest.permission.BIND_ACCESSIBILITY_SERVICE, null);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(mUpdateReceiver);
         // TODO: Deallocate native data.
     }
 
@@ -73,14 +104,21 @@ public class TranslatorService extends Service {
 
     private void extractDataFiles() {
         File baseDir = getDir("translator", MODE_PRIVATE);
-        // Do not clear directory every time if we want to preserve files, 
-        // but here it's for system tables extracted from APK.
-        clearDirectory(baseDir);
         
         ZipResourceExtractor extractor = new ZipResourceExtractor(
             this, R.raw.translationtables, baseDir) {
             @Override
+            protected void onPreExecute() {
+                // Perform cleanup in pre-execute if it's running in background (depends on implementation)
+                // Or better, inside onPostExecute but before extraction logic.
+                // In this specific implementation of eyesfree, we'll do it inside the extractor's task if possible.
+                super.onPreExecute();
+            }
+
+            @Override
             protected void onPostExecute(Integer result) {
+                // Moving clearDirectory inside a thread or background task would be better, 
+                // but since extractor is already an AsyncTask, we'll ensure it's handled.
                 synchronized (TranslatorService.this) {
                     if (result == RESULT_OK) {
                         File tablesDir = new File(baseDir, "liblouis/tables");
@@ -95,7 +133,11 @@ public class TranslatorService extends Service {
                 callPendingOnInits();
             }
         };
-        extractor.execute();
+        // Ensure directory is cleared before extraction
+        new Thread(() -> {
+            clearDirectory(baseDir);
+            extractor.execute();
+        }).start();
     }
 
     private void clearDirectory(File dir) {
@@ -169,14 +211,24 @@ public class TranslatorService extends Service {
             }
             File targetFile = new File(tablesDir, customFile.getName());
             
-            // Optimization: Only copy if the target doesn't exist or custom file is newer
-            if (!targetFile.exists() || customFile.lastModified() > targetFile.lastModified()) {
-                try {
-                    copyFile(customFile, targetFile);
-                    Log.i(LOG_TAG, "Updated custom table in translator dir: " + targetFile.getAbsolutePath());
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, "Failed to copy custom table, using original path", e);
-                    return tableName;
+            boolean forceSync = false;
+            synchronized (mForcedSyncTables) {
+                if (mForcedSyncTables.contains(customFile.getName())) {
+                    forceSync = true;
+                    mForcedSyncTables.remove(customFile.getName());
+                }
+            }
+
+            // Optimization: Only copy if the target doesn't exist, forced sync requested, or custom file is newer
+            synchronized (this) {
+                if (!targetFile.exists() || forceSync || customFile.lastModified() > targetFile.lastModified()) {
+                    try {
+                        copyFile(customFile, targetFile);
+                        Log.i(LOG_TAG, (forceSync ? "Forced sync: " : "Updated ") + "custom table in translator dir: " + targetFile.getAbsolutePath());
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG, "Failed to copy custom table, using original path", e);
+                        return tableName;
+                    }
                 }
             }
             return targetFile.getAbsolutePath();

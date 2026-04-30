@@ -286,6 +286,35 @@ public interface KeyboardListener {
      * @return The translated text, or null if translation failed.
      */
     String translateOnly(byte dots);
+
+    /**
+     * Translates the Braille dots to text using a literal (Grade 1) table if available.
+     * Useful for search modes like Emoji search.
+     * @param dots The Braille dots.
+     * @return The translated text, or null if translation failed.
+     */
+    String translateLiteral(byte dots);
+
+    /**
+     * Controlla se il buffer corrente corrisponde a un'abbreviazione e la espande.
+     * @param strict Se true, esegue un controllo rigoroso (usato per espansione istantanea).
+     */
+    void checkAndExpandAbbreviation(boolean strict);
+
+    /**
+     * Traduce il testo in punti Braille usando la tabella corrente.
+     */
+    byte[] getDotsForText(String text);
+
+    /**
+     * Traduce il testo in punti Braille usando una tabella letterale (Grado 1).
+     */
+    byte[] getDotsForTextLiteral(String text);
+
+    /**
+     * Traduce i punti Braille in testo usando la tabella corrente (senza commit).
+     */
+    String backTranslate(byte[] cells);
 }
 
 

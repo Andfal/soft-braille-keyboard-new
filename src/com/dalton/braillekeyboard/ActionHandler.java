@@ -16,19 +16,6 @@
 
 package com.dalton.braillekeyboard;
 
-import com.dalton.braillekeyboard.R;
-import com.dalton.braillekeyboard.Pad.Swipe;
-import com.dalton.braillekeyboard.Pad.Coords;
-import com.dalton.braillekeyboard.BrailleParser.BrailleType;
-import com.dalton.braillekeyboard.Options.KeyboardFeedback;
-import com.dalton.braillekeyboard.Options.KeyboardEcho;
-import com.dalton.braillekeyboard.Options.KeyboardType;
-import com.dalton.braillekeyboard.Options.OptionList;
-import com.dalton.braillekeyboard.EditingUtilities.Word;
-import com.dalton.braillekeyboard.EmojiDictionary.EmojiEntry;
-import com.dalton.braillekeyboard.SpellChecker.Suggestion;
-import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
-
 import java.util.Locale;
 import java.util.List;
 import java.util.ArrayList;
@@ -43,165 +30,55 @@ import androidx.core.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
 
-
+import com.dalton.braillekeyboard.EditingUtilities.Word;
+import com.dalton.braillekeyboard.EmojiDictionary.EmojiEntry;
+import com.dalton.braillekeyboard.Options.KeyboardEcho;
+import com.dalton.braillekeyboard.Options.KeyboardFeedback;
+import com.dalton.braillekeyboard.Pad.Swipe;
+import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
+import com.dalton.braillekeyboard.SpellChecker.Suggestion;
 
 /**
  * ActionHandler handles actions from a View or other interface and performs the
  * appropriate logic before returning the results back to the calling View in
- * the form of a callback. This performs higher level logic than the
- * InputService itself and communicates directly with the InputService to
- * collaborate and solve the requests from the View.
- * 
- * A View should instantiate this class once upon initialisation and call it's
- * handleSwipe or handleCharacter methods to perform actions. Before such
- * activity the view shall set the IME listener by calling
- * setKeyboardListener(KeyboardListener listener) and also set the callback by
- * calling setCallback(OnActionListener callback). You should always call the
- * shutdown() method when you are done.
- * 
- * The callback is how the results are sent back to the View. The View should
- * implement the respective callbacks and implement them appropriate to their
- * View and user interface. See ActionHandler.OnActionListener for details.
+ * the form of a callback. (Modernized for AndroidX and Dynamic Gestures).
  */
 public class ActionHandler {
-    // The maximum time between two identical swipe patterns which constitutes a
-    // double swipe.
     private static final long DOUBLE_TOUCH_THRESHOLD = 1300;
 
-    /**
-     * Listener for handling the results of requests to the input methods. You
-     * should implement these callbacks in your View and display the results to
-     * the user.
-     */
     public interface OnActionListener {
-        /**
-         * Deliver a string of text to the view as output of a certain action
-         * that was performed. This might be some sort of message, a key name to
-         * echo or some other text. Your UI should communicate this to the user
-         * somehow in the form of audible or visual representation whatever is
-         * appropriate for the use case.
-         * 
-         * @param format
-         *            Format string to be used to display the message.
-         * @param text
-         *            Any text of the message.
-         * @param isPasswordField
-         *            True if it should be displayed with the same rules of
-         *            showing passwords.
-         */
         void onText(String format, String text, boolean isPasswordField);
-
-        void onText(String format, String text, boolean isPasswordField,
-                int mode);
-
-        /**
-         * Called when a notification should be delivered to the user.
-         * 
-         * @param vibrate
-         *            true if the device should be vibrated for this
-         *            notification.
-         * @param playSound
-         *            true if a sound should be played for this notification.
-         */
+        void onText(String format, String text, boolean isPasswordField, int mode);
         void onNotify(boolean vibrate, boolean playSound);
-
-        /**
-         * Called when dots 7 and 8 should be set in the View.
-         * 
-         * @param dot7
-         *            Whether dot7 is pressed.
-         * @param dot8
-         *            Whether dot8 is pressed.
-         */
         void onSetDots(boolean dot7, boolean dot8);
-
-        /**
-         * Called when the View should update it's Locale. This is generally
-         * called when the Braille table is changed because there is the
-         * possibility for language change.
-         */
         void onSetLocale(Locale locale);
-
-        /**
-         * Called when the View should shrink itself.
-         */
         void onShrink();
-
-        /**
-         * Called when the View should update the state of it's privacy mode.
-         */
         void onPrivacy();
-
         void onShutup();
     }
 
-    /**
-     * Representation of varying textual granularities from the smallest level
-     * character up until the entire text.
-     */
     private enum Granularity {
         CHARACTER, WORD, LINE, ALL;
     }
 
-    /**
-     * Representation of the currently available edit actions that can be
-     * performed on a selection of text.
-     */
     private enum EditAction {
         SELECT_ALL(R.string.select_all), COPY(android.R.string.copy), CUT(
                 android.R.string.cut), PASTE(android.R.string.paste), SPEAK(
                 R.string.speak_selection), DELETE(R.string.delete_selection);
 
-        // The Android resource for the text UI string for this action.
         public final int resource;
+        EditAction(int resource) { this.resource = resource; }
 
-        EditAction(int resource) {
-            this.resource = resource;
-        }
-
-        // Find the position of this action in the enum values() array.
         private int getIndexOfThis() {
             EditAction[] values = EditAction.values();
-            int i;
-            for (i = 0; i < values.length; i++) {
-                if (this == values[i]) {
-                    break;
-                }
-            }
-            return i;
+            for (int i = 0; i < values.length; i++) if (this == values[i]) return i;
+            return 0;
         }
 
-        /**
-         * Move in order to the next EditAction in the enum list. If we are at
-         * the end of the list it will wrap.
-         * 
-         * @return The new EditAction instance.
-         */
         public EditAction next(ClipboardManager clipboard) {
             int i = getIndexOfThis();
-
-            if (++i == values().length) {
-                i = 0; // point at first item in list.
-            }
-
-            if (values()[i] == PASTE) {
-                boolean canPaste;
-                // Check that there is text on the clipboard so it makes sense
-                // showing paste.
-                if (!(clipboard.hasPrimaryClip())) {
-                    canPaste = false;
-                } else {
-                    // This enables the paste menu item, since the clipboard
-                    // contains plain text.
-                    canPaste = true;
-                }
-                if (!canPaste) {
-                    if (++i == values().length) {
-                        i = 0; // Point at start if we exceed the end
-                    }
-                }
-            }
-
+            if (++i == values().length) i = 0;
+            if (values()[i] == PASTE && !clipboard.hasPrimaryClip()) if (++i == values().length) i = 0;
             return values()[i];
         }
     }
@@ -213,8 +90,8 @@ public class ActionHandler {
     private final Context context;
 
     private EditAction editAction = EditAction.COPY;
-    private long lastTouchTime = 0; // Time screen was last touched.
-    private Swipe lastSwipe = Swipe.NONE; // Type of last gesture.
+    private long lastTouchTime = 0;
+    private Swipe lastSwipe = Swipe.NONE;
     private KeyboardListener listener;
     private OnActionListener callback;
     private int directionThroughSuggestionList;
@@ -226,966 +103,337 @@ public class ActionHandler {
     private List<EmojiEntry> emojiResults = new ArrayList<EmojiEntry>();
     private int emojiIndex = 0;
 
-    /**
-     * Create a new ActionHandler for the given context.
-     * 
-     * @param context
-     *            The application context.
-     */
     public ActionHandler(Context context) {
         this.context = context;
-        inputManager = (InputMethodManager) context
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        clipboard = (ClipboardManager) context
-                .getSystemService(Context.CLIPBOARD_SERVICE);
+        inputManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         spellChecker = new SpellChecker(context);
     }
 
-    /**
-     * Set the callback to deliver results to the View interracting with this
-     * instance.
-     * 
-     * @param callback
-     *            The View's implementation of ActionHandler.OnActionListener
-     *            listening for updates.
-     */
-    public void setCallback(OnActionListener callback) {
-        this.callback = callback;
-    }
+    public void setCallback(OnActionListener callback) { this.callback = callback; }
+    public void setKeyboardListener(KeyboardListener listener) { this.listener = listener; }
+    public void shutdown() { voiceInput.destroy(); spellChecker.destroy(); }
 
-    /**
-     * Set the listener so that the ActionHandler can communicate with the
-     * underlying IME.
-     * 
-     * @param listener
-     *            The KeyboardListener for the current input session.
-     */
-    public void setKeyboardListener(KeyboardListener listener) {
-        this.listener = listener;
-    }
-
-    /**
-     * Releases system resources. This should be called just before the
-     * interracting View gets destroyed.
-     */
-    public void shutdown() {
-        voiceInput.destroy();
-        spellChecker.destroy();
-    }
-
-    /**
-     * Handle swipe actions delivered from the interracting View.
-     * 
-     * Each View should deliver a swipe action as defined by the generic
-     * Pad.Swipe type. This method will perform the appropriate action for the
-     * received Swipe gesture. If need be the appropriate callbacks will be
-     * invoked.
-     * 
-     * @param context
-     *            The application context.
-     * @param value
-     *            The Swipe value from the View.
-     * @return true if the Swipe was handled otherwise false.
-     */
     public boolean handleSwipe(Context context, Swipe value) {
-        // Disable all swipes while voice input is in progress.
-        if (voiceInput.isListening()) {
-            return true;
-        }
+        if (voiceInput.isListening()) return true;
 
-        value = normaliseSwipe(value);
+        BrailleAction action = GestureRepository.getActionForSwipe(context, value);
+        
         String message = null;
         boolean notify = true;
         boolean setDots = false;
         boolean considerPassword = false;
-        // states for dots 7 and 8
         boolean dots[] = { false, false };
         boolean fastDoubleSwipe = fastDoubleSwipe(value, DOUBLE_TOUCH_THRESHOLD);
 
-        switch (value) {
-        case ONE_LEFT:
-            moveLeft(context, Granularity.CHARACTER);
-            break;
-        case ONE_RIGHT:
-            moveRight(context, Granularity.CHARACTER);
-            break;
-        case ONE_DOWN:
-            KeyboardFeedback feedback = KeyboardFeedback.valueOf(Integer
-                    .parseInt(Options.getStringPreference(context,
-                            R.string.pref_keyboard_feedback_key,
-                            KeyboardFeedback.SOUND.getValue())));
-            feedback = KeyboardFeedback.next(feedback);
-            Options.writeStringPreference(context,
-                    R.string.pref_keyboard_feedback_key, feedback.getValue());
-            message = context.getString(feedback.resource);
-            break;
-        case ONE_UP:
-            message = getInput(Granularity.CHARACTER);
-            considerPassword = true;
-            break;
-        case TWO_LEFT:
-            moveLeft(context, Granularity.WORD);
-            break;
-        case TWO_RIGHT:
-            moveRight(context, Granularity.WORD);
-            break;
-        case TWO_UP:
-            message = getInput(Granularity.WORD);
-            considerPassword = true;
-            break;
-        case TWO_DOWN:
-            KeyboardEcho echo = KeyboardEcho.valueOf(Integer.parseInt(Options
-                    .getStringPreference(context,
-                            R.string.pref_echo_feedback_key,
-                            KeyboardEcho.CHARACTER.getValue())));
-            echo = KeyboardEcho.next(echo);
-            Options.writeStringPreference(context,
-                    R.string.pref_echo_feedback_key, echo.getValue());
-            message = context.getString(echo.resource);
-            break;
-        case TWO_FINGERS_DOWN:
-            message = context.getString(R.string.closing_keyboard);
-            listener.closeKeyboard();
-            break;
-        case DOTS_FOUR_SIX_RIGHT:
-            break;
-        case THREE_LEFT:
-            moveLeft(context, Granularity.LINE);
-            break;
-        case THREE_RIGHT:
-            moveRight(context, Granularity.LINE);
-            break;
-        case THREE_UP:
-            message = getInput(Granularity.LINE);
-            considerPassword = true;
-            break;
-        case THREE_DOWN:
-            if (listener.getDots() == 8) {
-                setDots = true;
-                dots[0] = true;
-            } else {
-                message = context.getString(R.string.unknown_character);
-            }
-            break;
-        case FOUR_LEFT:
-            if (emojiMode) {
-                if (emojiSearchQuery.length() > 0) {
-                    emojiSearchQuery.setLength(emojiSearchQuery.length() - 1);
-                    updateEmojiResults();
-                    callback.onText("%s", getEmojiSummary(), false);
-                } else {
-                    callback.onText("%s", context.getString(R.string.emoji_search_query_empty), false);
-                }
-                break;
-            }
-            backspace(context, Granularity.CHARACTER, fastDoubleSwipe);
-            break;
-        case FOUR_RIGHT:
-            if (fastDoubleSwipe) {
-                if (handleDoubleSpace(context)) {
+        if (emojiMode) {
+            boolean emojiHandled = true;
+            switch (value) {
+                case FOUR_LEFT:
+                    if (emojiSearchQuery.length() > 0) {
+                        emojiSearchQuery.setLength(emojiSearchQuery.length() - 1);
+                        updateEmojiResults();
+                        callback.onText("%s", getEmojiSummary(), false);
+                    } else callback.onText("%s", context.getString(R.string.emoji_search_query_empty), false);
                     break;
-                }
+                case SIX_LEFT:
+                    if (!emojiResults.isEmpty()) { emojiIndex = (emojiIndex - 1 + emojiResults.size()) % emojiResults.size(); message = getEmojiSummary(); }
+                    else message = "No emoji results";
+                    break;
+                case SIX_RIGHT:
+                    if (!emojiResults.isEmpty()) { emojiIndex = (emojiIndex + 1) % emojiResults.size(); message = getEmojiSummary(); }
+                    else message = "No emoji results";
+                    break;
+                case SIX_UP:
+                    if (!emojiResults.isEmpty()) {
+                        EmojiEntry entry = emojiResults.get(emojiIndex);
+                        listener.commitText(entry.emoji, 1);
+                        String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
+                        message = context.getString(R.string.emoji_inserted) + displayName;
+                        emojiMode = false;
+                    } else message = context.getString(R.string.emoji_no_to_insert);
+                    break;
+                default: emojiHandled = false;
             }
-            typeCharacter(context, (int) ' ', " ");
-            break;
-        case FOUR_DOWN: // newline / enter
-            typeCharacter(context, KeyEvent.KEYCODE_ENTER,
-                    context.getString(R.string.newline));
-            break;
-        case FOUR_UP:
-            Options.switchBooleanPreference(context, R.string.pref_privacy_key,
-                    Boolean.parseBoolean(context
-                            .getString(R.string.pref_privacy_default)));
-            callback.onPrivacy();
-            message = Options.getBooleanPreference(context,
-                    R.string.pref_privacy_key, Boolean.parseBoolean(context
-                            .getString(R.string.pref_privacy_default))) ? context
-                    .getString(R.string.privacy_enabled) : context
-                    .getString(R.string.privacy_disabled);
-            break;
-        case FIVE_LEFT:
-            backspace(context, Granularity.WORD, fastDoubleSwipe);
-            break;
-        case FIVE_DOWN:
-            if (fastDoubleSwipe) {
-                message = context.getString(R.string.show_input_switcher);
-                // Forziamo la pulizia della regione prima di aprire il selettore tastiere
-                if (BrailleAccessibilityService.isServiceEnabled()) {
-                    BrailleAccessibilityService.getInstance().clearPassthroughRegion();
-                }
-                inputManager.showInputMethodPicker();
-            } else {
-                message = context.getString(R.string.swipe_confirm_input);
-            }
-            break;
-        case FIVE_UP:
-            if (fastDoubleSwipe) {
-                callback.onSetLocale(Locale.getDefault());
-                message = context.getString(R.string.show_settings);
-                Intent intent = new Intent(context, PreferenceIME.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-            } else {
-                message = context.getString(R.string.swipe_confirm_settings);
-            }
-            break;
-        case SIX_LEFT:
-            if (emojiMode) {
-                if (!emojiResults.isEmpty()) {
-                    emojiIndex = (emojiIndex - 1 + emojiResults.size()) % emojiResults.size();
-                    message = getEmojiSummary();
-                } else {
-                    message = "No emoji results";
-                }
-                break;
-            }
-            backspace(context, Granularity.LINE, fastDoubleSwipe);
-            break;
-        case SIX_RIGHT:
-            if (emojiMode) {
-                if (!emojiResults.isEmpty()) {
-                    emojiIndex = (emojiIndex + 1) % emojiResults.size();
-                    message = getEmojiSummary();
-                } else {
-                    message = "No emoji results";
-                }
-                break;
-            }
-            nextAction(context);
-            break;
-        case SIX_UP:
-            if (emojiMode) {
-                if (!emojiResults.isEmpty()) {
-                    EmojiEntry entry = emojiResults.get(emojiIndex);
-                    listener.commitText(entry.emoji, 1);
-                    String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
-                    message = context.getString(R.string.emoji_inserted) + displayName;
-                    emojiMode = false;
-                } else {
-                    message = context.getString(R.string.emoji_no_to_insert);
-                }
-                break;
-            }
-            selectAction(context);
-            break;
-        case SIX_DOWN:
-            if (listener.getDots() == 8) {
-                setDots = true;
-                dots[1] = true;
-            } else {
-                message = context.getString(R.string.unknown_character);
-            }
-            break;
-        case EMOJI_MODE:
-            emojiMode = !emojiMode;
-            if (emojiMode) {
-                emojiSearchQuery.setLength(0);
-                emojiResults.clear();
-                emojiIndex = 0;
-                Locale locale = listener.getLocale();
-                String langName = locale != null ? locale.getDisplayLanguage() : "English";
-                message = String.format(context.getString(R.string.emoji_search_mode_on), langName);
-            } else {
-                message = context.getString(R.string.emoji_search_mode_off);
-            }
-            break;
-        case AUTOCAPS_TOGGLE:
-        case HOLD_ONE_DOWN:
+            if (emojiHandled) { callback.onNotify(true, true); if (message != null) callback.onText("%s", message, false); lastSwipe = value; return true; }
+        }
+
+        switch (action) {
+        case MOVE_LEFT_CHAR: moveLeft(context, Granularity.CHARACTER); break;
+        case MOVE_RIGHT_CHAR: moveRight(context, Granularity.CHARACTER); break;
+        case MOVE_LEFT_WORD: moveLeft(context, Granularity.WORD); break;
+        case MOVE_RIGHT_WORD: moveRight(context, Granularity.WORD); break;
+        case MOVE_LEFT_LINE: moveLeft(context, Granularity.LINE); break;
+        case MOVE_RIGHT_LINE: moveRight(context, Granularity.LINE); break;
+        case MOVE_LEFT_ALL: moveLeft(context, Granularity.ALL); break;
+        case MOVE_RIGHT_ALL: moveRight(context, Granularity.ALL); break;
+        case BACKSPACE_CHAR: backspace(context, Granularity.CHARACTER, fastDoubleSwipe); break;
+        case BACKSPACE_WORD: backspace(context, Granularity.WORD, fastDoubleSwipe); break;
+        case BACKSPACE_LINE: backspace(context, Granularity.LINE, fastDoubleSwipe); break;
+        case BACKSPACE_ALL: backspace(context, Granularity.ALL, fastDoubleSwipe); break;
+        case READ_CHAR: message = getInput(Granularity.CHARACTER); considerPassword = true; break;
+        case READ_WORD: message = getInput(Granularity.WORD); considerPassword = true; break;
+        case READ_LINE: message = getInput(Granularity.LINE); considerPassword = true; break;
+        case READ_ALL: message = getInput(Granularity.ALL); considerPassword = true; break;
+        case SPACE: if (fastDoubleSwipe && handleDoubleSpace(context)) break; typeCharacter(context, (int) ' ', " "); break;
+        case NEWLINE: typeCharacter(context, KeyEvent.KEYCODE_ENTER, context.getString(R.string.newline)); break;
+        case VOICE_INPUT: doVoiceInput(context, fastDoubleSwipe); break;
+        case TOGGLE_PRIVACY:
+            boolean priv = Options.switchBooleanPreference(context, R.string.pref_privacy_key, Boolean.parseBoolean(context.getString(R.string.pref_privacy_default)));
+            callback.onPrivacy(); message = priv ? context.getString(R.string.privacy_enabled) : context.getString(R.string.privacy_disabled); break;
+        case TOGGLE_AUTO_CAPS:
+            boolean caps = Options.switchBooleanPreference(context, R.string.pref_auto_caps_key, Boolean.parseBoolean(context.getString(R.string.pref_auto_caps_default)));
+            message = caps ? context.getString(R.string.auto_caps_enabled) : context.getString(R.string.auto_caps_disabled); break;
+        case TOGGLE_ECHO_PASSWORDS:
+            boolean echoPassword = Options.switchBooleanPreference(context, R.string.pref_echo_passwords_key, false);
+            message = echoPassword ? context.getString(R.string.speak_passwords) : context.getString(R.string.no_password_echo); break;
+        case TOGGLE_MARK: message = context.getString(listener.toggleMark() ? R.string.set_mark : R.string.unset_mark); break;
+        case TOGGLE_ABBREVIATIONS:
+            boolean abbrEnabled = Options.switchBooleanPreference(context, R.string.pref_abbreviations_enabled_key, Boolean.parseBoolean(context.getString(R.string.pref_abbreviations_enabled_default)));
+            message = context.getString(abbrEnabled ? R.string.abbreviations_enabled : R.string.abbreviations_disabled); break;
+        case TOGGLE_INSTANT_ABBREVIATIONS:
+            boolean inst = Options.switchBooleanPreferenceStringKey(context, "ABBREVIATIONS_INSTANT", false);
+            message = context.getString(inst ? R.string.abbreviations_instant_enabled : R.string.abbreviations_instant_disabled); break;
+        case CYCLE_KEYBOARD_FEEDBACK:
+            KeyboardFeedback fb = KeyboardFeedback.valueOf(Integer.parseInt(Options.getStringPreference(context, R.string.pref_keyboard_feedback_key, KeyboardFeedback.SOUND.getValue())));
+            fb = KeyboardFeedback.next(fb); Options.writeStringPreference(context, R.string.pref_keyboard_feedback_key, fb.getValue()); message = context.getString(fb.resource); break;
+        case CYCLE_ECHO_FEEDBACK:
+            KeyboardEcho echo = KeyboardEcho.valueOf(Integer.parseInt(Options.getStringPreference(context, R.string.pref_echo_feedback_key, KeyboardEcho.CHARACTER.getValue())));
+            echo = KeyboardEcho.next(echo); Options.writeStringPreference(context, R.string.pref_echo_feedback_key, echo.getValue()); message = context.getString(echo.resource); break;
+        case SWITCH_BRAILLE_TYPE:
+            int bt = listener.switchBrailleType(); message = bt == 8 ? context.getString(R.string.grade_computer) : context.getString(R.string.grade_literary);
+            callback.onSetLocale(listener.getLocale()); break;
+        case SWITCH_BRAILLE_TABLE:
+            message = listener.switchTable(); message = message == null ? context.getString(R.string.no_braille_table) : message;
+            callback.onSetLocale(listener.getLocale()); break;
+        case OPEN_SETTINGS:
+            if (fastDoubleSwipe) { callback.onSetLocale(Locale.getDefault()); message = context.getString(R.string.show_settings); Intent intent = new Intent(context, PreferenceIME.class); intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); context.startActivity(intent); }
+            else message = context.getString(R.string.swipe_confirm_settings); break;
+        case OPEN_INPUT_SWITCHER:
+            if (fastDoubleSwipe) { message = context.getString(R.string.show_input_switcher); if (BrailleAccessibilityService.isServiceEnabled()) BrailleAccessibilityService.getInstance().clearPassthroughRegion(); inputManager.showInputMethodPicker(); }
+            else message = context.getString(R.string.swipe_confirm_input); break;
+        case CLOSE_KEYBOARD: message = context.getString(R.string.closing_keyboard); listener.closeKeyboard(); break;
+        case SHRINK_KEYBOARD: message = context.getString(R.string.keyboard_shrink); callback.onShrink(); break;
+        case WORD_COUNT:
             CharSequence text = listener.getAllText().text;
-            if (text != null) {
-                message = String.format(context.getString(R.string.word_count),
-                        EditingUtilities.lineCount(text),
-                        EditingUtilities.wordCount(text),
-                        EditingUtilities.characterCount(text));
-            }
+            if (text != null) message = String.format(context.getString(R.string.word_count), EditingUtilities.lineCount(text), EditingUtilities.wordCount(text), EditingUtilities.characterCount(text));
             break;
-        case HOLD_ONE_UP:
-            Options.switchBooleanPreference(context,
-                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
-                            .getString(R.string.pref_auto_caps_default)));
-            message = Options.getBooleanPreference(context,
-                    R.string.pref_auto_caps_key, Boolean.parseBoolean(context
-                            .getString(R.string.pref_auto_caps_default))) ? context
-                    .getString(R.string.auto_caps_enabled) : context
-                    .getString(R.string.auto_caps_disabled);
-            break;
-        case HOLD_ONE_RIGHT:
-            message = context
-                    .getString(listener.toggleMark() ? R.string.set_mark
-                            : R.string.unset_mark);
-            break;
-        case HOLD_ONE_LEFT:
-            message = context.getString(R.string.keyboard_shrink);
-            callback.onShrink();
-            break;
-        case HOLD_SIX_LEFT:
-            moveLeft(context, Granularity.ALL);
-            break;
-        case HOLD_SIX_RIGHT:
-            moveRight(context, Granularity.ALL);
-            break;
-        case HOLD_SIX_DOWN:
-            boolean echoPassword = Options.switchBooleanPreference(context,
-                    R.string.pref_echo_passwords_key, false);
-            message = echoPassword ? context
-                    .getString(R.string.speak_passwords) : context
-                    .getString(R.string.no_password_echo);
-            break;
-        case HOLD_SIX_UP:
-            message = getInput(Granularity.ALL);
-            considerPassword = true;
-            break;
-        case HOLD_THREE_LEFT:
-            backspace(context, Granularity.ALL, fastDoubleSwipe);
-            break;
-        case HOLD_THREE_RIGHT:
-            int brailleType = listener.switchBrailleType();
-            message = brailleType == 8 ? context
-                    .getString(R.string.grade_computer) : context
-                    .getString(R.string.grade_literary);
-            callback.onSetLocale(listener.getLocale());
-            break;
-        case HOLD_THREE_DOWN:
-            message = listener.switchTable();
-            message = message == null ? context
-                    .getString(R.string.no_braille_table) : message;
-            callback.onSetLocale(listener.getLocale());
-            break;
-        case HOLD_THREE_UP:
-            doVoiceInput(context, fastDoubleSwipe);
-            break;
-        case HOLD_FOUR_LEFT:
-            doSpellCheck(context, SpellChecker.Direction.LEFT, 0,
-                    listener.getCursor());
-            break;
-        case HOLD_FOUR_RIGHT:
-            doSpellCheck(context, SpellChecker.Direction.RIGHT, 0,
-                    listener.getCursor());
-            break;
-        case HOLD_FOUR_DOWN:
-            nextSpellCheckSuggestion(context);
-            break;
-        case HOLD_FOUR_UP:
-            previousSpellCheckSuggestion(context);
-            break;
-        case NONE:
-            return false;
-        default:
-            notify = false;
+        case NEXT_FIELD_ACTION: nextAction(context); break;
+        case SELECT_TEXT_ACTION: selectAction(context); break;
+        case EMOJI_MODE_TOGGLE:
+            emojiMode = !emojiMode;
+            if (emojiMode) { emojiSearchQuery.setLength(0); emojiResults.clear(); emojiIndex = 0; Locale loc = listener.getLocale(); String lang = loc != null ? loc.getDisplayLanguage() : "English"; message = String.format(context.getString(R.string.emoji_search_mode_on), lang); }
+            else message = context.getString(R.string.emoji_search_mode_off); break;
+        case EDIT_SELECT_ALL: doSelectAll(context); break;
+        case EDIT_COPY: doCopy(context); break;
+        case EDIT_CUT: doCut(context); break;
+        case EDIT_PASTE: doPaste(context); break;
+        case EDIT_SPEAK: doSpeakSelection(context); break;
+        case EDIT_DELETE: doDeleteSelection(context); break;
+        case SPELL_CHECK_LEFT: doSpellCheck(context, SpellChecker.Direction.LEFT, 0, listener.getCursor()); break;
+        case SPELL_CHECK_RIGHT: doSpellCheck(context, SpellChecker.Direction.RIGHT, 0, listener.getCursor()); break;
+        case SPELL_CHECK_NEXT_SUGGESTION: nextSpellCheckSuggestion(context); break;
+        case SPELL_CHECK_PREV_SUGGESTION: previousSpellCheckSuggestion(context); break;
+        case SET_DOT_7: if (listener.getDots() == 8) { setDots = true; dots[0] = true; } else message = context.getString(R.string.unknown_character); break;
+        case SET_DOT_8: if (listener.getDots() == 8) { setDots = true; dots[1] = true; } else message = context.getString(R.string.unknown_character); break;
+        case NONE: return false;
+        default: notify = false;
         }
 
-        // Invoke the notification callback
         callback.onNotify(notify, notify);
-        if (message != null) {
-            // Only invoke onText callback if there is a message to send i.e. it
-            // wasn't already handled.
-            callback.onText("%s", message,
-                    considerPassword ? listener.isPasswordField() : false);
-        }
-
-        if (setDots) { // Dots 7 or 8 were triggered
-            callback.onSetDots(dots[0], dots[1]);
-        }
-
-        lastSwipe = value; // update the last swipe
+        if (message != null) callback.onText("%s", message, considerPassword ? listener.isPasswordField() : false);
+        if (setDots) callback.onSetDots(dots[0], dots[1]);
+        lastSwipe = value;
         return true;
     }
 
-    /**
-     * Handle typing a Braille character into the underlying IME. The character
-     * is delivered as a byte value representing the dot pattern and will be
-     * converted and written as a standard textual character by the IME.
-     * 
-     * @param context
-     *            The application context.
-     * @param value
-     *            The byte value which represents the dot pattern to type. This
-     *            is a bitstring that represents a Braille pattern where dot 8
-     *            is represented by the MSB and dot 1 by the LSB. A value of 0
-     *            means no dots are present and a value of 0b11111111 means all
-     *            8 dots are pressed.
-     */
+    private boolean isConfirmed(Context context, boolean fastDoubleTouch) {
+        if (!fastDoubleTouch) {
+            callback.onText("%s", context.getString(R.string.swipe_confirm), false);
+            return false;
+        }
+        return true;
+    }
+
     public void handleCharacter(Context context, byte value) {
-        // Can't type while voice input is in progress.
-        if (voiceInput.isListening()) {
-            return;
-        }
-
+        if (voiceInput.isListening()) return;
         if (emojiMode) {
-            String translated = listener.translateOnly(value);
-            if (translated != null && translated.length() > 0) {
-                emojiSearchQuery.append(translated);
-                updateEmojiResults();
-                callback.onNotify(true, true);
-                callback.onText("%s", getEmojiSummary(), false);
-            } else {
-                callback.onNotify(true, false);
-            }
+            String trans = listener.translateLiteral(value);
+            if (trans != null && trans.length() > 0) { emojiSearchQuery.append(trans); updateEmojiResults(); callback.onNotify(true, true); callback.onText("%s", getEmojiSummary(), false); }
+            else callback.onNotify(true, false);
             return;
         }
-
         lastSwipe = Swipe.NONE;
-        String result;
-        if ((result = listener.handleTypedCharacter(value)) == null) {
-            // IME couldn't handle the dot pattern propergate the error to the
-            // callback.
-            callback.onText("%s",
-                    context.getString(R.string.unknown_character), false);
-        } else {
+        String result = listener.handleTypedCharacter(value);
+        if (result == null) callback.onText("%s", context.getString(R.string.unknown_character), false);
+        else {
             callback.onNotify(true, true);
-
-            // Decide what to deliver to the callback such as a key echo or
-            // autocompletion string.
             String character = echoCharacter(context, result);
-            result = character == null ? "" : character;
-            if (!(result = result.trim()).equals("")) {
-                callback.onText("%s", result.toString(),
-                        listener.isPasswordField());
-            }
+            result = (character == null) ? "" : character;
+            if (!(result = result.trim()).equals("")) callback.onText("%s", result, listener.isPasswordField());
         }
-
-        // dots 7 and 8 should now be unset
         callback.onSetDots(false, false);
     }
 
-    // Handle prompting user to confirm an action with a double swipe.
-    private boolean isConfirmed(Context context, boolean fastDoubleTouch) {
-        if (!fastDoubleTouch) {
-            callback.onText("%s", context.getString(R.string.swipe_confirm),
-                    false);
-            return false;
-        }
-        return true;
-    }
-
-    // Perform the currently selected Edit Action on the region.
     private void selectAction(Context context) {
         switch (editAction) {
-        case COPY:
-            performContextMenuAction(context, true, android.R.id.copy,
-                    R.string.copied, R.string.copy_error);
-            listener.deselect();
-            break;
-        case CUT:
-            if (performContextMenuAction(context, true, android.R.id.cut,
-                    android.R.string.cut, R.string.cut_error)) {
-                listener.setCursorToStartOfSelection();
-            }
-            break;
-        case PASTE:
-            if (performContextMenuAction(context, false, android.R.id.paste,
-                    R.string.pasted, R.string.paste_error)) {
-                int cursor = listener.getCursor();
-                listener.setSelection(cursor);
-            }
-            break;
-        case SPEAK:
-        case DELETE:
-            performAction(context, editAction);
-            break;
-        case SELECT_ALL:
-            listener.selectAll();
-            callback.onText("%s", context.getString(R.string.selected_all),
-                    false);
-            break;
-        default:
+        case COPY: doCopy(context); break;
+        case CUT: doCut(context); break;
+        case PASTE: doPaste(context); break;
+        case SPEAK: doSpeakSelection(context); break;
+        case DELETE: doDeleteSelection(context); break;
+        case SELECT_ALL: doSelectAll(context); break;
         }
     }
 
-    // Handle these actions by using the inbuilt android context menu action
-    private boolean performContextMenuAction(Context context,
-            boolean requiresSelection, int code, int successString,
-            int errorString) {
+    private void doCopy(Context context) { performContextMenuAction(context, true, android.R.id.copy, R.string.copied, R.string.copy_error); listener.deselect(); }
+    private void doCut(Context context) { if (performContextMenuAction(context, true, android.R.id.cut, android.R.string.cut, R.string.cut_error)) listener.setCursorToStartOfSelection(); }
+    private void doPaste(Context context) { if (performContextMenuAction(context, false, android.R.id.paste, R.string.pasted, R.string.paste_error)) listener.setSelection(listener.getCursor()); }
+    private void doSpeakSelection(Context context) { performAction(context, EditAction.SPEAK); }
+    private void doDeleteSelection(Context context) { performAction(context, EditAction.DELETE); }
+    private void doSelectAll(Context context) { listener.selectAll(); callback.onText("%s", context.getString(R.string.selected_all), false); }
+
+    private boolean performContextMenuAction(Context context, boolean requiresSelection, int code, int successString, int errorString) {
         if (!requiresSelection || listener.setSelection()) {
-            if (listener.performContextMenuAction(code)) {
-                callback.onText("%s", context.getString(successString), false);
-                return true;
-            } else {
-                callback.onText("%s", context.getString(errorString), false);
-                return false;
-            }
-        } else {
-            callback.onText("%s", context.getString(R.string.mark_not_set),
-                    false);
-            return false;
-        }
+            if (listener.performContextMenuAction(code)) { callback.onText("%s", context.getString(successString), false); return true; }
+            else { callback.onText("%s", context.getString(errorString), false); return false; }
+        } else { callback.onText("%s", context.getString(R.string.mark_not_set), false); return false; }
     }
 
-    // These actions aren't implemented by Android so do them ourselves.
     private boolean performAction(Context context, EditAction action) {
         if (listener.setSelection()) {
-            CharSequence text = listener.getSelectedText(0);
-            listener.deselect();
+            CharSequence text = listener.getSelectedText(0); listener.deselect();
             switch (action) {
-            case SPEAK:
-                callback.onText(
-                        "%s",
-                        text == null ? context.getString(R.string.blank) : text
-                                .toString(), listener.isPasswordField());
-                break;
+            case SPEAK: callback.onText("%s", text == null ? context.getString(R.string.blank) : text.toString(), listener.isPasswordField()); break;
             case DELETE:
-                if (listener.deleteSelection() && text != null) {
-                    callback.onText(context.getString(R.string.deleted),
-                            text.toString(), listener.isPasswordField());
-                } else {
-                    callback.onText("%s",
-                            context.getString(R.string.nothing_to_delete),
-                            false);
-                }
-                break;
-            default:
-                return false;
+                if (listener.deleteSelection() && text != null) callback.onText(context.getString(R.string.deleted), text.toString(), listener.isPasswordField());
+                else callback.onText("%s", context.getString(R.string.nothing_to_delete), false); break;
+            default: return false;
             }
             return true;
         }
-        callback.onText("%s", context.getString(R.string.mark_not_set), false);
-        return false;
+        callback.onText("%s", context.getString(R.string.mark_not_set), false); return false;
     }
 
-    private void nextAction(Context context) {
-        editAction = editAction.next(clipboard);
-        callback.onText("%s", context.getString(editAction.resource), false);
-    }
+    private void nextAction(Context context) { editAction = editAction.next(clipboard); callback.onText("%s", context.getString(editAction.resource), false); }
 
-    // Move the cursor left by the appropriate granularity and speak the result.
     private void moveLeft(Context context, Granularity granularity) {
-        EditingUtilities.Word word = null;
-        listener.finishComposingText();
-        if (listener.isSelectAll()) {
-            granularity = Granularity.ALL;
-            listener.setSelection(0);
-        }
+        EditingUtilities.Word word = null; listener.finishComposingText();
+        if (listener.isSelectAll()) { granularity = Granularity.ALL; listener.setSelection(0); }
         switch (granularity) {
-        case CHARACTER:
-            word = EditingUtilities.moveToPreviousCharacter(listener);
-            break;
-        case WORD:
-            word = EditingUtilities.moveToPreviousWord(listener);
-            break;
-        case LINE:
-            word = EditingUtilities.moveToPreviousLine(listener);
-            break;
-        case ALL:
-            word = EditingUtilities.moveToHome(listener);
-            break;
-        default:
+        case CHARACTER: word = EditingUtilities.moveToPreviousCharacter(listener); break;
+        case WORD: word = EditingUtilities.moveToPreviousWord(listener); break;
+        case LINE: word = EditingUtilities.moveToPreviousLine(listener); break;
+        case ALL: word = EditingUtilities.moveToHome(listener); break;
         }
-
-        if (word != null) {
-            callback.onText("%s",
-                    !word.moveLeft ? context.getString(R.string.start_of_text)
-                            : word.word,
-                    word.moveLeft && listener.isPasswordField());
-        }
+        if (word != null) callback.onText("%s", !word.moveLeft ? context.getString(R.string.start_of_text) : word.word, word.moveLeft && listener.isPasswordField());
     }
 
-    // Move the cursor right by the appropriate granularity and speak the
-    // result.
     private void moveRight(Context context, Granularity granularity) {
-        EditingUtilities.Word word = null;
-        listener.finishComposingText();
-        if (listener.isSelectAll()) {
-            granularity = Granularity.ALL;
-            listener.setSelection(0);
-        }
+        EditingUtilities.Word word = null; listener.finishComposingText();
+        if (listener.isSelectAll()) { granularity = Granularity.ALL; listener.setSelection(0); }
         switch (granularity) {
-        case CHARACTER:
-            word = EditingUtilities.moveToNextCharacter(listener);
-            break;
-        case WORD:
-            word = EditingUtilities.moveToNextWord(listener);
-            break;
-        case LINE:
-            word = EditingUtilities.moveToNextLine(listener);
-            break;
-        case ALL:
-            word = EditingUtilities.moveToEnd(listener);
-            break;
-        default:
+        case CHARACTER: word = EditingUtilities.moveToNextCharacter(listener); break;
+        case WORD: word = EditingUtilities.moveToNextWord(listener); break;
+        case LINE: word = EditingUtilities.moveToNextLine(listener); break;
+        case ALL: word = EditingUtilities.moveToEnd(listener); break;
         }
-
-        if (word != null) {
-            callback.onText("%s",
-                    !word.moveRight ? context.getString(R.string.end_of_text)
-                            : word.word,
-                    word.moveRight && listener.isPasswordField());
-        }
+        if (word != null) callback.onText("%s", !word.moveRight ? context.getString(R.string.end_of_text) : word.word, word.moveRight && listener.isPasswordField());
     }
 
-    // Perform backspace by the specified Granularity.
-    private boolean backspace(Context context, Granularity granularity,
-            boolean fastDoubleTouch) {
-        EditingUtilities.Word word = null;
-        boolean canDelete = true;
+    private boolean backspace(Context context, Granularity granularity, boolean fastDoubleTouch) {
+        EditingUtilities.Word word = null; boolean canDelete = true;
         switch (granularity) {
-        case CHARACTER:
-            word = listener.handleBackspace();
-            if (word != null) {
-                break;
-            }
-            listener.finishComposingText();
-            word = EditingUtilities.moveToPreviousCharacter(listener);
-            break;
-        case WORD:
-            listener.finishComposingText();
-            Word space = EditingUtilities.skipSepBackwards(listener,
-                    EditingUtilities.WORD_SEPARATORS);
-            word = EditingUtilities.getWord(listener);
-            if (word != null) {
-                if (space != null) {
-                    word.charsBefore += space.charsBefore;
-                }
-                if (word.word.length() > word.charsBefore) {
-                    word.word = word.word.substring(0, word.charsBefore);
-                }
-                EditingUtilities.moveToPreviousWord(listener);
-            }
-            break;
-        case LINE:
-            canDelete = isConfirmed(context, fastDoubleTouch);
-            if (canDelete) {
-                listener.finishComposingText();
-                int cursor = listener.getCursor();
-                word = EditingUtilities.getLine(listener);
-                if (word != null && (cursor > 0 || word.charsAfter > 0)) {
-                    int moveChars = (cursor - word.charsBefore) > 0 ? 1 : 0;
-                    listener.setSelection(cursor - moveChars - word.charsBefore);
-                    word.charsBefore = word.charsBefore + moveChars
-                            + word.charsAfter;
-                }
-            }
-            break;
-        case ALL:
-            canDelete = isConfirmed(context, fastDoubleTouch);
-            if (canDelete) {
-                listener.finishComposingText();
-                word = EditingUtilities.moveToHome(listener);
-                word.word = EditingUtilities.getAllText(listener);
-                word.charsBefore = word.word.length();
-            }
-            break;
-        default:
+        case CHARACTER: word = listener.handleBackspace(); if (word != null) break; listener.finishComposingText(); word = EditingUtilities.moveToPreviousCharacter(listener); break;
+        case WORD: listener.finishComposingText(); Word space = EditingUtilities.skipSepBackwards(listener, EditingUtilities.WORD_SEPARATORS); word = EditingUtilities.getWord(listener);
+            if (word != null) { if (space != null) word.charsBefore += space.charsBefore; if (word.word.length() > word.charsBefore) word.word = word.word.substring(0, word.charsBefore); EditingUtilities.moveToPreviousWord(listener); } break;
+        case LINE: if (canDelete = isConfirmed(context, fastDoubleTouch)) { listener.finishComposingText(); int cur = listener.getCursor(); word = EditingUtilities.getLine(listener); if (word != null && (cur > 0 || word.charsAfter > 0)) { int move = (cur - word.charsBefore) > 0 ? 1 : 0; listener.setSelection(cur - move - word.charsBefore); word.charsBefore += move + word.charsAfter; } } break;
+        case ALL: if (canDelete = isConfirmed(context, fastDoubleTouch)) { listener.finishComposingText(); word = EditingUtilities.moveToHome(listener); word.word = EditingUtilities.getAllText(listener); word.charsBefore = word.word.length(); } break;
         }
         return performDelete(context, word, canDelete);
     }
 
-    // Given the text to delete and a canDelete flag do the actual deletion.
-    private boolean performDelete(Context context, EditingUtilities.Word word,
-            boolean canDelete) {
+    private boolean performDelete(Context context, EditingUtilities.Word word, boolean canDelete) {
         if (canDelete && word != null) {
-            if (word.charsBefore > 0 || word.charsAfter > 0) {
-                // cursor moved back word.charsBefore positions, so delete that
-                // many chars ahead of the cursor.
-                if (listener.deleteSurroundingText(0, word.charsBefore)) {
-                    if (word.word != null) {
-                        callback.onText(context.getString(R.string.deleted),
-                                word.word, listener.isPasswordField());
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                callback.onText("%s",
-                        context.getString(R.string.nothing_to_delete), false);
-                return true;
-            }
+            if (word.charsBefore > 0 || word.charsAfter > 0) { if (listener.deleteSurroundingText(0, word.charsBefore)) { if (word.word != null) callback.onText(context.getString(R.string.deleted), word.word, listener.isPasswordField()); return true; } return false; }
+            else { callback.onText("%s", context.getString(R.string.nothing_to_delete), false); return true; }
         }
         return false;
     }
 
-    // Insert a certain character like a ' ' or '\n'
     private void typeCharacter(Context context, int code, String charName) {
-        listener.finishComposingText();
-        Word word = EditingUtilities.getWord(listener);
-        String message = word == null ? null : word.word.substring(0,
-                word.charsBefore);
+        listener.checkAndExpandAbbreviation(false); listener.finishComposingText();
+        Word word = EditingUtilities.getWord(listener); String msg = word == null ? null : word.word.substring(0, word.charsBefore);
         listener.onKey(code);
-
-        if ((message = echoWord(context, message)) == null) {
-            message = echoCharacter(context, charName);
-        }
-        callback.onText("%s", message, listener.isPasswordField());
-
-        if (Options.getBooleanPreference(context,
-                R.string.pref_echo_misspellings_key,
-                Boolean.parseBoolean(context
-                        .getString(R.string.pref_echo_misspellings_default)))
-                && spellChecker.isSpellCheckAvailable()) {
-            doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, 0,
-                    listener.getCursor() - 2);
-        }
+        if ((msg = echoWord(context, msg)) == null) msg = echoCharacter(context, charName);
+        callback.onText("%s", msg, listener.isPasswordField());
+        if (Options.getBooleanPreference(context, R.string.pref_echo_misspellings_key, Boolean.parseBoolean(context.getString(R.string.pref_echo_misspellings_default))) && spellChecker.isSpellCheckAvailable()) doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, 0, listener.getCursor() - 2);
     }
 
-    // Special logic for double space to insert a period followed by a space.
     private boolean handleDoubleSpace(Context context) {
-        if (Options.getBooleanPreference(context,
-                R.string.pref_double_space_period_key,
-                Boolean.parseBoolean(context
-                        .getString(R.string.pref_double_space_period_default)))) {
+        if (Options.getBooleanPreference(context, R.string.pref_double_space_period_key, Boolean.parseBoolean(context.getString(R.string.pref_double_space_period_default)))) {
             CharSequence text = listener.getTextBeforeCursor(2);
-            if (text != null) {
-                if (text.length() == 2
-                        && Character.isWhitespace(text.charAt(1))
-                        && Character.isLetterOrDigit(text.charAt(0))) {
-                    listener.deleteSurroundingText(1, 0);
-                    listener.onKey('.');
-                    typeCharacter(context, ' ', " ");
-                    return true;
-                }
-            }
+            if (text != null && text.length() == 2 && Character.isWhitespace(text.charAt(1)) && Character.isLetterOrDigit(text.charAt(0))) { listener.deleteSurroundingText(1, 0); listener.onKey('.'); typeCharacter(context, ' ', " "); return true; }
         }
         return false;
     }
 
-    // Return true if the same gesture was typed quickly in succession.
-    private boolean fastDoubleSwipe(Swipe swipe, long threshold) {
-        if ((lastTouchTime + threshold) > System.currentTimeMillis()
-                && lastSwipe == swipe) {
-            lastTouchTime = 0;
-            return true;
-        } else {
-            lastSwipe = swipe;
-            lastTouchTime = System.currentTimeMillis();
-            return false;
-        }
-    }
+    private boolean fastDoubleSwipe(Swipe swipe, long threshold) { if ((lastTouchTime + threshold) > System.currentTimeMillis() && lastSwipe == swipe) { lastTouchTime = 0; return true; } else { lastSwipe = swipe; lastTouchTime = System.currentTimeMillis(); return false; } }
 
-    // Get a particular granularity of text from the IME.
     private String getInput(Granularity granularity) {
-        String text = "";
-        Word word;
         switch (granularity) {
-        case CHARACTER:
-            text = EditingUtilities.getCharacter(listener);
-            break;
-        case WORD:
-            word = EditingUtilities.getWord(listener);
-            text = word == null ? null : word.word;
-            break;
-        case LINE:
-            word = EditingUtilities.getLine(listener);
-            text = word == null ? null : word.word;
-            break;
-        case ALL:
-            text = EditingUtilities.getAllText(listener);
-            break;
-        default:
+        case CHARACTER: return EditingUtilities.getCharacter(listener);
+        case WORD: Word w = EditingUtilities.getWord(listener); return w == null ? null : w.word;
+        case LINE: Word l = EditingUtilities.getLine(listener); return l == null ? null : l.word;
+        case ALL: return EditingUtilities.getAllText(listener);
+        default: return "";
         }
-        return text;
     }
 
-    // Handle voice input.
     public boolean doVoiceInput(final Context context, boolean fastDoubleSwipe) {
-        // Check for the "dangerous permission" for Android 6 and higher.
-        if (ContextCompat.checkSelfPermission(context,
-                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-            // Fast double swipe to show the permission dialog so we don't
-            // surprise the user having no screen reader or talking keyboard in
-            // focus.
-            if (!fastDoubleSwipe) {
-                callback.onText("%s",
-                        context.getString(R.string.voice_input_enable), false);
-            } else { // Show permission dialog
-                Intent intent = new Intent(context, IntentActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.setAction(context
-                        .getString(R.string.action_record_audio_permission));
-                intent.putExtra(
-                        context.getString(R.string.require_record_audio_now),
-                        true);
-                context.startActivity(intent);
-            }
-            return false; // We didn't do voice input.
-        }
-
-        VoiceInput.TextReadyListener textReadyListener = new VoiceInput.TextReadyListener() {
-
-            @Override
-            public void onTextReady(String text) {
-                // Write the text and send it back to the callback.
-                if (text != null && text.length() > 0) {
-                    CharSequence before = listener.getTextBeforeCursor(1);
-                    if (before != null && before.length() > 0
-                            && !Character.isWhitespace(before.charAt(0))) {
-                        listener.onKey(' ');
-                    }
-                    listener.commitText(text, 1);
-                    callback.onText("%s", text, listener.isPasswordField());
-                }
-            }
-
-            @Override
-            public void onError(int error) {
-                callback.onText("%s", String.format(
-                        context.getString(R.string.voice_input_error), error),
-                        false);
-            }
-        };
-
-        if (voiceInput.start(context, textReadyListener, listener.getLocale())) {
-            callback.onShutup();
-        } else {
-            callback.onText("%s",
-                    context.getString(R.string.voice_input_is_not_available),
-                    false);
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            if (!fastDoubleSwipe) callback.onText("%s", context.getString(R.string.voice_input_enable), false);
+            else { Intent intent = new Intent(context, IntentActivity.class); intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); intent.setAction(context.getString(R.string.action_record_audio_permission)); intent.putExtra(context.getString(R.string.require_record_audio_now), true); context.startActivity(intent); }
             return false;
         }
+        VoiceInput.TextReadyListener trl = new VoiceInput.TextReadyListener() {
+            @Override public void onTextReady(String text) { if (text != null && text.length() > 0) { CharSequence before = listener.getTextBeforeCursor(1); if (before != null && before.length() > 0 && !Character.isWhitespace(before.charAt(0))) listener.onKey(' '); listener.commitText(text, 1); callback.onText("%s", text, listener.isPasswordField()); } }
+            @Override public void onError(int error) { callback.onText("%s", String.format(context.getString(R.string.voice_input_error), error), false); }
+        };
+        if (voiceInput.start(context, trl, listener.getLocale())) callback.onShutup();
+        else { callback.onText("%s", context.getString(R.string.voice_input_is_not_available), false); return false; }
         return true;
     }
 
-    // Rules for echoing character. Return the character if it should be echoed
-    // else null.
-    private static String echoCharacter(Context context, String character) {
-        if ((Integer.parseInt(Options.getStringPreference(context,
-                R.string.pref_echo_feedback_key,
-                KeyboardEcho.CHARACTER.getValue())) & KeyboardEcho.CHARACTER.value) != 0) {
-            return character;
-        }
-        return null;
-    }
+    private static String echoCharacter(Context context, String character) { if ((Integer.parseInt(Options.getStringPreference(context, R.string.pref_echo_feedback_key, KeyboardEcho.CHARACTER.getValue())) & KeyboardEcho.CHARACTER.value) != 0) return character; return null; }
+    private static String echoWord(Context context, String word) { if ((Integer.parseInt(Options.getStringPreference(context, R.string.pref_echo_feedback_key, KeyboardEcho.CHARACTER.getValue())) & KeyboardEcho.WORD.value) != 0) return word; return null; }
 
-    // Rules for echoing word. Return the word if it should be echoed
-    // else null.
-    private static String echoWord(Context context, String word) {
-        if ((Integer.parseInt(Options.getStringPreference(context,
-                R.string.pref_echo_feedback_key,
-                KeyboardEcho.CHARACTER.getValue())) & KeyboardEcho.WORD.value) != 0) {
-            return word;
-        }
-        return null;
-    }
-
-    // Some swipe actions should resolve to the same thing eg. dots 4 and 5
-    // swipe right.
-    private static Swipe normaliseSwipe(Swipe swipe) {
-        if (swipe == Swipe.FIVE_RIGHT) {
-            return Swipe.FOUR_RIGHT;
-        }
-        return swipe;
-    }
-
-    private void doSpellCheck(final Context context,
-            SpellChecker.Direction direction, int move, int cursor) {
-        SpellingSuggestionsReadyListener spellingListener = new SpellingSuggestionsReadyListener() {
-
-            @Override
-            public void suggestionsReady(Suggestion result) {
-                spellingSuggestion = result;
-                if (result != null
-                        || spellingDirection == SpellChecker.Direction.UNDER_CURSOR) {
-                    handleSpellingSuggestion(context);
-                } else {
-                    callback.onText("%s",
-                            context.getString(R.string.no_more_misspellings),
-                            false);
-                }
-            }
+    private void doSpellCheck(final Context context, SpellChecker.Direction direction, int move, int cursor) {
+        SpellingSuggestionsReadyListener sl = new SpellingSuggestionsReadyListener() {
+            @Override public void suggestionsReady(Suggestion result) { spellingSuggestion = result; if (result != null || spellingDirection == SpellChecker.Direction.UNDER_CURSOR) handleSpellingSuggestion(context); else callback.onText("%s", context.getString(R.string.no_more_misspellings), false); }
         };
-
-        String text = getInput(Granularity.ALL);
-        spellingDirection = direction;
-        directionThroughSuggestionList = move;
-        if (text != null && text.length() > 0) {
-            if (!spellChecker.checkSpelling(spellingListener, text, cursor,
-                    direction)) {
-                callback.onText("%s",
-                        context.getString(R.string.spellcheck_not_supported),
-                        false);
-            }
-        } else {
-            callback.onText("%s", context.getString(R.string.blank), false);
-        }
+        String text = getInput(Granularity.ALL); spellingDirection = direction; directionThroughSuggestionList = move;
+        if (text != null && text.length() > 0) { if (!spellChecker.checkSpelling(sl, text, cursor, direction)) callback.onText("%s", context.getString(R.string.spellcheck_not_supported), false); }
+        else callback.onText("%s", context.getString(R.string.blank), false);
     }
 
     private void handleSpellingSuggestion(Context context) {
-        boolean password = false;
-        String message = null;
-
-        if (spellingSuggestion == null && directionThroughSuggestionList != 0) {
-            message = context.getString(R.string.word_correct);
-        } else if (spellingSuggestion != null
-                && spellingDirection == SpellChecker.Direction.UNDER_CURSOR) {
-            spellingDirection = null;
-            if (directionThroughSuggestionList > 0) {
-                nextSpellCheckSuggestion(context);
-            } else if (directionThroughSuggestionList < 0) {
-                previousSpellCheckSuggestion(context);
-            } else {
-                message = context.getString(R.string.word_misspelled);
-            }
-        } else if (spellingSuggestion != null) {
-            password = true;
-            message = spellingSuggestion.isMisspelledWord() ? String.format(
-                    context.getString(R.string.word_correction_misspelled),
-                    spellingSuggestion.getCurrent()) : spellingSuggestion
-                    .getCurrent();
-            listener.setSelection(spellingSuggestion.offset);
-            listener.deleteSurroundingText(0, spellingSuggestion.getLength());
-            listener.commitText(spellingSuggestion.getCurrent(), 1);
-            listener.setSelection(spellingSuggestion.offset);
-            spellingSuggestion.setLength();
-        }
-
-        if (message != null) {
-            callback.onText("%s", message, listener.isPasswordField()
-                    && password, Speech.QUEUE_ADD);
-        }
+        boolean pass = false; String msg = null;
+        if (spellingSuggestion == null && directionThroughSuggestionList != 0) msg = context.getString(R.string.word_correct);
+        else if (spellingSuggestion != null && spellingDirection == SpellChecker.Direction.UNDER_CURSOR) { spellingDirection = null; if (directionThroughSuggestionList > 0) nextSpellCheckSuggestion(context); else if (directionThroughSuggestionList < 0) previousSpellCheckSuggestion(context); else msg = context.getString(R.string.word_misspelled); }
+        else if (spellingSuggestion != null) { pass = true; msg = spellingSuggestion.isMisspelledWord() ? String.format(context.getString(R.string.word_correction_misspelled), spellingSuggestion.getCurrent()) : spellingSuggestion.getCurrent(); listener.setSelection(spellingSuggestion.offset); listener.deleteSurroundingText(0, spellingSuggestion.getLength()); listener.commitText(spellingSuggestion.getCurrent(), 1); listener.setSelection(spellingSuggestion.offset); spellingSuggestion.setLength(); }
+        if (msg != null) callback.onText("%s", msg, listener.isPasswordField() && pass, Speech.QUEUE_ADD);
     }
 
-    private void nextSpellCheckSuggestion(Context context) {
-        if (spellingSuggestion != null) {
-            if (spellCheckerMatchesWord()) {
-                spellingSuggestion.next();
-                handleSpellingSuggestion(context);
-                return;
-            }
-        }
-        doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, 1,
-                listener.getCursor());
-    }
-
-    private void previousSpellCheckSuggestion(Context context) {
-        if (spellingSuggestion != null) {
-            if (spellCheckerMatchesWord()) {
-                spellingSuggestion.prev();
-                handleSpellingSuggestion(context);
-                return;
-            }
-        }
-        doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, -1,
-                listener.getCursor());
-    }
+    private void nextSpellCheckSuggestion(Context context) { if (spellingSuggestion != null && spellCheckerMatchesWord()) { spellingSuggestion.next(); handleSpellingSuggestion(context); return; } doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, 1, listener.getCursor()); }
+    private void previousSpellCheckSuggestion(Context context) { if (spellingSuggestion != null && spellCheckerMatchesWord()) { spellingSuggestion.prev(); handleSpellingSuggestion(context); return; } doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, -1, listener.getCursor()); }
 
     private boolean spellCheckerMatchesWord() {
         String text = getInput(Granularity.ALL);
-        if (text != null && spellingSuggestion != null) {
-            int offset = spellingSuggestion.offset;
-            int length = spellingSuggestion.getLength();
-            int cursor = listener.getCursor();
-            if (text.length() > 0 && (offset + length) <= text.length()
-                    && cursor >= offset && cursor < (offset + length)) {
-                return text.substring(offset, offset + length).equals(
-                        spellingSuggestion.getCurrent());
-            }
-        }
+        if (text != null && spellingSuggestion != null) { int off = spellingSuggestion.offset, len = spellingSuggestion.getLength(), cur = listener.getCursor(); if (text.length() > 0 && (off + len) <= text.length() && cur >= off && cur < (off + len)) return text.substring(off, off + len).equals(spellingSuggestion.getCurrent()); }
         return false;
     }
 
-    private void updateEmojiResults() {
-        emojiResults = EmojiDictionary.search(context, emojiSearchQuery.toString(), listener.getLocale());
-        emojiIndex = 0;
-    }
-
-    private String getEmojiSummary() {
-        if (emojiResults.isEmpty()) {
-            return String.format(context.getString(R.string.emoji_no_results_query), emojiSearchQuery.toString());
-        }
-        EmojiEntry entry = emojiResults.get(emojiIndex);
-        String displayName = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword;
-        return String.format(context.getString(R.string.emoji_count_summary), displayName, emojiIndex + 1, emojiResults.size());
-    }
+    private void updateEmojiResults() { emojiResults = EmojiDictionary.search(context, emojiSearchQuery.toString(), listener.getLocale()); emojiIndex = 0; }
+    private String getEmojiSummary() { if (emojiResults.isEmpty()) return String.format(context.getString(R.string.emoji_no_results_query), emojiSearchQuery.toString()); EmojiEntry entry = emojiResults.get(emojiIndex); String name = (entry.name != null && !entry.name.isEmpty()) ? entry.name : entry.keyword; return String.format(context.getString(R.string.emoji_count_summary), name, emojiIndex + 1, emojiResults.size()); }
 }
-
-
-

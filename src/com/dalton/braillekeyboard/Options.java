@@ -16,19 +16,6 @@
 
 package com.dalton.braillekeyboard;
 
-import com.dalton.braillekeyboard.R;
-import com.dalton.braillekeyboard.Pad.Swipe;
-import com.dalton.braillekeyboard.Pad.Coords;
-import com.dalton.braillekeyboard.BrailleParser.BrailleType;
-import com.dalton.braillekeyboard.Options.KeyboardFeedback;
-import com.dalton.braillekeyboard.Options.KeyboardEcho;
-import com.dalton.braillekeyboard.Options.KeyboardType;
-import com.dalton.braillekeyboard.Options.OptionList;
-import com.dalton.braillekeyboard.EditingUtilities.Word;
-import com.dalton.braillekeyboard.EmojiDictionary.EmojiEntry;
-import com.dalton.braillekeyboard.SpellChecker.Suggestion;
-import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -146,11 +133,39 @@ public class Options {
 
     public static SharedPreferences getSharedPreferences(Context context) {
         if (context == null) return null;
-        Context storageContext = context;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            storageContext = context.createDeviceProtectedStorageContext();
+            Context deContext = context.createDeviceProtectedStorageContext();
+            SharedPreferences migrationTracker = deContext.getSharedPreferences("migration_tracker", Context.MODE_PRIVATE);
+            
+            if (!migrationTracker.getBoolean("pref_migrated", false)) {
+                String prefName = context.getPackageName() + "_preferences";
+                java.io.File ceFile = new java.io.File(context.getDataDir(), "shared_prefs/" + prefName + ".xml");
+                java.io.File deFile = new java.io.File(deContext.getDataDir(), "shared_prefs/" + prefName + ".xml");
+
+                if (ceFile.exists() && !deFile.exists()) {
+                    deContext.moveSharedPreferencesFrom(context, prefName);
+                }
+                
+                java.io.File ceTablesPref = new java.io.File(context.getDataDir(), "shared_prefs/custom_tables.xml");
+                java.io.File deTablesPref = new java.io.File(deContext.getDataDir(), "shared_prefs/custom_tables.xml");
+                if (ceTablesPref.exists() && !deTablesPref.exists()) {
+                    deContext.moveSharedPreferencesFrom(context, "custom_tables");
+                }
+
+                java.io.File ceFilesDir = context.getFilesDir();
+                java.io.File deFilesDir = deContext.getFilesDir();
+                java.io.File ceCustomTablesDir = new java.io.File(ceFilesDir, "custom_tables");
+                java.io.File deCustomTablesDir = new java.io.File(deFilesDir, "custom_tables");
+
+                if (ceCustomTablesDir.exists() && !deCustomTablesDir.exists()) {
+                    ceCustomTablesDir.renameTo(deCustomTablesDir);
+                }
+                
+                migrationTracker.edit().putBoolean("pref_migrated", true).apply();
+            }
+            return PreferenceManager.getDefaultSharedPreferences(deContext);
         }
-        return PreferenceManager.getDefaultSharedPreferences(storageContext);
+        return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public static boolean getBooleanPreference(Context context, int resource,
@@ -167,6 +182,26 @@ public class Options {
         SharedPreferences sharedPref = getSharedPreferences(context);
         if (sharedPref == null) return defaultValue;
         return sharedPref.getString(context.getString(resource), defaultValue);
+    }
+
+    public static void writeStringPreference(Context context, int resource,
+            String value) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(context.getString(resource), value);
+        editor.apply();
+    }
+
+    public static void writeStringPreferenceStringKey(Context context, String key,
+            String value) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(key, value);
+        editor.apply();
     }
 
     public static boolean switchBooleanPreference(Context context,
@@ -191,6 +226,26 @@ public class Options {
         editor.apply();
     }
 
+    public static void writeBooleanPreferenceStringKey(Context context, String key,
+            boolean value) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(key, value);
+        editor.apply();
+    }
+
+    public static boolean switchBooleanPreferenceStringKey(Context context,
+            String key, boolean defaultValue) {
+        if (context == null) return defaultValue;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return defaultValue;
+        boolean pref = sharedPref.getBoolean(key, defaultValue);
+        sharedPref.edit().putBoolean(key, !pref).apply();
+        return !pref;
+    }
+
     public static int getIntPreference(Context context, int resource, int defaultValue) {
         if (context == null) return defaultValue;
         SharedPreferences sharedPref = getSharedPreferences(context);
@@ -204,16 +259,6 @@ public class Options {
         if (sharedPref == null) return;
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt(context.getString(resource), value);
-        editor.apply();
-    }
-
-    public static void writeStringPreference(Context context, int resource,
-            String value) {
-        if (context == null) return;
-        SharedPreferences sharedPref = getSharedPreferences(context);
-        if (sharedPref == null) return;
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(context.getString(resource), value);
         editor.apply();
     }
 
@@ -254,6 +299,3 @@ public class Options {
         editor.apply();
     }
 }
-
-
-
