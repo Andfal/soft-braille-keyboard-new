@@ -396,11 +396,17 @@
     <string name="msg_deleted">Deleted</string>
     <string name="msg_duplicate_dots">Combination %1$s is already used for \'%2$s\'.</string>
     <string name="msg_enter_dots">Please enter dots (e.g. 123-45)</string>
+    <string name="msg_invalid_dots_format">Invalid dots format. Use digits 1-8 separated by \'-\' or spaces.</string>
+    <string name="msg_char_required">This rule requires a character.</string>
+    <string name="msg_dots_required">Please enter at least one dot pattern.</string>
 
     
     <string name="msg_error_logs">Error while handling logs</string>
     <string name="msg_fixed_mapping">This is a fixed system mapping and cannot be removed.</string>
-    <string name="msg_import_rules_confirm">Import %d rules?</string>
+    <string name="btn_rename">Rename</string>
+    <string name="dialog_export_title">File exists</string>
+    <string name="msg_export_collision">A file with the name %1$s already exists in the export folder. What would you like to do?</string>
+    <string name="hint_enter_new_name">Enter new filename</string>
     <string name="msg_imported">Imported %s</string>
     <string name="msg_invalid_pos">Invalid position</string>
     <string name="msg_logs_cleared">Logs cleared successfully</string>

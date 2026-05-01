@@ -217,9 +217,15 @@
     <string name="msg_deleted">Eliminato</string>
     <string name="msg_duplicate_dots">La combinazione %1$s è già usata per \'%2$s\'.</string>
     <string name="msg_enter_dots">Inserisci i punti (es. 123-45)</string>
+    <string name="msg_invalid_dots_format">Formato punti non valido. Usa le cifre 1-8 separate da \'-\' o spazi.</string>
+    <string name="msg_char_required">Questa regola richiede un carattere.</string>
+    <string name="msg_dots_required">Inserisci almeno una combinazione di punti.</string>
     <string name="msg_error_logs">Errore durante la gestione dei log</string>
     <string name="msg_fixed_mapping">Questa è una mappatura di sistema fissa e non può essere rimossa.</string>
-    <string name="msg_import_rules_confirm">Importa %d regole?</string>
+    <string name="btn_rename">Rinomina</string>
+    <string name="dialog_export_title">File esistente</string>
+    <string name="msg_export_collision">Un file con il nome %1$s esiste già nella cartella di esportazione. Cosa vuoi fare?</string>
+    <string name="hint_enter_new_name">Inserisci nuovo nome file</string>
     <string name="msg_imported">Importato %s</string>
     <string name="msg_logs_cleared">Log cancellati con successo</string>
     <string name="msg_no_deletable_rules">Nessuna regola eliminabile trovata.</string>

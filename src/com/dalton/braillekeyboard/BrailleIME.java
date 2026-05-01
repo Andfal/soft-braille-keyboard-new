@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Locale;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
@@ -66,11 +68,31 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         }
     };
 
+    private final android.content.BroadcastReceiver mTableUpdateReceiver = new android.content.BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if ("com.dalton.braillekeyboard.ACTION_TABLE_UPDATED".equals(intent.getAction())) {
+                android.util.Log.i("BrailleIME", "Table update received, reloading translator...");
+                if (brailleParser != null) {
+                    brailleParser.setTranslator(BrailleIME.this);
+                }
+            }
+        }
+    };
+
     @Override
     public void onCreate() {
         // Trigger migration if needed
         Options.getSharedPreferences(this);
         super.onCreate();
+
+        IntentFilter filter = new IntentFilter("com.dalton.braillekeyboard.ACTION_TABLE_UPDATED");
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(mTableUpdateReceiver, filter, 4); // 4 = RECEIVER_NOT_EXPORTED
+        } else {
+            registerReceiver(mTableUpdateReceiver, filter);
+        }
+        
         abbreviationManager = AbbreviationManager.getInstance(this);
         if (brailleParser == null) {
             brailleParser = new BrailleParser(this,
@@ -221,6 +243,11 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        try {
+            unregisterReceiver(mTableUpdateReceiver);
+        } catch (Exception e) {
+            android.util.Log.w("BrailleIME", "Error unregistering receiver", e);
+        }
         if (brailleView != null) {
             brailleView.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
         }
