@@ -230,12 +230,20 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     @Override
+    public void onFinishInput() {
+        super.onFinishInput();
+        mIsFinishing = true;
+        finishComposingText(false);
+    }
+
+    @Override
     public void onWindowHidden() {
         super.onWindowHidden();
         if (brailleView != null) {
             brailleView.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
         }
         mIsFinishing = true;
+        finishComposingText(false);
         mAccessibilityHandler.removeCallbacksAndMessages(null);
         clearAccessibilityState();
     }

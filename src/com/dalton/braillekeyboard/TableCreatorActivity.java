@@ -305,11 +305,11 @@ public class TableCreatorActivity extends Activity {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
                 if (mIsUpdatingUI) return;
 
-                // Rimuoviamo sempre i vecchi include numerici e il segnanumero
+                // Rimuoviamo sempre i vecchi include numerici, il segnanumero e le definizioni litdigit
                 List<String> numFiles = Arrays.asList("digits6Dots.uti", "litdigits6DotsPlusDot6.uti", "digits6DotsPlusDot6.uti", "digits8Dots.uti", "loweredDigits6Dots.uti", "litdigits6Dots.uti");
                 for (int i = mMappings.size() - 1; i >= 0; i--) {
                     Mapping m = mMappings.get(i);
-                    if ((m.opcode.equals("include") && numFiles.contains(m.character)) || m.opcode.equals("numsign")) {
+                    if ((m.opcode.equals("include") && numFiles.contains(m.character)) || m.opcode.equals("numsign") || m.opcode.equals("litdigit")) {
                         mMappings.remove(i);
                     }
                 }
@@ -489,27 +489,12 @@ public class TableCreatorActivity extends Activity {
 
                 // LOGICA PER TABELLE MANAGED (PULIZIA)
                 if (trimmed.startsWith("include ")) { String included = trimmed.substring(8).trim().split("#")[0].trim(); Mapping m = new Mapping("include", included, new ArrayList<Integer>(), currentlyHighPriority); m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); continue; }
-                String[] parts = trimmed.split("\\s+"); if (parts.length < 2) continue;
-                String opcode = parts[0], charPart = "", dotsPart = "";
                 
-                if (opcode.equals("base")) continue; 
-                
-                boolean stand = Arrays.asList("numsign", "capsletter", "letsign", "space").contains(opcode) || opcode.startsWith("beg") || opcode.startsWith("end");
-                if (stand) {
-                    if (parts.length >= 2) dotsPart = parts[1];
-                } else if (parts.length >= 3) {
-                    charPart = parts[1];
-                    if (charPart.startsWith("\\x")) try { charPart = String.valueOf((char)Integer.parseInt(charPart.substring(2), 16)); } catch (Exception e) {}
-                    dotsPart = parts[2];
-                }
-
-                if (!dotsPart.isEmpty()) {
-                    Mapping m = new Mapping(opcode, charPart, parseDots(dotsPart), currentlyHighPriority);
-                    m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m);
-                } else {
-                    Mapping m = new Mapping(trimmed);
-                    m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m);
-                }
+                Mapping m = new Mapping(trimmed);
+                m.comment = lastMappingComment;
+                m.isHighPriority = currentlyHighPriority;
+                lastMappingComment = null;
+                mMappings.add(m);
             }
             refreshSpinner(); mIsUpdatingUI = false; initPresets();
         } catch (Exception e) { mIsUpdatingUI = false; }
@@ -730,27 +715,44 @@ public class TableCreatorActivity extends Activity {
         final Mapping target = (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty() && pos - 1 < mCurrentSearchResults.size()) ? mCurrentSearchResults.get(pos - 1) : mMappings.get(pos - 1);
         if (target.isFixed) { Toast.makeText(this, R.string.msg_fixed_mapping, Toast.LENGTH_SHORT).show(); return; }
         
-        // Pulizia simmetrica per i caratteri alfabetici
-        List<Mapping> toRemove = new ArrayList<>();
-        toRemove.add(target);
-        if (target.character != null && target.character.length() == 1) {
-            char c = target.character.charAt(0);
-            if (Character.isLetter(c)) {
-                char counterpart = Character.isLowerCase(c) ? Character.toUpperCase(c) : Character.toLowerCase(c);
-                String cpStr = String.valueOf(counterpart);
-                for (Mapping m : mMappings) {
-                    if (!m.isFixed && cpStr.equals(m.character) && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) {
-                        toRemove.add(m);
-                    }
-                }
-            }
-        }
+        // Pulizia simmetrica intelligente
+        List<Mapping> toRemove = findRelatedMappings(target);
 
         mMappings.removeAll(toRemove); 
         if (mCurrentSearchResults != null) mCurrentSearchResults.removeAll(toRemove);
         
         refreshSpinner(); mMappedItemsSpinner.setSelection(0); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); mCharEdit.setText(""); mDotsEdit.setText(""); mCurrentPatterns.clear(); updateDotsDisplay(); 
         Toast.makeText(this, getString(R.string.msg_rule_removed), Toast.LENGTH_SHORT).show();
+    }
+
+    private List<Mapping> findRelatedMappings(Mapping target) {
+        List<Mapping> related = new ArrayList<>();
+        related.add(target);
+        String character = target.character;
+        if (character == null || character.isEmpty()) return related;
+        if (character.length() == 1) {
+            char c = character.charAt(0);
+            if (Character.isLetter(c)) {
+                char counterpart = Character.isLowerCase(c) ? Character.toUpperCase(c) : Character.toLowerCase(c);
+                String cpStr = String.valueOf(counterpart);
+                for (Mapping m : mMappings) {
+                    if (m.isFixed) continue;
+                    if (character.equals(m.character) || cpStr.equals(m.character)) { if (!related.contains(m)) related.add(m); }
+                    if (m.rawLine != null && (m.rawLine.contains(character) || m.rawLine.contains(cpStr))) { if (!related.contains(m)) related.add(m); }
+                }
+            } else if (Character.isDigit(c)) {
+                for (Mapping m : mMappings) {
+                    if (m.isFixed) continue;
+                    if (character.equals(m.character)) { if (!related.contains(m)) related.add(m); }
+                    String hex = String.format("\\x%04X", (int)c).toLowerCase();
+                    String hexLower = String.format("\\x%04x", (int)c);
+                    if (m.rawLine != null && (m.rawLine.toLowerCase().contains(character) || m.rawLine.contains(hex) || m.rawLine.contains(hexLower))) {
+                         if (!related.contains(m)) related.add(m);
+                    }
+                }
+            }
+        }
+        return related;
     }
 
     private void refreshSpinner() {
@@ -1039,13 +1041,9 @@ public class TableCreatorActivity extends Activity {
             if (!localeLine.isEmpty()) sb.append(localeLine);
             if (cloneMarker != null) writeSingleMapping(sb, cloneMarker, wP, wL, wO);
 
-            // 3. Scrittura Personalizzazioni Utente (Nuove/Modificate)
+            // 3. Scrittura di tutte le regole mantenendo l'ordine della lista mMappings
             for (Mapping m : mMappings) {
-                if (m.rawLine == null && m != cloneMarker) writeSingleMapping(sb, m, wP, wL, wO);
-            }
-            // 4. Scrittura resto del codice originale (tranne ciò che è stato messo nell'header)
-            for (Mapping m : mMappings) {
-                if (m.rawLine != null && m != cloneMarker) writeSingleMapping(sb, m, wP, wL, wO);
+                if (m != cloneMarker) writeSingleMapping(sb, m, wP, wL, wO);
             }
             
         } else {
