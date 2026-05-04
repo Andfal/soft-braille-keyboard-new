@@ -728,6 +728,8 @@
     <string name="table_variant_unofficial">Unofficial</string>
     <string name="btn_edit_header">Edit Table Header / Metadata</string>
     <string name="btn_move_to_pos">Move to Position</string>
+    <string name="btn_pin_mapping">Pin mapping (protect)</string>
+    <string name="btn_unpin_mapping">Unpin mapping</string>
     <string name="hint_enter_pos">Enter position (1 to %d)</string>
     <string name="btn_move_up">Move Up</string>
     <string name="btn_move_down">Move Down</string>

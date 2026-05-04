@@ -547,6 +547,8 @@
     <string name="table_variant_unofficial">Non ufficiale</string>
     <string name="btn_edit_header">Modifica Intestazione / Metadati</string>
     <string name="btn_move_to_pos">Sposta in Posizione</string>
+    <string name="btn_pin_mapping">Fissa (proteggi da eliminazione)</string>
+    <string name="btn_unpin_mapping">Sblocca (permetti modifiche)</string>
     <string name="hint_enter_pos">Inserisci posizione (da 1 a %d)</string>
     <string name="msg_invalid_pos">Posizione non valida</string>
     <string name="btn_move_up">Sposta Su</string>

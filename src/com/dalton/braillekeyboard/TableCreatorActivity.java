@@ -767,14 +767,23 @@ public class TableCreatorActivity extends Activity {
         LinearLayout layout = new LinearLayout(this); layout.setOrientation(LinearLayout.VERTICAL); layout.setPadding(40, 20, 40, 20);
         Button upBtn = new Button(this); upBtn.setText(R.string.btn_move_up); Button downBtn = new Button(this); downBtn.setText(R.string.btn_move_down);
         Button topBtn = new Button(this); topBtn.setText(R.string.btn_move_top); Button moveToBtn = new Button(this); moveToBtn.setText(R.string.btn_move_to_pos);
-        layout.addView(upBtn); layout.addView(downBtn); layout.addView(topBtn); layout.addView(moveToBtn);
+        Button pinBtn = new Button(this); pinBtn.setText(mapping.isFixed ? R.string.btn_unpin_mapping : R.string.btn_pin_mapping);
+        layout.addView(upBtn); layout.addView(downBtn); layout.addView(topBtn); layout.addView(moveToBtn); layout.addView(pinBtn);
         Button delBtn = new Button(this); delBtn.setText(R.string.btn_remove_mapping); delBtn.setTextColor(Color.RED); layout.addView(delBtn); 
         builder.setView(layout); builder.setNegativeButton(R.string.btn_cancel, null); final AlertDialog dialog = builder.create(); dialog.show();
         Runnable updateUI = () -> { refreshSpinner(); int newPos = mMappings.indexOf(mapping); if (newPos != -1) mMappedItemsSpinner.setSelection(newPos + 1); };
+        
+        upBtn.setEnabled(!mapping.isFixed);
+        downBtn.setEnabled(!mapping.isFixed);
+        topBtn.setEnabled(!mapping.isFixed);
+        moveToBtn.setEnabled(!mapping.isFixed);
+        delBtn.setEnabled(!mapping.isFixed);
+
         upBtn.setOnClickListener(v -> { int idx = mMappings.indexOf(mapping); if (idx > 0) { Collections.swap(mMappings, idx, idx - 1); updateUI.run(); } });
         downBtn.setOnClickListener(v -> { int idx = mMappings.indexOf(mapping); if (idx < mMappings.size() - 1) { Collections.swap(mMappings, idx, idx + 1); updateUI.run(); } });
         topBtn.setOnClickListener(v -> { int idx = mMappings.indexOf(mapping); int firstNonFixed = 0; while (firstNonFixed < mMappings.size() && mMappings.get(firstNonFixed).isFixed) firstNonFixed++; if (idx > firstNonFixed) { Mapping m = mMappings.remove(idx); mMappings.add(firstNonFixed, m); updateUI.run(); } else Toast.makeText(this, R.string.msg_already_top, 0).show(); });
         moveToBtn.setOnClickListener(v -> { dialog.dismiss(); showMoveToDialog(mapping); });
+        pinBtn.setOnClickListener(v -> { mapping.isFixed = !mapping.isFixed; dialog.dismiss(); refreshSpinner(); Toast.makeText(this, mapping.isFixed ? R.string.btn_pin_mapping : R.string.btn_unpin_mapping, 0).show(); });
         delBtn.setOnClickListener(v -> { if (mapping.isFixed) return; mMappings.remove(mapping); refreshSpinner(); mMappedItemsSpinner.setSelection(0); dialog.dismiss(); });
     }
 
