@@ -406,6 +406,12 @@
     <string name="btn_rename">Rename</string>
     <string name="dialog_export_title">File exists</string>
     <string name="msg_export_collision">A file with the name %1$s already exists in the export folder. What would you like to do?</string>
+    <string name="msg_save_collision">A table with the name %1$s already exists. What would you like to do?</string>
+    <string name="msg_export_failed">Export failed: %1$s</string>
+    <string name="msg_select_mapping_first">Please select a mapping from the list first.</string>
+    <string name="msg_share_error">Share error</string>
+    <string name="label_sync_hub">Synchronized Hub</string>
+    <string name="msg_hands_overlapping">Hands overlapping</string>
     <string name="hint_enter_new_name">Enter new filename</string>
     <string name="msg_imported">Imported %s</string>
     <string name="msg_invalid_pos">Invalid position</string>
@@ -736,6 +742,7 @@
     <string name="btn_move_top">Move to Top</string>
     <string name="btn_insert_alphabet_here">Insert Alphabet (%s) here</string>
     <string name="btn_insert_numeric_here">Insert Numbers (%s) here</string>
+    <string name="title_activity_keyboard_help">Keyboard Help</string>
     <string name="title_activity_table_creator">Table Creator</string>
     <string name="title_confirm_delete">Confirm Delete</string>
     <string name="title_duplicate_combination">Duplicate Combination</string>

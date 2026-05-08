@@ -252,6 +252,7 @@ public class TableCreatorActivity extends Activity {
         Button appendDotBtn = (Button) findViewById(R.id.btn_append_cell);
         Button clearDotsBtn = (Button) findViewById(R.id.btn_clear_dots);
         Button massActionBtn = (Button) findViewById(R.id.btn_mass_action);
+        Button orderActionsBtn = (Button) findViewById(R.id.btn_order_actions);
         Button saveBtn = (Button) findViewById(R.id.btn_save_table);
         Button exportBtn = (Button) findViewById(R.id.btn_export_table_final);
 
@@ -366,6 +367,17 @@ public class TableCreatorActivity extends Activity {
             showOrderActionsDialog(target); return true;
         });
 
+        orderActionsBtn.setOnClickListener(v -> {
+            int pos = mMappedItemsSpinner.getSelectedItemPosition();
+            if (pos <= 0) {
+                Toast.makeText(this, R.string.msg_select_mapping_first, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Mapping target = (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty() && pos - 1 < mCurrentSearchResults.size()) 
+                             ? mCurrentSearchResults.get(pos - 1) : mMappings.get(pos - 1);
+            showOrderActionsDialog(target);
+        });
+
         mAddMappingBtn.setOnClickListener(v -> { addOrUpdateMapping(); collapseHeader(); });
         massActionBtn.setOnClickListener(v -> showMassActionsDialog());
         saveBtn.setOnClickListener(v -> saveTable());
@@ -466,11 +478,11 @@ public class TableCreatorActivity extends Activity {
                 String trimmed = line.trim();
                 if (trimmed.isEmpty()) { if (inHeader) mOriginalHeaderLines.add(""); continue; }
                 if (trimmed.startsWith("#")) {
-                    if (trimmed.startsWith("# Author: ")) mAuthorEdit.setText(trimmed.substring(10));
-                    else if (trimmed.startsWith("# Description: ")) mDescriptionEdit.setText(trimmed.substring(15));
+                    if (trimmed.startsWith("# Author:")) mAuthorEdit.setText(trimmed.substring(9).trim());
+                    else if (trimmed.startsWith("# Description:")) mDescriptionEdit.setText(trimmed.substring(14).trim());
                     else if (trimmed.contains("+mode:clone")) { mIsCloningMode = true; mMappings.add(new Mapping("comment", "+mode:clone", new ArrayList<Integer>(), true, true)); }
                     else if (trimmed.contains("+mode:managed")) isManaged = true;
-                    else if (trimmed.startsWith("#+locale: ")) { String code = trimmed.substring(10).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int filteredIdx = mFilteredLocaleNames.indexOf(name); if (filteredIdx != -1) mLocaleSpinner.setSelection(filteredIdx); } }
+                    else if (trimmed.startsWith("#+locale:")) { String code = trimmed.substring(9).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int filteredIdx = mFilteredLocaleNames.indexOf(name); if (filteredIdx != -1) mLocaleSpinner.setSelection(filteredIdx); } }
                     else if (trimmed.contains("SYSTEM INCLUDES") || trimmed.contains("SYSTEM SECTION")) currentlyHighPriority = false;
                     else if (!trimmed.startsWith("# ---") && !trimmed.startsWith("##")) lastMappingComment = trimmed.substring(1).trim();
                     
@@ -1034,17 +1046,20 @@ public class TableCreatorActivity extends Activity {
         String localeLine = (localePos >= 0 && localePos < mFilteredLocaleCodes.size() && !mFilteredLocaleCodes.get(localePos).isEmpty()) 
                             ? "#+locale: " + mFilteredLocaleCodes.get(localePos) + "\n" : "";
 
-        boolean preserveStructure = (isClone || !mOriginalHeaderLines.isEmpty()) && !mIsTemplateUsed;
+        boolean preserveStructure = (isClone || !mIsManagedTable || !mOriginalHeaderLines.isEmpty()) && !mIsTemplateUsed;
 
         if (preserveStructure) {
-            // 1. Scrittura Header originale (preservato, filtrando metadati sovrascritti)
+            // 1. Scrittura Header originale (preservato, filtrando metadati sovrascritti o obsoleti)
             for (String hLine : mOriginalHeaderLines) {
-                if (hLine.startsWith("# Author: ") || hLine.startsWith("# Description: ") 
-                    || hLine.startsWith("#+locale: ") || hLine.contains("+mode:clone")) continue;
+                String t = hLine.trim();
+                if (t.startsWith("# Author:") || t.startsWith("# Description:") 
+                    || t.startsWith("#+locale:") || t.contains("+mode:clone")
+                    || t.contains("+mode:managed")) continue;
                 sb.append(hLine).append("\n");
             }
 
             // 2. Inserimento Metadati moderni e Firma
+            if (mIsManagedTable) sb.append("#+mode:managed\n");
             sb.append("# Author: ").append(mAuthorEdit.getText().toString().trim()).append("\n");
             sb.append("# Description: ").append(mDescriptionEdit.getText().toString().trim()).append("\n");
             if (!localeLine.isEmpty()) sb.append(localeLine);
@@ -1087,12 +1102,40 @@ public class TableCreatorActivity extends Activity {
 
     private void writeSingleMapping(StringBuilder sb, Mapping m, List<String> wP, List<Character> wL, List<String> wO) {
         if (m.opcode.equals("comment") && "+mode:clone".equals(m.character)) { sb.append("#+mode:clone\n"); return; }
-        if (m.rawLine != null) { sb.append(m.rawLine).append("\n"); return; }
+        if (m.rawLine != null) {
+            // Se è una riga base uppercase esplicita, la segniamo per evitare duplicati automatici
+            if (m.opcode.startsWith("base uppercase")) {
+                String pair = extractBasePair(m.rawLine);
+                if (pair != null) wP.add(pair);
+            }
+            sb.append(m.rawLine).append("\n"); return;
+        }
         if (m.opcode.equals("include")) { sb.append("include ").append(m.character).append("\n"); return; }
         if (m.opcode.equals("context") || m.opcode.equals("class")) { StringBuilder dots = new StringBuilder(); for (int i = 0; i < m.patterns.size(); i++) { if (i > 0) dots.append("-"); dots.append(patternToDotsString(m.patterns.get(i))); } sb.append(m.opcode).append(" ").append(m.character).append(" ").append(dots).append("\n"); return; }
         if (m.character != null && !m.character.isEmpty()) { String key = m.opcode + ":" + m.character; if (wO.contains(key)) return; }
         StringBuilder dots = new StringBuilder(); for (int i = 0; i < m.patterns.size(); i++) { if (i > 0) dots.append("-"); dots.append(patternToDotsString(m.patterns.get(i))); }
-        if (m.character != null && m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) { char c = m.character.charAt(0); if (Character.isLetter(c)) { char low = Character.toLowerCase(c), up = Character.toUpperCase(c); if (low != up) { if (c == up && !isCharacterMapped(low) && !wL.contains(low)) { sb.append("# ").append(getCharLabel(String.valueOf(low))).append(" ").append(getString(R.string.label_auto_link)).append("\n"); sb.append("lowercase ").append(String.format("\\x%04x", (int)low)).append(" 0\n"); wL.add(low); wO.add("lowercase:" + low); } String pair = up + "-" + low; if (!wP.contains(pair)) { sb.append("base uppercase ").append(String.format("\\x%04x", (int)up)).append(" ").append(String.format("\\x%04x", (int)low)).append("\n"); wP.add(pair); } if (c == low) wL.add(low); } } }
+
+        // Gestione automatica uppercase/lowercase/base
+        char c_low = 0, c_up = 0;
+        boolean isLetter = false;
+        if (m.character != null && m.character.length() == 1 && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase"))) {
+            char c = m.character.charAt(0);
+            if (Character.isLetter(c)) {
+                isLetter = true;
+                c_low = Character.toLowerCase(c);
+                c_up = Character.toUpperCase(c);
+                if (c_low != c_up) {
+                    // 1. Se stiamo salvando un uppercase, assicuriamoci che esista il lowercase (auto-link)
+                    if (c == c_up && !isCharacterMapped(c_low) && !wL.contains(c_low)) {
+                        sb.append("# ").append(getCharLabel(String.valueOf(c_low))).append(" ").append(getString(R.string.label_auto_link)).append("\n");
+                        sb.append("lowercase ").append(String.format("\\x%04x", (int)c_low)).append(" 0\n");
+                        wL.add(c_low);
+                        wO.add("lowercase:" + c_low);
+                    }
+                } else isLetter = false;
+            }
+        }
+
         if (m.comment != null && !m.comment.isEmpty()) sb.append("# ").append(m.comment).append("\n"); else if (m.character != null && !m.character.isEmpty()) { String label = getCharLabel(m.character); if (label != null) sb.append("# ").append(label).append("\n"); }
         
         // Opcode che NON richiedono un carattere ma solo i punti (segnatasti, indicatori, ecc.)
@@ -1100,26 +1143,58 @@ public class TableCreatorActivity extends Activity {
         
         if (standaloneOpcodes.contains(m.opcode)) {
             sb.append(m.opcode).append(" ").append(dots).append("\n");
-            return;
+        } else {
+            // Per tutti gli altri (lowercase, uppercase, punctuation, math, sign, space, word, ecc.)
+            if (m.character == null || m.character.isEmpty()) {
+                if (m.opcode.equals("space")) m.character = " "; // Default per lo spazio
+                else return; // Non scriviamo regole incomplete
+            }
+            
+            String cP = m.character;
+            if (cP.length() == 1) {
+                char c = cP.charAt(0);
+                if (c == ' ') cP = "\\s";
+                else if (c == '\t') cP = "\\t";
+                else if (c == '\\') cP = "\\\\";
+                else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c);
+            }
+            
+            sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append("\n");
+            wO.add(m.opcode + ":" + m.character);
+            if (isLetter && m.character.charAt(0) == c_low) wL.add(c_low);
         }
-        
-        // Per tutti gli altri (lowercase, uppercase, punctuation, math, sign, space, word, ecc.)
-        if (m.character == null || m.character.isEmpty()) {
-            if (m.opcode.equals("space")) m.character = " "; // Default per lo spazio
-            else return; // Non scriviamo regole incomplete
+
+        // 2. Dopo la riga, aggiungiamo base uppercase se necessario (ordine canonico Liblouis)
+        if (isLetter) {
+            String pair = c_up + "-" + c_low;
+            if (!wP.contains(pair) && !isBaseMappingPresent(c_up, c_low)) {
+                sb.append("base uppercase ").append(String.format("\\x%04x", (int)c_up)).append(" ").append(String.format("\\x%04x", (int)c_low)).append("\n");
+                wP.add(pair);
+            }
         }
-        
-        String cP = m.character;
-        if (cP.length() == 1) {
-            char c = cP.charAt(0);
-            if (c == ' ') cP = "\\s";
-            else if (c == '\t') cP = "\\t";
-            else if (c == '\\') cP = "\\\\";
-            else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c);
+    }
+
+    private String extractBasePair(String line) {
+        try {
+            String[] p = line.trim().split("\\s+");
+            if (p.length >= 4 && p[0].equals("base") && p[1].equals("uppercase")) {
+                char up = (char)Integer.parseInt(p[2].replace("\\x", ""), 16);
+                char low = (char)Integer.parseInt(p[3].replace("\\x", ""), 16);
+                return up + "-" + low;
+            }
+        } catch (Exception e) {}
+        return null;
+    }
+
+    private boolean isBaseMappingPresent(char up, char low) {
+        String pair = up + "-" + low;
+        for (Mapping m : mMappings) {
+            if (m.rawLine != null) {
+                String p = extractBasePair(m.rawLine);
+                if (pair.equals(p)) return true;
+            }
         }
-        
-        sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append("\n");
-        wO.add(m.opcode + ":" + m.character);
+        return false;
     }
 
     private String getCharLabel(String s) {
@@ -1294,15 +1369,47 @@ public class TableCreatorActivity extends Activity {
             } catch (Exception ex) { Log.e(TAG, "Failed to start intent sender", ex); }
         } catch (Exception e) {
             Log.e(TAG, "MediaStore export failed", e);
-            runOnUiThread(() -> Toast.makeText(this, "Export failed: " + e.getMessage(), Toast.LENGTH_LONG).show());
+            runOnUiThread(() -> Toast.makeText(this, String.format(getString(R.string.msg_export_failed), e.getMessage()), Toast.LENGTH_LONG).show());
         }
         return false;
     }
 
     private void saveTable() {
         String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) { Toast.makeText(this, R.string.error_no_name, 0).show(); mTableNameEdit.requestFocus(); return; }
+        if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
+        final String finalName = name;
+        CustomTableManager manager = new CustomTableManager(this);
+        File f = manager.getCustomTableFile(finalName);
+        if (f.exists()) {
+            new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_export_title)
+                .setMessage(String.format(getString(R.string.msg_save_collision), finalName))
+                .setPositiveButton(R.string.btn_overwrite, (d, w) -> doSaveTable(finalName))
+                .setNeutralButton(R.string.btn_rename, (d, w) -> {
+                    AlertDialog.Builder rb = new AlertDialog.Builder(this);
+                    rb.setTitle(R.string.btn_rename);
+                    final EditText input = new EditText(this);
+                    input.setText(finalName);
+                    rb.setView(input);
+                    rb.setPositiveButton(R.string.btn_ok, (d2, w2) -> {
+                        String newName = input.getText().toString().trim();
+                        if (!newName.isEmpty()) {
+                            if (!newName.endsWith(".ctb") && !newName.endsWith(".utb")) newName += ".ctb";
+                            mTableNameEdit.setText(newName);
+                            saveTable();
+                        }
+                    });
+                    rb.setNegativeButton(R.string.btn_cancel, null).show();
+                })
+                .setNegativeButton(R.string.btn_cancel, null).show();
+        } else {
+            doSaveTable(finalName);
+        }
+    }
+
+    private void doSaveTable(String name) {
         String tableContent = generateTableContent(); if (tableContent.isEmpty()) return;
-        try { CustomTableManager manager = new CustomTableManager(this); if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb"; File f = manager.getCustomTableFile(name); try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); } 
+        try { CustomTableManager manager = new CustomTableManager(this); File f = manager.getCustomTableFile(name); try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); }
             Intent intent = new Intent("com.dalton.braillekeyboard.ACTION_TABLE_UPDATED");
             intent.putExtra("table_file_name", name);
             sendBroadcast(intent);

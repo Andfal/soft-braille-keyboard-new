@@ -241,7 +241,7 @@ public class GestureSettingsActivity extends PreferenceActivity {
                                 }
                                 os.write(json.toString(2).getBytes("UTF-8"));
                                 os.close();
-                                Toast.makeText(getActivity(), String.format(getString(R.string.msg_exported_to), "Hub Sincronizzato"), Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), String.format(getString(R.string.msg_exported_to), getString(R.string.label_sync_hub)), Toast.LENGTH_LONG).show();
                                 return;
                             }
                         }
@@ -257,7 +257,7 @@ public class GestureSettingsActivity extends PreferenceActivity {
             if (GestureRepository.exportToJson(getActivity(), backupFile)) {
                 Toast.makeText(getActivity(), String.format(getString(R.string.msg_exported_to), backupFile.getAbsolutePath()), Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(getActivity(), "Export failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), String.format(getString(R.string.msg_export_failed), ""), Toast.LENGTH_SHORT).show();
             }
         }
 

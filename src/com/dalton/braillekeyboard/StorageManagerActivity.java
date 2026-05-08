@@ -254,7 +254,7 @@ public class StorageManagerActivity extends Activity {
                 while ((len = fis.read(buffer)) > 0) fos.write(buffer, 0, len);
             }
             Toast.makeText(this, String.format(getString(R.string.msg_exported_to), outFile.getAbsolutePath()), Toast.LENGTH_LONG).show();
-        } catch (Exception e) { Toast.makeText(this, "Error: " + e.getMessage(), 0).show(); }
+        } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
     }
 
     private void openVirtualEditor(int type) {
@@ -402,7 +402,7 @@ public class StorageManagerActivity extends Activity {
                 refreshList();
             } else Toast.makeText(this, R.string.msg_import_error, 0).show();
             tempFile.delete();
-        } catch (Exception e) { Toast.makeText(this, "Error: " + e.getMessage(), 0).show(); }
+        } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
     }
 
     private void autoActivateTable(File f) {
@@ -435,7 +435,7 @@ public class StorageManagerActivity extends Activity {
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(Intent.createChooser(intent, getString(R.string.menu_share)));
-        } catch (Exception e) { Toast.makeText(this, "Share error", 0).show(); }
+        } catch (Exception e) { Toast.makeText(this, R.string.msg_share_error, 0).show(); }
     }
 
     private void showDeleteConfirmation(StorageItem item) {

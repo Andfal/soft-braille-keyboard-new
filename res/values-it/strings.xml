@@ -225,6 +225,12 @@
     <string name="btn_rename">Rinomina</string>
     <string name="dialog_export_title">File esistente</string>
     <string name="msg_export_collision">Un file con il nome %1$s esiste già nella cartella di esportazione. Cosa vuoi fare?</string>
+    <string name="msg_save_collision">Una tabella con il nome %1$s esiste già. Cosa vuoi fare?</string>
+    <string name="msg_export_failed">Esportazione fallita: %1$s</string>
+    <string name="msg_select_mapping_first">Seleziona prima una mappatura dalla lista.</string>
+    <string name="msg_share_error">Errore durante la condivisione</string>
+    <string name="label_sync_hub">Hub Sincronizzato</string>
+    <string name="msg_hands_overlapping">Mani sovrapposte</string>
     <string name="hint_enter_new_name">Inserisci nuovo nome file</string>
     <string name="msg_imported">Importato %s</string>
     <string name="msg_logs_cleared">Log cancellati con successo</string>
@@ -556,6 +562,7 @@
     <string name="btn_move_top">Sposta in Cima</string>
     <string name="btn_insert_alphabet_here">Inserisci Alfabeto (%s) qui</string>
     <string name="btn_insert_numeric_here">Inserisci Numeri (%s) qui</string>
+    <string name="title_activity_keyboard_help">Aiuto Tastiera</string>
     <string name="title_activity_table_creator">Creatore Tabelle</string>
     <string name="title_confirm_delete">Conferma Eliminazione</string>
     <string name="title_duplicate_combination">Combinazione Duplicata</string>

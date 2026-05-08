@@ -47,12 +47,12 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".TableCreatorActivity" android:label="Create Braille Table" android:exported="true">
+        <activity android:name=".TableCreatorActivity" android:label="@string/title_activity_table_creator" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".KeyboardHelpActivity" android:label="Aiuto Tastiera" android:exported="true">
+        <activity android:name=".KeyboardHelpActivity" android:label="@string/title_activity_keyboard_help" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
