@@ -165,7 +165,13 @@ public class TableCreatorActivity extends Activity {
         Mapping(String raw) {
             this.rawLine = raw;
             this.isFixed = false;
-            String[] p = raw.trim().split("\\s+");
+            String clean = raw.trim();
+            int commentIdx = clean.indexOf('#');
+            if (commentIdx != -1) {
+                this.comment = clean.substring(commentIdx + 1).trim();
+                clean = clean.substring(0, commentIdx).trim();
+            }
+            String[] p = clean.split("\\s+");
             if (p.length > 0) {
                 this.opcode = p[0];
                 if (this.opcode.equals("base") && p.length >= 4) {
@@ -639,7 +645,11 @@ public class TableCreatorActivity extends Activity {
             return;
         }
 
-        boolean high = mMappingPriorityCheck.isChecked(); Mapping m = new Mapping(opcode, character, patterns, high); String dots = getDotsString(m.patterns); int dupIdx = findDuplicateDots(dots);
+        boolean high = mMappingPriorityCheck.isChecked(); 
+        Mapping m = new Mapping(opcode, character, patterns, high); 
+        if (mEditingIndex != -1) m.comment = mMappings.get(mEditingIndex).comment;
+        String dots = getDotsString(m.patterns); 
+        int dupIdx = findDuplicateDots(dots);
         if (mEditingIndex != -1 && dupIdx == mEditingIndex) { mMappings.remove(mEditingIndex); insertMappingWithPriority(m, high, mEditingIndex); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); return; }
         if (dupIdx != -1 && !opcode.equals("include")) { showDuplicateDialog(m, dupIdx); return; }
         String preset = findDuplicateInPresets(dots); 
@@ -1209,9 +1219,29 @@ public class TableCreatorActivity extends Activity {
     }
 
     private String getCharLabel(String s) {
-        if (s == null || s.isEmpty()) return null; if (s.length() > 1) return s; char c = s.charAt(0); if (c == ' ') return getString(R.string.label_spazio);
-        int resId = getResources().getIdentifier("label_" + String.format("%04x", (int)c), "string", getPackageName()); if (resId != 0) return getString(resId);
-        if (c == 'à') return getString(R.string.label_a_grave); if (c == 'è') return getString(R.string.label_e_grave); if (c == 'é') return getString(R.string.label_e_acute); if (c == 'ì') return getString(R.string.label_i_grave); if (c == 'ò') return getString(R.string.label_o_grave); if (c == 'ù') return getString(R.string.label_u_grave); return s;
+        if (s == null || s.isEmpty()) return null;
+        if (s.length() > 1) return s;
+        char c = s.charAt(0);
+        if (c == ' ') return getString(R.string.label_spazio);
+        
+        int resId = getResources().getIdentifier("label_" + String.format("%04x", (int)c), "string", getPackageName());
+        if (resId != 0) return getString(resId);
+        
+        // Fallback manuali per caratteri comuni (se mancano in strings.xml)
+        if (c == 'à') return getString(R.string.label_a_grave);
+        if (c == 'è') return getString(R.string.label_e_grave);
+        if (c == 'é') return getString(R.string.label_e_acute);
+        if (c == 'ì') return getString(R.string.label_i_grave);
+        if (c == 'ò') return getString(R.string.label_o_grave);
+        if (c == 'ù') return getString(R.string.label_u_grave);
+        if (c == 'œ') return "oe ligature";
+        if (c == 'Œ') return "OE ligature";
+        if (c == 'ç') return "c cedilla";
+        if (c == 'Ç') return "C cedilla";
+        
+        // Se non abbiamo un'etichetta descrittiva, restituiamo null invece del carattere stesso
+        // per evitare commenti ridondanti come "lowercase œ 123 # œ"
+        return null;
     }
 
     private boolean isCharacterMapped(char c) { String s = String.valueOf(c); for (Mapping m : mMappings) if (s.equals(m.character)) return true; return false; }
