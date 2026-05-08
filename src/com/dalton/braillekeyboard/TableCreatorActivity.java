@@ -1136,13 +1136,24 @@ public class TableCreatorActivity extends Activity {
             }
         }
 
-        if (m.comment != null && !m.comment.isEmpty()) sb.append("# ").append(m.comment).append("\n"); else if (m.character != null && !m.character.isEmpty()) { String label = getCharLabel(m.character); if (label != null) sb.append("# ").append(label).append("\n"); }
-        
+        // Determinazione del commento/etichetta (inline)
+        String inlineComment = "";
+        if (m.comment != null && !m.comment.isEmpty()) {
+            inlineComment = " # " + m.comment;
+        } else if (m.character != null && !m.character.isEmpty()) {
+            char c = m.character.charAt(0);
+            // Evitiamo commenti ridondanti per ASCII semplici (lettere a-z, numeri 0-9)
+            if (!(m.character.length() == 1 && ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')))) {
+                String label = getCharLabel(m.character);
+                if (label != null) inlineComment = " # " + label;
+            }
+        }
+
         // Opcode che NON richiedono un carattere ma solo i punti (segnatasti, indicatori, ecc.)
         List<String> standaloneOpcodes = Arrays.asList("numsign", "capsletter", "letsign", "begcaps", "endcaps", "begcapsword", "endcapsword", "begnum", "endnum");
         
         if (standaloneOpcodes.contains(m.opcode)) {
-            sb.append(m.opcode).append(" ").append(dots).append("\n");
+            sb.append(m.opcode).append(" ").append(dots).append(inlineComment).append("\n");
         } else {
             // Per tutti gli altri (lowercase, uppercase, punctuation, math, sign, space, word, ecc.)
             if (m.character == null || m.character.isEmpty()) {
@@ -1159,7 +1170,7 @@ public class TableCreatorActivity extends Activity {
                 else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c);
             }
             
-            sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append("\n");
+            sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append(inlineComment).append("\n");
             wO.add(m.opcode + ":" + m.character);
             if (isLetter && m.character.charAt(0) == c_low) wL.add(c_low);
         }
