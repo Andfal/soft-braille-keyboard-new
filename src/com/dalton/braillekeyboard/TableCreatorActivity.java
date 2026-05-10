@@ -153,6 +153,7 @@ public class TableCreatorActivity extends Activity {
         String opcode; String character; List<Integer> patterns = new ArrayList<>();
         boolean isHighPriority = false;
         boolean isFixed = false;
+        boolean isDirty = false; // Indica se la mappatura è stata creata o modificata dall'utente
         String comment = null;
         String rawLine = null;
         
@@ -161,36 +162,92 @@ public class TableCreatorActivity extends Activity {
         }
         Mapping(String op, String ch, List<Integer> pts, boolean high, boolean fixed) { 
             opcode = op; character = ch; patterns.addAll(pts); isHighPriority = high; isFixed = fixed;
+            isDirty = true; // Nuova mappatura o modifica esplicita
         }
         Mapping(String raw) {
             this.rawLine = raw;
             this.isFixed = false;
-            String clean = raw.trim();
-            int commentIdx = clean.indexOf('#');
-            if (commentIdx != -1) {
-                this.comment = clean.substring(commentIdx + 1).trim();
-                clean = clean.substring(0, commentIdx).trim();
+            this.isDirty = false; // Caricata da file, non ancora modificata
+            String trimmed = raw.trim();
+            if (trimmed.isEmpty()) { this.opcode = "raw"; this.character = ""; return; }
+            
+            // 1. Identificazione riga di puro commento
+            if (trimmed.startsWith("#")) {
+                this.opcode = "comment";
+                this.character = ""; // Non usiamo character per i commenti puri
+                return;
             }
-            String[] p = clean.split("\\s+");
+
+            // 2. Estrazione commento inline esplicito (#)
+            int hashIdx = raw.indexOf('#');
+            if (hashIdx != -1) {
+                this.comment = raw.substring(hashIdx + 1);
+                trimmed = raw.substring(0, hashIdx).trim();
+            }
+
+            String[] p = trimmed.split("\\s+");
             if (p.length > 0) {
                 this.opcode = p[0];
                 if (this.opcode.equals("base") && p.length >= 4) {
                     this.opcode = "base " + p[1];
-                    this.character = p[2];
-                    this.patterns = new ArrayList<>(); // base rules don't have dots
+                    this.character = p[2] + " " + p[3]; // SALVIAMO ENTRAMBI I CARATTERI
+                    this.patterns = new ArrayList<>();
+                    // 3. Cattura commento implicito base (tutto ciò che segue p[3] se non c'è #)
+                    if (this.comment == null) {
+                        int pos = raw.indexOf(p[3]);
+                        if (pos != -1) {
+                            int nextPos = raw.indexOf(p[3], pos + 1); // Cerca se p[3] compare due volte (es. base uppercase A A)
+                            if (nextPos != -1) pos = nextPos;
+                            if (pos + p[3].length() < raw.length()) {
+                                String extra = raw.substring(pos + p[3].length()).trim();
+                                if (!extra.isEmpty()) this.comment = extra;
+                            }
+                        }
+                    }
                 } else if (this.opcode.equals("include") && p.length >= 2) {
                     this.character = p[1];
+                    if (this.comment == null) {
+                        int pos = raw.indexOf(p[1]);
+                        if (pos != -1 && pos + p[1].length() < raw.length()) {
+                            String extra = raw.substring(pos + p[1].length()).trim();
+                            if (!extra.isEmpty()) this.comment = extra;
+                        }
+                    }
                 } else {
                     List<String> standalone = Arrays.asList("numsign", "capsletter", "letsign", "begcaps", "endcaps", "begcapsword", "endcapsword", "begnum", "endnum");
                     if (standalone.contains(this.opcode) || this.opcode.startsWith("beg") || this.opcode.startsWith("end")) {
-                        if (p.length >= 2) this.patterns = parseDots(p[1]);
-                    } else if (p.length >= 3) {
+                        if (p.length >= 2) {
+                            this.patterns = parseDots(p[1]);
+                            // Commento implicito dopo i punti
+                            if (this.comment == null) {
+                                int pos = raw.indexOf(p[1]);
+                                if (pos != -1 && pos + p[1].length() < raw.length()) {
+                                    String extra = raw.substring(pos + p[1].length()).trim();
+                                    if (!extra.isEmpty()) this.comment = extra;
+                                }
+                            }
+                        }
+                    } else if (p.length >= 2) {
                         this.character = p[1];
                         if (this.character.startsWith("\\x")) {
                             try { this.character = String.valueOf((char)Integer.parseInt(this.character.substring(2), 16)); } catch (Exception e) {}
                         } else if (this.character.equals("\\s")) this.character = " ";
                         else if (this.character.equals("\\\\")) this.character = "\\";
-                        this.patterns = parseDots(p[2]);
+                        
+                        if (p.length >= 3) {
+                            this.patterns = parseDots(p[2]);
+                            // 4. Cattura commento implicito (tutto ciò che segue i punti se non c'è #)
+                            if (this.comment == null) {
+                                // Cerchiamo p[2] DOPO p[1] per evitare falsi positivi (es: litdigit 1 1)
+                                int startSearch = raw.indexOf(p[1]);
+                                if (startSearch == -1) startSearch = 0; else startSearch += p[1].length();
+                                int pos = raw.indexOf(p[2], startSearch);
+                                if (pos != -1 && pos + p[2].length() < raw.length()) {
+                                    String extra = raw.substring(pos + p[2].length()).trim();
+                                    if (!extra.isEmpty()) this.comment = extra;
+                                }
+                            }
+                        }
                     }
                 }
             } else {
@@ -472,7 +529,7 @@ public class TableCreatorActivity extends Activity {
             File f = manager.getCustomTableFile(fileName); if (!f.exists()) { mIsUpdatingUI = false; return; }
             mTableNameEdit.setText(fileName); mMappings.clear(); mOriginalHeaderLines.clear(); mNumSystemSpinner.setSelection(NUM_NONE);
             boolean currentlyHighPriority = true; Scanner scanner = new Scanner(f, "UTF-8");
-            String lastMappingComment = null; boolean inHeader = true; boolean isManaged = false;
+            boolean inHeader = true; boolean isManaged = false;
             
             // Primo passo: cerchiamo se è una tabella gestita (managed)
             List<String> lines = new ArrayList<>();
@@ -490,28 +547,19 @@ public class TableCreatorActivity extends Activity {
                     else if (trimmed.contains("+mode:managed")) isManaged = true;
                     else if (trimmed.startsWith("#+locale:")) { String code = trimmed.substring(9).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int filteredIdx = mFilteredLocaleNames.indexOf(name); if (filteredIdx != -1) mLocaleSpinner.setSelection(filteredIdx); } }
                     else if (trimmed.contains("SYSTEM INCLUDES") || trimmed.contains("SYSTEM SECTION")) currentlyHighPriority = false;
-                    else if (!trimmed.startsWith("# ---") && !trimmed.startsWith("##")) lastMappingComment = trimmed.substring(1).trim();
                     
-                    if (inHeader) mOriginalHeaderLines.add(trimmed);
-                    else { Mapping m = new Mapping(trimmed); m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); }
+                    if (inHeader) mOriginalHeaderLines.add(line); // Usiamo line originale per preservare spazi nell'header
+                    else { 
+                        Mapping m = new Mapping(line); 
+                        m.isHighPriority = currentlyHighPriority;
+                        mMappings.add(m); 
+                    }
                     continue;
                 }
                 inHeader = false;
 
-                // SE NON E' MANAGED, CARICHIAMO TUTTO COME RAW PER VEDERE IL CODICE REALE
-                if (!isManaged) {
-                    Mapping m = new Mapping(trimmed);
-                    m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m);
-                    continue;
-                }
-
-                // LOGICA PER TABELLE MANAGED (PULIZIA)
-                if (trimmed.startsWith("include ")) { String included = trimmed.substring(8).trim().split("#")[0].trim(); Mapping m = new Mapping("include", included, new ArrayList<Integer>(), currentlyHighPriority); m.comment = lastMappingComment; lastMappingComment = null; mMappings.add(m); continue; }
-                
-                Mapping m = new Mapping(trimmed);
-                m.comment = lastMappingComment;
+                Mapping m = new Mapping(line); // CARICHIAMO SEMPRE DA LINE ORIGINALE
                 m.isHighPriority = currentlyHighPriority;
-                lastMappingComment = null;
                 mMappings.add(m);
             }
             refreshSpinner(); mIsUpdatingUI = false; initPresets();
@@ -898,15 +946,26 @@ public class TableCreatorActivity extends Activity {
     }
 
     private String getMappingDisplayString(Mapping m) {
-        if (m.rawLine != null && !m.opcode.equals("comment")) return m.rawLine;
         if (m.opcode.equals("#") || m.opcode.equals("comment")) return m.rawLine != null ? m.rawLine : ("# " + m.character);
-        if (m.opcode.equals("include")) return getString(R.string.label_structure_prefix) + m.character;
-        if (m.opcode.equals("context")) return getString(R.string.label_logic_prefix) + m.character + " -> " + getDotsString(m.patterns);
-        if (m.opcode.equals("class")) return getString(R.string.label_class_prefix) + m.character + " -> " + getDotsString(m.patterns);
-        String fO = m.opcode; for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { fO = OPCODE_LABELS[i]; break; }
-        StringBuilder sb = new StringBuilder(); if (m.isHighPriority) sb.append("[H] "); sb.append(fO);
-        if (m.character != null && !m.character.isEmpty()) sb.append(" '").append(m.character).append("'");
+        if (m.opcode.equals("include")) return getString(R.string.label_structure_prefix) + m.character + (m.comment != null ? " # " + m.comment : "");
+        if (m.opcode.equals("context")) return getString(R.string.label_logic_prefix) + m.character + " -> " + getDotsString(m.patterns) + (m.comment != null ? " # " + m.comment : "");
+        if (m.opcode.equals("class")) return getString(R.string.label_class_prefix) + m.character + " -> " + getDotsString(m.patterns) + (m.comment != null ? " # " + m.comment : "");
+        
+        String fO = m.opcode; 
+        for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { fO = OPCODE_LABELS[i]; break; }
+        
+        StringBuilder sb = new StringBuilder(); 
+        if (m.isHighPriority) sb.append("[H] "); 
+        sb.append(fO);
+        
+        if (m.character != null && !m.character.isEmpty()) {
+            if (m.opcode.startsWith("base")) sb.append(" ").append(m.character);
+            else sb.append(" '").append(m.character).append("'");
+        }
+        
         if (!m.patterns.isEmpty()) sb.append(" -> ").append(getDotsString(m.patterns));
+        if (m.comment != null && !m.comment.isEmpty()) sb.append(" # ").append(m.comment);
+        
         return sb.toString();
     }
 
@@ -1112,18 +1171,49 @@ public class TableCreatorActivity extends Activity {
 
     private void writeSingleMapping(StringBuilder sb, Mapping m, List<String> wP, List<Character> wL, List<String> wO) {
         if (m.opcode.equals("comment") && "+mode:clone".equals(m.character)) { sb.append("#+mode:clone\n"); return; }
-        if (m.rawLine != null) {
-            // Se è una riga base uppercase esplicita, la segniamo per evitare duplicati automatici
+        
+        // --- ARCHITETTURA PRESERVATION-FIRST (Surgical Update) ---
+        // Se la mappatura NON è stata modificata e abbiamo la riga originale, la usiamo INTEGRALMENTE.
+        // Questo protegge opcode sconosciuti, logica complessa di 2/3 grado e formattazioni custom.
+        if (!m.isDirty && m.rawLine != null) {
+            sb.append(m.rawLine).append("\n");
+            
+            // Registriamo comunque le lettere e le coppie base caricate per evitare duplicati automatici
+            if (m.opcode.equals("lowercase") || m.opcode.equals("uppercase")) {
+                if (m.character != null && m.character.length() == 1) wL.add(m.character.charAt(0));
+            }
             if (m.opcode.startsWith("base uppercase")) {
                 String pair = extractBasePair(m.rawLine);
                 if (pair != null) wP.add(pair);
             }
-            sb.append(m.rawLine).append("\n"); return;
+            return;
         }
+
+        // Se è una riga di commento o raw che inizia con # (mappatura nuova o modificata), scriviamo il commento
+        if ((m.opcode.equals("comment") || m.opcode.equals("raw")) && (m.rawLine != null || m.comment != null)) {
+            String c = (m.rawLine != null) ? m.rawLine : ("# " + m.comment);
+            sb.append(c).append("\n");
+            return;
+        }
+
+        // Per le righe include, scriviamo solo l'include
         if (m.opcode.equals("include")) { sb.append("include ").append(m.character).append("\n"); return; }
-        if (m.opcode.equals("context") || m.opcode.equals("class")) { StringBuilder dots = new StringBuilder(); for (int i = 0; i < m.patterns.size(); i++) { if (i > 0) dots.append("-"); dots.append(patternToDotsString(m.patterns.get(i))); } sb.append(m.opcode).append(" ").append(m.character).append(" ").append(dots).append("\n"); return; }
-        if (m.character != null && !m.character.isEmpty()) { String key = m.opcode + ":" + m.character; if (wO.contains(key)) return; }
-        StringBuilder dots = new StringBuilder(); for (int i = 0; i < m.patterns.size(); i++) { if (i > 0) dots.append("-"); dots.append(patternToDotsString(m.patterns.get(i))); }
+        
+        // Se è una riga base uppercase esplicita, la segniamo per evitare duplicati automatici
+        if (m.opcode.startsWith("base uppercase")) {
+            String pair = extractBasePair(m.rawLine != null ? m.rawLine : (m.opcode + " " + m.character));
+            if (pair != null) wP.add(pair);
+        }
+
+        // Opcode che NON richiedono un carattere ma solo i punti (segnatasti, indicatori, ecc.)
+        List<String> standaloneOpcodes = Arrays.asList("numsign", "capsletter", "letsign", "begcaps", "endcaps", "begcapsword", "endcapsword");
+        // Opcode che accettano una stringa di caratteri ma NON i punti (es. classi, attributi, liste)
+        List<String> stringOpcodes = Arrays.asList("numericmodechars", "midendnumericmodechars", "attribute", "class");
+        // Opcode di logica complessa (2/3 grado) che non devono subire escaping o formattazione punti
+        List<String> logicOpcodes = Arrays.asList("context");
+        
+        StringBuilder dots = new StringBuilder(); 
+        for (int i = 0; i < m.patterns.size(); i++) { if (i > 0) dots.append("-"); dots.append(patternToDotsString(m.patterns.get(i))); }
 
         // Gestione automatica uppercase/lowercase/base
         char c_low = 0, c_up = 0;
@@ -1135,9 +1225,7 @@ public class TableCreatorActivity extends Activity {
                 c_low = Character.toLowerCase(c);
                 c_up = Character.toUpperCase(c);
                 if (c_low != c_up) {
-                    // 1. Se stiamo salvando un uppercase, assicuriamoci che esista il lowercase (auto-link)
                     if (c == c_up && !isCharacterMapped(c_low) && !wL.contains(c_low)) {
-                        sb.append("# ").append(getCharLabel(String.valueOf(c_low))).append(" ").append(getString(R.string.label_auto_link)).append("\n");
                         sb.append("lowercase ").append(String.format("\\x%04x", (int)c_low)).append(" 0\n");
                         wL.add(c_low);
                         wO.add("lowercase:" + c_low);
@@ -1146,46 +1234,39 @@ public class TableCreatorActivity extends Activity {
             }
         }
 
-        // Determinazione del commento/etichetta (inline)
-        String inlineComment = "";
-        if (m.comment != null && !m.comment.isEmpty()) {
-            inlineComment = " # " + m.comment;
-        } else if (m.character != null && !m.character.isEmpty()) {
-            char c = m.character.charAt(0);
-            // Evitiamo commenti ridondanti per ASCII semplici (lettere a-z, numeri 0-9)
-            if (!(m.character.length() == 1 && ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9')))) {
-                String label = getCharLabel(m.character);
-                if (label != null) inlineComment = " # " + label;
-            }
-        }
+        // Determinazione del commento (inline) - Rispettiamo rigorosamente l'originale
+        String inlineComment = (m.comment != null) ? " #" + m.comment : "";
 
-        // Opcode che NON richiedono un carattere ma solo i punti (segnatasti, indicatori, ecc.)
-        List<String> standaloneOpcodes = Arrays.asList("numsign", "capsletter", "letsign", "begcaps", "endcaps", "begcapsword", "endcapsword", "begnum", "endnum");
-        
-        if (standaloneOpcodes.contains(m.opcode)) {
+        if (stringOpcodes.contains(m.opcode)) {
+            // Opcode di tipo stringa - Scriviamo solo l'opcode e il contenuto (m.character)
+            sb.append(m.opcode).append(" ").append(m.character).append(inlineComment).append("\n");
+        } else if (logicOpcodes.contains(m.opcode) || m.opcode.startsWith("pass")) {
+            // Opcode di logica (context, pass2, ecc.) - Scriviamo i campi grezzi senza escaping
+            String d = dots.toString();
+            sb.append(m.opcode).append(" ").append(m.character).append(d.isEmpty() ? "" : " " + d).append(inlineComment).append("\n");
+        } else if (standaloneOpcodes.contains(m.opcode) || ((m.opcode.startsWith("beg") || m.opcode.startsWith("end")) && (m.character == null || m.character.isEmpty()))) {
+            // Opcode standalone (solo punti)
             sb.append(m.opcode).append(" ").append(dots).append(inlineComment).append("\n");
+        } else if (m.opcode.startsWith("base")) {
+            // Righe base uppercase/lowercase
+            sb.append(m.opcode).append(" ").append(m.character).append(inlineComment).append("\n");
         } else {
-            // Per tutti gli altri (lowercase, uppercase, punctuation, math, sign, space, word, ecc.)
+            // Opcode standard (opcode + char + dots)
             if (m.character == null || m.character.isEmpty()) {
-                if (m.opcode.equals("space")) m.character = " "; // Default per lo spazio
-                else return; // Non scriviamo regole incomplete
+                if (m.opcode.equals("space")) m.character = " "; else return;
             }
-            
             String cP = m.character;
+            // Eseguiamo l'escaping solo per singoli caratteri critici
             if (cP.length() == 1) {
                 char c = cP.charAt(0);
-                if (c == ' ') cP = "\\s";
-                else if (c == '\t') cP = "\\t";
-                else if (c == '\\') cP = "\\\\";
-                else if (c < 33 || c > 126) cP = String.format("\\x%04x", (int)c);
+                if (c == ' ') cP = "\\s"; else if (c == '\t') cP = "\\t"; else if (c == '\\') cP = "\\\\";
+                else if (c < 33 || c > 126 || ",.:-/*=+<>%€$#".indexOf(c) != -1) cP = String.format("\\x%04x", (int)c);
             }
-            
             sb.append(m.opcode).append(" ").append(cP).append(" ").append(dots).append(inlineComment).append("\n");
             wO.add(m.opcode + ":" + m.character);
             if (isLetter && m.character.charAt(0) == c_low) wL.add(c_low);
         }
 
-        // 2. Dopo la riga, aggiungiamo base uppercase se necessario (ordine canonico Liblouis)
         if (isLetter) {
             String pair = c_up + "-" + c_low;
             if (!wP.contains(pair) && !isBaseMappingPresent(c_up, c_low)) {
@@ -1234,6 +1315,11 @@ public class TableCreatorActivity extends Activity {
         if (c == 'ì') return getString(R.string.label_i_grave);
         if (c == 'ò') return getString(R.string.label_o_grave);
         if (c == 'ù') return getString(R.string.label_u_grave);
+        if (c == 'â') return "a accent circonflexe";
+        if (c == 'ê') return "e accent circonflexe";
+        if (c == 'î') return "i accent circonflexe";
+        if (c == 'ô') return "o accent circonflexe";
+        if (c == 'û') return "u accent circonflexe";
         if (c == 'œ') return "oe ligature";
         if (c == 'Œ') return "OE ligature";
         if (c == 'ç') return "c cedilla";
@@ -1476,9 +1562,10 @@ public class TableCreatorActivity extends Activity {
         } else { if (cursor != null) cursor.close(); uri = resolver.insert(externalUri, values); }
         if (uri == null) return false;
         try (java.io.OutputStream os = resolver.openOutputStream(uri, "wt")) {
-            if (sourceFile != null) { try (java.io.FileInputStream fis = new java.io.FileInputStream(sourceFile)) { byte[] buffer = new byte[1024]; int len; while ((len = fis.read(buffer)) > 0) os.write(buffer, 0, len); } }
+            if (sourceFile != null) { try (java.io.FileInputStream fis = new java.io.FileInputStream(sourceFile)) { byte[] buffer = new byte[1024]; int len; while ((len = fis.read(buffer)) > 0) os.write(buffer, 0, len); } } 
             else if (content != null) { os.write(content.getBytes(StandardCharsets.UTF_8)); }
             return true;
         } catch (Exception e) { Log.e(TAG, "MediaStore export failed", e); return false; }
     }
 }
+
