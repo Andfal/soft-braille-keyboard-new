@@ -469,8 +469,22 @@ public class TableCreatorActivity extends Activity {
         });
 
         String tableId = getIntent().getStringExtra("table_id");
-        if (tableId != null && !tableId.isEmpty()) { loadTableData(tableId); collapseHeader(); }
-        else if (mLocaleNames.size() > 1) mLocaleSpinner.setSelection(1);
+        if (tableId != null && !tableId.isEmpty()) { 
+            loadTableData(tableId); 
+            collapseHeader(); 
+        } else {
+            if (mLocaleNames.size() > 1) mLocaleSpinner.setSelection(1);
+            initManagedInfrastructure();
+        }
+    }
+
+    private void initManagedInfrastructure() {
+        // Aggiungiamo gli elementi strutturali obbligatori per le tabelle managed.
+        // Li marchiamo come fixed in modo che non siano eliminabili dall'utente.
+        mMappings.add(new Mapping("include", "unicode.dis", new ArrayList<Integer>(), true, true));
+        mMappings.add(new Mapping("include", "spaces.uti", new ArrayList<Integer>(), true, true));
+        mMappings.add(new Mapping("include", "braille-patterns.cti", new ArrayList<Integer>(), false, true));
+        refreshSpinner();
     }
 
     private void toggleHeader() { if (mHeaderConfigLayout.getVisibility() == View.VISIBLE) collapseHeader(); else expandHeader(); }
@@ -574,6 +588,13 @@ public class TableCreatorActivity extends Activity {
 
                 Mapping m = new Mapping(line); // CARICHIAMO SEMPRE DA LINE ORIGINALE
                 m.isHighPriority = currentlyHighPriority;
+                
+                // Identifichiamo gli elementi strutturali delle tabelle managed e li marchiamo come fixed
+                if (m.opcode != null && m.opcode.equals("include") && 
+                    ("unicode.dis".equals(m.character) || "spaces.uti".equals(m.character) || "braille-patterns.cti".equals(m.character))) {
+                    m.isFixed = true;
+                }
+                
                 mMappings.add(m);
             }
             refreshSpinner(); mIsUpdatingUI = false; initPresets();
@@ -1494,7 +1515,24 @@ public class TableCreatorActivity extends Activity {
         String locCode = s.getString("locale"); int idx = mLocaleCodes.indexOf(locCode); if (idx != -1) { String name = mLocaleNames.get(idx); int fIdx = mFilteredLocaleNames.indexOf(name); if (fIdx != -1) mLocaleSpinner.setSelection(fIdx); }
         String script = s.getString("scriptFileName"); String[][] set = mEightDotCheck.isChecked() ? SCRIPTS_8 : SCRIPTS_6; for (int i=0; i<set.length; i++) if (set[i][1].equals(script)) { mScriptSpinner.setSelection(i); break; } mNumSystemSpinner.setSelection(s.getInt("numSystem")); 
         mMappings.clear(); mOriginalHeaderLines.clear();
-        for (int i = 0; i < m.length(); i++) { JSONObject mO = m.getJSONObject(i); mMappings.add(new Mapping(mO.getString("opcode"), mO.getString("char"), parseDots(mO.getString("dots")), mO.getBoolean("high"), mO.getBoolean("fixed"))); } mTableNameEdit.setText(f.replace(".json", "") + "_custom"); refreshSpinner(); mIsTemplateUsed = true; mIsManagedTable = true; collapseHeader(); } catch (Exception e) {} }
+        
+        // Aggiungiamo unicode e spaces in cima
+        mMappings.add(new Mapping("include", "unicode.dis", new ArrayList<Integer>(), true, true));
+        mMappings.add(new Mapping("include", "spaces.uti", new ArrayList<Integer>(), true, true));
+
+        for (int i = 0; i < m.length(); i++) { 
+            JSONObject mO = m.getJSONObject(i); 
+            String op = mO.getString("opcode");
+            String ch = mO.getString("char");
+            // Evitiamo duplicati degli include strutturali se già presenti nel template
+            if ("include".equals(op) && ("unicode.dis".equals(ch) || "spaces.uti".equals(ch) || "braille-patterns.cti".equals(ch))) continue;
+            mMappings.add(new Mapping(op, ch, parseDots(mO.getString("dots")), mO.getBoolean("high"), mO.getBoolean("fixed"))); 
+        } 
+        
+        // Aggiungiamo braille-patterns in fondo
+        mMappings.add(new Mapping("include", "braille-patterns.cti", new ArrayList<Integer>(), false, true));
+
+        mTableNameEdit.setText(f.replace(".json", "") + "_custom"); refreshSpinner(); mIsTemplateUsed = true; mIsManagedTable = true; collapseHeader(); } catch (Exception e) {} }
 
     private void exportSystemTable() {
         int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) { Toast.makeText(this, getString(R.string.msg_select_source_first), 0).show(); return; }
@@ -1690,12 +1728,34 @@ public class TableCreatorActivity extends Activity {
     }
 
     private void doSaveTable(String name) {
-        String tableContent = generateTableContent(); if (tableContent.isEmpty()) return;
-        try { CustomTableManager manager = new CustomTableManager(this); File f = manager.getCustomTableFile(name); try (FileOutputStream fos = new FileOutputStream(f)) { fos.write(tableContent.getBytes(StandardCharsets.UTF_8)); }
+        String tableContent = generateTableContent();
+        if (tableContent.isEmpty()) return;
+        try {
+            CustomTableManager manager = new CustomTableManager(this);
+            File f = manager.getCustomTableFile(name);
+            try (FileOutputStream fos = new FileOutputStream(f)) {
+                fos.write(tableContent.getBytes(StandardCharsets.UTF_8));
+            }
+            
+            // Notifica il sistema che la tabella è stata aggiornata
             Intent intent = new Intent("com.dalton.braillekeyboard.ACTION_TABLE_UPDATED");
             intent.putExtra("table_file_name", name);
             sendBroadcast(intent);
-            int prefKey = mEightDotCheck.isChecked() ? R.string.pref_braille_computer_table_key : R.string.pref_braille_literary_table_key; Options.writeStringPreference(this, prefKey, "custom:" + name); Toast.makeText(this, R.string.msg_table_saved, 0).show(); } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); }
+            
+            // Aggiorna le preferenze dell'utente
+            int prefKey = mEightDotCheck.isChecked() ? R.string.pref_braille_computer_table_key : R.string.pref_braille_literary_table_key;
+            Options.writeStringPreference(this, prefKey, "custom:" + name);
+            
+            Toast.makeText(this, R.string.msg_table_saved, Toast.LENGTH_SHORT).show();
+            
+            // CRITICAL FIX: Refresh the internal state from the newly saved file.
+            // This resets mOriginalHeaderLines and marks all mappings as NOT dirty,
+            // ensuring that subsequent saves correctly use the new base structure.
+            loadTableData(name);
+            
+        } catch (Exception e) {
+            Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), Toast.LENGTH_LONG).show();
+        }
     }
 
     private boolean exportToDownloadsMediaStore(String fileName, File sourceFile, String content) {

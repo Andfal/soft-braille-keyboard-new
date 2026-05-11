@@ -203,8 +203,7 @@ public class TranslatorService extends Service {
 
             // To force Liblouis to bypass its internal cache, we use a unique name
             // based on the last modified timestamp.
-            final String uniqueName = customFile.getName() + "_" + customFile.lastModified() + ".ctb";
-            File targetFile = new File(tablesDir, uniqueName);
+            long timestamp = customFile.lastModified();
             
             boolean forceSync = false;
             synchronized (mForcedSyncTables) {
@@ -213,6 +212,15 @@ public class TranslatorService extends Service {
                     mForcedSyncTables.remove(customFile.getName());
                 }
             }
+            
+            // If forced sync is requested, we use the current time to ensure a new filename
+            // and force the native engine to reload the table.
+            if (forceSync) {
+                timestamp = System.currentTimeMillis();
+            }
+
+            final String uniqueName = customFile.getName() + "_" + timestamp + ".ctb";
+            File targetFile = new File(tablesDir, uniqueName);
 
             // Optimization: Only copy if the target doesn't exist or forced sync requested
             if (!targetFile.exists() || forceSync) {
