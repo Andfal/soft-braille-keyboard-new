@@ -98,6 +98,7 @@ public class TableCreatorActivity extends Activity {
     private LinearLayout mCurrentCellsContainer;
     private List<Integer> mCurrentPatterns = new ArrayList<>();
     private Button mAddMappingBtn;
+    private Button mDeleteMappingBtn;
     private CheckBox mShowVisualPickerCheck;
     
     private LinearLayout mAdvancedSettingsLayout;
@@ -307,6 +308,11 @@ public class TableCreatorActivity extends Activity {
         mSearchResultsSummary = (TextView) findViewById(R.id.text_search_summary);
         mMappedItemsSpinner = (Spinner) findViewById(R.id.spinner_mapped_items);
         mAddMappingBtn = (Button) findViewById(R.id.btn_add_mapping);
+        mDeleteMappingBtn = (Button) findViewById(R.id.btn_delete_mapping);
+        if (mDeleteMappingBtn != null) {
+            mDeleteMappingBtn.setVisibility(View.GONE);
+            mDeleteMappingBtn.setOnClickListener(v -> deleteSelected());
+        }
         
         Button loadTemplateBtn = (Button) findViewById(R.id.btn_load_template);
         Button cloneTableBtn = (Button) findViewById(R.id.btn_clone_table);
@@ -447,11 +453,19 @@ public class TableCreatorActivity extends Activity {
         exportBtn.setOnClickListener(v -> exportTable());
 
         mCharEdit.addTextChangedListener(new android.text.TextWatcher() {
-            private final android.os.Handler handler = new android.os.Handler();
-            private Runnable runnable;
             @Override public void beforeTextChanged(CharSequence s, int st, int c, int af) {}
             @Override public void onTextChanged(CharSequence s, int st, int b, int c) {}
-            @Override public void afterTextChanged(final android.text.Editable s) { if (mIsUpdatingUI) return; handler.removeCallbacks(runnable); runnable = () -> { if (mCharEdit.hasFocus() && mCharEdit.getText().length() > 0) suggestOpcodeFromChar(); }; handler.postDelayed(runnable, 200); }
+            @Override public void afterTextChanged(final android.text.Editable s) { 
+                if (mIsUpdatingUI) return; 
+                if (mCharEdit.getText().length() > 0) {
+                    suggestOpcodeFromChar(); 
+                } else if (mCharEdit.getText().length() == 0) {
+                    mIsUpdatingUI = true;
+                    mMappedItemsSpinner.setSelection(0);
+                    mOpcodeSpinner.setSelection(0);
+                    mIsUpdatingUI = false;
+                }
+            }
         });
 
         String tableId = getIntent().getStringExtra("table_id");
@@ -546,7 +560,7 @@ public class TableCreatorActivity extends Activity {
                     else if (trimmed.contains("+mode:clone")) { mIsCloningMode = true; mMappings.add(new Mapping("comment", "+mode:clone", new ArrayList<Integer>(), true, true)); }
                     else if (trimmed.contains("+mode:managed")) isManaged = true;
                     else if (trimmed.startsWith("#+locale:")) { String code = trimmed.substring(9).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int filteredIdx = mFilteredLocaleNames.indexOf(name); if (filteredIdx != -1) mLocaleSpinner.setSelection(filteredIdx); } }
-                    else if (trimmed.contains("SYSTEM INCLUDES") || trimmed.contains("SYSTEM SECTION")) currentlyHighPriority = false;
+                    else if (trimmed.contains("SYSTEM INCLUDES") || trimmed.contains("SYSTEM SECTION") || trimmed.contains("LOW PRIORITY")) currentlyHighPriority = false;
                     
                     if (inHeader) mOriginalHeaderLines.add(line); // Usiamo line originale per preservare spazi nell'header
                     else { 
@@ -583,7 +597,19 @@ public class TableCreatorActivity extends Activity {
         }
     }
 
-    private void finishMappingAction() { refreshSpinner(); mCharEdit.setText(""); mDotsEdit.setText(""); mCurrentPatterns.clear(); updateDotsDisplay(); }
+    private void finishMappingAction() { 
+        refreshSpinner(); 
+        mIsUpdatingUI = true;
+        mCharEdit.setText(""); 
+        mDotsEdit.setText(""); 
+        mOpcodeSpinner.setSelection(0);
+        mEditingIndex = -1;
+        mAddMappingBtn.setText(R.string.btn_add);
+        if (mDeleteMappingBtn != null) mDeleteMappingBtn.setVisibility(View.GONE);
+        mIsUpdatingUI = false;
+        mCurrentPatterns.clear(); 
+        updateDotsDisplay(); 
+    }
     private String getDotsString(List<Integer> patterns) { StringBuilder sb = new StringBuilder(); for (int i=0; i<patterns.size(); i++) { if (i>0) sb.append("-"); sb.append(patternToDotsString(patterns.get(i))); } return sb.toString(); }
     private int findDuplicateDots(String dots) { for (int i = 0; i < mMappings.size(); i++) if (getDotsString(mMappings.get(i).patterns).equals(dots)) return i; return -1; }
     private String findDuplicateInPresets(String dots) { return mPresetLookup.get(dots); }
@@ -607,8 +633,14 @@ public class TableCreatorActivity extends Activity {
                 String selected = options.get(which);
                 if (selected.equals(getString(R.string.btn_overwrite))) {
                     if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
-                    if (!isPreset) mMappings.set(existingIndex, newMapping);
-                    else mMappings.add(newMapping);
+                    if (!isPreset) {
+                        mMappings.remove(existingIndex);
+                        insertMappingWithPriority(newMapping, newMapping.isHighPriority, existingIndex);
+                        mCharEdit.announceForAccessibility(getString(R.string.msg_rule_updated));
+                    } else {
+                        insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+                        mCharEdit.announceForAccessibility(getString(R.string.msg_rule_added));
+                    }
                     mEditingIndex = -1;
                     mAddMappingBtn.setText(R.string.btn_add);
                     finishMappingAction();
@@ -661,7 +693,48 @@ public class TableCreatorActivity extends Activity {
         if ("+-*×÷=<>".indexOf(c) != -1) return "math"; if ("%€$#".indexOf(c) != -1) return "midendnumericmodechars";
         if (",.:;-!?¡¿\"'\\|/_@&§¶†‡*".indexOf(c) != -1) return "punctuation"; return null;
     }
-    private void suggestOpcodeFromChar() { String s = sanitizeCharacter(mCharEdit.getText().toString()), sug = getSuggestedOpcode(s); if (sug == null) return; mIsUpdatingUI = true; if (mEditingIndex == -1) updateSpinnerToOpcode(sug); mIsUpdatingUI = false; }
+    private void suggestOpcodeFromChar() { 
+        final String s = sanitizeCharacter(mCharEdit.getText().toString());
+        if (s.isEmpty()) return;
+
+        // Suggerimento opcode istantaneo (ora indipendentemente dal focus per massimizzare la prontezza)
+        String sug = getSuggestedOpcode(s); 
+        if (sug != null && mEditingIndex == -1) {
+            mIsUpdatingUI = true; 
+            updateSpinnerToOpcode(sug); 
+            mIsUpdatingUI = false; 
+        }
+        
+        // Salto alla regola esistente (solo se l'utente sta interagendo con il campo)
+        if (mCharEdit.hasFocus()) {
+            final List<Mapping> sourceList = (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty()) ? mCurrentSearchResults : mMappings;
+            
+            for (int i = 0; i < sourceList.size(); i++) {
+                final Mapping found = sourceList.get(i);
+                if (s.equals(found.character)) {
+                    final int targetIdx = i;
+                    // Se siamo già su quella regola (es. stiamo modificando), non facciamo nulla
+                    if (mEditingIndex == mMappings.indexOf(found)) return;
+
+                    mCharEdit.post(() -> {
+                        // Verifichiamo che il testo non sia cambiato nel frattempo
+                        if (!s.equals(sanitizeCharacter(mCharEdit.getText().toString()))) return;
+                        
+                        mIsUpdatingUI = true;
+                        mMappedItemsSpinner.setSelection(targetIdx + 1);
+                        loadMappingFromObject(found);
+                        mIsUpdatingUI = false;
+                        
+                        // Feedback vocale con leggero ritardo per permettere al sistema di stabilizzarsi
+                        mCharEdit.postDelayed(() -> {
+                            mCharEdit.announceForAccessibility(getString(R.string.msg_rule_found) + ": " + getMappingDisplayString(found));
+                        }, 400);
+                    });
+                    return;
+                }
+            }
+        }
+    }
     private void updateSpinnerToOpcode(String opcode) { for (int i = 0; i < OPCODES.length; i++) if (OPCODES[i].equals(opcode)) { mOpcodeSpinner.setSelection(i); break; } }
 
     private void addOrUpdateMapping() {
@@ -705,8 +778,28 @@ public class TableCreatorActivity extends Activity {
             showDuplicateDialogInternal(m, dots, preset, -1); 
             return; 
         }
+
         if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
-        insertMappingWithPriority(m, high, mEditingIndex); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
+        insertMappingWithPriority(m, high, mEditingIndex);
+        
+        // ESPANSIONE SIMMETRICA AUTOMATICA (Managed Mode)
+        if (mIsManagedTable && character.length() == 1 && (opcode.equals("lowercase") || opcode.equals("uppercase"))) {
+            char c = character.charAt(0);
+            if (Character.isLetter(c)) {
+                char c_low = Character.toLowerCase(c);
+                char c_up = Character.toUpperCase(c);
+                if (c_low != c_up) {
+                    if (!isBaseMappingPresent(c_up, c_low)) {
+                        int mainIdx = mMappings.indexOf(m);
+                        if (mainIdx != -1) {
+                            mMappings.add(mainIdx + 1, new Mapping("base uppercase", String.format("\\x%04x \\x%04x", (int)c_up, (int)c_low), new ArrayList<Integer>(), high));
+                        }
+                    }
+                }
+            }
+        }
+
+        mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
     }
 
     private void insertMappingWithPriority(Mapping m, boolean high, int fallbackIdx) {
@@ -729,10 +822,43 @@ public class TableCreatorActivity extends Activity {
         }
         
         if (high) {
+            // Se siamo in modalità managed, cerchiamo spaces.uti per inserire subito dopo
+            if (mIsManagedTable) {
+                int spacesIdx = -1;
+                for (int i = 0; i < mMappings.size(); i++) {
+                    Mapping curr = mMappings.get(i);
+                    if ("include".equals(curr.opcode) && "spaces.uti".equals(curr.character)) {
+                        spacesIdx = i;
+                        break;
+                    }
+                }
+                if (spacesIdx != -1) {
+                    mMappings.add(spacesIdx + 1, m);
+                    return;
+                }
+            }
             mMappings.add(firstNonFixed, m);
         } else {
             int target = (fallbackIdx != -1) ? fallbackIdx : mMappings.size();
-            if (target < firstNonFixed) target = firstNonFixed; // Non sovrascrivere mai i fissi
+            
+            // Se siamo in modalità managed, cerchiamo braille-patterns.cti per non inserire mai DOPO di esso
+            if (mIsManagedTable) {
+                int patternsIdx = -1;
+                for (int i = 0; i < mMappings.size(); i++) {
+                    Mapping curr = mMappings.get(i);
+                    if ("include".equals(curr.opcode) && "braille-patterns.cti".equals(curr.character)) {
+                        patternsIdx = i;
+                        break;
+                    }
+                }
+                // Se stiamo aggiungendo una nuova o se la posizione originale era dopo il marker,
+                // forziamo l'inserimento alla posizione del marker (che lo sposta in avanti)
+                if (patternsIdx != -1 && (fallbackIdx == -1 || target > patternsIdx)) {
+                    target = patternsIdx;
+                }
+            }
+
+            if (target < firstNonFixed) target = firstNonFixed;
             if (target > mMappings.size()) target = mMappings.size();
             mMappings.add(target, m);
         }
@@ -755,9 +881,12 @@ public class TableCreatorActivity extends Activity {
             if (current.isFixed || isSystemInclude || isCloneMarker) firstNonFixed++; else break;
         }
         
-        mMappingPriorityCheck.setChecked(index == firstNonFixed && !m.isFixed);
-        updateDotsDisplay(); mAddMappingBtn.setText(R.string.btn_update); mIsUpdatingUI = false;
-    }
+        mMappingPriorityCheck.setChecked(m.isHighPriority);
+        updateDotsDisplay(); 
+        mAddMappingBtn.setText(R.string.btn_update); 
+        if (mDeleteMappingBtn != null) mDeleteMappingBtn.setVisibility(View.VISIBLE);
+        mIsUpdatingUI = false;
+        }
 
     private void showCellEditor(boolean append) {
         int dotCount = mEightDotCheck.isChecked() ? 8 : 6; AlertDialog.Builder b = new AlertDialog.Builder(this); b.setTitle(R.string.label_dots_dialog);
@@ -785,13 +914,18 @@ public class TableCreatorActivity extends Activity {
         final Mapping target = (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty() && pos - 1 < mCurrentSearchResults.size()) ? mCurrentSearchResults.get(pos - 1) : mMappings.get(pos - 1);
         if (target.isFixed) { Toast.makeText(this, R.string.msg_fixed_mapping, Toast.LENGTH_SHORT).show(); return; }
         
-        // Pulizia simmetrica intelligente
+        // Pulizia simmetrica intelligente (valida per TUTTE le modalità)
         List<Mapping> toRemove = findRelatedMappings(target);
 
         mMappings.removeAll(toRemove); 
         if (mCurrentSearchResults != null) mCurrentSearchResults.removeAll(toRemove);
         
-        refreshSpinner(); mMappedItemsSpinner.setSelection(0); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); mCharEdit.setText(""); mDotsEdit.setText(""); mCurrentPatterns.clear(); updateDotsDisplay(); 
+        refreshSpinner(); 
+        mMappedItemsSpinner.setSelection(0); 
+        mEditingIndex = -1; 
+        finishMappingAction();
+        
+        mCharEdit.announceForAccessibility(getString(R.string.msg_rule_removed));
         Toast.makeText(this, getString(R.string.msg_rule_removed), Toast.LENGTH_SHORT).show();
     }
 
@@ -799,25 +933,36 @@ public class TableCreatorActivity extends Activity {
         List<Mapping> related = new ArrayList<>();
         related.add(target);
         String character = target.character;
-        if (character == null || character.isEmpty()) return related;
+        if (character == null || character.isEmpty() || target.opcode.equals("include")) return related;
+        
         if (character.length() == 1) {
             char c = character.charAt(0);
             if (Character.isLetter(c)) {
-                char counterpart = Character.isLowerCase(c) ? Character.toUpperCase(c) : Character.toLowerCase(c);
-                String cpStr = String.valueOf(counterpart);
+                char c_low = Character.toLowerCase(c);
+                char c_up = Character.toUpperCase(c);
+                String pair = c_up + "-" + c_low;
+
                 for (Mapping m : mMappings) {
-                    if (m.isFixed) continue;
-                    if (character.equals(m.character) || cpStr.equals(m.character)) { if (!related.contains(m)) related.add(m); }
-                    if (m.rawLine != null && (m.rawLine.contains(character) || m.rawLine.contains(cpStr))) { if (!related.contains(m)) related.add(m); }
-                }
-            } else if (Character.isDigit(c)) {
-                for (Mapping m : mMappings) {
-                    if (m.isFixed) continue;
-                    if (character.equals(m.character)) { if (!related.contains(m)) related.add(m); }
-                    String hex = String.format("\\x%04X", (int)c).toLowerCase();
-                    String hexLower = String.format("\\x%04x", (int)c);
-                    if (m.rawLine != null && (m.rawLine.toLowerCase().contains(character) || m.rawLine.contains(hex) || m.rawLine.contains(hexLower))) {
-                         if (!related.contains(m)) related.add(m);
+                    if (m == target || m.isFixed || m.opcode.equals("include")) continue;
+                    
+                    // 1. Controllo se è la controparte (maiuscola o minuscola)
+                    if (m.character != null && m.character.length() == 1) {
+                        char mc = m.character.charAt(0);
+                        if (mc == c_low || mc == c_up) {
+                            if (!related.contains(m)) related.add(m);
+                            continue;
+                        }
+                    }
+                    
+                    // 2. Controllo se è la riga "base uppercase" specifica per QUESTA coppia
+                    if (m.opcode != null && m.opcode.startsWith("base uppercase")) {
+                        String mPair = null;
+                        if (m.rawLine != null) mPair = extractBasePair(m.rawLine);
+                        else mPair = extractBasePair(m.opcode + " " + m.character);
+                        
+                        if (pair.equals(mPair)) {
+                            if (!related.contains(m)) related.add(m);
+                        }
                     }
                 }
             }
@@ -942,8 +1087,11 @@ public class TableCreatorActivity extends Activity {
         mIsUpdatingUI = true; mEditingIndex = -1; for (int i = 0; i < mMappings.size(); i++) if (mMappings.get(i) == m) { mEditingIndex = i; break; }
         updateSpinnerToOpcode(m.opcode); mCharEdit.setText(m.character); mDotsEdit.setText(getDotsString(m.patterns));
         mCurrentPatterns.clear(); mCurrentPatterns.addAll(m.patterns); mMappingPriorityCheck.setChecked(m.isHighPriority);
-        updateDotsDisplay(); mAddMappingBtn.setText(mEditingIndex != -1 ? R.string.btn_update : R.string.btn_add); mIsUpdatingUI = false;
-    }
+        updateDotsDisplay(); 
+        mAddMappingBtn.setText(mEditingIndex != -1 ? R.string.btn_update : R.string.btn_add); 
+        if (mDeleteMappingBtn != null) mDeleteMappingBtn.setVisibility(mEditingIndex != -1 ? View.VISIBLE : View.GONE);
+        mIsUpdatingUI = false;
+        }
 
     private String getMappingDisplayString(Mapping m) {
         if (m.opcode.equals("#") || m.opcode.equals("comment")) return m.rawLine != null ? m.rawLine : ("# " + m.character);
@@ -1146,24 +1294,31 @@ public class TableCreatorActivity extends Activity {
             sb.append("# ").append(name).append("\n");
             sb.append("# ").append(getString(R.string.table_header_author)).append(mAuthorEdit.getText().toString().trim()).append("\n");
             
-            boolean hasUnicode = false, hasPatterns = false, hasSpaces = false;
-            for (Mapping m : mMappings) if (m.opcode.equals("include")) { 
-                if (m.character.equals("unicode.dis")) hasUnicode = true; 
-                if (m.character.equals("braille-patterns.cti")) hasPatterns = true; 
-                if (m.character.equals("spaces.uti")) hasSpaces = true;
-            }
-            if (!hasUnicode) sb.append("\ninclude unicode.dis\n");
-            if (!hasSpaces) sb.append("include spaces.uti\n");
+            // In Managed Mode forziamo sempre questi include in cima per compatibilità e ordine
+            sb.append("\ninclude unicode.dis\n");
+            sb.append("include spaces.uti\n\n");
             
-            // Inseriamo le mappature QUI (dopo spaces.uti)
+            // 1. Scriviamo le mappature ad ALTA PRIORITÀ
+            boolean hasHigh = false;
             for (Mapping m : mMappings) {
-                if (m == cloneMarker) continue;
-                // Saltiamo gli include strutturali che abbiamo già gestito o gestiremo
+                if (m == cloneMarker || !m.isHighPriority) continue;
+                if (m.opcode.equals("include") && (m.character.equals("unicode.dis") || m.character.equals("spaces.uti") || m.character.equals("braille-patterns.cti"))) continue;
+                writeSingleMapping(sb, m, wP, wL, wO);
+                hasHigh = true;
+            }
+            
+            // 2. Scriviamo il marcatore per le mappature a BASSA PRIORITÀ
+            sb.append("\n# SECTION: LOW PRIORITY\n");
+
+            // 3. Scriviamo le mappature a BASSA PRIORITÀ
+            for (Mapping m : mMappings) {
+                if (m == cloneMarker || m.isHighPriority) continue;
                 if (m.opcode.equals("include") && (m.character.equals("unicode.dis") || m.character.equals("spaces.uti") || m.character.equals("braille-patterns.cti"))) continue;
                 writeSingleMapping(sb, m, wP, wL, wO);
             }
             
-            if (!hasPatterns) sb.append("\ninclude braille-patterns.cti\n");
+            // Forziamo sempre questo include in fondo
+            sb.append("\ninclude braille-patterns.cti\n");
         }
         return sb.toString();
     }
@@ -1291,10 +1446,10 @@ public class TableCreatorActivity extends Activity {
     private boolean isBaseMappingPresent(char up, char low) {
         String pair = up + "-" + low;
         for (Mapping m : mMappings) {
-            if (m.rawLine != null) {
-                String p = extractBasePair(m.rawLine);
-                if (pair.equals(p)) return true;
-            }
+            String p = null;
+            if (m.rawLine != null) p = extractBasePair(m.rawLine);
+            else if (m.opcode != null && m.opcode.startsWith("base uppercase")) p = extractBasePair(m.opcode + " " + m.character);
+            if (pair.equals(p)) return true;
         }
         return false;
     }

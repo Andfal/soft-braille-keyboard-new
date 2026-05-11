@@ -236,6 +236,9 @@
     <string name="msg_logs_cleared">Log cancellati con successo</string>
     <string name="msg_no_deletable_rules">Nessuna regola eliminabile trovata.</string>
     <string name="msg_rule_removed">Regola rimossa.</string>
+    <string name="msg_rule_found">Regola esistente trovata</string>
+    <string name="msg_rule_updated">Regola aggiornata</string>
+    <string name="msg_rule_added">Regola aggiunta</string>
     <string name="msg_rules_filtered">regole filtrate</string>
     <string name="msg_select_opcode_first">Seleziona prima un Opcode / Regola</string>
     <string name="msg_select_source_first">Seleziona una tabella sorgente prima di clonare.</string>    <string name="msg_standard_char_override">Carattere standard del set selezionato. La tua scelta avrà la precedenza.</string>

@@ -418,6 +418,9 @@
     <string name="msg_logs_cleared">Logs cleared successfully</string>
     <string name="msg_no_deletable_rules">No deletable rules found.</string>
     <string name="msg_rule_removed">Rule removed.</string>
+    <string name="msg_rule_found">Existing rule found</string>
+    <string name="msg_rule_updated">Rule updated</string>
+    <string name="msg_rule_added">Rule added</string>
     <string name="msg_rules_filtered">rules filtered</string>
     <string name="msg_select_opcode_first">Please select a Rule/Opcode first</string>
     <string name="msg_select_source_first">Select a source table before cloning.</string>    <string name="msg_standard_char_override">Standard character of the selected set. Your choice will take precedence.</string>
