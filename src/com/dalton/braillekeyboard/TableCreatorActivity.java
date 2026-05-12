@@ -119,6 +119,8 @@ public class TableCreatorActivity extends Activity {
     private boolean mIsUpdatingUI = false;
     private boolean mIsCloningMode = false;
     private long mLastMappingClickTime = 0;
+    private int mLastScriptPos = -1;
+    private int mLastNumPos = -1;
 
     private static class LabeledSpinnerAdapter extends ArrayAdapter<String> {
         private String label;
@@ -359,7 +361,8 @@ public class TableCreatorActivity extends Activity {
         updateScriptSpinner(false);
         mScriptSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
-                if (mIsUpdatingUI) return;
+                if (mIsUpdatingUI || pos == mLastScriptPos) return;
+                mLastScriptPos = pos;
                 initPresets();
                 if (pos >= 0) {
                     if (applyAlphabetScript(pos, mEightDotCheck.isChecked())) {
@@ -373,20 +376,41 @@ public class TableCreatorActivity extends Activity {
         mNumSystemSpinner.setAdapter(new LabeledSpinnerAdapter(this, getString(R.string.label_number_system_short), numSystems));
         mNumSystemSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) {
-                if (mIsUpdatingUI) return;
+                if (mIsUpdatingUI || pos == mLastNumPos) return;
+                mLastNumPos = pos;
 
-                // Rimuoviamo sempre i vecchi include numerici, il segnanumero e le definizioni litdigit
+                // Rimuoviamo sempre i vecchi include numerici
                 List<String> numFiles = Arrays.asList("digits6Dots.uti", "litdigits6DotsPlusDot6.uti", "digits6DotsPlusDot6.uti", "digits8Dots.uti", "loweredDigits6Dots.uti", "litdigits6Dots.uti");
                 for (int i = mMappings.size() - 1; i >= 0; i--) {
                     Mapping m = mMappings.get(i);
-                    if ((m.opcode.equals("include") && numFiles.contains(m.character)) || m.opcode.equals("numsign") || m.opcode.equals("litdigit")) {
+                    if (m.opcode.equals("include") && numFiles.contains(m.character)) {
+                        mMappings.remove(i);
+                    } else if (mIsManagedTable && (m.opcode.equals("numsign") || m.opcode.equals("litdigit"))) {
+                        // Rimuoviamo segnanumero e litdigit SOLO in modalità managed
                         mMappings.remove(i);
                     }
                 }
 
                 if (pos > 0) {
-                    List<Mapping> rules = getNumericMappings(pos, mMappingPriorityCheck.isChecked());
-                    if (!rules.isEmpty()) { int insertIdx = mMappedItemsSpinner.getSelectedItemPosition(); insertIdx = (insertIdx <= 0) ? 0 : insertIdx - 1; mMappings.addAll(insertIdx, rules); }
+                    boolean high = mMappingPriorityCheck.isChecked();
+                    List<Mapping> rules = getNumericMappings(pos, high);
+                    if (!rules.isEmpty()) { 
+                        if (!mIsManagedTable) {
+                            // In clone mode, prendiamo solo l'include e usiamo insertMappingWithPriority
+                            for (int i = rules.size() - 1; i >= 0; i--) {
+                                Mapping rule = rules.get(i);
+                                if (!rule.opcode.equals("include")) {
+                                    rules.remove(i);
+                                } else {
+                                    insertMappingWithPriority(rule, high, -1);
+                                }
+                            }
+                        } else {
+                            int insertIdx = mMappedItemsSpinner.getSelectedItemPosition(); 
+                            insertIdx = (insertIdx <= 0) ? 0 : insertIdx - 1; 
+                            mMappings.addAll(insertIdx, rules); 
+                        }
+                    }
                 }
                 refreshSpinner();
             }
@@ -422,7 +446,7 @@ public class TableCreatorActivity extends Activity {
         mMappedItemsSpinner.setAdapter(mAdapter);
         mMappedItemsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override public void onItemSelected(AdapterView<?> p, View v, int pos, long id) { 
-                if (pos <= 0) return;
+                if (mIsUpdatingUI || pos <= 0) return;
                 if (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty() && pos - 1 < mCurrentSearchResults.size()) loadMappingFromObject(mCurrentSearchResults.get(pos - 1));
                 else if (pos - 1 < mMappings.size()) loadMapping(pos - 1);
                 collapseHeader();
@@ -564,6 +588,7 @@ public class TableCreatorActivity extends Activity {
             while (scanner.hasNextLine()) { String l = scanner.nextLine(); lines.add(l); if (l.contains("+mode:managed")) isManaged = true; }
             scanner.close();
             mIsManagedTable = isManaged;
+            mIsCloningMode = !isManaged;
 
             for (String line : lines) {
                 String trimmed = line.trim();
@@ -596,6 +621,33 @@ public class TableCreatorActivity extends Activity {
                 }
                 
                 mMappings.add(m);
+
+                // Sincronizziamo gli spinner in base agli include trovati (anche per tabelle caricate)
+                if (m.opcode != null && m.opcode.equals("include")) {
+                    String inc = m.character;
+                    // Alfabeti
+                    String[][] set = mEightDotCheck.isChecked() ? SCRIPTS_8 : SCRIPTS_6;
+                    for (int i = 0; i < set.length; i++) {
+                        if (set[i][1].equals(inc)) {
+                            mScriptSpinner.setSelection(i);
+                            mLastScriptPos = i;
+                            break;
+                        }
+                    }
+                    // Sistemi numerici
+                    int numPos = -1;
+                    if (inc.equals("digits6Dots.uti")) numPos = NUM_CLASSIC;
+                    else if (inc.equals("litdigits6DotsPlusDot6.uti")) numPos = NUM_ANTOINE;
+                    else if (inc.equals("digits6DotsPlusDot6.uti")) numPos = NUM_6DOT_UNIVOCAL;
+                    else if (inc.equals("digits8Dots.uti")) numPos = NUM_8DOT_STANDARD;
+                    else if (inc.equals("loweredDigits6Dots.uti")) numPos = NUM_DROPPED; // Default per lowered
+                    else if (inc.equals("litdigits6Dots.uti")) numPos = NUM_LITERARY;
+                    
+                    if (numPos != -1) {
+                        mNumSystemSpinner.setSelection(numPos);
+                        mLastNumPos = numPos;
+                    }
+                }
             }
             refreshSpinner(); mIsUpdatingUI = false; initPresets();
         } catch (Exception e) { mIsUpdatingUI = false; }
@@ -644,7 +696,7 @@ public class TableCreatorActivity extends Activity {
         List<String> options = new ArrayList<>();
         options.add(getString(R.string.btn_overwrite));
         options.add(getString(R.string.btn_add_prefix));
-        if (!isPreset) options.add(getString(R.string.btn_add_anyway));
+        options.add(getString(R.string.btn_add_anyway));
         options.add(getString(R.string.btn_cancel));
 
         new AlertDialog.Builder(this)
@@ -670,9 +722,16 @@ public class TableCreatorActivity extends Activity {
                 } else if (selected.equals(getString(R.string.btn_add_anyway))) {
                     if (mEditingIndex != -1) {
                         mMappings.remove(mEditingIndex);
-                        int targetIdx = mMappings.indexOf(mMappings.get(existingIndex < mEditingIndex ? existingIndex : existingIndex - 1));
-                        mMappings.add(targetIdx, newMapping);
-                    } else mMappings.add(existingIndex, newMapping);
+                        if (!isPreset) {
+                            int targetIdx = mMappings.indexOf(mMappings.get(existingIndex < mEditingIndex ? existingIndex : existingIndex - 1));
+                            mMappings.add(targetIdx, newMapping);
+                        } else {
+                            insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+                        }
+                    } else {
+                        if (!isPreset) mMappings.add(existingIndex, newMapping);
+                        else insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+                    }
                     mEditingIndex = -1;
                     mAddMappingBtn.setText(R.string.btn_add);
                     finishMappingAction();
@@ -795,7 +854,7 @@ public class TableCreatorActivity extends Activity {
         if (mEditingIndex != -1 && dupIdx == mEditingIndex) { mMappings.remove(mEditingIndex); insertMappingWithPriority(m, high, mEditingIndex); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); return; }
         if (dupIdx != -1 && !opcode.equals("include")) { showDuplicateDialog(m, dupIdx); return; }
         String preset = findDuplicateInPresets(dots); 
-        if (preset != null && !opcode.equals("include") && mIsTemplateUsed) { 
+        if (preset != null && !opcode.equals("include")) { 
             showDuplicateDialogInternal(m, dots, preset, -1); 
             return; 
         }
@@ -1003,21 +1062,31 @@ public class TableCreatorActivity extends Activity {
         LinearLayout layout = new LinearLayout(this); layout.setOrientation(LinearLayout.VERTICAL); layout.setPadding(40, 20, 40, 20);
         Button upBtn = new Button(this); upBtn.setText(R.string.btn_move_up); Button downBtn = new Button(this); downBtn.setText(R.string.btn_move_down);
         Button topBtn = new Button(this); topBtn.setText(R.string.btn_move_top); Button moveToBtn = new Button(this); moveToBtn.setText(R.string.btn_move_to_pos);
+        Button bottomBtn = new Button(this); bottomBtn.setText("Sposta in fondo");
         Button pinBtn = new Button(this); pinBtn.setText(mapping.isFixed ? R.string.btn_unpin_mapping : R.string.btn_pin_mapping);
-        layout.addView(upBtn); layout.addView(downBtn); layout.addView(topBtn); layout.addView(moveToBtn); layout.addView(pinBtn);
+        layout.addView(upBtn); layout.addView(downBtn); layout.addView(topBtn); layout.addView(bottomBtn); layout.addView(moveToBtn); layout.addView(pinBtn);
         Button delBtn = new Button(this); delBtn.setText(R.string.btn_remove_mapping); delBtn.setTextColor(Color.RED); layout.addView(delBtn); 
         builder.setView(layout); builder.setNegativeButton(R.string.btn_cancel, null); final AlertDialog dialog = builder.create(); dialog.show();
-        Runnable updateUI = () -> { refreshSpinner(); int newPos = mMappings.indexOf(mapping); if (newPos != -1) mMappedItemsSpinner.setSelection(newPos + 1); };
+        Runnable updateUI = () -> { 
+            mIsUpdatingUI = true; 
+            refreshSpinner(); 
+            int newPos = mMappings.indexOf(mapping); 
+            if (newPos != -1) mMappedItemsSpinner.setSelection(newPos + 1); 
+            mIsUpdatingUI = false;
+            finishMappingAction(); // Pulisce l'editor ed evita il pulsante 'Aggiorna'
+        };
         
         upBtn.setEnabled(!mapping.isFixed);
         downBtn.setEnabled(!mapping.isFixed);
         topBtn.setEnabled(!mapping.isFixed);
+        bottomBtn.setEnabled(!mapping.isFixed);
         moveToBtn.setEnabled(!mapping.isFixed);
         delBtn.setEnabled(!mapping.isFixed);
 
         upBtn.setOnClickListener(v -> { int idx = mMappings.indexOf(mapping); if (idx > 0) { Collections.swap(mMappings, idx, idx - 1); updateUI.run(); } });
         downBtn.setOnClickListener(v -> { int idx = mMappings.indexOf(mapping); if (idx < mMappings.size() - 1) { Collections.swap(mMappings, idx, idx + 1); updateUI.run(); } });
         topBtn.setOnClickListener(v -> { int idx = mMappings.indexOf(mapping); int firstNonFixed = 0; while (firstNonFixed < mMappings.size() && mMappings.get(firstNonFixed).isFixed) firstNonFixed++; if (idx > firstNonFixed) { Mapping m = mMappings.remove(idx); mMappings.add(firstNonFixed, m); updateUI.run(); } else Toast.makeText(this, R.string.msg_already_top, 0).show(); });
+        bottomBtn.setOnClickListener(v -> { int idx = mMappings.indexOf(mapping); mMappings.remove(idx); mMappings.add(mapping); updateUI.run(); });
         moveToBtn.setOnClickListener(v -> { dialog.dismiss(); showMoveToDialog(mapping); });
         pinBtn.setOnClickListener(v -> { mapping.isFixed = !mapping.isFixed; dialog.dismiss(); refreshSpinner(); Toast.makeText(this, mapping.isFixed ? R.string.btn_pin_mapping : R.string.btn_unpin_mapping, 0).show(); });
         delBtn.setOnClickListener(v -> { if (mapping.isFixed) return; mMappings.remove(mapping); refreshSpinner(); mMappedItemsSpinner.setSelection(0); dialog.dismiss(); });
@@ -1058,6 +1127,26 @@ public class TableCreatorActivity extends Activity {
         if (items.isEmpty()) { Toast.makeText(this, R.string.msg_no_deletable_rules, 0).show(); return; }
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, items);
         lv.setAdapter(adapter); lv.setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 1.0f)); root.addView(lv);
+        
+        lv.setOnItemLongClickListener((parent, view, position, id) -> {
+            android.util.SparseBooleanArray checked = lv.getCheckedItemPositions();
+            int firstChecked = -1;
+            for (int i = 0; i < items.size(); i++) {
+                if (checked.get(i)) {
+                    firstChecked = i;
+                    break;
+                }
+            }
+            if (firstChecked != -1 && firstChecked != position) {
+                int start = Math.min(firstChecked, position);
+                int end = Math.max(firstChecked, position);
+                for (int i = start; i <= end; i++) lv.setItemChecked(i, true);
+            } else {
+                lv.setItemChecked(position, !lv.isItemChecked(position));
+            }
+            return true;
+        });
+
         selectAll.setOnCheckedChangeListener((v, isChecked) -> { for (int i = 0; i < items.size(); i++) lv.setItemChecked(i, isChecked); });
         
         b.setPositiveButton(R.string.btn_remove_mapping, (d, w) -> {
@@ -1182,7 +1271,35 @@ public class TableCreatorActivity extends Activity {
                     continue;
                 }
                 inHeader = false;
-                mMappings.add(new Mapping(line));
+                Mapping m = new Mapping(line);
+                mMappings.add(m);
+
+                // Sincronizziamo gli spinner in base agli include trovati
+                if (m.opcode.equals("include")) {
+                    String inc = m.character;
+                    // Alfabeti
+                    String[][] set = mEightDotCheck.isChecked() ? SCRIPTS_8 : SCRIPTS_6;
+                    for (int i = 0; i < set.length; i++) {
+                        if (set[i][1].equals(inc)) {
+                            mScriptSpinner.setSelection(i);
+                            mLastScriptPos = i;
+                            break;
+                        }
+                    }
+                    // Sistemi numerici
+                    int numPos = -1;
+                    if (inc.equals("digits6Dots.uti")) numPos = NUM_CLASSIC;
+                    else if (inc.equals("litdigits6DotsPlusDot6.uti")) numPos = NUM_ANTOINE;
+                    else if (inc.equals("digits6DotsPlusDot6.uti")) numPos = NUM_6DOT_UNIVOCAL;
+                    else if (inc.equals("digits8Dots.uti")) numPos = NUM_8DOT_STANDARD;
+                    else if (inc.equals("loweredDigits6Dots.uti")) numPos = NUM_DROPPED; // Default per lowered
+                    else if (inc.equals("litdigits6Dots.uti")) numPos = NUM_LITERARY;
+                    
+                    if (numPos != -1) {
+                        mNumSystemSpinner.setSelection(numPos);
+                        mLastNumPos = numPos;
+                    }
+                }
             }
             scanner.close(); refreshSpinner(); Toast.makeText(this, getString(R.string.msg_structure_cloned), Toast.LENGTH_LONG).show(); collapseHeader();
         } catch (Exception e) { Toast.makeText(this, String.format(getString(R.string.label_error_prefix), e.getMessage()), 0).show(); } finally { mIsUpdatingUI = false; }
@@ -1212,6 +1329,26 @@ public class TableCreatorActivity extends Activity {
 
     private boolean applyAlphabetScript(int pos, boolean is8dot) {
         String scriptKey = is8dot ? SCRIPTS_8[pos][1] : SCRIPTS_6[pos][1];
+
+        if (!mIsManagedTable) {
+            // Modalità CLONA: non rimuoviamo le lettere, cambiamo solo l'include
+            for (int i = mMappings.size() - 1; i >= 0; i--) {
+                Mapping m = mMappings.get(i);
+                if (m.opcode.equals("include")) {
+                    boolean isScriptFile = false;
+                    for (String[] s : SCRIPTS_6) if (s[1].equals(m.character)) isScriptFile = true;
+                    for (String[] s : SCRIPTS_8) if (s[1].equals(m.character)) isScriptFile = true;
+                    if (isScriptFile) mMappings.remove(i);
+                }
+            }
+            if (!scriptKey.equals("none")) {
+                boolean high = mMappingPriorityCheck.isChecked();
+                Mapping includeMap = new Mapping("include", scriptKey, new ArrayList<Integer>(), high);
+                insertMappingWithPriority(includeMap, high, -1);
+            }
+            return true;
+        }
+
         if (scriptKey.equals("none")) {
             removeCurrentAlphabetMappings();
             return true;
