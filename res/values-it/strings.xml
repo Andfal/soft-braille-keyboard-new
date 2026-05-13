@@ -10,6 +10,8 @@
     <string name="auto_caps_enabled">Maiuscole automatiche</string>
     <string name="blank">Vuoto</string>
     <string name="braille_ime">Soft Braille Keyboard</string>
+    <string name="btn_move_to_bottom">Sposta in fondo</string>
+    <string name="label_high_priority_prefix">[H] </string>
     <string name="btn_add">AGGIUNGI</string>
     <string name="btn_add_anyway">Aggiungi comunque</string>
     <string name="btn_add_prefix">Aggiungi prefisso...</string>

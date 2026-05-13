@@ -11,6 +11,8 @@
     <string name="auto_caps_enabled">Auto-capitalisation</string>
     <string name="blank">Blank</string>
     <string name="braille_ime">Soft Braille Keyboard</string>
+    <string name="btn_move_to_bottom">Move to bottom</string>
+    <string name="label_high_priority_prefix">[H] </string>
     <string name="btn_add">ADD</string>
     <string name="btn_add_anyway">Add anyway</string>
     <string name="btn_add_prefix">Add prefix...</string>

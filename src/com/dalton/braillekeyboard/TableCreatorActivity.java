@@ -690,54 +690,65 @@ public class TableCreatorActivity extends Activity {
     private void showDuplicateDialog(final Mapping newMapping, final int existingIndex) { showDuplicateDialogInternal(newMapping, getDotsString(newMapping.patterns), mMappings.get(existingIndex).character, existingIndex); }
     private void showDuplicateDialogInternal(final Mapping newMapping, String dots, String existingName, final int existingIndex) {
         boolean isPreset = existingIndex == -1;
-        String msg = String.format(getString(R.string.msg_duplicate_dots), dots, existingName);
-        if (isPreset) msg += "\n\n(" + getString(R.string.msg_standard_char_override) + ")";
-        
-        List<String> options = new ArrayList<>();
-        options.add(getString(R.string.btn_overwrite));
-        options.add(getString(R.string.btn_add_prefix));
-        options.add(getString(R.string.btn_add_anyway));
-        options.add(getString(R.string.btn_cancel));
+        String langName = "";
+        int langPos = mLocaleSpinner != null ? mLocaleSpinner.getSelectedItemPosition() : -1;
+        if (langPos >= 0 && langPos < mFilteredLocaleNames.size()) langName = mFilteredLocaleNames.get(langPos);
 
-        new AlertDialog.Builder(this)
-            .setTitle(R.string.title_duplicate_combination)
-            .setMessage(msg)
-            .setItems(options.toArray(new String[0]), (dialog, which) -> {
-                String selected = options.get(which);
-                if (selected.equals(getString(R.string.btn_overwrite))) {
-                    if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
-                    if (!isPreset) {
-                        mMappings.remove(existingIndex);
-                        insertMappingWithPriority(newMapping, newMapping.isHighPriority, existingIndex);
-                        mCharEdit.announceForAccessibility(getString(R.string.msg_rule_updated));
-                    } else {
-                        insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
-                        mCharEdit.announceForAccessibility(getString(R.string.msg_rule_added));
-                    }
-                    mEditingIndex = -1;
-                    mAddMappingBtn.setText(R.string.btn_add);
-                    finishMappingAction();
-                } else if (selected.equals(getString(R.string.btn_add_prefix))) {
-                    showPrefixSelector(newMapping, existingIndex);
-                } else if (selected.equals(getString(R.string.btn_add_anyway))) {
-                    if (mEditingIndex != -1) {
-                        mMappings.remove(mEditingIndex);
-                        if (!isPreset) {
-                            int targetIdx = mMappings.indexOf(mMappings.get(existingIndex < mEditingIndex ? existingIndex : existingIndex - 1));
-                            mMappings.add(targetIdx, newMapping);
-                        } else {
-                            insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
-                        }
-                    } else {
-                        if (!isPreset) mMappings.add(existingIndex, newMapping);
-                        else insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
-                    }
-                    mEditingIndex = -1;
-                    mAddMappingBtn.setText(R.string.btn_add);
-                    finishMappingAction();
-                }
-            })
-            .show();
+        String msg = String.format(getString(R.string.msg_duplicate_dots), dots, existingName);
+        if (isPreset) {
+            msg += "\n\n(" + getString(R.string.msg_standard_char_override);
+            if (!langName.isEmpty()) msg += " [" + langName + "]";
+            msg += ")";
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setTitle(R.string.title_duplicate_combination);
+        LinearLayout layout = new LinearLayout(this); layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 30, 50, 30);
+        TextView tv = new TextView(this); tv.setText(msg); tv.setTextSize(16); tv.setTextColor(Color.BLACK); layout.addView(tv);
+        
+        final AlertDialog dialog = builder.setView(layout).create();
+
+        Button overBtn = new Button(this); overBtn.setText(R.string.btn_overwrite);
+        overBtn.setOnClickListener(v -> {
+            if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
+            if (!isPreset) {
+                int realIdx = mMappings.indexOf(mMappings.get(existingIndex < mMappings.size() ? existingIndex : mMappings.size()-1));
+                if (realIdx != -1) mMappings.remove(realIdx);
+                insertMappingWithPriority(newMapping, newMapping.isHighPriority, existingIndex);
+            } else {
+                insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+            }
+            mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
+            mCharEdit.announceForAccessibility(getString(R.string.msg_rule_updated));
+            dialog.dismiss();
+        });
+        layout.addView(overBtn);
+
+        if (!isPreset) {
+            Button prefBtn = new Button(this); prefBtn.setText(R.string.btn_add_prefix);
+            prefBtn.setOnClickListener(v -> { showPrefixSelector(newMapping, existingIndex); dialog.dismiss(); });
+            layout.addView(prefBtn);
+        }
+
+        Button anywayBtn = new Button(this); anywayBtn.setText(R.string.btn_add_anyway);
+        anywayBtn.setOnClickListener(v -> {
+            if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
+            if (!isPreset) {
+                int targetIdx = existingIndex; if (targetIdx > mMappings.size()) targetIdx = mMappings.size();
+                mMappings.add(targetIdx, newMapping);
+            } else {
+                insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+            }
+            mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
+            dialog.dismiss();
+        });
+        layout.addView(anywayBtn);
+
+        Button cancelBtn = new Button(this); cancelBtn.setText(R.string.btn_cancel);
+        cancelBtn.setOnClickListener(v -> dialog.dismiss());
+        layout.addView(cancelBtn);
+
+        dialog.show();
     }
 
     private void showPrefixSelector(final Mapping mapping, final int targetIndex) {
@@ -785,33 +796,31 @@ public class TableCreatorActivity extends Activity {
             mIsUpdatingUI = false; 
         }
         
-        // Salto alla regola esistente (solo se l'utente sta interagendo con il campo)
-        if (mCharEdit.hasFocus()) {
-            final List<Mapping> sourceList = (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty()) ? mCurrentSearchResults : mMappings;
-            
-            for (int i = 0; i < sourceList.size(); i++) {
-                final Mapping found = sourceList.get(i);
-                if (s.equals(found.character)) {
-                    final int targetIdx = i;
-                    // Se siamo già su quella regola (es. stiamo modificando), non facciamo nulla
-                    if (mEditingIndex == mMappings.indexOf(found)) return;
+        // Salto alla regola esistente (Sempre attivo per auto-fill)
+        final List<Mapping> sourceList = (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty()) ? mCurrentSearchResults : mMappings;
+        
+        for (int i = 0; i < sourceList.size(); i++) {
+            final Mapping found = sourceList.get(i);
+            if (s.equals(found.character)) {
+                final int targetIdx = i;
+                // Se siamo già su quella regola (es. stiamo modificando), non facciamo nulla
+                if (mEditingIndex == mMappings.indexOf(found)) return;
 
-                    mCharEdit.post(() -> {
-                        // Verifichiamo che il testo non sia cambiato nel frattempo
-                        if (!s.equals(sanitizeCharacter(mCharEdit.getText().toString()))) return;
-                        
-                        mIsUpdatingUI = true;
-                        mMappedItemsSpinner.setSelection(targetIdx + 1);
-                        loadMappingFromObject(found);
-                        mIsUpdatingUI = false;
-                        
-                        // Feedback vocale con leggero ritardo per permettere al sistema di stabilizzarsi
-                        mCharEdit.postDelayed(() -> {
-                            mCharEdit.announceForAccessibility(getString(R.string.msg_rule_found) + ": " + getMappingDisplayString(found));
-                        }, 400);
-                    });
-                    return;
-                }
+                mCharEdit.post(() -> {
+                    // Verifichiamo che il testo non sia cambiato nel frattempo
+                    if (!s.equals(sanitizeCharacter(mCharEdit.getText().toString()))) return;
+                    
+                    mIsUpdatingUI = true;
+                    mMappedItemsSpinner.setSelection(targetIdx + 1);
+                    loadMappingFromObject(found);
+                    mIsUpdatingUI = false;
+                    
+                    // Feedback vocale con leggero ritardo per permettere al sistema di stabilizzarsi
+                    mCharEdit.postDelayed(() -> {
+                        mCharEdit.announceForAccessibility(getString(R.string.msg_rule_found) + ": " + getMappingDisplayString(found));
+                    }, 400);
+                });
+                return;
             }
         }
     }
@@ -851,15 +860,33 @@ public class TableCreatorActivity extends Activity {
         if (mEditingIndex != -1) m.comment = mMappings.get(mEditingIndex).comment;
         String dots = getDotsString(m.patterns); 
         int dupIdx = findDuplicateDots(dots);
-        if (mEditingIndex != -1 && dupIdx == mEditingIndex) { mMappings.remove(mEditingIndex); insertMappingWithPriority(m, high, mEditingIndex); mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); return; }
+        if (mEditingIndex != -1 && dupIdx == mEditingIndex) { 
+            int originalIndex = mEditingIndex;
+            mMappings.remove(originalIndex);
+            insertMappingWithPriority(m, high, originalIndex);
+            mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); return; 
+        }
         if (dupIdx != -1 && !opcode.equals("include")) { showDuplicateDialog(m, dupIdx); return; }
-        String preset = findDuplicateInPresets(dots); 
-        if (preset != null && !opcode.equals("include")) { 
-            showDuplicateDialogInternal(m, dots, preset, -1); 
-            return; 
+        
+        // Cerca nei preset solo se è stato applicato un Template
+        if (mIsTemplateUsed) {
+            String preset = findDuplicateInPresets(dots); 
+            if (preset != null && !opcode.equals("include")) { 
+                showDuplicateDialogInternal(m, dots, preset, -1); 
+                return; 
+            }
         }
 
-        if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
+        if (mEditingIndex != -1) {
+            int originalIndex = mEditingIndex;
+            mMappings.remove(originalIndex);
+            mMappings.add(originalIndex, m);
+            mEditingIndex = -1;
+            mAddMappingBtn.setText(R.string.btn_add);
+            finishMappingAction();
+            return;
+        }
+
         insertMappingWithPriority(m, high, mEditingIndex);
         
         // ESPANSIONE SIMMETRICA AUTOMATICA (Managed Mode)
@@ -1212,10 +1239,9 @@ public class TableCreatorActivity extends Activity {
         String fO = m.opcode; 
         for (int i=0; i<OPCODES.length; i++) if (OPCODES[i].equals(m.opcode)) { fO = OPCODE_LABELS[i]; break; }
         
-        StringBuilder sb = new StringBuilder(); 
-        if (m.isHighPriority) sb.append("[H] "); 
-        sb.append(fO);
-        
+        StringBuilder sb = new StringBuilder();
+        if (m.isHighPriority) sb.append(getString(R.string.label_high_priority_prefix));
+        sb.append(fO);        
         if (m.character != null && !m.character.isEmpty()) {
             if (m.opcode.startsWith("base")) sb.append(" ").append(m.character);
             else sb.append(" '").append(m.character).append("'");
