@@ -732,12 +732,13 @@ public class TableCreatorActivity extends Activity {
 
         Button anywayBtn = new Button(this); anywayBtn.setText(R.string.btn_add_anyway);
         anywayBtn.setOnClickListener(v -> {
+            int targetPos = (mEditingIndex != -1) ? mEditingIndex : existingIndex;
             if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
             if (!isPreset) {
-                int targetIdx = existingIndex; if (targetIdx > mMappings.size()) targetIdx = mMappings.size();
-                mMappings.add(targetIdx, newMapping);
+                if (targetPos > mMappings.size()) targetPos = mMappings.size();
+                mMappings.add(targetPos, newMapping);
             } else {
-                insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+                insertMappingWithPriority(newMapping, newMapping.isHighPriority, targetPos);
             }
             mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
             dialog.dismiss();
