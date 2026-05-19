@@ -710,13 +710,28 @@ public class TableCreatorActivity extends Activity {
 
         Button overBtn = new Button(this); overBtn.setText(R.string.btn_overwrite);
         overBtn.setOnClickListener(v -> {
-            if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
-            if (!isPreset) {
-                int realIdx = mMappings.indexOf(mMappings.get(existingIndex < mMappings.size() ? existingIndex : mMappings.size()-1));
-                if (realIdx != -1) mMappings.remove(realIdx);
-                insertMappingWithPriority(newMapping, newMapping.isHighPriority, existingIndex);
+            if (mIsCloningMode || !mIsManagedTable) {
+                if (mEditingIndex != -1) {
+                    Mapping oldMapping = mMappings.get(mEditingIndex);
+                    Mapping duplicateMapping = !isPreset ? mMappings.get(existingIndex) : null;
+                    if (duplicateMapping != null && duplicateMapping != oldMapping) mMappings.remove(duplicateMapping);
+                    int currentIdx = mMappings.indexOf(oldMapping);
+                    if (currentIdx != -1) mMappings.set(currentIdx, newMapping);
+                    else mMappings.add(newMapping);
+                } else if (!isPreset) {
+                    mMappings.set(existingIndex, newMapping);
+                } else {
+                    insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+                }
             } else {
-                insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+                if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
+                if (!isPreset) {
+                    int realIdx = mMappings.indexOf(mMappings.get(existingIndex < mMappings.size() ? existingIndex : mMappings.size()-1));
+                    if (realIdx != -1) mMappings.remove(realIdx);
+                    insertMappingWithPriority(newMapping, newMapping.isHighPriority, existingIndex);
+                } else {
+                    insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+                }
             }
             mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
             mCharEdit.announceForAccessibility(getString(R.string.msg_rule_updated));
@@ -732,13 +747,22 @@ public class TableCreatorActivity extends Activity {
 
         Button anywayBtn = new Button(this); anywayBtn.setText(R.string.btn_add_anyway);
         anywayBtn.setOnClickListener(v -> {
-            int targetPos = (mEditingIndex != -1) ? mEditingIndex : existingIndex;
-            if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
-            if (!isPreset) {
-                if (targetPos > mMappings.size()) targetPos = mMappings.size();
-                mMappings.add(targetPos, newMapping);
+            if (mIsCloningMode || !mIsManagedTable) {
+                if (mEditingIndex != -1) {
+                    mMappings.set(mEditingIndex, newMapping);
+                } else {
+                    int target = (existingIndex >= 0 && existingIndex < mMappings.size()) ? existingIndex : mMappings.size();
+                    mMappings.add(target, newMapping);
+                }
             } else {
-                insertMappingWithPriority(newMapping, newMapping.isHighPriority, targetPos);
+                int targetPos = (mEditingIndex != -1) ? mEditingIndex : existingIndex;
+                if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
+                if (!isPreset) {
+                    if (targetPos > mMappings.size()) targetPos = mMappings.size();
+                    mMappings.add(targetPos, newMapping);
+                } else {
+                    insertMappingWithPriority(newMapping, newMapping.isHighPriority, targetPos);
+                }
             }
             mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
             dialog.dismiss();
@@ -864,7 +888,11 @@ public class TableCreatorActivity extends Activity {
         if (mEditingIndex != -1 && dupIdx == mEditingIndex) { 
             int originalIndex = mEditingIndex;
             mMappings.remove(originalIndex);
-            insertMappingWithPriority(m, high, originalIndex);
+            if (mIsCloningMode || !mIsManagedTable) {
+                mMappings.add(originalIndex, m);
+            } else {
+                insertMappingWithPriority(m, high, originalIndex);
+            }
             mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); return; 
         }
         if (dupIdx != -1 && !opcode.equals("include")) { showDuplicateDialog(m, dupIdx); return; }
@@ -880,8 +908,8 @@ public class TableCreatorActivity extends Activity {
 
         if (mEditingIndex != -1) {
             int originalIndex = mEditingIndex;
-            mMappings.remove(originalIndex);
-            mMappings.add(originalIndex, m);
+            // Usiamo set() invece di remove/add per garantire la stabilità assoluta della posizione
+            mMappings.set(originalIndex, m);
             mEditingIndex = -1;
             mAddMappingBtn.setText(R.string.btn_add);
             finishMappingAction();
@@ -890,7 +918,7 @@ public class TableCreatorActivity extends Activity {
 
         insertMappingWithPriority(m, high, mEditingIndex);
         
-        // ESPANSIONE SIMMETRICA AUTOMATICA (Managed Mode)
+        // ESPANSIONE SIMMETRICA AUTOMATICA (Managed Mode Only)
         if (mIsManagedTable && character.length() == 1 && (opcode.equals("lowercase") || opcode.equals("uppercase"))) {
             char c = character.charAt(0);
             if (Character.isLetter(c)) {
@@ -1435,6 +1463,11 @@ public class TableCreatorActivity extends Activity {
     }
 
     private String generateTableContent() {
+        android.util.Log.d("TableCreator", "--- GENERATING TABLE CONTENT ---");
+        for (int i = 0; i < mMappings.size(); i++) {
+            Mapping m = mMappings.get(i);
+            android.util.Log.d("TableCreator", String.format("Mapping [%d]: %s %s", i, m.opcode, m.character));
+        }
         String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) return ""; if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
         
         Mapping cloneMarker = null;
@@ -1609,13 +1642,22 @@ public class TableCreatorActivity extends Activity {
 
         if (isLetter) {
             String pair = c_up + "-" + c_low;
-            if (!wP.contains(pair) && !isBaseMappingPresent(c_up, c_low)) {
+            // Generiamo 'base uppercase' AUTOMATICAMENTE solo in Managed Mode
+            // e solo se non è già presente nel file (wP) o nella lista mMappings.
+            if (mIsManagedTable && !wP.contains(pair) && !isBaseMappingPresent(c_up, c_low)) {
                 sb.append("base uppercase ").append(String.format("\\x%04x", (int)c_up)).append(" ").append(String.format("\\x%04x", (int)c_low)).append("\n");
                 wP.add(pair);
             }
         }
-    }
+        }
 
+        private boolean isCharacterMapped(char c) {
+        String s = String.valueOf(c);
+        for (Mapping m : mMappings) {
+            if (m.character != null && m.character.equals(s) && (m.opcode.equals("lowercase") || m.opcode.equals("uppercase") || m.opcode.equals("letter"))) return true;
+        }
+        return false;
+        }
     private String extractBasePair(String line) {
         try {
             String[] p = line.trim().split("\\s+");
@@ -1668,11 +1710,9 @@ public class TableCreatorActivity extends Activity {
         // Se non abbiamo un'etichetta descrittiva, restituiamo null invece del carattere stesso
         // per evitare commenti ridondanti come "lowercase œ 123 # œ"
         return null;
-    }
+        }
 
-    private boolean isCharacterMapped(char c) { String s = String.valueOf(c); for (Mapping m : mMappings) if (s.equals(m.character)) return true; return false; }
-
-    private void showTemplatePicker() { try { String[] files = getAssets().list("templates"); if (files == null || files.length == 0) return; final List<String> names = new ArrayList<>(), fFiles = new ArrayList<>(); for (String f : files) if (f.endsWith(".json")) { JSONObject o = new JSONObject(loadTemplateFromAssets(f)); names.add(o.getString("templateName")); fFiles.add(f); } new AlertDialog.Builder(this).setTitle(R.string.title_select_template).setItems(names.toArray(new String[0]), (dialog, w) -> confirmTemplateApplication(fFiles.get(w))).show(); } catch (Exception e) {} }
+        private void showTemplatePicker() { try { String[] files = getAssets().list("templates"); if (files == null || files.length == 0) return; final List<String> names = new ArrayList<>(), fFiles = new ArrayList<>(); for (String f : files) if (f.endsWith(".json")) { JSONObject o = new JSONObject(loadTemplateFromAssets(f)); names.add(o.getString("templateName")); fFiles.add(f); } new AlertDialog.Builder(this).setTitle(R.string.title_select_template).setItems(names.toArray(new String[0]), (dialog, w) -> confirmTemplateApplication(fFiles.get(w))).show(); } catch (Exception e) {} }
     private String loadTemplateFromAssets(String f) throws Exception { InputStream is = getAssets().open("templates/" + f); byte[] b = new byte[is.available()]; is.read(b); is.close(); return new String(b, "UTF-8"); }
     private void confirmTemplateApplication(final String f) { if (!mMappings.isEmpty()) new AlertDialog.Builder(this).setTitle(R.string.title_select_template).setMessage(R.string.msg_confirm_template).setPositiveButton(android.R.string.yes, (d, w) -> applyTemplate(f)).setNegativeButton(android.R.string.no, null).show(); else applyTemplate(f); }
     private void applyTemplate(String f) { try { JSONObject o = new JSONObject(loadTemplateFromAssets(f)), s = o.getJSONObject("settings"); JSONArray m = o.getJSONArray("mappings"); mEightDotCheck.setChecked(s.getBoolean("is8Dot")); updateScriptSpinner(mEightDotCheck.isChecked()); 
