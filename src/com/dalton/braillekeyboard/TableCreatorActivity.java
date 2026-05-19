@@ -791,9 +791,19 @@ public class TableCreatorActivity extends Activity {
         b.setPositiveButton(R.string.btn_ok, (d, w) -> { 
             int p = 0; for (char c : dotEdit.getText().toString().toCharArray()) p |= (1 << (Character.getNumericValue(c) - 1)); 
             if (p > 0) { 
-                List<Integer> pts = new ArrayList<>(); pts.add(p); pts.addAll(mapping.patterns); if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
-                if (targetIndex != -1) { int insertAt = targetIndex + 1; if (mEditingIndex != -1 && mEditingIndex < insertAt) insertAt--; if (insertAt > mMappings.size()) insertAt = mMappings.size(); mMappings.add(insertAt, new Mapping(mapping.opcode, mapping.character, pts, mapping.isHighPriority)); }
-                else mMappings.add(mapping.isHighPriority ? 0 : mMappings.size(), new Mapping(mapping.opcode, mapping.character, pts, mapping.isHighPriority));
+                List<Integer> pts = new ArrayList<>(); pts.add(p); pts.addAll(mapping.patterns); 
+                Mapping newMapping = new Mapping(mapping.opcode, mapping.character, pts, mapping.isHighPriority);
+                if (mIsCloningMode || !mIsManagedTable) {
+                    if (mEditingIndex != -1) {
+                        mMappings.set(mEditingIndex, newMapping);
+                    } else {
+                        mMappings.add(newMapping);
+                    }
+                } else {
+                    if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
+                    if (targetIndex != -1) { int insertAt = targetIndex + 1; if (mEditingIndex != -1 && mEditingIndex < insertAt) insertAt--; if (insertAt > mMappings.size()) insertAt = mMappings.size(); mMappings.add(insertAt, newMapping); }
+                    else mMappings.add(mapping.isHighPriority ? 0 : mMappings.size(), newMapping);
+                }
                 mEditingIndex = -1; mAddMappingBtn.setText(R.string.btn_add); finishMappingAction(); 
             } 
         });
