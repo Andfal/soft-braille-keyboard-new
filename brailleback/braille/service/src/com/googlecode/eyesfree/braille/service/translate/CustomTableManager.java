@@ -123,10 +123,6 @@ public class CustomTableManager {
         return mTableFileNames.get(tableId);
     }
 
-    public File getCustomDir() {
-        return mCustomDir;
-    }
-
     public File getCustomTableFile(String name) {
         if (name == null || name.isEmpty()) return new File(mCustomDir, "unnamed.ctb");
         if (!name.endsWith(".ctb") && !name.endsWith(".utb") && !name.endsWith(".dis")) {

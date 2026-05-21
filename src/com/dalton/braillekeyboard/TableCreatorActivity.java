@@ -101,7 +101,6 @@ public class TableCreatorActivity extends Activity {
     private Button mDeleteMappingBtn;
     private CheckBox mShowVisualPickerCheck;
     
-    private LinearLayout mAdvancedSettingsLayout;
     private LinearLayout mHeaderConfigLayout;
     private LinearLayout mCellPickerButtonsLayout;
     private Button mToggleHeaderBtn;
@@ -294,7 +293,6 @@ public class TableCreatorActivity extends Activity {
         mLocaleSpinner = (Spinner) findViewById(R.id.spinner_locale);
         mSearchLocaleEdit = (EditText) findViewById(R.id.edit_search_locale);
         mEightDotCheck = (CheckBox) findViewById(R.id.check_use_8_dots);
-        mAdvancedSettingsLayout = (LinearLayout) findViewById(R.id.layout_advanced_settings);
         mBaseTableSpinner = (Spinner) findViewById(R.id.spinner_base_table);
         mScriptSpinner = (Spinner) findViewById(R.id.spinner_script);
         mNumSystemSpinner = (Spinner) findViewById(R.id.spinner_num_system);
@@ -597,7 +595,6 @@ public class TableCreatorActivity extends Activity {
                     if (trimmed.startsWith("# Author:")) mAuthorEdit.setText(trimmed.substring(9).trim());
                     else if (trimmed.startsWith("# Description:")) mDescriptionEdit.setText(trimmed.substring(14).trim());
                     else if (trimmed.contains("+mode:clone")) { mIsCloningMode = true; mMappings.add(new Mapping("comment", "+mode:clone", new ArrayList<Integer>(), true, true)); }
-                    else if (trimmed.contains("+mode:managed")) isManaged = true;
                     else if (trimmed.startsWith("#+locale:")) { String code = trimmed.substring(9).trim(); int idx = mLocaleCodes.indexOf(code); if (idx != -1) { String name = mLocaleNames.get(idx); int filteredIdx = mFilteredLocaleNames.indexOf(name); if (filteredIdx != -1) mLocaleSpinner.setSelection(filteredIdx); } }
                     else if (trimmed.contains("SYSTEM INCLUDES") || trimmed.contains("SYSTEM SECTION") || trimmed.contains("LOW PRIORITY")) currentlyHighPriority = false;
                     
@@ -687,9 +684,13 @@ public class TableCreatorActivity extends Activity {
     private int findDuplicateDots(String dots) { for (int i = 0; i < mMappings.size(); i++) if (getDotsString(mMappings.get(i).patterns).equals(dots)) return i; return -1; }
     private String findDuplicateInPresets(String dots) { return mPresetLookup.get(dots); }
 
-    private void showDuplicateDialog(final Mapping newMapping, final int existingIndex) { showDuplicateDialogInternal(newMapping, getDotsString(newMapping.patterns), mMappings.get(existingIndex).character, existingIndex); }
-    private void showDuplicateDialogInternal(final Mapping newMapping, String dots, String existingName, final int existingIndex) {
-        boolean isPreset = existingIndex == -1;
+    private void showDuplicateDialog(final Mapping newMapping, final int existingIndex) { 
+        Mapping duplicateMapping = (existingIndex >= 0 && existingIndex < mMappings.size()) ? mMappings.get(existingIndex) : null;
+        showDuplicateDialogInternal(newMapping, getDotsString(newMapping.patterns), duplicateMapping != null ? duplicateMapping.character : "", duplicateMapping); 
+    }
+
+    private void showDuplicateDialogInternal(final Mapping newMapping, String dots, String existingName, final Mapping duplicateMapping) {
+        boolean isPreset = duplicateMapping == null;
         String langName = "";
         int langPos = mLocaleSpinner != null ? mLocaleSpinner.getSelectedItemPosition() : -1;
         if (langPos >= 0 && langPos < mFilteredLocaleNames.size()) langName = mFilteredLocaleNames.get(langPos);
@@ -713,25 +714,30 @@ public class TableCreatorActivity extends Activity {
             if (mIsCloningMode || !mIsManagedTable) {
                 if (mEditingIndex != -1) {
                     Mapping oldMapping = mMappings.get(mEditingIndex);
-                    Mapping duplicateMapping = !isPreset ? mMappings.get(existingIndex) : null;
                     if (duplicateMapping != null && duplicateMapping != oldMapping) mMappings.remove(duplicateMapping);
                     int currentIdx = mMappings.indexOf(oldMapping);
                     if (currentIdx != -1) mMappings.set(currentIdx, newMapping);
                     else mMappings.add(newMapping);
-                } else if (!isPreset) {
-                    mMappings.set(existingIndex, newMapping);
+                } else if (duplicateMapping != null) {
+                    int dupIdx = mMappings.indexOf(duplicateMapping);
+                    if (dupIdx != -1) mMappings.set(dupIdx, newMapping);
                 } else {
                     insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
                 }
             } else {
-                if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
-                if (!isPreset) {
-                    int realIdx = mMappings.indexOf(mMappings.get(existingIndex < mMappings.size() ? existingIndex : mMappings.size()-1));
-                    if (realIdx != -1) mMappings.remove(realIdx);
-                    insertMappingWithPriority(newMapping, newMapping.isHighPriority, existingIndex);
-                } else {
-                    insertMappingWithPriority(newMapping, newMapping.isHighPriority, -1);
+                int targetPos = -1;
+                if (duplicateMapping != null) {
+                    targetPos = mMappings.indexOf(duplicateMapping);
+                    mMappings.remove(duplicateMapping);
                 }
+                if (mEditingIndex != -1) {
+                    Mapping oldMapping = mMappings.get(mEditingIndex);
+                    if (targetPos != -1 && mEditingIndex < targetPos) {
+                        targetPos--;
+                    }
+                    mMappings.remove(oldMapping);
+                }
+                insertMappingWithPriority(newMapping, newMapping.isHighPriority, targetPos);
             }
             mAddMappingBtn.setText(R.string.btn_add); finishMappingAction();
             mCharEdit.announceForAccessibility(getString(R.string.msg_rule_updated));
@@ -741,7 +747,7 @@ public class TableCreatorActivity extends Activity {
 
         if (!isPreset) {
             Button prefBtn = new Button(this); prefBtn.setText(R.string.btn_add_prefix);
-            prefBtn.setOnClickListener(v -> { showPrefixSelector(newMapping, existingIndex); dialog.dismiss(); });
+            prefBtn.setOnClickListener(v -> { showPrefixSelector(newMapping, duplicateMapping); dialog.dismiss(); });
             layout.addView(prefBtn);
         }
 
@@ -751,11 +757,13 @@ public class TableCreatorActivity extends Activity {
                 if (mEditingIndex != -1) {
                     mMappings.set(mEditingIndex, newMapping);
                 } else {
-                    int target = (existingIndex >= 0 && existingIndex < mMappings.size()) ? existingIndex : mMappings.size();
+                    int targetIndex = duplicateMapping != null ? mMappings.indexOf(duplicateMapping) : -1;
+                    int target = (targetIndex >= 0 && targetIndex < mMappings.size()) ? targetIndex : mMappings.size();
                     mMappings.add(target, newMapping);
                 }
             } else {
-                int targetPos = (mEditingIndex != -1) ? mEditingIndex : existingIndex;
+                int targetIndex = duplicateMapping != null ? mMappings.indexOf(duplicateMapping) : -1;
+                int targetPos = (mEditingIndex != -1) ? mEditingIndex : targetIndex;
                 if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
                 if (!isPreset) {
                     if (targetPos > mMappings.size()) targetPos = mMappings.size();
@@ -776,7 +784,7 @@ public class TableCreatorActivity extends Activity {
         dialog.show();
     }
 
-    private void showPrefixSelector(final Mapping mapping, final int targetIndex) {
+    private void showPrefixSelector(final Mapping mapping, final Mapping duplicateMapping) {
         int dotCount = mEightDotCheck.isChecked() ? 8 : 6; AlertDialog.Builder b = new AlertDialog.Builder(this); b.setTitle(R.string.title_select_prefix);
         LinearLayout layout = new LinearLayout(this); layout.setOrientation(LinearLayout.VERTICAL); layout.setPadding(40, 20, 40, 20);
         final EditText dotEdit = new EditText(this); dotEdit.setInputType(android.text.InputType.TYPE_CLASS_NUMBER); layout.addView(dotEdit);
@@ -800,6 +808,7 @@ public class TableCreatorActivity extends Activity {
                         mMappings.add(newMapping);
                     }
                 } else {
+                    int targetIndex = duplicateMapping != null ? mMappings.indexOf(duplicateMapping) : -1;
                     if (mEditingIndex != -1) mMappings.remove(mEditingIndex);
                     if (targetIndex != -1) { int insertAt = targetIndex + 1; if (mEditingIndex != -1 && mEditingIndex < insertAt) insertAt--; if (insertAt > mMappings.size()) insertAt = mMappings.size(); mMappings.add(insertAt, newMapping); }
                     else mMappings.add(mapping.isHighPriority ? 0 : mMappings.size(), newMapping);
@@ -832,7 +841,7 @@ public class TableCreatorActivity extends Activity {
         }
         
         // Salto alla regola esistente (Sempre attivo per auto-fill)
-        final List<Mapping> sourceList = (mCurrentSearchResults != null && !mCurrentSearchResults.isEmpty()) ? mCurrentSearchResults : mMappings;
+        final List<Mapping> sourceList = (mSearchEdit.getText().length() > 0) ? mCurrentSearchResults : mMappings;
         
         for (int i = 0; i < sourceList.size(); i++) {
             final Mapping found = sourceList.get(i);
@@ -911,7 +920,7 @@ public class TableCreatorActivity extends Activity {
         if (mIsTemplateUsed) {
             String preset = findDuplicateInPresets(dots); 
             if (preset != null && !opcode.equals("include")) { 
-                showDuplicateDialogInternal(m, dots, preset, -1); 
+                showDuplicateDialogInternal(m, dots, preset, null); 
                 return; 
             }
         }
@@ -1138,8 +1147,10 @@ public class TableCreatorActivity extends Activity {
             refreshSpinner(); 
             int newPos = mMappings.indexOf(mapping); 
             if (newPos != -1) mMappedItemsSpinner.setSelection(newPos + 1); 
-            mIsUpdatingUI = false;
-            finishMappingAction(); // Pulisce l'editor ed evita il pulsante 'Aggiorna'
+            mMappedItemsSpinner.post(() -> {
+                mIsUpdatingUI = false;
+                finishMappingAction(); // Pulisce l'editor ed evita il pulsante 'Aggiorna'
+            });
         };
         
         upBtn.setEnabled(!mapping.isFixed);
@@ -1155,13 +1166,41 @@ public class TableCreatorActivity extends Activity {
         bottomBtn.setOnClickListener(v -> { int idx = mMappings.indexOf(mapping); mMappings.remove(idx); mMappings.add(mapping); updateUI.run(); });
         moveToBtn.setOnClickListener(v -> { dialog.dismiss(); showMoveToDialog(mapping); });
         pinBtn.setOnClickListener(v -> { mapping.isFixed = !mapping.isFixed; dialog.dismiss(); refreshSpinner(); Toast.makeText(this, mapping.isFixed ? R.string.btn_pin_mapping : R.string.btn_unpin_mapping, 0).show(); });
-        delBtn.setOnClickListener(v -> { if (mapping.isFixed) return; mMappings.remove(mapping); refreshSpinner(); mMappedItemsSpinner.setSelection(0); dialog.dismiss(); });
+        delBtn.setOnClickListener(v -> { 
+            if (mapping.isFixed) return; 
+            mMappings.remove(mapping); 
+            mIsUpdatingUI = true;
+            refreshSpinner(); 
+            mMappedItemsSpinner.setSelection(0); 
+            mMappedItemsSpinner.post(() -> {
+                mIsUpdatingUI = false;
+                finishMappingAction();
+            });
+            dialog.dismiss(); 
+        });
     }
 
     private void showMoveToDialog(final Mapping mapping) {
         AlertDialog.Builder b = new AlertDialog.Builder(this); b.setTitle(R.string.btn_move_to_pos);
         final EditText input = new EditText(this); input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER); input.setHint(String.format(getString(R.string.hint_enter_pos), mMappings.size()));
-        b.setView(input); b.setPositiveButton(R.string.btn_ok, (d, w) -> { try { int target = Integer.parseInt(input.getText().toString()) - 1; if (target >= 0 && target <= mMappings.size()) { int oldIdx = mMappings.indexOf(mapping); mMappings.remove(oldIdx); if (target > mMappings.size()) target = mMappings.size(); mMappings.add(target, mapping); refreshSpinner(); mMappedItemsSpinner.setSelection(target + 1); } else Toast.makeText(this, R.string.msg_invalid_pos, 0).show(); } catch (Exception e) {} });
+        b.setView(input); b.setPositiveButton(R.string.btn_ok, (d, w) -> { 
+            try { 
+                int target = Integer.parseInt(input.getText().toString()) - 1; 
+                if (target >= 0 && target <= mMappings.size()) { 
+                    int oldIdx = mMappings.indexOf(mapping); 
+                    mMappings.remove(oldIdx); 
+                    if (target > mMappings.size()) target = mMappings.size(); 
+                    mMappings.add(target, mapping); 
+                    mIsUpdatingUI = true;
+                    refreshSpinner(); 
+                    mMappedItemsSpinner.setSelection(target + 1); 
+                    mMappedItemsSpinner.post(() -> {
+                        mIsUpdatingUI = false;
+                        finishMappingAction();
+                    });
+                } else Toast.makeText(this, R.string.msg_invalid_pos, 0).show(); 
+            } catch (Exception e) {} 
+        });
         b.setNegativeButton(R.string.btn_cancel, null).show();
     }
 
@@ -1243,17 +1282,16 @@ public class TableCreatorActivity extends Activity {
             new AlertDialog.Builder(TableCreatorActivity.this).setTitle(R.string.title_confirm_delete)
                 .setMessage(String.format(getString(R.string.msg_confirm_delete_mass), finalToRemove.size()))
                 .setPositiveButton(R.string.btn_ok, (d2, w2) -> { 
+                    mIsUpdatingUI = true;
                     mMappings.removeAll(finalToRemove); 
                     if (!query.isEmpty()) mCurrentSearchResults.removeAll(finalToRemove);
                     refreshSpinner(); 
                     mMappedItemsSpinner.setSelection(0); 
-                    mEditingIndex = -1;
-                    mAddMappingBtn.setText(R.string.btn_add);
-                    mCharEdit.setText("");
-                    mDotsEdit.setText("");
-                    mCurrentPatterns.clear();
-                    updateDotsDisplay();
-                    Toast.makeText(TableCreatorActivity.this, R.string.msg_rule_removed, 0).show(); 
+                    mMappedItemsSpinner.post(() -> {
+                        mIsUpdatingUI = false;
+                        finishMappingAction();
+                        Toast.makeText(TableCreatorActivity.this, R.string.msg_rule_removed, 0).show(); 
+                    });
                 }).setNegativeButton(R.string.btn_cancel, null).show();
         });
         b.setView(root); b.setNegativeButton(R.string.btn_cancel, null); b.show();
@@ -1308,8 +1346,6 @@ public class TableCreatorActivity extends Activity {
         if (!mCurrentSearchResults.isEmpty()) { mMappedItemsSpinner.setSelection(1); loadMappingFromObject(mCurrentSearchResults.get(0)); }
         mSearchResultsSummary.setText(String.format(getString(R.string.label_found_rules), mCurrentSearchResults.size(), mMappings.size())); mSearchResultsSummary.setVisibility(View.VISIBLE);
     }
-
-    private String parseLiblouisChar(String p) { if (p.startsWith("\\x")) try { return String.valueOf((char)Integer.parseInt(p.substring(2), 16)); } catch (Exception e) {} if (p.equals("\\s")) return " "; return p; }
 
     private void cloneBaseTable() {
         int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) { Toast.makeText(this, getString(R.string.msg_select_source_first), 0).show(); return; }
@@ -1473,11 +1509,7 @@ public class TableCreatorActivity extends Activity {
     }
 
     private String generateTableContent() {
-        android.util.Log.d("TableCreator", "--- GENERATING TABLE CONTENT ---");
-        for (int i = 0; i < mMappings.size(); i++) {
-            Mapping m = mMappings.get(i);
-            android.util.Log.d("TableCreator", String.format("Mapping [%d]: %s %s", i, m.opcode, m.character));
-        }
+        android.util.Log.d("TableCreator", "Generating table content. Total mappings: " + mMappings.size());
         String name = mTableNameEdit.getText().toString().trim(); if (name.isEmpty()) return ""; if (!name.endsWith(".ctb") && !name.endsWith(".utb")) name += ".ctb";
         
         Mapping cloneMarker = null;
@@ -1690,37 +1722,6 @@ public class TableCreatorActivity extends Activity {
         }
         return false;
     }
-
-    private String getCharLabel(String s) {
-        if (s == null || s.isEmpty()) return null;
-        if (s.length() > 1) return s;
-        char c = s.charAt(0);
-        if (c == ' ') return getString(R.string.label_spazio);
-        
-        int resId = getResources().getIdentifier("label_" + String.format("%04x", (int)c), "string", getPackageName());
-        if (resId != 0) return getString(resId);
-        
-        // Fallback manuali per caratteri comuni (se mancano in strings.xml)
-        if (c == 'à') return getString(R.string.label_a_grave);
-        if (c == 'è') return getString(R.string.label_e_grave);
-        if (c == 'é') return getString(R.string.label_e_acute);
-        if (c == 'ì') return getString(R.string.label_i_grave);
-        if (c == 'ò') return getString(R.string.label_o_grave);
-        if (c == 'ù') return getString(R.string.label_u_grave);
-        if (c == 'â') return "a accent circonflexe";
-        if (c == 'ê') return "e accent circonflexe";
-        if (c == 'î') return "i accent circonflexe";
-        if (c == 'ô') return "o accent circonflexe";
-        if (c == 'û') return "u accent circonflexe";
-        if (c == 'œ') return "oe ligature";
-        if (c == 'Œ') return "OE ligature";
-        if (c == 'ç') return "c cedilla";
-        if (c == 'Ç') return "C cedilla";
-        
-        // Se non abbiamo un'etichetta descrittiva, restituiamo null invece del carattere stesso
-        // per evitare commenti ridondanti come "lowercase œ 123 # œ"
-        return null;
-        }
 
         private void showTemplatePicker() { try { String[] files = getAssets().list("templates"); if (files == null || files.length == 0) return; final List<String> names = new ArrayList<>(), fFiles = new ArrayList<>(); for (String f : files) if (f.endsWith(".json")) { JSONObject o = new JSONObject(loadTemplateFromAssets(f)); names.add(o.getString("templateName")); fFiles.add(f); } new AlertDialog.Builder(this).setTitle(R.string.title_select_template).setItems(names.toArray(new String[0]), (dialog, w) -> confirmTemplateApplication(fFiles.get(w))).show(); } catch (Exception e) {} }
     private String loadTemplateFromAssets(String f) throws Exception { InputStream is = getAssets().open("templates/" + f); byte[] b = new byte[is.available()]; is.read(b); is.close(); return new String(b, "UTF-8"); }
