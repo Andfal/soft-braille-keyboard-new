@@ -19,9 +19,13 @@ package com.dalton.braillekeyboard;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import android.content.Context;
+import android.os.Vibrator;
 import android.util.TypedValue;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.accessibility.AccessibilityManager;
 
 import com.dalton.braillekeyboard.Options.KeyboardType;
 import com.dalton.braillekeyboard.Pad.Coords;
@@ -72,7 +76,7 @@ public class PadUtilities {
 
         List<Coords> keyList = Arrays.asList(coords);
         if (!autoSet && keyboard != KeyboardType.AUTO) {
-            validateCalibrationGeometry(keyList, keyboard, width, height);
+            validateCalibrationGeometry(context, keyList, keyboard, width, height);
         }
 
         if (autoSet || keyboard == KeyboardType.AUTO) {
@@ -114,7 +118,7 @@ public class PadUtilities {
         return pad;
     }
 
-    public static void validateCalibrationGeometry(List<Coords> coords, KeyboardType type, int width, int height) {
+    public static void validateCalibrationGeometry(Context context, List<Coords> coords, KeyboardType type, int width, int height) {
         if (coords.size() < 6) throw new IllegalArgumentException("Too few dots");
 
         int minX = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE;
@@ -126,22 +130,84 @@ public class PadUtilities {
         int deltaX = maxX - minX;
         int deltaY = maxY - minY;
 
+        boolean healed = false;
+
         if (type == KeyboardType.VERTICAL) {
             // For vertical, height of the bounding box should be significantly larger than width
             // Or at least not clearly horizontal.
             if (deltaY < deltaX / 2) {
-                throw new IllegalArgumentException("Geometry mismatch: Expected vertical, got horizontal");
+                // Compress X around its center
+                int centerX = minX + deltaX / 2;
+                float scale = (deltaY * 1.2f) / (deltaX > 0 ? deltaX : 1);
+                if (scale > 1.0f || scale <= 0.0f) scale = 0.5f;
+                for (Coords c : coords) {
+                    c.x = centerX + Math.round((c.x - centerX) * scale);
+                    c.setSecondCords(c.x, c.y);
+                }
+                healed = true;
             }
         } else { // TABLETOP or HORIZONTAL
             // For horizontal layouts, width should be significantly larger than height
             if (deltaX < deltaY / 2) {
-                throw new IllegalArgumentException("Geometry mismatch: Expected horizontal, got vertical");
+                // Compress Y around its center
+                int centerY = minY + deltaY / 2;
+                float scale = (deltaX * 1.2f) / (deltaY > 0 ? deltaY : 1);
+                if (scale > 1.0f || scale <= 0.0f) scale = 0.5f;
+                for (Coords c : coords) {
+                    c.y = centerY + Math.round((c.y - centerY) * scale);
+                    c.setSecondCords(c.x, c.y);
+                }
+                healed = true;
             }
             // Check hand separation: when sorted by X, there should be no overlap between halves
             Collections.sort(coords, Pad.comparatorX);
             int half = coords.size() / 2;
             if (coords.get(half).x <= coords.get(half - 1).x) {
-                throw new IllegalArgumentException("Hands overlapping");
+                // Separate hands
+                float density = context.getResources().getDisplayMetrics().density;
+                if (density <= 0) density = 1.0f;
+                int gap = Math.round(30 * density); // 30dp separation
+                int overlap = (coords.get(half - 1).x - coords.get(half).x) + gap;
+                int shift = overlap / 2;
+                
+                for (int i = 0; i < coords.size(); i++) {
+                    Coords c = coords.get(i);
+                    if (i < half) {
+                        c.x -= shift;
+                    } else {
+                        c.x += shift;
+                    }
+                    c.setSecondCords(c.x, c.y);
+                }
+                healed = true;
+            }
+        }
+
+        if (healed) {
+            android.util.Log.i("PadUtilities", "Soft-Healing applied: " + (type == KeyboardType.VERTICAL ? "VERTICAL" : "TABLETOP/HORIZONTAL"));
+            
+            // Short dual-pulse vibration pattern
+            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            if (vibrator != null) {
+                long[] pattern = {0, 60, 80, 60};
+                vibrator.vibrate(pattern, -1);
+            }
+            
+            // Speak via Accessibility TYPE_ANNOUNCEMENT
+            AccessibilityManager manager = (AccessibilityManager) context.getSystemService(Context.ACCESSIBILITY_SERVICE);
+            if (manager != null && manager.isEnabled()) {
+                android.view.accessibility.AccessibilityEvent event = android.view.accessibility.AccessibilityEvent.obtain();
+                event.setEventType(android.view.accessibility.AccessibilityEvent.TYPE_ANNOUNCEMENT);
+                event.setClassName("com.dalton.braillekeyboard.BrailleView");
+                event.setPackageName(context.getPackageName());
+                
+                String msg = "Geometria di calibrazione ottimizzata automaticamente.";
+                Locale currentLocale = context.getResources().getConfiguration().locale;
+                if (currentLocale != null && !"it".equals(currentLocale.getLanguage())) {
+                    msg = "Calibration geometry optimized automatically.";
+                }
+                event.getText().add(msg);
+                manager.sendAccessibilityEvent(event);
             }
         }
     }

@@ -489,10 +489,30 @@ public abstract class Pad {
         if (count[0] > 0) {
             newDiff[0].x /= count[0];
             newDiff[0].y /= count[0];
+            
+            // Outlier rejection (threshold 40px) and exponential damping (x 0.2)
+            double dist = Math.sqrt(newDiff[0].x * newDiff[0].x + newDiff[0].y * newDiff[0].y);
+            if (dist <= 40.0) {
+                newDiff[0].x = Math.round(newDiff[0].x * 0.2f);
+                newDiff[0].y = Math.round(newDiff[0].y * 0.2f);
+            } else {
+                newDiff[0].x = 0;
+                newDiff[0].y = 0;
+            }
         }
         if (count[1] > 0) {
             newDiff[1].x /= count[1];
             newDiff[1].y /= count[1];
+            
+            // Outlier rejection (threshold 40px) and exponential damping (x 0.2)
+            double dist = Math.sqrt(newDiff[1].x * newDiff[1].x + newDiff[1].y * newDiff[1].y);
+            if (dist <= 40.0) {
+                newDiff[1].x = Math.round(newDiff[1].x * 0.2f);
+                newDiff[1].y = Math.round(newDiff[1].y * 0.2f);
+            } else {
+                newDiff[1].x = 0;
+                newDiff[1].y = 0;
+            }
         }
 
         for (int i = 0; i < keys.size(); i++) {
