@@ -645,6 +645,7 @@
     <string name="action_set_dot_7">Inserisci punto 7</string>
     <string name="action_set_dot_8">Inserisci punto 8</string>
     <string name="action_toggle_abbreviations">Attiva/disattiva abbreviazioni</string>
+    <string name="action_toggle_abbreviations_no_space">Attiva/disattiva abbreviazioni senza spazio</string>
     <string name="action_toggle_instant_abbreviations">Attiva/disattiva espansione istantanea</string>
 
     <!-- Abbreviations (IT) -->
@@ -658,11 +659,17 @@
     <string name="pref_abbreviations_enabled_summary">Sostituisce le scorciatoie quando digiti uno spazio.</string>
     <string name="abbreviations_enabled">Abbreviazioni attivate</string>
     <string name="abbreviations_disabled">Abbreviazioni disattivate</string>
+    <string name="abbreviations_no_space_enabled">Abbreviazioni senza spazio attivate</string>
+    <string name="abbreviations_no_space_disabled">Abbreviazioni senza spazio disattivate</string>
     <string name="title_abbreviation_editor">Editor Abbreviazioni</string>
     <string name="hint_shortcut">Scorciatoia (es. ccs o 6-s)</string>
     <string name="hint_expansion">Testo espanso (es. Ciao, come stai?)</string>
     <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
     <string name="pref_abbreviations_enabled_default">false</string>
+    <string name="pref_abbreviations_add_space_title">Aggiungi spazio dopo l\'espansione</string>
+    <string name="pref_abbreviations_add_space_summary">Aggiunge uno spazio dopo l\'abbreviazione espansa. Disattiva per lasciare il cursore subito dopo il testo.</string>
+    <string name="action_expand_abbreviation">Espandi abbreviazione (senza spazio)</string>
+    <string name="nothing_to_expand">Nulla da espandere</string>
 
     <!-- Gesture Names (IT) -->
     <string name="swipe_one_left">Punto 1: Scorri a sinistra.</string>
@@ -829,7 +836,9 @@
         <item>@string/action_spell_check_next_suggestion</item>
         <item>@string/action_spell_check_prev_suggestion</item>
         <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_abbreviations_no_space</item>
         <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_expand_abbreviation</item>
         <item>@string/action_set_dot_7</item>
         <item>@string/action_set_dot_8</item>
     </string-array>
@@ -882,7 +891,9 @@
         <item>SPELL_CHECK_NEXT_SUGGESTION</item>
         <item>SPELL_CHECK_PREV_SUGGESTION</item>
         <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
         <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>EXPAND_ABBREVIATION</item>
         <item>SET_DOT_7</item>
         <item>SET_DOT_8</item>
     </string-array>

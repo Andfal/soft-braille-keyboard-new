@@ -256,6 +256,11 @@ public interface KeyboardListener {
     void finishComposingText();
 
     /**
+     * Checks if there is any composing text in the buffer.
+     */
+    boolean hasComposingText();
+
+    /**
      * Handle a backspace action. If there is an active Braille composition,
      * it should remove the last cell and update the composition.
      * @return The Word object containing information about the deleted character, or null if not handled.
@@ -282,11 +287,15 @@ public interface KeyboardListener {
      */
     String translateLiteral(byte dots);
 
+    int EXPANSION_TYPE_SPACE = 0;
+    int EXPANSION_TYPE_INSTANT = 1;
+    int EXPANSION_TYPE_MANUAL = 2;
+
     /**
      * Controlla se il buffer corrente corrisponde a un'abbreviazione e la espande.
-     * @param strict Se true, esegue un controllo rigoroso (usato per espansione istantanea).
+     * @param type Tipo di espansione (EXPANSION_TYPE_SPACE, EXPANSION_TYPE_INSTANT o EXPANSION_TYPE_MANUAL).
      */
-    void checkAndExpandAbbreviation(boolean strict);
+    boolean checkAndExpandAbbreviation(int type);
 
     /**
      * Traduce il testo in punti Braille usando la tabella corrente.

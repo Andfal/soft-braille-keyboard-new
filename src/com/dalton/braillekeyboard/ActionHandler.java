@@ -456,10 +456,16 @@ public class ActionHandler {
                             : R.string.unset_mark);
             break;
         case TOGGLE_ABBREVIATIONS:
-            boolean abbrEnabled = Options.switchBooleanPreference(context,
+            boolean addSpaceEnabled = Options.switchBooleanPreferenceStringKey(context,
+                    "ABBREVIATIONS_ADD_SPACE", false);
+            message = context.getString(addSpaceEnabled ? R.string.abbreviations_enabled
+                    : R.string.abbreviations_disabled);
+            break;
+        case TOGGLE_ABBREVIATIONS_NO_SPACE:
+            boolean spaceEnabled = Options.switchBooleanPreference(context,
                     R.string.pref_abbreviations_enabled_key,
                     Boolean.parseBoolean(context.getString(R.string.pref_abbreviations_enabled_default)));
-            message = context.getString(abbrEnabled ? R.string.abbreviations_enabled
+            message = context.getString(spaceEnabled ? R.string.abbreviations_no_space_enabled
                     : R.string.abbreviations_disabled);
             break;
         case TOGGLE_INSTANT_ABBREVIATIONS:
@@ -467,6 +473,29 @@ public class ActionHandler {
                     "ABBREVIATIONS_INSTANT", false);
             message = context.getString(instantEnabled ? R.string.abbreviations_instant_enabled
                     : R.string.abbreviations_instant_disabled);
+            break;
+        case EXPAND_ABBREVIATION:
+            if (!listener.hasComposingText()) {
+                boolean manualAbbrEnabled = Options.switchBooleanPreference(context,
+                        R.string.pref_abbreviations_enabled_key,
+                        Boolean.parseBoolean(context.getString(R.string.pref_abbreviations_enabled_default)));
+                message = context.getString(manualAbbrEnabled ? R.string.abbreviations_no_space_enabled
+                        : R.string.abbreviations_disabled);
+            } else {
+                boolean expandedAbbrManual = listener.checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_MANUAL);
+                if (expandedAbbrManual) {
+                    Word wordAbbr = EditingUtilities.getWord(listener);
+                    String expandedMsg = wordAbbr == null ? null : wordAbbr.word.substring(0, wordAbbr.charsBefore);
+                    if (expandedMsg != null) {
+                        message = echoWord(context, expandedMsg);
+                        if (message == null || message.isEmpty()) {
+                            message = expandedMsg;
+                        }
+                    }
+                } else {
+                    message = context.getString(R.string.nothing_to_expand);
+                }
+            }
             break;
         case CYCLE_KEYBOARD_FEEDBACK:
             KeyboardFeedback feedback = KeyboardFeedback.valueOf(Integer
@@ -968,11 +997,23 @@ public class ActionHandler {
 
     // Insert a certain character like a ' ' or '\n'
     private void typeCharacter(Context context, int code, String charName) {
-        listener.checkAndExpandAbbreviation(false);
+        boolean expanded = listener.checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_SPACE);
         listener.finishComposingText();
         Word word = EditingUtilities.getWord(listener);
         String message = word == null ? null : word.word.substring(0,
                 word.charsBefore);
+
+        boolean addSpace = Options.getSharedPreferences(context).getBoolean("ABBREVIATIONS_ADD_SPACE", false);
+        if (expanded && !addSpace) {
+            if (message != null) {
+                message = echoWord(context, message);
+                if (message != null && !message.isEmpty()) {
+                    callback.onText("%s", message, listener.isPasswordField());
+                }
+            }
+            return;
+        }
+
         listener.onKey(code);
 
         if ((message = echoWord(context, message)) == null) {

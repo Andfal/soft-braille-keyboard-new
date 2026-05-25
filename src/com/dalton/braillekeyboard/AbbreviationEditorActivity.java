@@ -140,6 +140,17 @@ public class AbbreviationEditorActivity extends Activity {
             }
         });
 
+        final CheckBox checkAddSpace = (CheckBox) findViewById(R.id.check_add_space_expansion);
+        checkAddSpace.setChecked(Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_ADD_SPACE", false));
+        checkAddSpace.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Options.getSharedPreferences(AbbreviationEditorActivity.this).edit()
+                        .putBoolean("ABBREVIATIONS_ADD_SPACE", isChecked)
+                        .apply();
+            }
+        });
+
         refreshList();
 
         btnExport.setOnClickListener(new View.OnClickListener() {

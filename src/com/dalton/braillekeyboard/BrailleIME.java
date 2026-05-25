@@ -490,25 +490,30 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     }
 
     @Override
-    public void checkAndExpandAbbreviation(boolean strict) {
+    public boolean checkAndExpandAbbreviation(int type) {
         // 1. Controllo indipendente basato sulla modalità
-        boolean enabled;
-        if (strict) {
+        boolean enabled = false;
+        if (type == EXPANSION_TYPE_INSTANT) {
             // Modalità istantanea
             enabled = Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_INSTANT", false);
-        } else {
+        } else if (type == EXPANSION_TYPE_SPACE) {
             // Modalità classica (spazio)
-            enabled = Options.getBooleanPreference(this, R.string.pref_abbreviations_enabled_key,
+            boolean spaceEnabled = Options.getBooleanPreference(this, R.string.pref_abbreviations_enabled_key,
                     Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default)));
+            boolean addSpaceEnabled = Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_ADD_SPACE", false);
+            enabled = spaceEnabled || addSpaceEnabled;
+        } else if (type == EXPANSION_TYPE_MANUAL) {
+            // Modalità manuale tramite gesto: sempre abilitata, ignora i controlli delle impostazioni automatiche!
+            enabled = true;
         }
 
-        if (!enabled) return;
+        if (!enabled) return false;
 
         // 2. Analisi del buffer in composizione locale
         if (composingText.length() > 0) {
             String word = composingText.toString();
             // In modalità rigorosa (istantanea), passiamo il numero esatto di celle digitate
-            int cellCount = strict ? cells.size() : -1;
+            int cellCount = (type == EXPANSION_TYPE_INSTANT) ? cells.size() : -1;
             String expansion = abbreviationManager.getExpansion(word, cellCount, this);
             
             // 3. Modifica SOLO se viene trovata un'espansione
@@ -525,9 +530,16 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                     // Puliamo i buffer locali per la parola successiva
                     composingText.setLength(0);
                     cells.clear();
+                    return true;
                 }
             }
         }
+        return false;
+    }
+
+    @Override
+    public boolean hasComposingText() {
+        return composingText.length() > 0;
     }
 
     @Override
@@ -542,8 +554,12 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
 
             // If dots is 0 (space) or contains space-like behavior, check abbreviations and finish composition
             if (dots == 0) {
-                checkAndExpandAbbreviation(false);
+                boolean expanded = checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_SPACE);
                 finishComposingText(true);
+                boolean addSpace = Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_ADD_SPACE", false);
+                if (expanded && !addSpace) {
+                    return "";
+                }
                 return " ";
             }
             
@@ -606,7 +622,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                 composingText.append(text);
 
                 // ESPANSIONE ISTANTANEA
-                checkAndExpandAbbreviation(true);
+                checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_INSTANT);
             }
         } finally { ic.endBatchEdit(); }
         return text.toString();
@@ -626,7 +642,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
         if (selectAll) { toggleMark(); selectAll = false; }
-        checkAndExpandAbbreviation(false);
+        checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_SPACE);
         finishComposingText();
         switch (keyCode) {
         case Keyboard.KEYCODE_DELETE: keyDownUp(ic, KeyEvent.KEYCODE_DEL); break;
