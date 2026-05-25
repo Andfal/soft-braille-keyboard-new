@@ -466,7 +466,7 @@ public class ActionHandler {
                     R.string.pref_abbreviations_enabled_key,
                     Boolean.parseBoolean(context.getString(R.string.pref_abbreviations_enabled_default)));
             message = context.getString(spaceEnabled ? R.string.abbreviations_no_space_enabled
-                    : R.string.abbreviations_disabled);
+                    : R.string.abbreviations_no_space_disabled);
             break;
         case TOGGLE_INSTANT_ABBREVIATIONS:
             boolean instantEnabled = Options.switchBooleanPreferenceStringKey(context,
@@ -480,7 +480,7 @@ public class ActionHandler {
                         R.string.pref_abbreviations_enabled_key,
                         Boolean.parseBoolean(context.getString(R.string.pref_abbreviations_enabled_default)));
                 message = context.getString(manualAbbrEnabled ? R.string.abbreviations_no_space_enabled
-                        : R.string.abbreviations_disabled);
+                        : R.string.abbreviations_no_space_disabled);
             } else {
                 boolean expandedAbbrManual = listener.checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_MANUAL);
                 if (expandedAbbrManual) {
