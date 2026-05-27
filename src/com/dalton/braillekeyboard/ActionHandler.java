@@ -456,29 +456,23 @@ public class ActionHandler {
                             : R.string.unset_mark);
             break;
         case TOGGLE_ABBREVIATIONS:
-            boolean addSpaceEnabled = Options.switchBooleanPreferenceStringKey(context,
-                    "ABBREVIATIONS_ADD_SPACE", false);
+            boolean addSpaceEnabled = Options.toggleAbbreviationOption(context, 3);
             message = context.getString(addSpaceEnabled ? R.string.abbreviations_enabled
                     : R.string.abbreviations_disabled);
             break;
         case TOGGLE_ABBREVIATIONS_NO_SPACE:
-            boolean spaceEnabled = Options.switchBooleanPreference(context,
-                    R.string.pref_abbreviations_enabled_key,
-                    Boolean.parseBoolean(context.getString(R.string.pref_abbreviations_enabled_default)));
+            boolean spaceEnabled = Options.toggleAbbreviationOption(context, 1);
             message = context.getString(spaceEnabled ? R.string.abbreviations_no_space_enabled
                     : R.string.abbreviations_no_space_disabled);
             break;
         case TOGGLE_INSTANT_ABBREVIATIONS:
-            boolean instantEnabled = Options.switchBooleanPreferenceStringKey(context,
-                    "ABBREVIATIONS_INSTANT", false);
+            boolean instantEnabled = Options.toggleAbbreviationOption(context, 2);
             message = context.getString(instantEnabled ? R.string.abbreviations_instant_enabled
                     : R.string.abbreviations_instant_disabled);
             break;
         case EXPAND_ABBREVIATION:
             if (!listener.hasComposingText()) {
-                boolean manualAbbrEnabled = Options.switchBooleanPreference(context,
-                        R.string.pref_abbreviations_enabled_key,
-                        Boolean.parseBoolean(context.getString(R.string.pref_abbreviations_enabled_default)));
+                boolean manualAbbrEnabled = Options.toggleAbbreviationOption(context, 1);
                 message = context.getString(manualAbbrEnabled ? R.string.abbreviations_no_space_enabled
                         : R.string.abbreviations_no_space_disabled);
             } else {

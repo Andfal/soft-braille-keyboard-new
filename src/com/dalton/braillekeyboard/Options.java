@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 public class Options {
+    private static SharedPreferences sCachedPreferences = null;
     public interface OptionList {
         OptionList[] getValues();
 
@@ -132,45 +133,59 @@ public class Options {
     }
 
     public static SharedPreferences getSharedPreferences(Context context) {
-        if (context == null) return null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            Context deContext = context.createDeviceProtectedStorageContext();
-            SharedPreferences migrationTracker = deContext.getSharedPreferences("migration_tracker", Context.MODE_PRIVATE);
-            
-            if (!migrationTracker.getBoolean("pref_migrated", false)) {
-                String prefName = context.getPackageName() + "_preferences";
-                java.io.File ceFile = new java.io.File(context.getDataDir(), "shared_prefs/" + prefName + ".xml");
-                java.io.File deFile = new java.io.File(deContext.getDataDir(), "shared_prefs/" + prefName + ".xml");
-
-                // 1. Migrazione SharedPreferences predefinite
-                if (ceFile.exists() && !deFile.exists()) {
-                    android.util.Log.i("Options", "Migrating default preferences from CE to DE...");
-                    deContext.moveSharedPreferencesFrom(context, prefName);
-                }
-                
-                // 2. Migrazione SharedPreferences custom_tables
-                java.io.File ceTablesPref = new java.io.File(context.getDataDir(), "shared_prefs/custom_tables.xml");
-                java.io.File deTablesPref = new java.io.File(deContext.getDataDir(), "shared_prefs/custom_tables.xml");
-                if (ceTablesPref.exists() && !deTablesPref.exists()) {
-                    deContext.moveSharedPreferencesFrom(context, "custom_tables");
-                }
-
-                // 3. Migrazione CARTELLE fisiche (custom_tables)
-                java.io.File ceFilesDir = context.getFilesDir();
-                java.io.File deFilesDir = deContext.getFilesDir();
-                java.io.File ceCustomTablesDir = new java.io.File(ceFilesDir, "custom_tables");
-                java.io.File deCustomTablesDir = new java.io.File(deFilesDir, "custom_tables");
-
-                if (ceCustomTablesDir.exists() && !deCustomTablesDir.exists()) {
-                    android.util.Log.i("Options", "Migrating custom_tables directory from CE to DE...");
-                    ceCustomTablesDir.renameTo(deCustomTablesDir);
-                }
-                
-                migrationTracker.edit().putBoolean("pref_migrated", true).apply();
-            }
-            return PreferenceManager.getDefaultSharedPreferences(deContext);
+        if (context == null) return sCachedPreferences;
+        if (sCachedPreferences != null) {
+            return sCachedPreferences;
         }
-        return PreferenceManager.getDefaultSharedPreferences(context);
+        synchronized (Options.class) {
+            if (sCachedPreferences != null) {
+                return sCachedPreferences;
+            }
+            Context appContext = context.getApplicationContext();
+            if (appContext == null) appContext = context;
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                Context deContext = appContext.createDeviceProtectedStorageContext();
+                SharedPreferences migrationTracker = deContext.getSharedPreferences("migration_tracker", Context.MODE_PRIVATE);
+                
+                if (!migrationTracker.getBoolean("pref_migrated", false)) {
+                    String prefName = appContext.getPackageName() + "_preferences";
+                    java.io.File ceFile = new java.io.File(appContext.getDataDir(), "shared_prefs/" + prefName + ".xml");
+                    java.io.File deFile = new java.io.File(deContext.getDataDir(), "shared_prefs/" + prefName + ".xml");
+
+                    // 1. Migrazione SharedPreferences predefinite
+                    if (ceFile.exists() && !deFile.exists()) {
+                        android.util.Log.i("Options", "Migrating default preferences from CE to DE...");
+                        deContext.moveSharedPreferencesFrom(appContext, prefName);
+                    }
+                    
+                    // 2. Migrazione SharedPreferences custom_tables
+                    java.io.File ceTablesPref = new java.io.File(appContext.getDataDir(), "shared_prefs/custom_tables.xml");
+                    java.io.File deTablesPref = new java.io.File(deContext.getDataDir(), "shared_prefs/custom_tables.xml");
+                    if (ceTablesPref.exists() && !deTablesPref.exists()) {
+                        deContext.moveSharedPreferencesFrom(appContext, "custom_tables");
+                    }
+
+                    // 3. Migrazione CARTELLE fisiche (custom_tables)
+                    java.io.File ceFilesDir = appContext.getFilesDir();
+                    java.io.File deFilesDir = deContext.getFilesDir();
+                    java.io.File ceCustomTablesDir = new java.io.File(ceFilesDir, "custom_tables");
+                    java.io.File deCustomTablesDir = new java.io.File(deFilesDir, "custom_tables");
+
+                    if (ceCustomTablesDir.exists() && !deCustomTablesDir.exists()) {
+                        android.util.Log.i("Options", "Migrating custom_tables directory from CE to DE...");
+                        ceCustomTablesDir.renameTo(deCustomTablesDir);
+                    }
+                    
+                    migrationTracker.edit().putBoolean("pref_migrated", true).apply();
+                }
+                sCachedPreferences = PreferenceManager.getDefaultSharedPreferences(deContext);
+            } else {
+                sCachedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+            }
+            sanitizeAbbreviationPreferences(appContext);
+        }
+        return sCachedPreferences;
     }
 
     public static boolean getBooleanPreference(Context context, int resource,
@@ -302,5 +317,62 @@ public class Options {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putStringSet(key, value != null ? new HashSet<String>(value) : null);
         editor.apply();
+    }
+
+    public static void setActiveAbbreviationOption(Context context, int activeOption) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+
+        String spaceKey = context.getString(R.string.pref_abbreviations_enabled_key);
+        sharedPref.edit()
+                .putBoolean(spaceKey, activeOption == 1)
+                .putBoolean("ABBREVIATIONS_INSTANT", activeOption == 2)
+                .putBoolean("ABBREVIATIONS_ADD_SPACE", activeOption == 3)
+                .apply();
+    }
+
+    public static boolean toggleAbbreviationOption(Context context, int optionToToggle) {
+        if (context == null) return false;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return false;
+
+        String key = null;
+        if (optionToToggle == 1) {
+            key = context.getString(R.string.pref_abbreviations_enabled_key);
+        } else if (optionToToggle == 2) {
+            key = "ABBREVIATIONS_INSTANT";
+        } else if (optionToToggle == 3) {
+            key = "ABBREVIATIONS_ADD_SPACE";
+        }
+
+        if (key == null) return false;
+
+        boolean currentlyEnabled = sharedPref.getBoolean(key, false);
+        int newActiveOption = currentlyEnabled ? 0 : optionToToggle;
+        setActiveAbbreviationOption(context, newActiveOption);
+
+        return !currentlyEnabled;
+    }
+
+    public static void sanitizeAbbreviationPreferences(Context context) {
+        if (context == null) return;
+        SharedPreferences sharedPref = getSharedPreferences(context);
+        if (sharedPref == null) return;
+
+        String spaceKey = context.getString(R.string.pref_abbreviations_enabled_key);
+        boolean space = sharedPref.getBoolean(spaceKey, false);
+        boolean instant = sharedPref.getBoolean("ABBREVIATIONS_INSTANT", false);
+        boolean addSpace = sharedPref.getBoolean("ABBREVIATIONS_ADD_SPACE", false);
+
+        int count = (space ? 1 : 0) + (instant ? 1 : 0) + (addSpace ? 1 : 0);
+        if (count > 1) {
+            int active = 0;
+            if (space) active = 1;
+            else if (instant) active = 2;
+            else if (addSpace) active = 3;
+
+            setActiveAbbreviationOption(context, active);
+        }
     }
 }
