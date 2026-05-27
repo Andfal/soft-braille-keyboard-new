@@ -148,21 +148,21 @@
     <string name="action_spell_check_prev_suggestion">Previous spelling suggestion</string>
     <string name="action_set_dot_7">Type dot 7</string>
     <string name="action_set_dot_8">Insert dot 8</string>
-    <string name="action_toggle_abbreviations">Toggle abbreviations</string>
+    <string name="action_toggle_abbreviations">Toggle abbreviations with space</string>
     <string name="action_toggle_abbreviations_no_space">Toggle abbreviations without space</string>
     <string name="action_toggle_instant_abbreviations">Toggle instant expansion</string>
 
     <!-- Abbreviations -->
     <string name="pref_abbreviations_title">Abbreviations</string>
-    <string name="pref_abbreviations_summary">Manage text expansion (via space or instant).</string>
+    <string name="pref_abbreviations_summary">Manage text expansion (with space, without space, or instant).</string>
     <string name="pref_abbreviations_instant_title">Instant expansion</string>
     <string name="pref_abbreviations_instant_summary">Replaces shortcuts as soon as they are typed.</string>
     <string name="abbreviations_instant_enabled">Instant expansion enabled</string>
     <string name="abbreviations_instant_disabled">Instant expansion disabled</string>
-    <string name="pref_abbreviations_enabled_title">Expansion via Space</string>
-    <string name="pref_abbreviations_enabled_summary">Replaces shortcuts when you type a space.</string>
-    <string name="abbreviations_enabled">Abbreviations enabled</string>
-    <string name="abbreviations_disabled">Abbreviations disabled</string>
+    <string name="pref_abbreviations_enabled_title">Expansion without space</string>
+    <string name="pref_abbreviations_enabled_summary">Replaces shortcuts using space or enter as modifiers only (no extra space is inserted).</string>
+    <string name="abbreviations_enabled">Abbreviations with space enabled</string>
+    <string name="abbreviations_disabled">Abbreviations with space disabled</string>
     <string name="abbreviations_no_space_enabled">Abbreviations without space enabled</string>
     <string name="abbreviations_no_space_disabled">Abbreviations without space disabled</string>
     <string name="title_abbreviation_editor">Abbreviation Editor</string>
@@ -170,8 +170,8 @@
     <string name="hint_expansion">Expanded text (e.g., How are you?)</string>
     <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
     <string name="pref_abbreviations_enabled_default">false</string>
-    <string name="pref_abbreviations_add_space_title">Add space after expansion</string>
-    <string name="pref_abbreviations_add_space_summary">Appends a space after the expanded abbreviation. Keep OFF to leave cursor right after the text.</string>
+    <string name="pref_abbreviations_add_space_title">Expansion with space</string>
+    <string name="pref_abbreviations_add_space_summary">Replaces shortcuts using space or enter and appends a space.</string>
     <string name="action_expand_abbreviation">Expand abbreviation (no space)</string>
     <string name="nothing_to_expand">Nothing to expand</string>
 

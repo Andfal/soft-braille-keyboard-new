@@ -644,21 +644,21 @@
     <string name="action_spell_check_prev_suggestion">Suggerimento ortografico precedente</string>
     <string name="action_set_dot_7">Inserisci punto 7</string>
     <string name="action_set_dot_8">Inserisci punto 8</string>
-    <string name="action_toggle_abbreviations">Attiva/disattiva abbreviazioni</string>
+    <string name="action_toggle_abbreviations">Attiva/disattiva abbreviazioni con spazio</string>
     <string name="action_toggle_abbreviations_no_space">Attiva/disattiva abbreviazioni senza spazio</string>
     <string name="action_toggle_instant_abbreviations">Attiva/disattiva espansione istantanea</string>
 
     <!-- Abbreviations (IT) -->
     <string name="pref_abbreviations_title">Abbreviazioni</string>
-    <string name="pref_abbreviations_summary">Gestisci l\'espansione del testo (tramite spazio o istantanea).</string>
+    <string name="pref_abbreviations_summary">Gestisci l\'espansione del testo (con spazio, senza spazio o istantanea).</string>
     <string name="pref_abbreviations_instant_title">Espansione istantanea</string>
     <string name="pref_abbreviations_instant_summary">Sostituisce le scorciatoie non appena vengono digitate.</string>
     <string name="abbreviations_instant_enabled">Espansione istantanea attivata</string>
     <string name="abbreviations_instant_disabled">Espansione istantanea disattivata</string>
-    <string name="pref_abbreviations_enabled_title">Espansione tramite Spazio</string>
-    <string name="pref_abbreviations_enabled_summary">Sostituisce le scorciatoie quando digiti uno spazio.</string>
-    <string name="abbreviations_enabled">Abbreviazioni attivate</string>
-    <string name="abbreviations_disabled">Abbreviazioni disattivate</string>
+    <string name="pref_abbreviations_enabled_title">Espansione senza spazio</string>
+    <string name="pref_abbreviations_enabled_summary">Sostituisce le scorciatoie tramite Spazio o Invio (usati come modificatori, senza inserire spazi aggiuntivi).</string>
+    <string name="abbreviations_enabled">Abbreviazioni con spazio attivate</string>
+    <string name="abbreviations_disabled">Abbreviazioni con spazio disattivate</string>
     <string name="abbreviations_no_space_enabled">Abbreviazioni senza spazio attivate</string>
     <string name="abbreviations_no_space_disabled">Abbreviazioni senza spazio disattivate</string>
     <string name="title_abbreviation_editor">Editor Abbreviazioni</string>
@@ -666,8 +666,8 @@
     <string name="hint_expansion">Testo espanso (es. Ciao, come stai?)</string>
     <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
     <string name="pref_abbreviations_enabled_default">false</string>
-    <string name="pref_abbreviations_add_space_title">Aggiungi spazio dopo l\'espansione</string>
-    <string name="pref_abbreviations_add_space_summary">Aggiunge uno spazio dopo l\'abbreviazione espansa. Disattiva per lasciare il cursore subito dopo il testo.</string>
+    <string name="pref_abbreviations_add_space_title">Espansione con spazio</string>
+    <string name="pref_abbreviations_add_space_summary">Sostituisce le scorciatoie inserendo uno spazio o invio dopo il testo espanso.</string>
     <string name="action_expand_abbreviation">Espandi abbreviazione (senza spazio)</string>
     <string name="nothing_to_expand">Nulla da espandere</string>
 
