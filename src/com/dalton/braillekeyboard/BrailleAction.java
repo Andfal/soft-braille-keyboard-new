@@ -74,7 +74,6 @@ public enum BrailleAction {
     
     // Braille Dots (7 and 8)
     TOGGLE_ABBREVIATIONS_NO_SPACE(R.string.action_toggle_abbreviations_no_space),
-    EXPAND_ABBREVIATION(R.string.action_expand_abbreviation),
     SET_DOT_7(R.string.action_set_dot_7),
     SET_DOT_8(R.string.action_set_dot_8);
 

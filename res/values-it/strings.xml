@@ -668,7 +668,6 @@
     <string name="pref_abbreviations_enabled_default">false</string>
     <string name="pref_abbreviations_add_space_title">Espansione con spazio</string>
     <string name="pref_abbreviations_add_space_summary">Sostituisce le scorciatoie inserendo uno spazio o invio dopo il testo espanso.</string>
-    <string name="action_expand_abbreviation">Espandi abbreviazione (senza spazio)</string>
     <string name="nothing_to_expand">Nulla da espandere</string>
 
     <!-- Gesture Names (IT) -->
@@ -838,7 +837,6 @@
         <item>@string/action_toggle_abbreviations</item>
         <item>@string/action_toggle_abbreviations_no_space</item>
         <item>@string/action_toggle_instant_abbreviations</item>
-        <item>@string/action_expand_abbreviation</item>
         <item>@string/action_set_dot_7</item>
         <item>@string/action_set_dot_8</item>
     </string-array>
@@ -893,7 +891,6 @@
         <item>TOGGLE_ABBREVIATIONS</item>
         <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
         <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
-        <item>EXPAND_ABBREVIATION</item>
         <item>SET_DOT_7</item>
         <item>SET_DOT_8</item>
     </string-array>

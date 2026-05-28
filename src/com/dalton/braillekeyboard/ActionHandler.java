@@ -470,27 +470,6 @@ public class ActionHandler {
             message = context.getString(instantEnabled ? R.string.abbreviations_instant_enabled
                     : R.string.abbreviations_instant_disabled);
             break;
-        case EXPAND_ABBREVIATION:
-            if (!listener.hasComposingText()) {
-                boolean manualAbbrEnabled = Options.toggleAbbreviationOption(context, 1);
-                message = context.getString(manualAbbrEnabled ? R.string.abbreviations_no_space_enabled
-                        : R.string.abbreviations_no_space_disabled);
-            } else {
-                boolean expandedAbbrManual = listener.checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_MANUAL);
-                if (expandedAbbrManual) {
-                    Word wordAbbr = EditingUtilities.getWord(listener);
-                    String expandedMsg = wordAbbr == null ? null : wordAbbr.word.substring(0, wordAbbr.charsBefore);
-                    if (expandedMsg != null) {
-                        message = echoWord(context, expandedMsg);
-                        if (message == null || message.isEmpty()) {
-                            message = expandedMsg;
-                        }
-                    }
-                } else {
-                    message = context.getString(R.string.nothing_to_expand);
-                }
-            }
-            break;
         case CYCLE_KEYBOARD_FEEDBACK:
             KeyboardFeedback feedback = KeyboardFeedback.valueOf(Integer
                     .parseInt(Options.getStringPreference(context,

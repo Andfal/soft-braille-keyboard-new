@@ -289,11 +289,10 @@ public interface KeyboardListener {
 
     int EXPANSION_TYPE_SPACE = 0;
     int EXPANSION_TYPE_INSTANT = 1;
-    int EXPANSION_TYPE_MANUAL = 2;
 
     /**
      * Controlla se il buffer corrente corrisponde a un'abbreviazione e la espande.
-     * @param type Tipo di espansione (EXPANSION_TYPE_SPACE, EXPANSION_TYPE_INSTANT o EXPANSION_TYPE_MANUAL).
+     * @param type Tipo di espansione (EXPANSION_TYPE_SPACE o EXPANSION_TYPE_INSTANT).
      */
     boolean checkAndExpandAbbreviation(int type);
 

@@ -502,9 +502,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
                     Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default)));
             boolean addSpaceEnabled = Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_ADD_SPACE", false);
             enabled = spaceEnabled || addSpaceEnabled;
-        } else if (type == EXPANSION_TYPE_MANUAL) {
-            // Modalità manuale tramite gesto: sempre abilitata, ignora i controlli delle impostazioni automatiche!
-            enabled = true;
         }
 
         if (!enabled) return false;
