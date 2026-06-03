@@ -31,6 +31,7 @@ OFFICIAL_MAPPINGS = [
     # Italian
     ('it-g1', 6, 1, 'table_variant_unofficial', 'it-it-g1.ctb'),
     ('it-comp8', 8, 0, 'table_variant_unofficial', 'it-it-comp8.utb'),
+    ('it-it-numerazione-canonica', 6, 1, 'table_variant_unofficial', 'it-it-numerazione-canonica.ctb'),
     # Russian (ru) - Ordered: G1, G2, Comp8
     ('ru-g1', 6, 1, '', 'ru-litbrl.ctb'),
     ('ru-g2', 6, 2, 'Contracted', 'ru-ru-g1.ctb'),

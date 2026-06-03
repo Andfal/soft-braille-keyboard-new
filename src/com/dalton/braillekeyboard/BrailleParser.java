@@ -416,7 +416,7 @@ public class BrailleParser {
                         table.getLocale().getDisplayCountry(),
                         table.isEightDot() ? "" : String.format(
                                 context.getString(R.string.grade_table),
-                                table.getGrade()));
+                                table.getGrade()) + ("it-g1".equals(table.getId()) ? " num-6" : ("it-it-numerazione-canonica".equals(table.getId()) ? " num3456" : "")));
                 return result.trim();
             }
         }
@@ -776,7 +776,10 @@ public class BrailleParser {
 
     private TableInfo findDefaultTableInfo(BrailleType brailleType) {
         List<TableInfo> filteredTables = getTables(brailleType);
-        if (filteredTables == null) {
+        if ((filteredTables == null || filteredTables.isEmpty()) && brailleType == BrailleType.LITERARY) {
+            filteredTables = getTables(BrailleType.COMPUTER);
+        }
+        if (filteredTables == null || filteredTables.isEmpty()) {
             return null;
         }
 

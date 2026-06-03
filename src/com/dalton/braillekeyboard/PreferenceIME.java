@@ -378,6 +378,12 @@ public class PreferenceIME extends PreferenceActivity {
                                     table.getGrade());
                         }
 
+                        if ("it-g1".equals(table.getId())) {
+                            label += " num-6";
+                        } else if ("it-it-numerazione-canonica".equals(table.getId())) {
+                            label += " num3456";
+                        }
+
                         
                         String variant = table.getVariant();
                         if (variant != null && !variant.isEmpty() && !table.getId().startsWith("custom:")) {
