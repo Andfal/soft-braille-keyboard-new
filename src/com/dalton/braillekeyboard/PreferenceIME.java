@@ -168,6 +168,23 @@ public class PreferenceIME extends AppCompatActivity implements
             if (rootKey == null || rootKey.equals(getString(R.string.pref_category_advanced_key))) {
                 setupLogPreferences();
             }
+
+            // Misc Category
+            if (rootKey == null || rootKey.equals(getString(R.string.pref_category_misc_key))) {
+                setupMiscPreferences();
+            }
+        }
+
+        private void setupMiscPreferences() {
+            Preference storageManager = findPreference("pref_storage_manager_key");
+            if (storageManager != null) {
+                storageManager.setOnPreferenceClickListener(p -> {
+                    Intent intent = new Intent(getActivity(), StorageManagerActivity.class);
+                    intent.putExtra(StorageManagerActivity.EXTRA_MODE, StorageManagerActivity.MODE_TABLES);
+                    startActivity(intent);
+                    return true;
+                });
+            }
         }
 
         private void setupFeedbackPreferences() {
@@ -333,6 +350,13 @@ public class PreferenceIME extends AppCompatActivity implements
                                                               : t.getLocale().getDisplayName();
                 if (verbose) {
                     String label = t.isEightDot() ? getString(R.string.grade_computer) : String.format(getString(R.string.grade_table), t.getGrade());
+                    if (!t.isEightDot()) {
+                        if ("it-g1".equals(t.getId())) {
+                            label += " num-6";
+                        } else if ("it-it-numerazione-canonica".equals(t.getId())) {
+                            label += " num3456";
+                        }
+                    }
                     if (t.getVariant() != null && !t.getVariant().isEmpty() && !t.getId().startsWith("custom:")) label += " (" + t.getVariant() + ")";
                     text += ": " + label;
                 }

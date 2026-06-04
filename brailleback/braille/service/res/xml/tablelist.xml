@@ -12,6 +12,7 @@
     <table id="es-comp8" locale="es" dots="8" fileName="Es-Es-G0.utb" />
     <table id="it-g1" locale="it" dots="6" grade="1" variant="table_variant_unofficial" fileName="it-it-g1.ctb" />
     <table id="it-comp8" locale="it" dots="8" variant="table_variant_unofficial" fileName="it-it-comp8.utb" />
+    <table id="it-it-numerazione-canonica" locale="it" dots="6" grade="1" variant="table_variant_unofficial" fileName="it-it-numerazione-canonica.ctb" />
     <table id="ru-g1" locale="ru" dots="6" grade="1" fileName="ru-litbrl.ctb" />
     <table id="ru-g2" locale="ru" dots="6" grade="2" variant="Contracted" fileName="ru-ru-g1.ctb" />
     <table id="ru-comp8" locale="ru" dots="8" fileName="ru-comp8.utb" />

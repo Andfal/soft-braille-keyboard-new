@@ -304,7 +304,7 @@
     <string name="pref_braille_literary_table_default">en-UEB-g1</string>
     <string name="pref_braille_literary_table_key">BRAILLE_TABLE_1</string>
     <string name="pref_braille_table_auto">auto</string>
-    <string name="pref_braille_type_default">0</string>
+    <string name="pref_braille_type_default">1</string>
     <string name="pref_braille_type_key">BRAILLE_GRADE_KEY</string>
     <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
     <string name="pref_category_advanced_title">Avanzate e Log</string>
@@ -624,20 +624,20 @@
     <string name="action_spell_check_prev_suggestion">Suggerimento ortografico precedente</string>
     <string name="action_set_dot_7">Inserisci punto 7</string>
     <string name="action_set_dot_8">Inserisci punto 8</string>
-    <string name="action_toggle_abbreviations">Attiva/disattiva abbreviazioni</string>
+    <string name="action_toggle_abbreviations">Attiva/disattiva abbreviazioni con spazio</string>
     <string name="action_toggle_instant_abbreviations">Attiva/disattiva espansione istantanea</string>
 
     <!-- Abbreviations (IT) -->
     <string name="pref_abbreviations_title">Abbreviazioni</string>
-    <string name="pref_abbreviations_summary">Gestisci l\'espansione del testo (tramite spazio o istantanea).</string>
+    <string name="pref_abbreviations_summary">Gestisci l\'espansione del testo (con spazio, senza spazio o istantanea).</string>
     <string name="pref_abbreviations_instant_title">Espansione istantanea</string>
     <string name="pref_abbreviations_instant_summary">Sostituisce le scorciatoie non appena vengono digitate.</string>
     <string name="abbreviations_instant_enabled">Espansione istantanea attivata</string>
     <string name="abbreviations_instant_disabled">Espansione istantanea disattivata</string>
-    <string name="pref_abbreviations_enabled_title">Espansione tramite Spazio</string>
-    <string name="pref_abbreviations_enabled_summary">Sostituisce le scorciatoie quando digiti uno spazio.</string>
-    <string name="abbreviations_enabled">Abbreviazioni attivate</string>
-    <string name="abbreviations_disabled">Abbreviazioni disattivate</string>
+    <string name="pref_abbreviations_enabled_title">Espansione senza spazio</string>
+    <string name="pref_abbreviations_enabled_summary">Sostituisce le scorciatoie tramite Spazio o Invio (usati come modificatori, senza inserire spazi aggiuntivi).</string>
+    <string name="abbreviations_enabled">Abbreviazioni con spazio attivate</string>
+    <string name="abbreviations_disabled">Abbreviazioni con spazio disattivate</string>
     <string name="title_abbreviation_editor">Editor Abbreviazioni</string>
     <string name="hint_shortcut">Scorciatoia (es. ccs o 6-s)</string>
     <string name="hint_expansion">Testo espanso (es. Ciao, come stai?)</string>
@@ -862,6 +862,7 @@
         <item>SPELL_CHECK_NEXT_SUGGESTION</item>
         <item>SPELL_CHECK_PREV_SUGGESTION</item>
         <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
         <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
         <item>SET_DOT_7</item>
         <item>SET_DOT_8</item>
@@ -869,4 +870,31 @@
 
     
     
-        </resources>
+            <string name="btn_move_to_bottom">Sposta in fondo</string>
+    <string name="label_high_priority_prefix">[H] </string>
+    <string name="msg_invalid_dots_format">Formato punti non valido. Usa le cifre 1-8 separate da \'-\' o spazi.</string>
+    <string name="msg_char_required">Questa regola richiede un carattere.</string>
+    <string name="msg_dots_required">Inserisci almeno una combinazione di punti.</string>
+    <string name="btn_rename">Rinomina</string>
+    <string name="dialog_export_title">File esistente</string>
+    <string name="msg_export_collision">Un file con il nome %1$s esiste già nella cartella di esportazione. Cosa vuoi fare?</string>
+    <string name="msg_save_collision">Una tabella con il nome %1$s esiste già. Cosa vuoi fare?</string>
+    <string name="msg_export_failed">Esportazione fallita: %1$s</string>
+    <string name="msg_select_mapping_first">Seleziona prima una mappatura dalla lista.</string>
+    <string name="msg_share_error">Errore durante la condivisione</string>
+    <string name="label_sync_hub">Hub Sincronizzato</string>
+    <string name="msg_hands_overlapping">Mani sovrapposte</string>
+    <string name="hint_enter_new_name">Inserisci nuovo nome file</string>
+    <string name="msg_rule_found">Regola esistente trovata</string>
+    <string name="msg_rule_updated">Regola aggiornata</string>
+    <string name="msg_rule_added">Regola aggiunta</string>
+    <string name="btn_pin_mapping">Fissa (proteggi da eliminazione)</string>
+    <string name="btn_unpin_mapping">Sblocca (permetti modifiche)</string>
+    <string name="title_activity_keyboard_help">Aiuto Tastiera</string>
+    <string name="action_toggle_abbreviations_no_space">Attiva/disattiva abbreviazioni senza spazio</string>
+    <string name="abbreviations_no_space_enabled">Abbreviazioni senza spazio attivate</string>
+    <string name="abbreviations_no_space_disabled">Abbreviazioni senza spazio disattivate</string>
+    <string name="pref_abbreviations_add_space_title">Espansione con spazio</string>
+    <string name="pref_abbreviations_add_space_summary">Sostituisce le scorciatoie inserendo uno spazio o invio dopo il testo espanso.</string>
+    <string name="nothing_to_expand">Nulla da espandere</string>
+</resources>

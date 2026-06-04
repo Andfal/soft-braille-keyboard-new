@@ -1,8 +1,9 @@
 # liblouis: Italian grade1 unofficial
+# Author: 
+# Description: 
 include unicode.dis
 include text_nabcc.dis
 include latinLetterDef6Dots.uti
-
 # Italian standard accented
 lowercase \x00E0 12356                                # a with grave
 base uppercase \x00C0 \x00E0
@@ -16,7 +17,6 @@ lowercase \x00F2 346                  # o with grave above
 base uppercase \x00D2 \x00F2
 lowercase \x00F9 23456                        # u with grave above
 base uppercase \x00D9 \x00F9
-
 # Circonflesse
 lowercase \x00E2 5-16                         a accent circonflexe
 base uppercase \x00C2 \x00E2
@@ -39,7 +39,6 @@ lowercase \x00F6 6-246                        # o with diaeresis
 base uppercase \x00D6 \x00F6
 lowercase \x00FC 5-1256                       u tréma
 base uppercase \x00DC \x00FC
-
 # Acute
 lowercase \x00E1 6-12356        A with acute
 base uppercase \x00C1 \x00E1
@@ -51,7 +50,6 @@ lowercase \x00FA 6-23456        U with acute
 base uppercase \x00DA \x00FA
 lowercase \x00FD 5-2456   #y with acute
 base uppercase \x00DD \x00FD
-
 # Others
 lowercase \x0153 5-246    oe liés
 base uppercase \x0152 \x0153
@@ -62,7 +60,6 @@ base uppercase \x00C7 \x00E7
 # Schwa (Əə)
 lowercase \x0259 6-16                         schwa
 base uppercase \x018F \x0259
-
 punctuation \x0021 235    # !
 punctuation \x0022 4      # "
 punctuation \x0027 3      # '
@@ -84,7 +81,6 @@ punctuation \x00BB 5-356   # »
 punctuation \x00A1 6-235   # ¡
 punctuation \x00BF 6-26    # ¿
 punctuation \x00B7 6-3     # ·
-
 sign \x0040 345           # @
 sign \x0023 5-3456        # #
 sign \x0024 5-46          # $
@@ -127,70 +123,17 @@ sign \x201D 6-356         # ”
 sign \x00BC 3456-2-145    # 1/4
 sign \x00BD 3456-2-12     # 1/2
 sign \x00BE 3456-25-145   # 3/4
-
 math \x003C 56            # <
 math \x003D 2356          # =
 math \x003E 45            # >
 math \x00D7 46-236        # ×
 math \x00F7 46-256        # ÷
-
-numsign 3456
-litdigit 1 1
-litdigit 2 12
-litdigit 3 14
-litdigit 4 145
-litdigit 5 15
-litdigit 6 124
-litdigit 7 1245
-litdigit 8 125
-litdigit 9 24
-litdigit 0 245
-
-# --- Gestione Avanzata Modalità Numerica ---
-
-# Caratteri che mantengono la modalità (in mezzo all'operazione)
-midnum \x002C 2        # ,
-midnum \x002E 256      # .
-midnum \x003A 25       # :
-midnum \x002D 36       # -
-midnum \x002F 5-256    # /
-midnum \x002B 5-235    # +
-midnum \x002A 35       # *
-midnum \x003D 2356     # =
-midnum \x00D7 46-236   # ×
-midnum \x00F7 46-256   # ÷
-midnum \x003C 56       # <
-midnum \x003E 45       # >
-
-# Caratteri che possono stare alla fine di un numero (es. percentuali e valute)
-endnum \x0025 5-123456 # %
-endnum \x20AC 5-15     # €
-endnum \x0024 5-46     # $
-
-# Attiva il segnanumero PRIMA del carattere se segue una cifra (es. +39 -> #+39)
-# E mantiene la modalità attiva durante la sequenza.
-numericmodechars ,.:-/+×÷=<>
-
-# Mantiene la modalità attiva se il carattere è in mezzo o alla fine
-# ma NON attiva il segnanumero se il carattere è all'inizio.
-# Incluso l'asterisco per gli elenchi puntati e il cancelletto.
-midendnumericmodechars %€$#*
-
-punctuation \x0031 16
-punctuation \x0032 126
-punctuation \x0033 146
-punctuation \x0034 1456
-punctuation \x0035 156
-punctuation \x0036 1246
-punctuation \x0037 12456
-punctuation \x0038 1256
-punctuation \x0039 246
-
 capsletter 46
 begcapsword 46-46
 endcapsword 46-3
 space \x0020 0
 space \x00a0 5
 space \x0009 5-5
-
+digit 0 3456
+include digits6DotsPlusDot6.uti
 include braille-patterns.cti

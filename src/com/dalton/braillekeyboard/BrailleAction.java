@@ -73,6 +73,7 @@ public enum BrailleAction {
     SPELL_CHECK_PREV_SUGGESTION(R.string.action_spell_check_prev_suggestion),
     
     // Braille Dots (7 and 8)
+    TOGGLE_ABBREVIATIONS_NO_SPACE(R.string.action_toggle_abbreviations_no_space),
     SET_DOT_7(R.string.action_set_dot_7),
     SET_DOT_8(R.string.action_set_dot_8);
 

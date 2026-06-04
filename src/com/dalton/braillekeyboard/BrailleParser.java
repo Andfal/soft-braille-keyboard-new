@@ -218,7 +218,15 @@ public class BrailleParser {
             TableInfo table = tables.get(pos);
             if (onFly.contains(table.getId())) {
                 setTable(context, table);
-                return (table.getLocale().getDisplayLanguage() + " " + table.getLocale().getDisplayCountry() + (table.isEightDot() ? "" : " G" + table.getGrade())).trim();
+                String gradeStr = table.isEightDot() ? "" : String.format(context.getString(R.string.grade_table), table.getGrade());
+                if (!table.isEightDot()) {
+                    if ("it-g1".equals(table.getId())) {
+                        gradeStr += " num-6";
+                    } else if ("it-it-numerazione-canonica".equals(table.getId())) {
+                        gradeStr += " num3456";
+                    }
+                }
+                return (table.getLocale().getDisplayLanguage() + " " + table.getLocale().getDisplayCountry() + " " + gradeStr).trim();
             }
         }
         return null;
@@ -345,7 +353,10 @@ public class BrailleParser {
 
     private TableInfo findDefaultTableInfo(BrailleType brailleType) {
         List<TableInfo> filteredTables = getTables(brailleType);
-        if (filteredTables == null) return null;
+        if ((filteredTables == null || filteredTables.isEmpty()) && brailleType == BrailleType.LITERARY) {
+            filteredTables = getTables(BrailleType.COMPUTER);
+        }
+        if (filteredTables == null || filteredTables.isEmpty()) return null;
         TableInfo best = null;
         for (TableInfo info : filteredTables) { if (best == null || matchRank(info.getLocale(), Locale.getDefault()) > matchRank(best.getLocale(), Locale.getDefault())) best = info; }
         return best;

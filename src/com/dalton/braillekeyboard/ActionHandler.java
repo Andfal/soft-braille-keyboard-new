@@ -189,11 +189,20 @@ public class ActionHandler {
             message = echoPassword ? context.getString(R.string.speak_passwords) : context.getString(R.string.no_password_echo); break;
         case TOGGLE_MARK: message = context.getString(listener.toggleMark() ? R.string.set_mark : R.string.unset_mark); break;
         case TOGGLE_ABBREVIATIONS:
-            boolean abbrEnabled = Options.switchBooleanPreference(context, R.string.pref_abbreviations_enabled_key, Boolean.parseBoolean(context.getString(R.string.pref_abbreviations_enabled_default)));
-            message = context.getString(abbrEnabled ? R.string.abbreviations_enabled : R.string.abbreviations_disabled); break;
+            boolean addSpaceEnabled = Options.toggleAbbreviationOption(context, 3);
+            message = context.getString(addSpaceEnabled ? R.string.abbreviations_enabled
+                    : R.string.abbreviations_disabled);
+            break;
+        case TOGGLE_ABBREVIATIONS_NO_SPACE:
+            boolean spaceEnabled = Options.toggleAbbreviationOption(context, 1);
+            message = context.getString(spaceEnabled ? R.string.abbreviations_no_space_enabled
+                    : R.string.abbreviations_no_space_disabled);
+            break;
         case TOGGLE_INSTANT_ABBREVIATIONS:
-            boolean inst = Options.switchBooleanPreferenceStringKey(context, "ABBREVIATIONS_INSTANT", false);
-            message = context.getString(inst ? R.string.abbreviations_instant_enabled : R.string.abbreviations_instant_disabled); break;
+            boolean instantEnabled = Options.toggleAbbreviationOption(context, 2);
+            message = context.getString(instantEnabled ? R.string.abbreviations_instant_enabled
+                    : R.string.abbreviations_instant_disabled);
+            break;
         case CYCLE_KEYBOARD_FEEDBACK:
             KeyboardFeedback fb = KeyboardFeedback.valueOf(Integer.parseInt(Options.getStringPreference(context, R.string.pref_keyboard_feedback_key, KeyboardFeedback.SOUND.getValue())));
             fb = KeyboardFeedback.next(fb); Options.writeStringPreference(context, R.string.pref_keyboard_feedback_key, fb.getValue()); message = context.getString(fb.resource); break;
@@ -362,8 +371,22 @@ public class ActionHandler {
     }
 
     private void typeCharacter(Context context, int code, String charName) {
-        listener.checkAndExpandAbbreviation(false); listener.finishComposingText();
-        Word word = EditingUtilities.getWord(listener); String msg = word == null ? null : word.word.substring(0, word.charsBefore);
+        boolean expanded = listener.checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_SPACE);
+        listener.finishComposingText();
+        Word word = EditingUtilities.getWord(listener);
+        String msg = word == null ? null : word.word.substring(0, word.charsBefore);
+
+        boolean addSpace = Options.getSharedPreferences(context).getBoolean("ABBREVIATIONS_ADD_SPACE", false);
+        if (expanded && !addSpace) {
+            if (msg != null) {
+                msg = echoWord(context, msg);
+                if (msg != null && !msg.isEmpty()) {
+                    callback.onText("%s", msg, listener.isPasswordField());
+                }
+            }
+            return;
+        }
+
         listener.onKey(code);
         if ((msg = echoWord(context, msg)) == null) msg = echoCharacter(context, charName);
         callback.onText("%s", msg, listener.isPasswordField());

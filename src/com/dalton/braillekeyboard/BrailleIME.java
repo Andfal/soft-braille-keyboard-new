@@ -158,10 +158,23 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override public void onFinishInputView(boolean finishingInput) { super.onFinishInputView(finishingInput); if (brailleView != null) brailleView.close(); }
 
     @Override
+    public void onFinishInput() {
+        super.onFinishInput();
+        mIsFinishing = true;
+        finishComposingText(false);
+    }
+
+    @Override
     public void onWindowHidden() {
         super.onWindowHidden();
-        if (brailleView != null) { brailleView.setVisibility(View.GONE); brailleView.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED); }
-        mIsFinishing = true; mAccessibilityHandler.removeCallbacksAndMessages(null); clearAccessibilityState();
+        if (brailleView != null) {
+            brailleView.setVisibility(View.GONE);
+            brailleView.sendAccessibilityEvent(android.view.accessibility.AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED);
+        }
+        mIsFinishing = true;
+        finishComposingText(false);
+        mAccessibilityHandler.removeCallbacksAndMessages(null);
+        clearAccessibilityState();
     }
 
     @Override
@@ -254,7 +267,15 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         if (brailleParser != null) {
             InputConnection ic = getCurrentInputConnection(); String snapshot = "";
             if (ic != null) { CharSequence before = ic.getTextBeforeCursor(20, 0); if (before != null) snapshot = before.toString(); }
-            if (dots == 0) { checkAndExpandAbbreviation(false); finishComposingText(true); return " "; }
+            if (dots == 0) {
+                boolean expanded = checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_SPACE);
+                finishComposingText(true);
+                boolean addSpace = Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_ADD_SPACE", false);
+                if (expanded && !addSpace) {
+                    return "";
+                }
+                return " ";
+            }
             
             Locale loc = getLocale();
             boolean isEng = loc != null && loc.getLanguage().equals(Locale.ENGLISH.getLanguage());
@@ -264,7 +285,7 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
             String text = brailleParser.backTranslate(this, cells.toArray(new Byte[cells.size()]));
             if (text != null) {
                 text = compose(text.subSequence(0, text.length()), snapshot);
-                checkAndExpandAbbreviation(true);
+                checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_INSTANT);
             } else { cells.remove(cells.size() - 1); return null; }
             return text != null ? stringDifference(oldText, text) : null;
         }
@@ -368,8 +389,10 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
 
     @Override
     public void commitText(String text, int newCursorPosition) {
-        finishComposingText(); InputConnection ic = getCurrentInputConnection(); if (ic == null) return;
+        InputConnection ic = getCurrentInputConnection(); if (ic == null) return;
         if (selectAll) { toggleMark(); selectAll = false; }
+        checkAndExpandAbbreviation(KeyboardListener.EXPANSION_TYPE_SPACE);
+        finishComposingText();
         updateShiftState(); text = capitalise(text.subSequence(0, text.length())).toString();
         ic.commitText(text, newCursorPosition);
     }
@@ -379,23 +402,46 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     @Override public String translateLiteral(byte dots) { if (brailleParser != null) { List<Byte> l = new ArrayList<Byte>(); l.add(dots); return brailleParser.backTranslateLiteral(this, l.toArray(new Byte[l.size()])); } return null; }
 
     @Override
-    public void checkAndExpandAbbreviation(boolean strict) {
-        boolean enabled = strict ? Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_INSTANT", false) : 
-            Options.getBooleanPreference(this, R.string.pref_abbreviations_enabled_key, Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default)));
-        if (!enabled) return;
+    public boolean checkAndExpandAbbreviation(int type) {
+        boolean enabled = false;
+        if (type == EXPANSION_TYPE_INSTANT) {
+            enabled = Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_INSTANT", false);
+        } else if (type == EXPANSION_TYPE_SPACE) {
+            boolean spaceEnabled = Options.getBooleanPreference(this, R.string.pref_abbreviations_enabled_key,
+                    Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default)));
+            boolean addSpaceEnabled = Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_ADD_SPACE", false);
+            enabled = spaceEnabled || addSpaceEnabled;
+        }
+
+        if (!enabled) return false;
+
         if (composingText.length() > 0) {
-            String expansion = AbbreviationManager.getInstance(this).getExpansion(composingText.toString(), strict ? cells.size() - 1 : -1, this);
+            String word = composingText.toString();
+            int cellCount = (type == EXPANSION_TYPE_INSTANT) ? cells.size() - 1 : -1;
+            String expansion = AbbreviationManager.getInstance(this).getExpansion(word, cellCount, this);
+            
             if (expansion != null) {
-                InputConnection ic = getCurrentInputConnection(); if (ic == null) return;
+                InputConnection ic = getCurrentInputConnection();
+                if (ic == null) return false;
+                
                 ic.beginBatchEdit();
                 try {
                     ic.deleteSurroundingText(composingText.length(), 0);
                     ic.commitText(expansion, 1);
-                    composingText.setLength(0); composingText.append(expansion);
-                    if (!strict) finishComposingText(true);
-                } finally { ic.endBatchEdit(); }
+                    composingText.setLength(0);
+                    cells.clear();
+                    return true;
+                } finally {
+                    ic.endBatchEdit();
+                }
             }
         }
+        return false;
+    }
+
+    @Override
+    public boolean hasComposingText() {
+        return composingText.length() > 0;
     }
 
     @Override public byte[] getDotsForText(String text) { return brailleParser != null ? brailleParser.getDotsForText(text) : null; }

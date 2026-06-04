@@ -209,7 +209,9 @@ public class TranslatorService extends Service {
                 Log.e(LOG_TAG, "Custom table file not found: " + tableName);
                 return tableName;
             }
-            File targetFile = new File(tablesDir, customFile.getName());
+            // To force Liblouis to bypass its internal cache, we use a unique name
+            // based on the last modified timestamp.
+            long timestamp = customFile.lastModified();
             
             boolean forceSync = false;
             synchronized (mForcedSyncTables) {
@@ -218,13 +220,36 @@ public class TranslatorService extends Service {
                     mForcedSyncTables.remove(customFile.getName());
                 }
             }
+            
+            // If forced sync is requested, we use the current time to ensure a new filename
+            // and force the native engine to reload the table.
+            if (forceSync) {
+                timestamp = System.currentTimeMillis();
+            }
 
-            // Optimization: Only copy if the target doesn't exist, forced sync requested, or custom file is newer
+            final String uniqueName = customFile.getName() + "_" + timestamp + ".ctb";
+            File targetFile = new File(tablesDir, uniqueName);
+
+            // Optimization: Only copy if the target doesn't exist or forced sync requested
             synchronized (this) {
-                if (!targetFile.exists() || forceSync || customFile.lastModified() > targetFile.lastModified()) {
+                if (!targetFile.exists() || forceSync) {
                     try {
+                        // Cleanup: remove old versioned files of the same custom table
+                        final String baseNamePrefix = customFile.getName() + "_";
+                        File[] oldFiles = tablesDir.listFiles(new java.io.FilenameFilter() {
+                            @Override
+                            public boolean accept(File dir, String name) {
+                                return name.startsWith(baseNamePrefix) && !name.equals(uniqueName);
+                            }
+                        });
+                        if (oldFiles != null) {
+                            for (File old : oldFiles) {
+                                old.delete();
+                            }
+                        }
+
                         copyFile(customFile, targetFile);
-                        Log.i(LOG_TAG, (forceSync ? "Forced sync: " : "Updated ") + "custom table in translator dir: " + targetFile.getAbsolutePath());
+                        Log.i(LOG_TAG, (forceSync ? "Forced sync: " : "Updated ") + "unique custom table: " + targetFile.getAbsolutePath());
                     } catch (Exception e) {
                         Log.e(LOG_TAG, "Failed to copy custom table, using original path", e);
                         return tableName;

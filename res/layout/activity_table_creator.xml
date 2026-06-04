@@ -287,11 +287,26 @@
                 android:text="@string/btn_add"
                 android:textSize="12sp" />
             <Button
+                android:id="@+id/btn_delete_mapping"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/btn_delete"
+                android:visibility="gone"
+                android:textSize="12sp" />
+            <Button
                 android:id="@+id/btn_mass_action"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/btn_select_mass"
+                android:textSize="12sp" />
+            <Button
+                android:id="@+id/btn_order_actions"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/title_order_actions"
                 android:textSize="12sp" />
         </LinearLayout>
 

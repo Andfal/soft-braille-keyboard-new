@@ -147,20 +147,20 @@
     <string name="action_spell_check_prev_suggestion">Previous spelling suggestion</string>
     <string name="action_set_dot_7">Type dot 7</string>
     <string name="action_set_dot_8">Insert dot 8</string>
-    <string name="action_toggle_abbreviations">Toggle abbreviations</string>
+    <string name="action_toggle_abbreviations">Toggle abbreviations with space</string>
     <string name="action_toggle_instant_abbreviations">Toggle instant expansion</string>
 
     <!-- Abbreviations -->
     <string name="pref_abbreviations_title">Abbreviations</string>
-    <string name="pref_abbreviations_summary">Manage text expansion (via space or instant).</string>
+    <string name="pref_abbreviations_summary">Manage text expansion (with space, without space, or instant).</string>
     <string name="pref_abbreviations_instant_title">Instant expansion</string>
     <string name="pref_abbreviations_instant_summary">Replaces shortcuts as soon as they are typed.</string>
     <string name="abbreviations_instant_enabled">Instant expansion enabled</string>
     <string name="abbreviations_instant_disabled">Instant expansion disabled</string>
-    <string name="pref_abbreviations_enabled_title">Expansion via Space</string>
-    <string name="pref_abbreviations_enabled_summary">Replaces shortcuts when you type a space.</string>
-    <string name="abbreviations_enabled">Abbreviations enabled</string>
-    <string name="abbreviations_disabled">Abbreviations disabled</string>
+    <string name="pref_abbreviations_enabled_title">Expansion without space</string>
+    <string name="pref_abbreviations_enabled_summary">Replaces shortcuts using space or enter as modifiers only (no extra space is inserted).</string>
+    <string name="abbreviations_enabled">Abbreviations with space enabled</string>
+    <string name="abbreviations_disabled">Abbreviations with space disabled</string>
     <string name="title_abbreviation_editor">Abbreviation Editor</string>
     <string name="hint_shortcut">Shortcut (e.g., hru or 6-s)</string>
     <string name="hint_expansion">Expanded text (e.g., How are you?)</string>
@@ -487,7 +487,7 @@
     <string name="pref_braille_literary_table_default">en-UEB-g1</string>
     <string name="pref_braille_literary_table_key">BRAILLE_TABLE_1</string>
     <string name="pref_braille_table_auto">auto</string>
-    <string name="pref_braille_type_default">0</string>
+    <string name="pref_braille_type_default">1</string>
     <string name="pref_braille_type_key">BRAILLE_GRADE_KEY</string>
     <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
     <string name="pref_category_advanced_title">Advanced &amp; Logs</string>
@@ -861,6 +861,7 @@
         <item>SPELL_CHECK_NEXT_SUGGESTION</item>
         <item>SPELL_CHECK_PREV_SUGGESTION</item>
         <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
         <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
         <item>SET_DOT_7</item>
         <item>SET_DOT_8</item>
@@ -869,4 +870,31 @@
     
 
     
-        </resources>
+            <string name="btn_move_to_bottom">Move to bottom</string>
+    <string name="label_high_priority_prefix">[H] </string>
+    <string name="action_toggle_abbreviations_no_space">Toggle abbreviations without space</string>
+    <string name="abbreviations_no_space_enabled">Abbreviations without space enabled</string>
+    <string name="abbreviations_no_space_disabled">Abbreviations without space disabled</string>
+    <string name="pref_abbreviations_add_space_title">Expansion with space</string>
+    <string name="pref_abbreviations_add_space_summary">Replaces shortcuts using space or enter and appends a space.</string>
+    <string name="nothing_to_expand">Nothing to expand</string>
+    <string name="msg_invalid_dots_format">Invalid dots format. Use digits 1-8 separated by \'-\' or spaces.</string>
+    <string name="msg_char_required">This rule requires a character.</string>
+    <string name="msg_dots_required">Please enter at least one dot pattern.</string>
+    <string name="btn_rename">Rename</string>
+    <string name="dialog_export_title">File exists</string>
+    <string name="msg_export_collision">A file with the name %1$s already exists in the export folder. What would you like to do?</string>
+    <string name="msg_save_collision">A table with the name %1$s already exists. What would you like to do?</string>
+    <string name="msg_export_failed">Export failed: %1$s</string>
+    <string name="msg_select_mapping_first">Please select a mapping from the list first.</string>
+    <string name="msg_share_error">Share error</string>
+    <string name="label_sync_hub">Synchronized Hub</string>
+    <string name="msg_hands_overlapping">Hands overlapping</string>
+    <string name="hint_enter_new_name">Enter new filename</string>
+    <string name="msg_rule_found">Existing rule found</string>
+    <string name="msg_rule_updated">Rule updated</string>
+    <string name="msg_rule_added">Rule added</string>
+    <string name="btn_pin_mapping">Pin mapping (protect)</string>
+    <string name="btn_unpin_mapping">Unpin mapping</string>
+    <string name="title_activity_keyboard_help">Keyboard Help</string>
+</resources>

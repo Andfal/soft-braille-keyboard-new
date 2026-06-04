@@ -43,9 +43,37 @@ public class AbbreviationEditorActivity extends AppCompatActivity {
     private ListView listView;
     private AbbreviationAdapter adapter;
     private List<String> shortcutList;
+    private boolean isUpdating = false;
+    private CheckBox checkSpace;
+    private CheckBox checkInstant;
+    private CheckBox checkAddSpace;
     
     private ActivityResultLauncher<Uri> mSyncFolderLauncher;
     private ActivityResultLauncher<Intent> mImportLauncher;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (checkSpace != null && checkInstant != null && checkAddSpace != null) {
+            isUpdating = true;
+            String spaceKey = getString(R.string.pref_abbreviations_enabled_key);
+            boolean spaceDefault = Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default));
+            checkSpace.setChecked(Options.getSharedPreferences(this).getBoolean(spaceKey, spaceDefault));
+            checkInstant.setChecked(Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_INSTANT", false));
+            checkAddSpace.setChecked(Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_ADD_SPACE", false));
+            isUpdating = false;
+        }
+    }
+
+    private void updateAbbreviationPreferences(int activeOption) {
+        isUpdating = true;
+        checkSpace.setChecked(activeOption == 1);
+        checkInstant.setChecked(activeOption == 2);
+        checkAddSpace.setChecked(activeOption == 3);
+        isUpdating = false;
+
+        Options.setActiveAbbreviationOption(this, activeOption);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,20 +118,41 @@ public class AbbreviationEditorActivity extends AppCompatActivity {
         btnSetup.setVisibility(syncUri == null ? View.VISIBLE : View.GONE);
         btnSetup.setOnClickListener(v -> mSyncFolderLauncher.launch(null));
 
-        final CheckBox checkSpace = (CheckBox) findViewById(R.id.check_space_expansion);
-        final CheckBox checkInstant = (CheckBox) findViewById(R.id.check_instant_expansion);
+        checkSpace = (CheckBox) findViewById(R.id.check_space_expansion);
+        checkInstant = (CheckBox) findViewById(R.id.check_instant_expansion);
+        checkAddSpace = (CheckBox) findViewById(R.id.check_add_space_expansion);
 
         String spaceKey = getString(R.string.pref_abbreviations_enabled_key);
         boolean spaceDefault = Boolean.parseBoolean(getString(R.string.pref_abbreviations_enabled_default));
         checkSpace.setChecked(Options.getSharedPreferences(this).getBoolean(spaceKey, spaceDefault));
         checkInstant.setChecked(Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_INSTANT", false));
+        checkAddSpace.setChecked(Options.getSharedPreferences(this).getBoolean("ABBREVIATIONS_ADD_SPACE", false));
 
         checkSpace.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Options.getSharedPreferences(this).edit().putBoolean(spaceKey, isChecked).apply();
+            if (isUpdating) return;
+            if (isChecked) {
+                updateAbbreviationPreferences(1);
+            } else {
+                updateAbbreviationPreferences(0);
+            }
         });
 
         checkInstant.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Options.getSharedPreferences(this).edit().putBoolean("ABBREVIATIONS_INSTANT", isChecked).apply();
+            if (isUpdating) return;
+            if (isChecked) {
+                updateAbbreviationPreferences(2);
+            } else {
+                updateAbbreviationPreferences(0);
+            }
+        });
+
+        checkAddSpace.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isUpdating) return;
+            if (isChecked) {
+                updateAbbreviationPreferences(3);
+            } else {
+                updateAbbreviationPreferences(0);
+            }
         });
 
         refreshList();

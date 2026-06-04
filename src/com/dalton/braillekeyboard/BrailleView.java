@@ -145,6 +145,89 @@ public class BrailleView extends View {
     private boolean mIsManualCalibrating = false;
     private int mCurrentCalibrationStep = 0;
     private List<Coords> mManualCalibrationDots = new ArrayList<Coords>();
+    private Runnable mCalibrationRunnable = null;
+
+    private void cancelCalibrationScheduled() {
+        if (mCalibrationRunnable != null) {
+            removeCallbacks(mCalibrationRunnable);
+            mCalibrationRunnable = null;
+        }
+    }
+
+    private void checkAndScheduleCalibration(final int width, final int height) {
+        cancelCalibrationScheduled();
+        if (mIsManualCalibrating) {
+            return;
+        }
+        int totalDots = listener.getDots();
+        if (totalDots == -1) totalDots = 6;
+
+        int dotsDownCount = countDotsDown(dotsDown);
+        final boolean canStartStepByStep = (dotsDownCount == 3);
+        final boolean canStartInstant = (dotsDownCount == totalDots);
+
+        if (canStartStepByStep || canStartInstant) {
+            mCalibrationRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if (mIsManualCalibrating) return;
+
+                    int currentCount = countDotsDown(dotsDown);
+                    if (canStartInstant) {
+                        int totalDots = listener.getDots();
+                        if (totalDots == -1) totalDots = 6;
+                        if (currentCount == totalDots) {
+                            mIsManualCalibrating = true;
+                            mCurrentCalibrationStep = 0;
+                            mManualCalibrationDots.clear();
+                            finishManualCalibrationInstant(-1, width, height);
+                        }
+                    } else if (canStartStepByStep && currentCount == 3) {
+                        mIsManualCalibrating = true;
+                        mCurrentCalibrationStep = 0;
+                        mManualCalibrationDots.clear();
+
+                        speech.speak(getContext(), getContext().getString(R.string.calibration_init_message), Speech.QUEUE_FLUSH);
+                        speech.speak(getContext(), getContext().getString(R.string.calibration_step, 1), Speech.QUEUE_ADD);
+                        vibrator.vibrate(VibrationEffect.createOneShot(MEDIUM_VIBRATION, VibrationEffect.DEFAULT_AMPLITUDE));
+                        lastDotList.clear();
+                        resetDots();
+                        invalidate();
+                    }
+                    mCalibrationRunnable = null;
+                }
+            };
+            postDelayed(mCalibrationRunnable, LONG_HOLD_DELAY);
+        }
+    }
+
+    private void applyCreaseAvoidance(Coords[] dots, int width) {
+        float density = getContext().getResources().getDisplayMetrics().density;
+        if (density <= 0) density = 1.0f;
+
+        int viewSmallestWidthDp = (int) (Math.min(width, getHeight()) / density);
+        if (viewSmallestWidthDp < 600) {
+            return;
+        }
+
+        int centerX = width / 2;
+        int marginPx = (int) (30 * density);
+
+        for (Coords dot : dots) {
+            if (dot != null) {
+                int dist = Math.abs(dot.x - centerX);
+                if (dist < marginPx) {
+                    int originalX = dot.x;
+                    if (dot.x <= centerX) {
+                        dot.x = centerX - marginPx;
+                    } else {
+                        dot.x = centerX + marginPx;
+                    }
+                    android.util.Log.i("BrailleView", "Crease Avoidance: shifted dot " + dot.id + " from " + originalX + " to " + dot.x);
+                }
+            }
+        }
+    }
 
     public BrailleView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -200,22 +283,24 @@ public class BrailleView extends View {
         actionHandler.setKeyboardListener(listener);
     }
 
-        private String getDynamicCalibrationKey(int width, int height) {
+    private String getDynamicCalibrationKey(int width, int height) {
         String baseKey = getContext().getString(R.string.pref_custom_dots_key);
-        // L'orientamento fisico determina il profilo di calibrazione da caricare (_PORTRAIT o _LANDSCAPE).
-        boolean isPortrait = height > width;
-        String orientation = isPortrait ? "_PORTRAIT" : "_LANDSCAPE";
         
-        // Usa smallestScreenWidthDp per una distinzione robusta smartphone/tablet (API 13+)
-        int smallestWidthDp = getContext().getResources().getConfiguration().smallestScreenWidthDp;
-        
-        // Fallback per vecchi dispositivi se smallestWidthDp fosse 0
-        if (smallestWidthDp == 0) {
-            DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
-            smallestWidthDp = (int) (Math.min(width, height) / displayMetrics.density);
+        // Gestione aspect ratio quasi quadrato per dispositivi pieghevoli
+        float ratio = (float) width / (float) height;
+        String orientation;
+        if (ratio >= 0.85f && ratio <= 1.15f) {
+            orientation = "_SQUARE";
+        } else {
+            orientation = height > width ? "_PORTRAIT" : "_LANDSCAPE";
         }
         
-        String size = smallestWidthDp >= 600 ? "_LARGE" : "_SMALL";
+        // Calcola la larghezza minima in DP basandoti sulla finestra reale per supportare Split-Screen
+        float density = getContext().getResources().getDisplayMetrics().density;
+        if (density <= 0) density = 1.0f;
+        int viewSmallestWidthDp = (int) (Math.min(width, height) / density);
+        
+        String size = viewSmallestWidthDp >= 600 ? "_LARGE" : "_SMALL";
         
         return baseKey + orientation + size;
     }
@@ -373,9 +458,15 @@ public class BrailleView extends View {
                     && id < dotsDown.length) {
                 dotsDown[id] = new Coords(id, x, y);
             }
+            
+            // Programma calibrazione su Long Press stabile delle dita
+            checkAndScheduleCalibration(width, height);
             break;
         case MotionEvent.ACTION_HOVER_EXIT:
         case MotionEvent.ACTION_UP:
+            // Cancella calibrazione se programmata e solleviamo dita
+            cancelCalibrationScheduled();
+            
             if (!handleVoiceInput()) {
                 if (pad != null && pressedDotString() != NO_DOTS) {
                     setDots();
@@ -411,9 +502,21 @@ public class BrailleView extends View {
             break;
         case MotionEvent.ACTION_HOVER_MOVE:
         case MotionEvent.ACTION_MOVE:
+            // Cancella se si muove troppo (swipe o trascinamento)
+            if (id < dotsDown.length && dotsDown[id] != null) {
+                int dx = Math.abs(x - dotsDown[id].x);
+                int dy = Math.abs(y - dotsDown[id].y);
+                if (dx > 40 || dy > 40) {
+                    cancelCalibrationScheduled();
+                }
+            }
+            
             updatePointer(dotsDown, id, x, y, false);
             break;
         case MotionEvent.ACTION_POINTER_UP:
+            // Cancella se solleviamo un dito prima dello scadere del timer
+            cancelCalibrationScheduled();
+            
             if (!setPad(id, width, height, displayParams.autoRotate)) {
                 updatePointer(dotsDown, id, x, y, false);
                 setDots();
@@ -451,6 +554,7 @@ public class BrailleView extends View {
         int height = displayParams.autoRotate ? getHeight() : Math.min(getWidth(), getHeight());
         
         Coords[] dots = mManualCalibrationDots.toArray(new Coords[mManualCalibrationDots.size()]);
+        applyCreaseAvoidance(dots, width);
         try {
             if (selectPad(dots, width, height)) {
                 // Success! Save and Lock.
@@ -566,6 +670,7 @@ public class BrailleView extends View {
         }
         
         mIsManualCalibrating = false;
+        applyCreaseAvoidance(dots, width);
         try {
             if (selectPad(dots, width, height)) {
                 String dynamicKey = getDynamicCalibrationKey(width, height);
