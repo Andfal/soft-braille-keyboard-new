@@ -1352,24 +1352,28 @@ public class ActionHandler {
             } else if (directionThroughSuggestionList < 0) {
                 previousSpellCheckSuggestion(context);
             } else {
-                if (Options.getBooleanPreference(context,
-                        R.string.pref_misspelling_sound_key,
-                        Boolean.parseBoolean(context.getString(R.string.pref_misspelling_sound_default)))) {
-                    int feedbackVal = Integer.parseInt(Options.getStringPreference(context,
-                            R.string.pref_keyboard_feedback_key,
-                            KeyboardFeedback.SOUND.getValue()));
-                    boolean playSound = (feedbackVal == KeyboardFeedback.SOUND.value 
-                                      || feedbackVal == KeyboardFeedback.ALL.value);
-                    boolean vibrate = (feedbackVal == KeyboardFeedback.VIBRATE.value 
-                                    || feedbackVal == KeyboardFeedback.ALL.value);
-                    if (playSound) {
-                        playSpellingBeep();
-                    }
-                    if (vibrate) {
-                        triggerVibration(context, 125);
-                    }
+                if (spellingSuggestion.isUserDictWord) {
+                    message = null;
                 } else {
-                    message = context.getString(R.string.word_misspelled);
+                    if (Options.getBooleanPreference(context,
+                            R.string.pref_misspelling_sound_key,
+                            Boolean.parseBoolean(context.getString(R.string.pref_misspelling_sound_default)))) {
+                        int feedbackVal = Integer.parseInt(Options.getStringPreference(context,
+                                R.string.pref_keyboard_feedback_key,
+                                KeyboardFeedback.SOUND.getValue()));
+                        boolean playSound = (feedbackVal == KeyboardFeedback.SOUND.value 
+                                          || feedbackVal == KeyboardFeedback.ALL.value);
+                        boolean vibrate = (feedbackVal == KeyboardFeedback.VIBRATE.value 
+                                        || feedbackVal == KeyboardFeedback.ALL.value);
+                        if (playSound) {
+                            playSpellingBeep();
+                        }
+                        if (vibrate) {
+                            triggerVibration(context, 125);
+                        }
+                    } else {
+                        message = context.getString(R.string.word_misspelled);
+                    }
                 }
             }
         } else if (spellingSuggestion != null) {
