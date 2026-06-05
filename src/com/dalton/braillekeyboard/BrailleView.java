@@ -263,9 +263,13 @@ public class BrailleView extends View {
             requestLayout();
         }
 
+        if (actionHandler != null) {
+            actionHandler.shutdown();
+        }
         actionHandler = new ActionHandler(context);
         actionHandler.setCallback(actionListener);
         actionHandler.setKeyboardListener(listener);
+        actionHandler.onStartInput(listener.getLocale());
     }
 
     private String getDynamicCalibrationKey(int width, int height) {
@@ -301,6 +305,12 @@ public class BrailleView extends View {
             }
         }
         loadDefaultPad(w, h);
+    }
+
+    public void onStartInput(Locale locale) {
+        if (actionHandler != null) {
+            actionHandler.onStartInput(locale);
+        }
     }
 
     public void close() {
@@ -591,6 +601,9 @@ public class BrailleView extends View {
                 if (!setTTSLocale || (setTTSLocale && speech.setLocale(locale))) {
                     conf.locale = locale;
                     resources.updateConfiguration(conf, displayMetrics);
+                    if (actionHandler != null) {
+                        actionHandler.onStartInput(locale);
+                    }
                     return true;
                 }
             }

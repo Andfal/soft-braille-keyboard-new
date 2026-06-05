@@ -159,6 +159,12 @@
          android:summary="@string/pref_echo_misspellings_summary"
          android:defaultValue="@string/pref_echo_misspellings_default" />
          <CheckBoxPreference
+         android:key="@string/pref_misspelling_sound_key"
+         android:title="@string/pref_misspelling_sound_title"
+         android:summary="@string/pref_misspelling_sound_summary"
+         android:defaultValue="@string/pref_misspelling_sound_default"
+         android:dependency="@string/pref_echo_misspellings_key" />
+         <CheckBoxPreference
          android:key="@string/pref_use_wav_key"
          android:title="@string/pref_use_wav_title"
          android:summary="@string/pref_use_wav_summary"

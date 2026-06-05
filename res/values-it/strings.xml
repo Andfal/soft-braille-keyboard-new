@@ -357,6 +357,17 @@
     <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
     <string name="pref_echo_misspellings_summary">Se attivato gli errori di ortografia vengono notificati dopo l\'inserimento di uno spazio</string>
     <string name="pref_echo_misspellings_title">Eco errori di ortografia durante la scrittura</string>
+    <string name="pref_misspelling_sound_default">false</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">Riproduce un suono per gli errori di ortografia invece del riscontro vocale.</string>
+    <string name="pref_misspelling_sound_title">Notifica sonora errori ortografici</string>
+    <string name="misspelling_sound_enabled">Notifica sonora errori ortografici attivata</string>
+    <string name="misspelling_sound_disabled">Notifica sonora errori ortografici disattivata</string>
+    <string name="word_added_to_dictionary">Parola %s aggiunta al dizionario personale</string>
+    <string name="no_word_to_add">Nessuna parola trovata da aggiungere al dizionario</string>
+    <string name="word_removed_from_dictionary">Parola %s rimossa dal dizionario personale</string>
+    <string name="word_not_in_dictionary">Parola %s non trovata nel dizionario personale</string>
+    <string name="no_word_to_remove">Nessuna parola trovata da rimuovere dal dizionario</string>
     <string name="pref_echo_passwords_default">false</string>
     <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
     <string name="pref_echo_passwords_summary">Se abilitato la tastiera pronuncerà le password durante la digitazione.</string>
@@ -591,6 +602,7 @@
     <string name="voice_input_permission_message">è necessario consentire la registrazione audio perché la dettatura vocale possa funzionare.</string>
     <string name="voice_input_permission_title">Permesso per dettatura vocale</string>
     <string name="word_correct">Parola corretta</string>
+    <string name="word_correction_correct">%s corretto</string>
     <string name="word_correction_misspelled">%s errato</string>
     <string name="word_count">%1$d righe, %2$d parole, %3$d caratteri</string>
     <string name="word_misspelled">Errato</string>
@@ -647,6 +659,11 @@
     <string name="action_toggle_abbreviations">Attiva/disattiva abbreviazioni con spazio</string>
     <string name="action_toggle_abbreviations_no_space">Attiva/disattiva abbreviazioni senza spazio</string>
     <string name="action_toggle_instant_abbreviations">Attiva/disattiva espansione istantanea</string>
+    <string name="action_toggle_misspelling_sound">Attiva/disattiva notifica sonora errori ortografici</string>
+    <string name="action_add_to_dictionary">Aggiungi parola al dizionario personale</string>
+    <string name="action_add_to_dictionary_option">Aggiungi %s al dizionario personale</string>
+    <string name="action_remove_from_dictionary">Rimuovi parola dal dizionario personale</string>
+    <string name="action_remove_from_dictionary_option">Rimuovi %s dal dizionario personale</string>
 
     <!-- Abbreviations (IT) -->
     <string name="pref_abbreviations_title">Abbreviazioni</string>
@@ -837,6 +854,9 @@
         <item>@string/action_toggle_abbreviations</item>
         <item>@string/action_toggle_abbreviations_no_space</item>
         <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_toggle_misspelling_sound</item>
+        <item>@string/action_add_to_dictionary</item>
+        <item>@string/action_remove_from_dictionary</item>
         <item>@string/action_set_dot_7</item>
         <item>@string/action_set_dot_8</item>
     </string-array>
@@ -891,6 +911,9 @@
         <item>TOGGLE_ABBREVIATIONS</item>
         <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
         <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>TOGGLE_MISSPELLING_SOUND</item>
+        <item>ADD_TO_DICTIONARY</item>
+        <item>REMOVE_FROM_DICTIONARY</item>
         <item>SET_DOT_7</item>
         <item>SET_DOT_8</item>
     </string-array>

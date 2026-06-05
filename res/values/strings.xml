@@ -151,6 +151,11 @@
     <string name="action_toggle_abbreviations">Toggle abbreviations with space</string>
     <string name="action_toggle_abbreviations_no_space">Toggle abbreviations without space</string>
     <string name="action_toggle_instant_abbreviations">Toggle instant expansion</string>
+    <string name="action_toggle_misspelling_sound">Toggle spelling error sound notification</string>
+    <string name="action_add_to_dictionary">Add word to personal dictionary</string>
+    <string name="action_add_to_dictionary_option">Add %s to personal dictionary</string>
+    <string name="action_remove_from_dictionary">Remove word from personal dictionary</string>
+    <string name="action_remove_from_dictionary_option">Remove %s from personal dictionary</string>
 
     <!-- Abbreviations -->
     <string name="pref_abbreviations_title">Abbreviations</string>
@@ -545,6 +550,17 @@
     <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
     <string name="pref_echo_misspellings_summary">When enabled misspellings are announced when a space is typed</string>
     <string name="pref_echo_misspellings_title">Echo misspellings as you type</string>
+    <string name="pref_misspelling_sound_default">false</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">Play a sound for misspelling errors instead of vocal feedback.</string>
+    <string name="pref_misspelling_sound_title">Spelling error sound notification</string>
+    <string name="misspelling_sound_enabled">Spelling error sound notification enabled</string>
+    <string name="misspelling_sound_disabled">Spelling error sound notification disabled</string>
+    <string name="word_added_to_dictionary">Word %s added to personal dictionary</string>
+    <string name="no_word_to_add">No word found to add to dictionary</string>
+    <string name="word_removed_from_dictionary">Word %s removed from personal dictionary</string>
+    <string name="word_not_in_dictionary">Word %s was not found in personal dictionary</string>
+    <string name="no_word_to_remove">No word found to remove from dictionary</string>
     <string name="pref_echo_passwords_default">false</string>
     <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
     <string name="pref_echo_passwords_summary">When enabled the keyboard will speak during password input.</string>
@@ -780,6 +796,7 @@
     <string name="voice_input_permission_message">You need to enable the record audio permission for voice input to work.</string>
     <string name="voice_input_permission_title">Voice Input Permission</string>
     <string name="word_correct">Word is correct</string>
+    <string name="word_correction_correct">%s correct</string>
     <string name="word_correction_misspelled">%s misspelled</string>
     <string name="word_count">%1$d lines, %2$d words, %3$d characters</string>
     <string name="word_misspelled">Misspelled</string>
@@ -835,6 +852,9 @@
         <item>@string/action_toggle_abbreviations</item>
         <item>@string/action_toggle_abbreviations_no_space</item>
         <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_toggle_misspelling_sound</item>
+        <item>@string/action_add_to_dictionary</item>
+        <item>@string/action_remove_from_dictionary</item>
         <item>@string/action_set_dot_7</item>
         <item>@string/action_set_dot_8</item>
     </string-array>
@@ -889,6 +909,9 @@
         <item>TOGGLE_ABBREVIATIONS</item>
         <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
         <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>TOGGLE_MISSPELLING_SOUND</item>
+        <item>ADD_TO_DICTIONARY</item>
+        <item>REMOVE_FROM_DICTIONARY</item>
         <item>SET_DOT_7</item>
         <item>SET_DOT_8</item>
     </string-array>
