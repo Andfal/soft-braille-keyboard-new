@@ -239,9 +239,7 @@ public class ActionHandler {
 
     private String getTargetSpellingWord() {
         if (spellingSuggestion != null && spellCheckerMatchesWord()) {
-            if (!spellingSuggestion.results.isEmpty()) {
-                return spellingSuggestion.results.get(0);
-            }
+            return spellingSuggestion.getOriginalWord();
         }
         Word word = EditingUtilities.getWord(listener);
         if (word != null && word.word != null && !word.word.trim().isEmpty()) {
@@ -1347,6 +1345,9 @@ public class ActionHandler {
         } else if (spellingSuggestion != null
                 && spellingDirection == SpellChecker.Direction.UNDER_CURSOR) {
             spellingDirection = null;
+            if (directionThroughSuggestionList != 0) {
+                listener.setSelection(spellingSuggestion.offset);
+            }
             if (directionThroughSuggestionList > 0) {
                 nextSpellCheckSuggestion(context);
             } else if (directionThroughSuggestionList < 0) {

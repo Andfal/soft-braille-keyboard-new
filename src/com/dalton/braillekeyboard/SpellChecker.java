@@ -141,6 +141,8 @@ public class SpellChecker {
         int end = direction == Direction.LEFT ? -1 : count;
         int step = end < start ? -1 : 1;
         
+        Log.d("SBK_SpellChecker", "doLocalSpellCheck: direction=" + direction + ", cursor=" + cursor + ", startOffset=" + startOffset + ", endOffset=" + endOffset + ", tokens count=" + count);
+
         Suggestion results = null;
         int idx = start;
         while (idx != end && results == null) {
@@ -162,8 +164,11 @@ public class SpellChecker {
                 match = isDirection(direction, cursor, token.length, absOffset);
             }
             
+            boolean misspelled = isWordMisspelled(token.text);
+            Log.d("SBK_SpellChecker", "token='" + token.text + "', absOffset=" + absOffset + ", length=" + token.length + ", match=" + match + ", misspelled=" + misspelled);
+
             if (match) {
-                if (isWordMisspelled(token.text)) {
+                if (misspelled) {
                     results = generateSuggestionsForWord(token.text, absOffset);
                 } else if (direction == Direction.UNDER_CURSOR) {
                     boolean isUserDict = isWordInUserDictionary(token.text) || isWordInUserDictionary(token.text.toLowerCase());
@@ -243,9 +248,7 @@ public class SpellChecker {
     }
 
     private Suggestion generateUserDictRemoveSuggestions(String word, int offset) {
-        Suggestion suggestion = new Suggestion(word, offset, true);
-        suggestion.results.remove("##ADD_TO_DICTIONARY##");
-        return suggestion;
+        return new Suggestion(word, offset, true);
     }
 
     private String matchCapitalization(String original, String suggestion) {
@@ -464,6 +467,7 @@ public class SpellChecker {
         public final List<String> results = new ArrayList<String>();
         public final int offset;
         public final boolean isUserDictWord;
+        private final String originalWord;
         private int current = 0;
         private int length = -1;
 
@@ -474,9 +478,15 @@ public class SpellChecker {
         public Suggestion(String word, int offset, boolean isUserDictWord) {
             this.offset = offset;
             this.isUserDictWord = isUserDictWord;
+            this.originalWord = word;
+            if (isUserDictWord) {
+                results.add("##REMOVE_FROM_DICTIONARY##");
+            } else {
+                results.add("##ADD_TO_DICTIONARY##");
+                results.add("##REMOVE_FROM_DICTIONARY##");
+            }
             results.add(word);
-            results.add("##ADD_TO_DICTIONARY##");
-            results.add("##REMOVE_FROM_DICTIONARY##");
+            current = results.indexOf(word);
         }
 
         public String next() {
@@ -492,7 +502,7 @@ public class SpellChecker {
         public String getCurrent() {
             String val = results.get(current);
             if ("##ADD_TO_DICTIONARY##".equals(val) || "##REMOVE_FROM_DICTIONARY##".equals(val)) {
-                return results.get(0);
+                return originalWord;
             }
             return val;
         }
@@ -506,7 +516,7 @@ public class SpellChecker {
         }
 
         public String getOriginalWord() {
-            return results.get(0);
+            return originalWord;
         }
 
         public void setLength() {
@@ -514,11 +524,11 @@ public class SpellChecker {
         }
 
         public int getLength() {
-            return length == -1 ? results.get(0).length() : length;
+            return length == -1 ? originalWord.length() : length;
         }
 
         public boolean isMisspelledWord() {
-            return current == 0;
+            return current == results.indexOf(originalWord);
         }
     }
 }
