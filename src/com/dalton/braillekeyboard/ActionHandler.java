@@ -1384,11 +1384,7 @@ public class ActionHandler {
                 message = String.format(
                         context.getString(R.string.action_add_to_dictionary_option),
                         originalWord);
-                listener.setSelection(spellingSuggestion.offset);
-                listener.deleteSurroundingText(0, spellingSuggestion.getLength());
-                listener.commitText(originalWord, 1);
-                listener.setSelection(spellingSuggestion.offset);
-                spellingSuggestion.setLength();
+                commitSuggestionText(originalWord, spellingSuggestion);
                 
                 addWordToPersonalDictionaryNoAnnounce(context, originalWord);
             } else if (spellingSuggestion.isRemoveFromDictionaryOption()) {
@@ -1396,11 +1392,7 @@ public class ActionHandler {
                 message = String.format(
                         context.getString(R.string.action_remove_from_dictionary_option),
                         originalWord);
-                listener.setSelection(spellingSuggestion.offset);
-                listener.deleteSurroundingText(0, spellingSuggestion.getLength());
-                listener.commitText(originalWord, 1);
-                listener.setSelection(spellingSuggestion.offset);
-                spellingSuggestion.setLength();
+                commitSuggestionText(originalWord, spellingSuggestion);
                 
                 removeWordFromPersonalDictionaryNoAnnounce(context, originalWord);
             } else {
@@ -1414,11 +1406,7 @@ public class ActionHandler {
                             spellingSuggestion.getCurrent()) : spellingSuggestion
                             .getCurrent();
                 }
-                listener.setSelection(spellingSuggestion.offset);
-                listener.deleteSurroundingText(0, spellingSuggestion.getLength());
-                listener.commitText(spellingSuggestion.getCurrent(), 1);
-                listener.setSelection(spellingSuggestion.offset);
-                spellingSuggestion.setLength();
+                commitSuggestionText(spellingSuggestion.getCurrent(), spellingSuggestion);
             }
         }
 
@@ -1426,6 +1414,35 @@ public class ActionHandler {
             callback.onText("%s", message, listener.isPasswordField()
                     && password, Speech.QUEUE_ADD);
         }
+    }
+
+    private void commitSuggestionText(String text, Suggestion suggestion) {
+        listener.setSelection(suggestion.offset);
+        listener.deleteSurroundingText(0, suggestion.getLength());
+        listener.commitText(text, 1);
+        
+        // Se ci sono solo spazi e punteggiatura fino alla fine del testo dopo la parola appena inserita,
+        // spostiamo il cursore oltre di essi per evitare che la parola successiva si attacchi.
+        int cursorShift = 0;
+        CharSequence afterText = listener.getTextAfterCursor(20);
+        if (afterText != null && afterText.length() > 0) {
+            boolean onlyPunctuationOrWhitespace = true;
+            for (int i = 0; i < afterText.length(); i++) {
+                char c = afterText.charAt(i);
+                if (Character.isLetterOrDigit(c)) {
+                    onlyPunctuationOrWhitespace = false;
+                    break;
+                }
+            }
+            if (onlyPunctuationOrWhitespace) {
+                cursorShift = afterText.length();
+            }
+        }
+        if (cursorShift > 0) {
+            listener.setSelection(suggestion.offset + text.length() + cursorShift);
+        }
+        
+        suggestion.setLength();
     }
 
     private void nextSpellCheckSuggestion(Context context) {
@@ -1459,7 +1476,7 @@ public class ActionHandler {
             int length = spellingSuggestion.getLength();
             int cursor = listener.getCursor();
             if (text.length() > 0 && (offset + length) <= text.length()
-                    && cursor >= offset && cursor < (offset + length)) {
+                    && cursor >= offset && cursor <= (offset + length)) {
                 return text.substring(offset, offset + length).equals(
                         spellingSuggestion.getCurrent());
             }
