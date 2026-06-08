@@ -1,31 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- User interface strings go below here -->
+    <string name="accessibility_service_description">通过创建屏幕阅读器不会拦截触摸的区域，允许软盲文键盘在 TalkBack 处于活动状态时正常工作。</string>
+    <string name="accessibility_service_dialog_message">要将此键盘与 TalkBack 一起使用，您必须在辅助功能设置中启用“软盲文键盘”。这允许键盘在 TalkBack 处于活动状态时接收您的触摸。</string>
+    <string name="accessibility_service_label">软盲文键盘辅助功能</string>
+    <string name="action_record_audio_permission">ACTION_RECORD_AUDIO_PERMISSION</string>
     <string name="action_settings">設定</string>
     <string name="app_name">軟點點字鍵盤</string>
     <string name="auto_caps_disabled">不自動大寫</string>
     <string name="auto_caps_enabled">自動大寫</string>
     <string name="blank">空白</string>
     <string name="braille_ime">軟點點字鍵盤</string>
+    <string name="btn_move_to_bottom">移至底部</string>
+    <string name="label_high_priority_prefix">[H]</string>
+    <string name="btn_add">添加</string>
+    <string name="btn_add_anyway">无论如何添加</string>
+    <string name="btn_add_prefix">添加前缀...</string>
+    <string name="btn_append_cell">+ 追加单元格</string>
+    <string name="btn_cancel">取消</string>
+    <string name="btn_clear_dots">清除</string>
+    <string name="btn_clone_table">克隆源</string>
+    <string name="btn_create_table">创建自定义表</string>
+    <string name="btn_delete">删除</string>
+    <string name="btn_export_system_table">导出系统表</string>
+    <string name="btn_export_original">出口原件</string>
+    <string name="btn_export_table">导出您的作品</string>
+    <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
+    <string name="btn_id_enable">BTN_ENABLED</string>
+    <string name="btn_import_base_rules">导入所有规则</string>
+    <string name="btn_import_table">导入现有表文件</string>
+    <string name="btn_import_visual">导入规则</string>
+    <string name="btn_insert_above">在此规则上方插入</string>
+    <string name="btn_load_template">加载模板</string>
+    <string name="btn_ok">好的</string>
+    <string name="btn_overwrite">覆盖/继续</string>
+    <string name="dialog_overwrite_title">覆盖文件？</string>
+    <string name="dialog_overwrite_msg">文件 %s 已存在。您想覆盖它吗？</string>
+    <string name="btn_remove_mapping">删除此映射</string>
+    <string name="btn_save">保存</string>
+    <string name="btn_select_mass">选择...</string>
+    <string name="btn_set_cell">设置单元格</string>
+    <string name="btn_sync_folder">授予文件夹扫描访问权限</string>
+    <string name="btn_update">更新</string>
     <string name="button_choose_default_keyboard">設定軟點為預設鍵盤</string>
     <string name="button_keyboard_settings">啟用軟點點字鍵盤</string>
     <string name="button_more_info">閱讀快速入門指引</string>
+    <string name="calibration_aborted">校准中止</string>
+    <string name="calibration_init_message">放置6或8个手指即可立即校准，或逐个触摸点进行手动校准</string>
+    <string name="calibration_step">触摸点 %d</string>
+    <string name="calibration_success">校准已保存并锁定</string>
     <string name="capital">大寫 %s</string>
     <string name="closing_keyboard">關閉鍵盤</string>
+    <string name="confirm_delete_msg">您想删除 %s 吗？</string>
+    <string name="confirm_delete_title">删除表</string>
     <string name="copied">複製完成</string>
     <string name="copy_error">複製錯誤</string>
+    <string name="custom_table_label_prefix">定制：</string>
     <string name="cut_error">剪下錯誤</string>
-    <string name="deleted">已刪除 %s</string>
+    <string name="default_swipe_sensitivity">50</string>
     <string name="delete_selection">移除選取</string>
+    <string name="deleted">已刪除 %s</string>
+    <string name="emoji_count_summary">%1$s、%2$d（共 %3$d）</string>
+    <string name="emoji_inserted">已插入</string>
+    <string name="emoji_no_results">没有表情符号结果</string>
+    <string name="emoji_no_results_query">%s 没有结果</string>
+    <string name="emoji_no_to_insert">没有表情符号可插入</string>
+    <string name="emoji_search_mode_off">表情符号搜索模式关闭</string>
+    <string name="emoji_search_mode_on">表情符号搜索模式开启 (%s)</string>
+    <string name="emoji_search_prefix">表情符号搜索：</string>
+    <string name="emoji_search_query_empty">表情符号搜索查询为空</string>
     <string name="end_of_text">文字結尾</string>
-    <string name="expand_keyboard_talkback">單擊此處擴展鍵盤</string>
+    <string name="error_invalid_file">文件类型无效。选择.ctb或.utb</string>
+    <string name="error_no_name">请输入表名</string>
     <string name="expand_keyboard">單擊此處擴展鍵盤</string>
+    <string name="expand_keyboard_talkback">單擊此處擴展鍵盤</string>
+    <string name="grade">預設縮寫等級</string>
     <string name="grade_computer">電腦點字</string>
     <string name="grade_literary">書面點字</string>
     <string name="grade_table">%s 級</string>
-    <string name="grade">預設縮寫等級</string>
+    <string name="help_desc_autocorrect">自动更正：调整该符号的位置或样式。</string>
+    <string name="help_desc_bold">粗体模式指示器。</string>
+    <string name="help_desc_caps_letter">大写指示符：使下一个字母大写。</string>
+    <string name="help_desc_caps_lock">Caps Lock：使整个单词大写。</string>
+    <string name="help_desc_default">映射：%s</string>
+    <string name="help_desc_diacritic">变音符号：用于修改上一个或下一个字符。</string>
+    <string name="help_desc_greek_mode">切换到希腊语模式。</string>
+    <string name="help_desc_italic">斜体模式指示器。</string>
+    <string name="help_desc_latin_mode">切换到拉丁（国际）模式。</string>
+    <string name="help_desc_numeric">序数/数字规则：适用于数字之后。</string>
+    <string name="help_desc_numsign">数字符号：启动数字模式（以下按键为数字）。</string>
+    <string name="help_desc_state_change">内部状态更改（影响下一个键的解释方式）。</string>
+    <string name="help_desc_underline">下划线模式指示器。</string>
+    <string name="help_desc_whole_word">全词收缩：仅作为独立单词使用。</string>
     <string name="hide_keyboard">隱藏鍵盤.</string>
+    <!--  Braille Actions  -->
+    <string name="action_none">无</string>
+    <string name="action_move_left_char">向左移动一个字符</string>
+    <string name="action_move_right_char">按字符右移</string>
+    <string name="action_move_left_word">按单词向左移动</string>
+    <string name="action_move_right_word">按单词右移</string>
+    <string name="action_move_left_line">向左移动一行</string>
+    <string name="action_move_right_line">按行向右移动</string>
+    <string name="action_move_left_all">移至文本开头</string>
+    <string name="action_move_right_all">移至文本末尾</string>
+    <string name="action_backspace_char">删除字符</string>
+    <string name="action_backspace_word">删除单词</string>
+    <string name="action_backspace_line">删除行</string>
+    <string name="action_backspace_all">删除所有文字</string>
+    <string name="action_read_char">读取当前字符</string>
+    <string name="action_read_word">读取当前单词</string>
+    <string name="action_read_line">读取当前行</string>
+    <string name="action_read_all">阅读所有文字</string>
+    <string name="action_space">插入空格</string>
+    <string name="action_newline">插入换行符</string>
+    <string name="action_voice_input">语音输入</string>
+    <string name="action_toggle_privacy">切换隐私模式</string>
+    <string name="action_toggle_auto_caps">切换自动大写</string>
+    <string name="action_toggle_echo_passwords">切换说出密码</string>
+    <string name="action_toggle_mark">切换选择标记</string>
+    <string name="action_cycle_keyboard_feedback">循环键盘反馈（声音/振动）</string>
+    <string name="action_cycle_echo_feedback">循环回显反馈（字符/字/无）</string>
+    <string name="action_switch_braille_type">切换文学/计算机盲文</string>
+    <string name="action_switch_braille_table">开关盲文表</string>
+    <string name="action_open_settings">打开键盘设置</string>
+    <string name="action_open_input_switcher">打开输入法选择器</string>
+    <string name="action_close_keyboard">关闭键盘</string>
+    <string name="action_shrink_keyboard">缩小键盘</string>
+    <string name="action_word_count">字数和字符数</string>
+    <string name="action_next_field_action">下一个字段/操作</string>
+    <string name="action_select_text_action">选择/行动</string>
+    <string name="action_emoji_mode_toggle">切换表情符号搜索模式</string>
+    <string name="action_edit_select_all">操作：选择全部</string>
+    <string name="action_edit_copy">动作：复制</string>
+    <string name="action_edit_cut">动作：剪切</string>
+    <string name="action_edit_paste">动作：粘贴</string>
+    <string name="action_edit_speak">行动：说出选择</string>
+    <string name="action_edit_delete">操作：删除选择</string>
+    <string name="action_spell_check_left">拼写检查前一个单词</string>
+    <string name="action_spell_check_right">拼写检查下一个单词</string>
+    <string name="action_spell_check_next_suggestion">下一个拼写建议</string>
+    <string name="action_spell_check_prev_suggestion">以前的拼写建议</string>
+    <string name="action_set_dot_7">键入点 7</string>
+    <string name="action_set_dot_8">插入点8</string>
+    <string name="action_toggle_abbreviations">用空格切换缩写</string>
+    <string name="action_toggle_abbreviations_no_space">切换不带空格的缩写</string>
+    <string name="action_toggle_instant_abbreviations">切换即时扩展</string>
+    <string name="action_toggle_misspelling_sound">切换拼写错误声音通知</string>
+    <string name="action_add_to_dictionary">将单词添加到个人词典</string>
+    <string name="action_add_to_dictionary_option">将 %s 添加到个人词典</string>
+    <string name="action_remove_from_dictionary">从个人词典中删除单词</string>
+    <string name="action_remove_from_dictionary_option">从个人词典中删除 %s</string>
+    <!--  Abbreviations  -->
+    <string name="pref_abbreviations_title">缩写</string>
+    <string name="pref_abbreviations_summary">管理文本扩展（带空格、不带空格或即时）。</string>
+    <string name="pref_abbreviations_instant_title">即时扩展</string>
+    <string name="pref_abbreviations_instant_summary">键入快捷方式后立即替换它们。</string>
+    <string name="abbreviations_instant_enabled">启用即时扩展</string>
+    <string name="abbreviations_instant_disabled">禁用即时扩展</string>
+    <string name="pref_abbreviations_enabled_title">无需空间即可扩展</string>
+    <string name="pref_abbreviations_enabled_summary">使用空格或仅将 Enter 作为修饰符替换快捷方式（不插入额外的空格）。</string>
+    <string name="abbreviations_enabled">启用空格的缩写</string>
+    <string name="abbreviations_disabled">禁用空格的缩写</string>
+    <string name="abbreviations_no_space_enabled">不带空格的缩写</string>
+    <string name="abbreviations_no_space_disabled">不带空格的缩写</string>
+    <string name="title_abbreviation_editor">缩写编辑器</string>
+    <string name="hint_shortcut">快捷方式（例如 hru 或 6-s）</string>
+    <string name="hint_expansion">扩展文本（例如，你好吗？）</string>
+    <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
+    <string name="pref_abbreviations_enabled_default">假的</string>
+    <string name="pref_abbreviations_add_space_title">随空间扩展</string>
+    <string name="pref_abbreviations_add_space_summary">使用空格替换快捷方式或输入并附加空格。</string>
+    <string name="nothing_to_expand">没什么可扩展的</string>
+    <!--  Gesture Names  -->
+    <string name="swipe_one_left">第 1 点：向左滑动。</string>
+    <string name="swipe_one_right">第 1 点：向右滑动。</string>
+    <string name="swipe_one_up">第 1 点：向上滑动。</string>
+    <string name="swipe_one_down">第 1 点：向下滑动。</string>
+    <string name="swipe_two_left">第 2 点：向左滑动。</string>
+    <string name="swipe_two_right">第 2 点：向右滑动。</string>
+    <string name="swipe_two_up">第 2 点：向上滑动。</string>
+    <string name="swipe_two_down">第 2 点：向下滑动。</string>
+    <string name="swipe_three_left">第 3 点：向左滑动。</string>
+    <string name="swipe_three_right">第 3 点：向右滑动。</string>
+    <string name="swipe_three_up">第 3 点：向上滑动。</string>
+    <string name="swipe_three_down">第 3 点：向下滑动。</string>
+    <string name="swipe_four_left">第 4 点：向左滑动。</string>
+    <string name="swipe_four_right">第 4 点：向右滑动。</string>
+    <string name="swipe_four_up">第 4 点：向上滑动。</string>
+    <string name="swipe_four_down">第 4 点：向下滑动。</string>
+    <string name="swipe_five_left">第 5 点：向左滑动。</string>
+    <string name="swipe_five_right">第 5 点：向右滑动。</string>
+    <string name="swipe_five_up">第 5 点：向上滑动。</string>
+    <string name="swipe_five_down">第 5 点：向下滑动。</string>
+    <string name="swipe_six_left">第 6 点：向左滑动。</string>
+    <string name="swipe_six_right">第 6 点：向右滑动。</string>
+    <string name="swipe_six_up">第 6 点：向上滑动。</string>
+    <string name="swipe_six_down">第 6 点：向下滑动。</string>
+    <string name="swipe_left_two_down">左：两根手指向下。</string>
+    <string name="swipe_right_two_down">右：两根手指向下。</string>
+    <string name="swipe_hold_one_left">第 1 点：用另一只手按住并向左滑动。</string>
+    <string name="swipe_hold_one_right">第 1 点：用另一只手按住并向右滑动。</string>
+    <string name="swipe_hold_one_up">第 1 点：用另一只手按住并向上滑动。</string>
+    <string name="swipe_hold_one_down">第 1 点：用另一只手按住并向下滑动。</string>
+    <string name="swipe_hold_two_left">第 2 点：用另一只手按住并向左滑动。</string>
+    <string name="swipe_hold_two_right">第 2 点：用另一只手按住并向右滑动。</string>
+    <string name="swipe_hold_two_up">第 2 点：用另一只手按住并向上滑动。</string>
+    <string name="swipe_hold_two_down">第 2 点：用另一只手按住并向下滑动。</string>
+    <string name="swipe_hold_three_left">第 3 点：用另一只手按住并向左滑动。</string>
+    <string name="swipe_hold_three_right">第 3 点：用另一只手按住并向右滑动。</string>
+    <string name="swipe_hold_three_up">第 3 点：用另一只手按住并向上滑动。</string>
+    <string name="swipe_hold_three_down">第 3 点：用另一只手按住并向下滑动。</string>
+    <string name="swipe_hold_four_left">第 4 点：用另一只手按住并向左滑动。</string>
+    <string name="swipe_hold_four_right">第 4 点：用另一只手按住并向右滑动。</string>
+    <string name="swipe_hold_four_up">第 4 点：用另一只手按住并向上滑动。</string>
+    <string name="swipe_hold_four_down">第 4 点：用另一只手按住并向下滑动。</string>
+    <string name="swipe_hold_five_left">第 5 点：用另一只手按住并向左滑动。</string>
+    <string name="swipe_hold_five_right">第 5 点：用另一只手按住并向右滑动。</string>
+    <string name="swipe_hold_five_up">第 5 点：用另一只手按住并向上滑动。</string>
+    <string name="swipe_hold_five_down">第 5 点：用另一只手按住并向下滑动。</string>
+    <string name="swipe_hold_six_left">第 6 点：用另一只手按住并向左滑动。</string>
+    <string name="swipe_hold_six_right">第 6 点：用另一只手按住并向右滑动。</string>
+    <string name="swipe_hold_six_up">第 6 点：用另一只手按住并向上滑动。</string>
+    <string name="swipe_hold_six_down">第 6 点：用另一只手按住并向下滑动。</string>
+    <!--  Storage Manager (Universal)  -->
+    <string name="label_active_abbreviations">[活跃缩写词典]</string>
+    <string name="label_active_gestures">[主动手势架构]</string>
+    <string name="msg_confirm_clear_active">您确定要清除键盘上的所有活动数据吗？此操作无法撤消。</string>
+    <string name="checkbox_delete_backup_file">同时删除软盲文文件夹中的备份文件</string>
+    <string name="btn_setup_sync_folder">授予文件夹访问权限以进行同步</string>
+    <string name="title_storage_manager">存储管理器</string>
+    <string name="btn_create_new_table">创建新表</string>
+    <string name="label_file_type_tables">盲文表</string>
+    <string name="label_file_type_abbreviations">缩略语词典</string>
+    <string name="label_file_type_gestures">手势架构</string>
+    <string name="msg_confirm_import_generic">您想导入该资源吗？当前数据可能会被覆盖。</string>
+    <string name="msg_sync_folder">同步文件夹</string>
+    <string name="msg_download_folder">下载文件夹</string>
+    <string name="pref_sync_folder_title">文件夹同步</string>
+    <string name="pref_sync_folder_summary">选择一个文件夹来同步表和备份</string>
+    <!--  Backup & Restore  -->
+    <string name="btn_export">出口</string>
+    <string name="btn_import">进口</string>
+    <string name="hint_search_items">搜索文件...</string>
+    <string name="btn_export_system">导出原始表</string>
+    <string name="hint_search_tables">搜索系统表...</string>
+    <string name="title_export_system">导出原始 Liblouis 表</string>
+    <string name="label_found_locales">找到 %d 种语言</string>
+    <string name="label_auto_selected">自动选择</string>
+    <string name="label_no_results">没有找到结果</string>
+    <string name="hint_search_locale">搜索语言...</string>
+    <string name="msg_exported_to">文件导出到：%s</string>
+    <string name="msg_import_success">数据导入成功！</string>
+    <string name="msg_import_error">导入错误：%s</string>
+    <string name="title_select_backup">选择备份</string>
+    <string name="msg_no_backups">在软盲文中找不到备份。</string>
+    <string name="msg_confirm_import">用此备份覆盖当前数据？</string>
+    <string name="menu_share">分享</string>
+    <string name="menu_delete">删除</string>
+    <string name="pref_category_gestures_title">手势定制</string>
+    <string name="pref_gestures_summary">为滑动和按住手势分配功能</string>
+    <string name="pref_gestures_title">自定义手势</string>
+    <string name="pref_reset_gestures_title">将手势重置为默认值</string>
+    <string name="pref_reset_gestures_summary">恢复原始手势分配</string>
+    <string name="pref_reset_gestures_confirm">您确定要将所有手势重置为默认分配吗？</string>
+    <string name="pref_export_gestures_title">导出手势</string>
+    <string name="pref_export_gestures_summary">将自定义手势图保存到文件中</string>
+    <string name="pref_import_gestures_title">导入手势</string>
+    <string name="pref_import_gestures_summary">从文件加载手势图</string>
+    <string name="pref_gesture_default_format">默认值：%1$s</string>
+    <string name="export_success">手势已成功导出到%1$s</string>
+    <string name="export_error">导出手势时出错：%1$s</string>
+    <string name="import_success">手势导入成功</string>
+    <string name="import_error">导入手势时出错：%1$s</string>
+    <string name="import_no_valid_data">文件中找不到有效的手势数据</string>
+    <string name="pref_group_single_finger">单指滑动</string>
+    <string name="pref_group_two_fingers">两指滑动（仅向下）</string>
+    <string name="pref_group_hold_swipe">用一只手握住一个点，然后用另一只手滑动</string>
     <string name="high">高</string>
+    <string name="hint_author">作者（例如 Sergio）</string>
+    <string name="hint_char">查尔</string>
+    <string name="hint_description">表说明</string>
+    <string name="hint_dots_format">点（例如 123-45）</string>
+    <string name="hint_enter_dots">输入点（例如 123）</string>
+    <string name="hint_search_rules">搜索字符或点...</string>
+    <string name="hint_table_name">输入表名称（例如 my_table）</string>
     <string name="info_url">https://goo.gl/pKGEUW</string>
     <string name="keyboard_auto">自動</string>
     <string name="keyboard_echo_all">字元與字詞</string>
@@ -38,6 +295,20 @@
     <string name="keyboard_feedback_sound">只有聲音</string>
     <string name="keyboard_feedback_vibrate">只有振動</string>
     <string name="keyboard_full_screen">鍵盤已擴展</string>
+    <string name="keyboard_help_active_table_label">活动表：%s</string>
+    <string name="keyboard_help_dots_hint">点或字符</string>
+    <string name="keyboard_help_dots_result">点：%1$s</string>
+    <string name="keyboard_help_enter_dots_toast">请输入点或字符进行搜索</string>
+    <string name="keyboard_help_error_no_table">错误：未找到活动表。</string>
+    <string name="keyboard_help_file_not_available">表文件不可用</string>
+    <string name="keyboard_help_how_to_write_title">如何写“%1$s”</string>
+    <string name="keyboard_help_instruction">输入点（例如 45）来查看它们的作用，或输入字符（例如 A）来查看如何编写它。</string>
+    <string name="keyboard_help_no_results">没有找到“%s”的结果</string>
+    <string name="keyboard_help_pref_summary">了解盲文点在当前语言中的作用</string>
+    <string name="keyboard_help_pref_title">键盘帮助（活动表）</string>
+    <string name="keyboard_help_result_line">第 %1$d 行</string>
+    <string name="keyboard_help_search_btn">搜索</string>
+    <string name="keyboard_help_title">键盘帮助（活动表）</string>
     <string name="keyboard_horizontal">橫向</string>
     <string name="keyboard_next_three">現在請用其他三指按住螢幕.</string>
     <string name="keyboard_not_set">請把手指都放在螢幕上來設定點字鍵盤</string>
@@ -45,71 +316,362 @@
     <string name="keyboard_style_normal">正常</string>
     <string name="keyboard_style_slate">點字板與點字筆模式</string>
     <string name="keyboard_style_top_bottom">1, 4 點與 3, 6 點對調</string>
+    <string name="keyboard_tabletop">桌面式</string>
     <string name="keyboard_vertical">直向</string>
+    <string name="label_a_grave">一座坟墓</string>
+    <string name="label_arabic">阿拉伯语</string>
+    <string name="label_auto_link">（自动链接）</string>
+    <string name="label_base_script">基本字母/脚本：</string>
+    <string name="label_base_script_short">字母表</string>
+    <string name="label_class_prefix">[类别] 类别</string>
+    <string name="label_cyrillic">西里尔字母</string>
+    <string name="label_dot">点 %d</string>
+    <string name="label_dots_dialog">为此单元格选择点</string>
+    <string name="label_e_acute">急性</string>
+    <string name="label_e_grave">坟墓</string>
+    <string name="label_error_prefix">错误：%s</string>
+    <string name="label_external_synced">[外部]</string>
+    <string name="label_found_rules">找到 %1$d 条规则（共 %2$d 条）</string>
+    <string name="label_greek">希腊语</string>
+    <string name="label_hebrew">希伯来语</string>
+    <string name="label_hindi">印地语</string>
+    <string name="label_i_grave">我坟墓</string>
+    <string name="label_korean">韩语</string>
+    <string name="label_latin">拉丁语</string>
+    <string name="label_locale">表语言（区域设置）：</string>
+    <string name="label_locale_short">语言</string>
+    <string name="label_logic_prefix">[逻辑] 上下文</string>
+    <string name="label_long_press_delete">自定义表的列表。长按某个项目即可将其删除。</string>
+    <string name="label_mapped_items">映射项目</string>
+    <string name="label_mapped_items_short">映射</string>
+    <string name="label_n_mapped_items">已映射 %d 个项目（点击即可编辑）</string>
+    <string name="label_no_mapped_items">没有映射的项目</string>
+    <string name="label_none">无</string>
+    <string name="label_number_system">编号系统：</string>
+    <string name="label_number_system_short">数字</string>
+    <string name="label_o_grave">噢，坟墓</string>
+    <string name="label_opcode">利布卢操作码：</string>
+    <string name="label_opcode_short">规则</string>
+    <string name="label_priority_short">优先级</string>
+    <string name="label_results_count">结果：%d</string>
+    <string name="label_select_all">选择全部</string>
+    <string name="label_show_visual_picker">显示视觉单元格选择器</string>
+    <string name="label_source">来源</string>
+    <string name="label_spazio">空间</string>
+    <string name="label_structure_prefix">[结构] 包括</string>
+    <string name="label_table_locale">表语言（区域设置）：</string>
+    <string name="label_tap_to_edit">点击进行编辑，长按删除</string>
+    <string name="label_thai">泰语</string>
+    <string name="label_u_grave">你坟墓</string>
+    <string name="label_unicode_braille">统一码盲文</string>
+    <string name="label_use_8_dots">使用 8 点（计算机盲文）</string>
+    <string name="label_vietnamese">越南语</string>
     <string name="low">低</string>
     <string name="mark_not_set">標記未設定</string>
     <string name="medium">中</string>
+    <string name="msg_already_bottom">已经在底部了</string>
+    <string name="msg_already_top">已经在顶部了</string>
+    <string name="msg_char_empty">字符字段为空</string>
+    <string name="msg_confirm_clone">将当前列表替换为源表的内容？</string>
+    <string name="msg_confirm_delete_mass">删除 %d 个选定的规则？</string>
+    <string name="msg_confirm_template">应用模板将清除当前映射。继续？</string>
+    <string name="msg_delete_external">也从外部文件夹中删除</string>
+    <string name="msg_deleted">已删除</string>
+    <string name="msg_duplicate_dots">组合 %1$s 已用于“%2$s”。</string>
+    <string name="msg_enter_dots">请输入点（例如 123-45）</string>
+    <string name="msg_invalid_dots_format">点格式无效。使用数字 1-8，并用“-”或空格分隔。</string>
+    <string name="msg_char_required">该规则需要一个字符。</string>
+    <string name="msg_dots_required">请输入至少一种点阵图案。</string>
+    <string name="msg_error_logs">处理日志时出错</string>
+    <string name="msg_fixed_mapping">这是固定的系统映射，无法删除。</string>
+    <string name="btn_rename">重命名</string>
+    <string name="dialog_export_title">文件存在</string>
+    <string name="msg_export_collision">导出文件夹中已存在名为 %1$s 的文件。你想做什么？</string>
+    <string name="msg_save_collision">名为 %1$s 的表已存在。你想做什么？</string>
+    <string name="msg_export_failed">导出失败：%1$s</string>
+    <string name="msg_select_mapping_first">请首先从列表中选择一个映射。</string>
+    <string name="msg_share_error">分享错误</string>
+    <string name="label_sync_hub">同步轮毂</string>
+    <string name="msg_hands_overlapping">双手重叠</string>
+    <string name="hint_enter_new_name">输入新文件名</string>
+    <string name="msg_imported">已导入 %s</string>
+    <string name="msg_invalid_pos">位置无效</string>
+    <string name="msg_logs_cleared">日志清除成功</string>
+    <string name="msg_no_deletable_rules">未找到可删除的规则。</string>
+    <string name="msg_rule_removed">规则已删除。</string>
+    <string name="msg_rule_found">发现现有规则</string>
+    <string name="msg_rule_updated">规则已更新</string>
+    <string name="msg_rule_added">添加规则</string>
+    <string name="msg_rules_filtered">规则过滤</string>
+    <string name="msg_select_opcode_first">请先选择规则/操作码</string>
+    <string name="msg_select_source_first">克隆前选择源表。</string>
+    <string name="msg_standard_char_override">所选集的标准字符。您的选择将优先。</string>
+    <string name="msg_structure_cloned">原始结构克隆到列表中。</string>
+    <string name="msg_sync_desc">选择“软盲文”文件夹以授予永久访问权限并自动加载其中的文件。</string>
+    <string name="msg_sync_error">请求文件夹访问权限时出错。</string>
+    <string name="msg_sync_success">文件夹访问已激活！</string>
+    <string name="msg_table_exported">表格导出至下载/软盲文</string>
+    <string name="msg_table_file_not_found">未找到表文件。</string>
+    <string name="msg_table_saved">表保存成功！</string>
+    <string name="msg_template_applied">模板应用成功！</string>
     <string name="newline">換行</string>
     <string name="no_braille_table">沒有點字對照表</string>
     <string name="no_more_misspellings">沒有拼錯字了</string>
     <string name="no_password_echo">不說出密碼</string>
     <string name="no_rotate_keyboard">不旋轉鍵盤</string>
     <string name="no_suggestions">沒有可用的建議</string>
+    <string name="none_selected">--- 未选择 ---</string>
     <string name="nothing_to_delete">沒有內容可刪除</string>
+    <string name="num_sys_6dot_univocal">计算机盲文（6 点，安托万风格）</string>
+    <string name="num_sys_8dot_computer_lowered">计算机盲文（8 点，降低，1=2）</string>
+    <string name="num_sys_8dot_standard">标准8点（添加8点，1=18）</string>
+    <string name="num_sys_antoine">安托万（点 6 + 文学，1=16）</string>
+    <string name="num_sys_classic">经典（3456 + a-j，1=1）</string>
+    <string name="num_sys_dropped">丢弃的数字（3456 + 低，1=2）</string>
+    <string name="num_sys_literary">文学（G2 语境）</string>
+    <string name="num_sys_none">无/手动映射</string>
+    <string name="opcode_always">覆盖（始终）</string>
+    <string name="opcode_begcaps">全部大写开始</string>
+    <string name="opcode_begcapsword">开始大写单词 (begcapsword)</string>
+    <string name="opcode_begnum">数字前缀</string>
+    <string name="opcode_capsletter">大写符号 (6)</string>
+    <string name="opcode_class">班级</string>
+    <string name="opcode_closepunc">词后标点符号 (postpunc)</string>
+    <string name="opcode_context">背景</string>
+    <string name="opcode_digit">数字（0-9）</string>
+    <string name="opcode_endcaps">全部大写结束</string>
+    <string name="opcode_endcapsword">结束大写单词 (endcapsword)</string>
+    <string name="opcode_endnum">结束数字模式</string>
+    <string name="opcode_include">包括</string>
+    <string name="opcode_letsign">字母标志 (5)</string>
+    <string name="opcode_letter">通用信函</string>
+    <string name="opcode_litdigit">文学数字</string>
+    <string name="opcode_lowercase">小写字母</string>
+    <string name="opcode_math">数学</string>
+    <string name="opcode_midendnumericmodechars">后缀/内部数字</string>
+    <string name="opcode_midnum">数字内的字符</string>
+    <string name="opcode_numericmodechars">数字模式触发</string>
+    <string name="opcode_numsign">数字符号 (3456)</string>
+    <string name="opcode_openpunc">词前标点符号 (prepunc)</string>
+    <string name="opcode_partword">部分词</string>
+    <string name="opcode_punctuation">标点符号</string>
+    <string name="opcode_sign">标志</string>
+    <string name="opcode_space">空间</string>
+    <string name="opcode_uppercase">大写字母</string>
+    <string name="opcode_word">全词（缩写）</string>
     <string name="pad_horizontal">設定鍵盤為橫向排列</string>
+    <string name="pad_tabletop">将键盘设置为桌面布局</string>
     <string name="pad_vertical">設定鍵盤為直向排列</string>
-    <string name="pasted">已貼上</string>
     <string name="paste_error">貼上文字發生錯誤</string>
+    <string name="pasted">已貼上</string>
+    <string name="pref_app_version_key">APP_VERSION</string>
     <string name="pref_app_version_title">軟體版本: %s.</string>
+    <string name="pref_auto_caps_default">真实</string>
+    <string name="pref_auto_caps_key">AUTO_CAPS</string>
     <string name="pref_auto_caps_summary">每個句子的第一個字大寫.</string>
     <string name="pref_auto_caps_title">自動大寫</string>
+    <string name="pref_auto_match_keyboard_default">真实</string>
+    <string name="pref_auto_match_keyboard_key">自动_匹配_键盘</string>
     <string name="pref_auto_match_keyboard_summary">手動校正鍵盤市根據手指的位置來啟用鍵盤.</string>
     <string name="pref_auto_match_keyboard_title">自動選擇按照手指位置的鍵盤排列</string>
+    <string name="pref_auto_rotate_keyboard_default">假的</string>
+    <string name="pref_auto_rotate_keyboard_key">自动旋转键盘</string>
+    <string name="pref_braille_computer_table_default">en-US-comp8</string>
+    <string name="pref_braille_computer_table_key">BRAILLE_TABLE_0</string>
     <string name="pref_braille_grade_summary">設定最愛的縮寫等級.</string>
+    <string name="pref_braille_literary_table_default">en-UEB-g1</string>
+    <string name="pref_braille_literary_table_key">BRAILLE_TABLE_1</string>
+    <string name="pref_braille_table_auto">汽车</string>
+    <string name="pref_braille_type_default">1</string>
+    <string name="pref_braille_type_key">BRAILLE_GRADE_KEY</string>
+    <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
+    <string name="pref_category_advanced_title">高级和日志</string>
+    <string name="pref_category_braille_key">BRAILLE_CATEGORY_KEY</string>
     <string name="pref_category_braille_title">點字對照表</string>
+    <string name="pref_category_custom_tables_title">定制盲文表</string>
+    <string name="pref_category_feedback_key">KEYBOARD_FEEDBACK_Category</string>
     <string name="pref_category_feedback_title">鍵盤回饋設定</string>
+    <string name="pref_category_keyboard_key">KEYBOARD_CATEGORY</string>
     <string name="pref_category_keyboard_title">鍵盤設定</string>
+    <string name="pref_category_misc_key">管理信息中心</string>
     <string name="pref_category_misc_title">其他設定</string>
+    <string name="pref_clear_log_key">CLEAR_LOG</string>
+    <string name="pref_clear_log_summary">清除现有的 logcat 缓冲区</string>
+    <string name="pref_clear_log_title">清除日志</string>
+    <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
     <string name="pref_default_computer_braille_table_summary"></string>
     <string name="pref_default_computer_braille_table_title">電腦點字對照表</string>
+    <string name="pref_default_keyboard_default">0</string>
+    <string name="pref_default_keyboard_key">DEFAULT_KEYBOARD</string>
     <string name="pref_default_keyboard_summary">選擇預設的鍵盤排列.</string>
     <string name="pref_default_keyboard_title">預設的鍵盤排列</string>
     <string name="pref_default_literary_braille_table_summary"></string>
-    <string name="pref_default_literary_braille_table_title">書面點字對照表</string>    
+    <string name="pref_default_literary_braille_table_title">書面點字對照表</string>
+    <string name="pref_double_space_period_default">真实</string>
+    <string name="pref_double_space_period_key">DOUBLE_SPACE_PERIOD</string>
     <string name="pref_double_space_period_summary">在空白處滑兩下插入句號跟一個空格.</string>
-    <string name="pref_double_space_period_title">雙滑空白句號</string>    
+    <string name="pref_double_space_period_title">雙滑空白句號</string>
+    <string name="pref_echo_feedback_key">KEYBOARD_ECHO</string>
     <string name="pref_echo_feedback_summary">選擇鍵盤回應方式.</string>
     <string name="pref_echo_feedback_title">鍵盤回應</string>
+    <string name="pref_echo_misspellings_default">真实</string>
+    <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
     <string name="pref_echo_misspellings_summary">啟用後輸入空格會讀出拼錯字</string>
     <string name="pref_echo_misspellings_title">讀出您打入的拼錯字</string>
+    <string name="pref_misspelling_sound_default">假的</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">播放拼写错误的声音而不是声音反馈。</string>
+    <string name="pref_misspelling_sound_title">拼写错误声音通知</string>
+    <string name="misspelling_sound_enabled">启用拼写错误声音通知</string>
+    <string name="misspelling_sound_disabled">拼写错误声音通知已禁用</string>
+    <string name="word_added_to_dictionary">单词 %s 已添加到个人词典中</string>
+    <string name="no_word_to_add">找不到可以添加到词典中的单词</string>
+    <string name="word_removed_from_dictionary">单词 %s 从个人词典中删除</string>
+    <string name="word_not_in_dictionary">在个人词典中找不到单词 %s</string>
+    <string name="no_word_to_remove">找不到可以从词典中删除的单词</string>
+    <string name="pref_echo_passwords_default">假的</string>
+    <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
     <string name="pref_echo_passwords_summary">啟用此鍵盤會說出輸入的密碼.</string>
+    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
+    <string name="pref_has_asked_record_audio_key">RECORD_AUDIO</string>
+    <string name="pref_invert_horizontal_swipes_default">假的</string>
+    <string name="pref_invert_horizontal_swipes_key">INVERT_HORIZONTAL_SWIPES</string>
+    <string name="pref_invert_horizontal_swipes_summary">交换左右滑动方向。</string>
+    <string name="pref_invert_horizontal_swipes_title">反转水平滑动</string>
+    <string name="pref_invert_vertical_swipes_default">假的</string>
+    <string name="pref_invert_vertical_swipes_key">INVERT_VERTICAL_SWIPES</string>
+    <string name="pref_invert_vertical_swipes_summary">交换上下滑动方向。</string>
+    <string name="pref_invert_vertical_swipes_title">反转垂直滑动</string>
+    <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_feedback_summary">選擇鍵盤回饋的觸感與聲音.</string>
     <string name="pref_keyboard_feedback_title">鍵盤回饋</string>
+    <string name="pref_keyboard_invert_default">假的</string>
+    <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">當手機上的鍵盤沒有旋轉可用此設定將鍵盤的方向翻轉180度</string>
     <string name="pref_keyboard_invert_title">反轉鍵盤</string>
+    <string name="pref_keyboard_save_horizontal_landscape_invert_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_landscape_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_horizontal_portrait_invert_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_portrait_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_invert_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE</string>
+    <string name="pref_keyboard_save_tabletop_portrait_invert_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_portrait_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT</string>
+    <string name="pref_keyboard_save_vertical_landscape_invert_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_vertical_landscape_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_vertical_portrait_invert_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_vertical_portrait_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT</string>
+    <string name="pref_keyboard_style_key">KEYBOARD_STYLE</string>
+    <string name="pref_keyboard_style_normal_value">0</string>
+    <string name="pref_keyboard_style_slate_value">1</string>
     <string name="pref_keyboard_style_summary">配置鍵盤的點位排列.</string>
     <string name="pref_keyboard_style_title">鍵盤型態</string>
+    <string name="pref_keyboard_style_top_bottom_value">2</string>
+    <string name="pref_last_calibrated_layout_key">LAST_CALIBRATED_LAYOUT</string>
+    <string name="pref_lock_calibration_default">假的</string>
+    <string name="pref_lock_calibration_key">LOCK_CALIBRATION</string>
+    <string name="pref_lock_calibration_summary">防止打字时点移动并保持自定义布局</string>
+    <string name="pref_lock_calibration_title">锁定点位置</string>
+    <string name="pref_manage_tables_summary">导入、删除或创建您自己的盲文表。</string>
+    <string name="pref_manage_tables_title">管理/创建盲文表</string>
+    <string name="pref_privacy_default">假的</string>
+    <string name="pref_privacy_key">隐私</string>
     <string name="pref_privacy_summary">啟用後輸入十螢幕會便黑以保護隱私.</string>
     <string name="pref_privacy_title">隱私畫面</string>
+    <string name="pref_share_log_key">SHARE_LOG</string>
+    <string name="pref_share_log_summary">收集和共享系统日志以进行调试</string>
+    <string name="pref_share_log_title">分享日志</string>
+    <string name="pref_show_circles_default">真实</string>
+    <string name="pref_show_circles_key">SHOW_CIRCLE_KEY</string>
     <string name="pref_show_circles_summary">啟用後會在螢幕上顯示小圓圈代表每個點字的點位</string>
     <string name="pref_show_circles_title">是否在螢幕上顯示小圓圈?</string>
+    <string name="pref_show_ext_tables_default">假的</string>
+    <string name="pref_show_ext_tables_key">SHOW_EXT_TABLES</string>
+    <string name="pref_show_ext_tables_summary">显示所有可用的 Liblouis 表，包括 Google 未正式支持的表。</string>
+    <string name="pref_show_ext_tables_title">显示扩展 Liblouis 表</string>
+    <string name="pref_speech_rate_default">50</string>
+    <string name="pref_speech_rate_key">SPEECH_RATE</string>
+    <string name="pref_speech_rate_summary">选择键盘说话的速度。</string>
+    <string name="pref_speech_rate_title">语速</string>
+    <string name="pref_swap_swipe_axes_default">假的</string>
+    <string name="pref_swap_swipe_axes_key">SWAP_SWIPE_AXES</string>
+    <string name="pref_swap_swipe_axes_summary">将水平滑动解释为垂直滑动，反之亦然。</string>
+    <string name="pref_swap_swipe_axes_title">交换滑动轴</string>
+    <string name="pref_swipe_sensitivity_key">SWIPE_SENSITIVITY_KEY</string>
     <string name="pref_swipe_sensitivity_summary">選擇滑動手勢的敏感度.</string>
     <string name="pref_swipe_sensitivity_title">滑動敏感度</string>
+    <string name="pref_switch_tables_key">SWITCH_TABLES</string>
     <string name="pref_switch_tables_summary">選擇某些語言打字十可以臨時切換語言.</string>
     <string name="pref_switch_tables_title">啟用可以臨時切換的點字對照表.</string>
+    <string name="pref_text_to_speech_engine_key">TEXT_TO_SPEECH</string>
     <string name="pref_text_to_speech_engine_title">文字轉語音引擎</string>
     <string name="pref_text_to_speech_title">文字轉語音設定</string>
+    <string name="pref_two_hand_calibration_default">真实</string>
+    <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
+    <string name="pref_two_hand_calibration_summary">允许通过两次单独的触摸来校准键盘。</string>
+    <string name="pref_two_hand_calibration_title">两点触控校准</string>
+    <string name="pref_use_accessibility_volume_default">假的</string>
+    <string name="pref_use_accessibility_volume_key">USE_ACCESSIBILITY_VOLUME</string>
+    <string name="pref_use_accessibility_volume_summary">使用可访问音量进行 TTS 和 WAV 反馈。</string>
+    <string name="pref_use_accessibility_volume_title">使用无障碍音量</string>
+    <string name="pref_use_eight_dots_default">假的</string>
+    <string name="pref_use_eight_dots_key">USE_EIGHT_DOT</string>
     <string name="pref_use_eight_dots_summary">啟用後會顯示7,8點.</string>
     <string name="pref_use_eight_dots_title">顯示八點鍵盤</string>
+    <string name="pref_use_wav_default">假的</string>
+    <string name="pref_use_wav_key">USE_WAV_TTS</string>
+    <string name="pref_use_wav_summary">对单个字符使用预先生成的 WAV 文件而不是 TTS 引擎（更快）。</string>
+    <string name="pref_use_wav_title">使用WAV反馈</string>
+    <string name="pref_vibrate_on_exit_default">真实</string>
+    <string name="pref_vibrate_on_exit_key">VIBRATE_EXIT</string>
     <string name="pref_vibrate_on_exit_title">鍵盤關閉十振動</string>
-    <string name="pref_voice_shortcut_summary">啟用後在 talkback 打開的情況下點兩下並按住開始語音輸入.</string> 
+    <string name="pref_voice_shortcut_default">真实</string>
+    <string name="pref_voice_shortcut_key">VOICE_INPUT_SHORTCUT</string>
+    <string name="pref_voice_shortcut_summary">啟用後在 talkback 打開的情況下點兩下並按住開始語音輸入.</string>
     <string name="pref_voice_shortcut_title">語音輸入捷徑</string>
+    <string name="preset_caps_sign">大写符号</string>
+    <string name="preset_cat_acute">急性/西班牙语 (á, ñ...)</string>
+    <string name="preset_cat_base">基本字母 (a-z)</string>
+    <string name="preset_cat_circ">抑扬音/法语 (â, œ...)</string>
+    <string name="preset_cat_control">控制代码（6 点）</string>
+    <string name="preset_cat_dier">分音符 (ä, ë...)</string>
+    <string name="preset_cat_it_accents">意大利口音</string>
+    <string name="preset_cat_math">数学和符号（+、€、...）</string>
+    <string name="preset_cat_punc">标点符号（标准/文学）</string>
+    <string name="preset_let_sign">字母标志</string>
+    <string name="preset_num_sign">数字符号</string>
     <string name="privacy_disabled">隱私畫面關閉</string>
     <string name="privacy_enabled">隱私畫面開啟</string>
+    <string name="punctuation_backslash">反斜線</string>
+    <string name="punctuation_close_paren">右括號</string>
+    <string name="punctuation_colon">冒號</string>
+    <string name="punctuation_comma">逗號</string>
+    <string name="punctuation_dot">點</string>
+    <string name="punctuation_double_quote">雙引號</string>
+    <string name="punctuation_exclamation">驚嘆號</string>
+    <string name="punctuation_left_brace">左大括號</string>
+    <string name="punctuation_open_paren">左括號</string>
+    <string name="punctuation_questionmark">問號</string>
+    <string name="punctuation_right_brace">右大括號</string>
+    <string name="punctuation_semicolon">分號</string>
+    <string name="punctuation_single_quote">撇號</string>
+    <string name="punctuation_slash">斜線</string>
+    <string name="punctuation_space">空格</string>
     <string name="ready">鍵盤準備就緒</string>
+    <string name="require_record_audio_now">REQUIRE_RECORD_AUDIO</string>
     <string name="return_key">返回</string>
     <string name="rotate_keyboard">以設備旋轉鍵盤</string>
     <string name="rotate_summary">啟用後鍵盤的方向會比照設備的方向.</string>
+    <string name="script_arabic">阿拉伯语</string>
+    <string name="script_cyrillic">西里尔文（俄语/斯拉夫语）</string>
+    <string name="script_greek">希腊语</string>
+    <string name="script_hebrew">希伯来语</string>
+    <string name="script_hindi">印度语（梵文）</string>
+    <string name="script_korean">韩语（韩文）</string>
+    <string name="script_latin">拉丁语（欧洲）</string>
+    <string name="script_thai">泰语</string>
+    <string name="script_unicode">仅符号（Unicode）</string>
+    <string name="script_vietnamese">越南语</string>
     <string name="select_all">全選</string>
     <string name="selected_all">全部文字都被選取</string>
     <string name="set_mark">標記設定</string>
@@ -121,11 +683,41 @@
     <string name="speak_selection">說出選取</string>
     <string name="spellcheck_not_supported">這個版本的 Android 不支援拼字檢查.</string>
     <string name="start_of_text">文字開頭</string>
+    <string name="swipe_confirm">再滑一次確認</string>
     <string name="swipe_confirm_input">再滑一次顯示鍵盤選擇器</string>
     <string name="swipe_confirm_settings">再滑一次顯示軟點設定</string>
-    <string name="swipe_confirm">再滑一次確認</string>
+    <string name="table_header_author">作者：</string>
+    <string name="table_header_desc">说明：</string>
+    <string name="table_section_base">基本规则</string>
+    <string name="table_section_high">HIGH PRIORITY</string>
+    <string name="table_section_standard">STANDARD PRIORITY</string>
+    <string name="table_variant_unofficial">非官方</string>
+    <string name="btn_edit_header">编辑表头/元数据</string>
+    <string name="btn_move_to_pos">移动到位置</string>
+    <string name="btn_pin_mapping">引脚映射（保护）</string>
+    <string name="btn_unpin_mapping">取消固定映射</string>
+    <string name="hint_enter_pos">输入位置（1 到 %d）</string>
+    <string name="btn_move_up">向上移动</string>
+    <string name="btn_move_down">下移</string>
+    <string name="btn_move_top">移至顶部</string>
+    <string name="btn_insert_alphabet_here">在此插入字母 (%s)</string>
+    <string name="btn_insert_numeric_here">在此插入数字 (%s)</string>
+    <string name="title_activity_keyboard_help">键盘帮助</string>
+    <string name="title_activity_table_creator">表格创建器</string>
+    <string name="title_confirm_delete">确认删除</string>
+    <string name="title_duplicate_combination">重复组合</string>
+    <string name="title_mass_actions">群众行动</string>
+    <string name="title_order_actions">重新排序操作</string>
+    <string name="title_select_prefix">选择前缀（例如点 4、点 5 或点 6）</string>
+    <string name="title_select_table_file">选择盲文表文件</string>
+    <string name="title_select_template">选择模板</string>
+    <string name="title_share_table">分享桌</string>
     <string name="translator_error">點字服務有一個問題</string>
+    <string name="trial_buy">购买</string>
+    <string name="trial_expired_message">试用期满了。</string>
+    <string name="trial_expired_title">试用期已过</string>
     <string name="try_box">請在這裡打字.</string>
+    <string name="txt_id_practice">TXT_PRACTICE</string>
     <string name="unknown_character">未知的字元</string>
     <string name="unset_mark">標記取消</string>
     <string name="voice_input_enable">請快速執行這個手勢兩次. 會顯示一個對話框請以 talkback 接受允許以便讓語音輸入可以運行.</string>
@@ -133,100 +725,122 @@
     <string name="voice_input_is_not_available">本裝置不提供語音輸入.</string>
     <string name="voice_input_permission_message">需要啟用錄音許可才能進行語音輸入.</string>
     <string name="voice_input_permission_title">語音輸入允許</string>
-    <string name="word_correction_misspelled">%s 拼錯字了</string>
     <string name="word_correct">文字正確</string>
+    <string name="word_correction_correct">%s 正确</string>
+    <string name="word_correction_misspelled">%s 拼錯字了</string>
     <string name="word_count">%1$d 行, %2$d 字詞, %3$d 字元</string>
     <string name="word_misspelled">拼錯字了</string>
-
-    <!-- PUNCTUATION -->
-
-    <!--
-      Source: A value for announcing a question mark.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_questionmark">問號</string>
-
-    <!--
-      Source: A value for announcing a space.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_space">空格</string>
-
-    <!--
-      Source: A value for announcing a comma.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_comma">逗號</string>
-
-    <!--
-      Source: A value for announcing a dot.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_dot">點</string>
-
-    <!--
-      Source: A value for announcing an exclamation.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_exclamation">驚嘆號</string>
-
-    <!--
-      Source: A value for announcing an opening parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_open_paren">左括號</string>
-
-    <!--
-      Source: A value for announcing a closing parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_close_paren">右括號</string>
-
-    <!--
-      Source: A value for announcing a double quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_double_quote">雙引號</string>
-
-    <!--
-      Source: A value for announcing a single quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_single_quote">撇號</string>
-
-    <!--
-      Source: A value for announcing a slash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_slash">斜線</string>
-
-    <!--
-      Source: A value for announcing a backslash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_backslash">反斜線</string>
-
-    <!--
-      Source: A value for announcing a semicolon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_semicolon">分號</string>
-
-    <!--
-      Source: A value for announcing a colon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_colon">冒號</string>
-    
-    <!--
-      Source: A value for announcing a left brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_left_brace">左大括號</string>
-    
-    <!--
-      Source: A value for announcing a right brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_right_brace">右大括號</string>
+    <!--  BrailleAction Arrays  -->
+    <string-array name="braille_action_entries">
+        <item>@string/action_none</item>
+        <item>@string/action_move_left_char</item>
+        <item>@string/action_move_right_char</item>
+        <item>@string/action_move_left_word</item>
+        <item>@string/action_move_right_word</item>
+        <item>@string/action_move_left_line</item>
+        <item>@string/action_move_right_line</item>
+        <item>@string/action_move_left_all</item>
+        <item>@string/action_move_right_all</item>
+        <item>@string/action_backspace_char</item>
+        <item>@string/action_backspace_word</item>
+        <item>@string/action_backspace_line</item>
+        <item>@string/action_backspace_all</item>
+        <item>@string/action_read_char</item>
+        <item>@string/action_read_word</item>
+        <item>@string/action_read_line</item>
+        <item>@string/action_read_all</item>
+        <item>@string/action_space</item>
+        <item>@string/action_newline</item>
+        <item>@string/action_voice_input</item>
+        <item>@string/action_toggle_privacy</item>
+        <item>@string/action_toggle_auto_caps</item>
+        <item>@string/action_toggle_echo_passwords</item>
+        <item>@string/action_toggle_mark</item>
+        <item>@string/action_cycle_keyboard_feedback</item>
+        <item>@string/action_cycle_echo_feedback</item>
+        <item>@string/action_switch_braille_type</item>
+        <item>@string/action_switch_braille_table</item>
+        <item>@string/action_open_settings</item>
+        <item>@string/action_open_input_switcher</item>
+        <item>@string/action_close_keyboard</item>
+        <item>@string/action_shrink_keyboard</item>
+        <item>@string/action_word_count</item>
+        <item>@string/action_next_field_action</item>
+        <item>@string/action_select_text_action</item>
+        <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_edit_select_all</item>
+        <item>@string/action_edit_copy</item>
+        <item>@string/action_edit_cut</item>
+        <item>@string/action_edit_paste</item>
+        <item>@string/action_edit_speak</item>
+        <item>@string/action_edit_delete</item>
+        <item>@string/action_spell_check_left</item>
+        <item>@string/action_spell_check_right</item>
+        <item>@string/action_spell_check_next_suggestion</item>
+        <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_abbreviations_no_space</item>
+        <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_toggle_misspelling_sound</item>
+        <item>@string/action_add_to_dictionary</item>
+        <item>@string/action_remove_from_dictionary</item>
+        <item>@string/action_set_dot_7</item>
+        <item>@string/action_set_dot_8</item>
+    </string-array>
+    <string-array name="braille_action_values">
+        <item>NONE</item>
+        <item>MOVE_LEFT_CHAR</item>
+        <item>MOVE_RIGHT_CHAR</item>
+        <item>MOVE_LEFT_WORD</item>
+        <item>MOVE_RIGHT_WORD</item>
+        <item>MOVE_LEFT_LINE</item>
+        <item>MOVE_RIGHT_LINE</item>
+        <item>MOVE_LEFT_ALL</item>
+        <item>MOVE_RIGHT_ALL</item>
+        <item>BACKSPACE_CHAR</item>
+        <item>BACKSPACE_WORD</item>
+        <item>BACKSPACE_LINE</item>
+        <item>BACKSPACE_ALL</item>
+        <item>READ_CHAR</item>
+        <item>READ_WORD</item>
+        <item>READ_LINE</item>
+        <item>READ_ALL</item>
+        <item>SPACE</item>
+        <item>NEWLINE</item>
+        <item>VOICE_INPUT</item>
+        <item>TOGGLE_PRIVACY</item>
+        <item>TOGGLE_AUTO_CAPS</item>
+        <item>TOGGLE_ECHO_PASSWORDS</item>
+        <item>TOGGLE_MARK</item>
+        <item>CYCLE_KEYBOARD_FEEDBACK</item>
+        <item>CYCLE_ECHO_FEEDBACK</item>
+        <item>SWITCH_BRAILLE_TYPE</item>
+        <item>SWITCH_BRAILLE_TABLE</item>
+        <item>OPEN_SETTINGS</item>
+        <item>OPEN_INPUT_SWITCHER</item>
+        <item>CLOSE_KEYBOARD</item>
+        <item>SHRINK_KEYBOARD</item>
+        <item>WORD_COUNT</item>
+        <item>NEXT_FIELD_ACTION</item>
+        <item>SELECT_TEXT_ACTION</item>
+        <item>EMOJI_MODE_TOGGLE</item>
+        <item>EDIT_SELECT_ALL</item>
+        <item>EDIT_COPY</item>
+        <item>EDIT_CUT</item>
+        <item>EDIT_PASTE</item>
+        <item>EDIT_SPEAK</item>
+        <item>EDIT_DELETE</item>
+        <item>SPELL_CHECK_LEFT</item>
+        <item>SPELL_CHECK_RIGHT</item>
+        <item>SPELL_CHECK_NEXT_SUGGESTION</item>
+        <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
+        <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>TOGGLE_MISSPELLING_SOUND</item>
+        <item>ADD_TO_DICTIONARY</item>
+        <item>REMOVE_FROM_DICTIONARY</item>
+        <item>SET_DOT_7</item>
+        <item>SET_DOT_8</item>
+    </string-array>
 </resources>

@@ -1,31 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- User interface strings go below here -->
+    <string name="accessibility_service_description">Umožňuje správne fungovanie klávesnice Braillovho písma, keď je funkcia TalkBack aktívna, vytvorením oblasti, kde čítačka obrazovky nezachytí dotyky.</string>
+    <string name="accessibility_service_dialog_message">Ak chcete používať túto klávesnicu s aplikáciou TalkBack, musíte v nastaveniach dostupnosti povoliť „Soft Braillova klávesnica“. Vďaka tomu môže klávesnica prijímať vaše dotyky, keď je funkcia TalkBack aktívna.</string>
+    <string name="accessibility_service_label">Dostupnosť mäkkej Braillovej klávesnice</string>
+    <string name="action_record_audio_permission">ACTION_RECORD_AUDIO_PERMISSION</string>
     <string name="action_settings">Nastavenia</string>
     <string name="app_name">Soft Braille Keyboard</string>
     <string name="auto_caps_disabled">Automatické veľké písmená vypnuté</string>
     <string name="auto_caps_enabled">Automatické veľké písmená</string>
     <string name="blank">Prázdny</string>
     <string name="braille_ime">Soft Braille Keyboard</string>
+    <string name="btn_move_to_bottom">Presuňte sa nadol</string>
+    <string name="label_high_priority_prefix">[H]</string>
+    <string name="btn_add">PRIDAŤ</string>
+    <string name="btn_add_anyway">Napriek tomu pridajte</string>
+    <string name="btn_add_prefix">Pridať predponu...</string>
+    <string name="btn_append_cell">+ Pridať bunku</string>
+    <string name="btn_cancel">Zrušiť</string>
+    <string name="btn_clear_dots">Jasné</string>
+    <string name="btn_clone_table">Zdroj klonov</string>
+    <string name="btn_create_table">Vytvorte si vlastnú tabuľku</string>
+    <string name="btn_delete">Odstrániť</string>
+    <string name="btn_export_system_table">Exportovať systémovú tabuľku</string>
+    <string name="btn_export_original">Exportovať originál</string>
+    <string name="btn_export_table">Exportujte svoju prácu</string>
+    <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
+    <string name="btn_id_enable">BTN_ENABLED</string>
+    <string name="btn_import_base_rules">Importovať všetky pravidlá</string>
+    <string name="btn_import_table">Importovať existujúci súbor tabuľky</string>
+    <string name="btn_import_visual">Pravidlá importu</string>
+    <string name="btn_insert_above">Vložiť nad toto pravidlo</string>
+    <string name="btn_load_template">Načítať šablónu</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_overwrite">Prepísať / pokračovať</string>
+    <string name="dialog_overwrite_title">Prepísať súbor?</string>
+    <string name="dialog_overwrite_msg">Súbor %s už existuje. Chcete ho prepísať?</string>
+    <string name="btn_remove_mapping">Odstráňte toto mapovanie</string>
+    <string name="btn_save">ULOŽIŤ</string>
+    <string name="btn_select_mass">Vybrať...</string>
+    <string name="btn_set_cell">Nastaviť bunku</string>
+    <string name="btn_sync_folder">Udeľte prístup k priečinku na skenovanie</string>
+    <string name="btn_update">AKTUALIZOVAŤ</string>
     <string name="button_choose_default_keyboard">Nastaviť Soft Braille Keyboard ako predvolenú metódu vstupu</string>
     <string name="button_keyboard_settings">Povoliť Soft Braille Keyboard</string>
     <string name="button_more_info">Prečítať príručku rýchleho spustenia</string>
+    <string name="calibration_aborted">Kalibrácia prerušená</string>
+    <string name="calibration_init_message">Umiestnite 6 alebo 8 prstov na okamžitú kalibráciu alebo sa dotknite bodov po jednom pre manuálnu kalibráciu</string>
+    <string name="calibration_step">Dotknite sa bodky %d</string>
+    <string name="calibration_success">Kalibrácia uložená a uzamknutá</string>
     <string name="capital">Veľké %s</string>
     <string name="closing_keyboard">Klávesnica zatvorená</string>
+    <string name="confirm_delete_msg">Chcete odstrániť %s?</string>
+    <string name="confirm_delete_title">Odstrániť tabuľku</string>
     <string name="copied">Skopírované</string>
     <string name="copy_error">Chyba pri kopírovaní</string>
+    <string name="custom_table_label_prefix">Vlastné:</string>
     <string name="cut_error">Chyba pri vystrihnutí</string>
-    <string name="deleted">Vymazané %s</string>
+    <string name="default_swipe_sensitivity">50</string>
     <string name="delete_selection">Vymazať výber</string>
+    <string name="deleted">Vymazané %s</string>
+    <string name="emoji_count_summary">%1$s, %2$d z %3$d</string>
+    <string name="emoji_inserted">Vložené</string>
+    <string name="emoji_no_results">Žiadne výsledky emodži</string>
+    <string name="emoji_no_results_query">Žiadne výsledky pre %s</string>
+    <string name="emoji_no_to_insert">Žiadne emotikony na vloženie</string>
+    <string name="emoji_search_mode_off">Režim vyhľadávania emodži je vypnutý</string>
+    <string name="emoji_search_mode_on">Režim vyhľadávania emodži je zapnutý (%s)</string>
+    <string name="emoji_search_prefix">Vyhľadávanie emodži:</string>
+    <string name="emoji_search_query_empty">Vyhľadávací dopyt emodži je prázdny</string>
     <string name="end_of_text">Koniec textu</string>
+    <string name="error_invalid_file">Neplatný typ súboru. Vyberte .ctb alebo .utb</string>
+    <string name="error_no_name">Zadajte názov tabuľky</string>
     <string name="expand_keyboard">Jedným klepnutím sem rozbalíte klávesnicu</string>
     <string name="expand_keyboard_talkback">Jedným klepnutím sem rozbalíte klávesnicu</string>
+    <string name="grade">Predvolený typ Braillovho písma</string>
     <string name="grade_computer">Počítačové Braillovo písmo</string>
     <string name="grade_literary">Literárne Braillovo písmo</string>
-    <string name="grade">Predvolený typ Braillovho písma</string>
     <string name="grade_table">Stupeň %s</string>
+    <string name="help_desc_autocorrect">Automatická korekcia: upravuje polohu alebo štýl tohto symbolu.</string>
+    <string name="help_desc_bold">Tučný indikátor režimu.</string>
+    <string name="help_desc_caps_letter">Indikátor veľkých písmen: zmení nasledujúce písmeno na veľké.</string>
+    <string name="help_desc_caps_lock">Caps Lock: robí celé slovo veľkými písmenami.</string>
+    <string name="help_desc_default">Mapovanie pre: %s</string>
+    <string name="help_desc_diacritic">Diakritické znamienko: používa sa na úpravu predchádzajúceho alebo nasledujúceho znaku.</string>
+    <string name="help_desc_greek_mode">Prepnite do gréckeho režimu.</string>
+    <string name="help_desc_italic">Indikátor režimu kurzíva.</string>
+    <string name="help_desc_latin_mode">Prepnite do latinského (medzinárodného) režimu.</string>
+    <string name="help_desc_numeric">Ordinal/Numeric Rule: platí po čísle.</string>
+    <string name="help_desc_numsign">Znak čísla: spustí numerický režim (nasledujúce klávesy sú čísla).</string>
+    <string name="help_desc_state_change">Vnútorná zmena stavu (ovplyvňuje interpretáciu ďalších kľúčov).</string>
+    <string name="help_desc_underline">Indikátor režimu podčiarknutia.</string>
+    <string name="help_desc_whole_word">Kontrakcia celého slova: funguje iba ako samostatné slovo.</string>
     <string name="hide_keyboard">Skryť klávesnicu.</string>
+    <!--  Braille Actions  -->
+    <string name="action_none">žiadne</string>
+    <string name="action_move_left_char">Pohybujte sa doľava po znakoch</string>
+    <string name="action_move_right_char">Pohybujte sa po znakoch doprava</string>
+    <string name="action_move_left_word">Presuňte sa po slove doľava</string>
+    <string name="action_move_right_word">Pohybujte sa slovom doprava</string>
+    <string name="action_move_left_line">Presuňte sa doľava po riadku</string>
+    <string name="action_move_right_line">Pohybujte sa doprava po riadku</string>
+    <string name="action_move_left_all">Presun na začiatok textu</string>
+    <string name="action_move_right_all">Presunúť na koniec textu</string>
+    <string name="action_backspace_char">Odstrániť znak</string>
+    <string name="action_backspace_word">Odstrániť slovo</string>
+    <string name="action_backspace_line">Odstrániť riadok</string>
+    <string name="action_backspace_all">Odstrániť celý text</string>
+    <string name="action_read_char">Prečítajte si aktuálnu postavu</string>
+    <string name="action_read_word">Prečítajte si aktuálne slovo</string>
+    <string name="action_read_line">Prečítajte si aktuálny riadok</string>
+    <string name="action_read_all">Prečítajte si celý text</string>
+    <string name="action_space">Vložte medzeru</string>
+    <string name="action_newline">Vložiť nový riadok</string>
+    <string name="action_voice_input">Hlasový vstup</string>
+    <string name="action_toggle_privacy">Prepnúť režim súkromia</string>
+    <string name="action_toggle_auto_caps">Prepnúť automatické veľké písmená</string>
+    <string name="action_toggle_echo_passwords">Prepnúť vyslovovanie hesiel</string>
+    <string name="action_toggle_mark">Prepnúť značku výberu</string>
+    <string name="action_cycle_keyboard_feedback">Cyklická odozva klávesnice (zvuk/vibrovanie)</string>
+    <string name="action_cycle_echo_feedback">Cyklická spätná väzba ozveny (Char/Word/None)</string>
+    <string name="action_switch_braille_type">Prepnúť literárne/počítačové Braillovo písmo</string>
+    <string name="action_switch_braille_table">Prepnúť tabuľku Braillovho písma</string>
+    <string name="action_open_settings">Otvorte nastavenia klávesnice</string>
+    <string name="action_open_input_switcher">Otvoriť výber metódy vstupu</string>
+    <string name="action_close_keyboard">Zatvorte klávesnicu</string>
+    <string name="action_shrink_keyboard">Zmenšiť klávesnicu</string>
+    <string name="action_word_count">Počet slov a znakov</string>
+    <string name="action_next_field_action">Ďalšie pole / akcia</string>
+    <string name="action_select_text_action">Vybrať / Akcia</string>
+    <string name="action_emoji_mode_toggle">Prepnúť režim vyhľadávania emodži</string>
+    <string name="action_edit_select_all">Akcia: Vyberte všetko</string>
+    <string name="action_edit_copy">Akcia: Kopírovať</string>
+    <string name="action_edit_cut">Akcia: Rez</string>
+    <string name="action_edit_paste">Akcia: Vložiť</string>
+    <string name="action_edit_speak">Akcia: Vysloviť výber</string>
+    <string name="action_edit_delete">Akcia: Odstrániť výber</string>
+    <string name="action_spell_check_left">Kontrola pravopisu predchádzajúce slovo</string>
+    <string name="action_spell_check_right">Kontrola pravopisu nasledujúceho slova</string>
+    <string name="action_spell_check_next_suggestion">Ďalší návrh pravopisu</string>
+    <string name="action_spell_check_prev_suggestion">Predchádzajúci pravopisný návrh</string>
+    <string name="action_set_dot_7">Napíšte bod 7</string>
+    <string name="action_set_dot_8">Vložte bod 8</string>
+    <string name="action_toggle_abbreviations">Prepínajte medzi skratkami medzerou</string>
+    <string name="action_toggle_abbreviations_no_space">Prepínajte skratky bez medzery</string>
+    <string name="action_toggle_instant_abbreviations">Prepnúť okamžité rozšírenie</string>
+    <string name="action_toggle_misspelling_sound">Prepnúť zvukové upozornenie na pravopisnú chybu</string>
+    <string name="action_add_to_dictionary">Pridajte slovo do osobného slovníka</string>
+    <string name="action_add_to_dictionary_option">Pridajte %s do osobného slovníka</string>
+    <string name="action_remove_from_dictionary">Odstráňte slovo z osobného slovníka</string>
+    <string name="action_remove_from_dictionary_option">Odstrániť %s z osobného slovníka</string>
+    <!--  Abbreviations  -->
+    <string name="pref_abbreviations_title">Skratky</string>
+    <string name="pref_abbreviations_summary">Spravujte rozšírenie textu (s medzerou, bez medzery alebo okamžite).</string>
+    <string name="pref_abbreviations_instant_title">Okamžité rozšírenie</string>
+    <string name="pref_abbreviations_instant_summary">Nahradí skratky hneď po ich napísaní.</string>
+    <string name="abbreviations_instant_enabled">Okamžité rozšírenie je povolené</string>
+    <string name="abbreviations_instant_disabled">Okamžité rozšírenie je zakázané</string>
+    <string name="pref_abbreviations_enabled_title">Rozšírenie bez priestoru</string>
+    <string name="pref_abbreviations_enabled_summary">Nahrádza skratky pomocou medzery alebo len ako modifikátory enter (nevkladá sa žiadna medzera navyše).</string>
+    <string name="abbreviations_enabled">Skratky s povolenou medzerou</string>
+    <string name="abbreviations_disabled">Skratky bez medzery</string>
+    <string name="abbreviations_no_space_enabled">Skratky bez medzery</string>
+    <string name="abbreviations_no_space_disabled">Skratky bez medzery sú zakázané</string>
+    <string name="title_abbreviation_editor">Editor skratiek</string>
+    <string name="hint_shortcut">Skratka (napr. hru alebo 6-s)</string>
+    <string name="hint_expansion">Rozšírený text (napr. Ako sa máš?)</string>
+    <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
+    <string name="pref_abbreviations_enabled_default">falošný</string>
+    <string name="pref_abbreviations_add_space_title">Rozšírenie o priestor</string>
+    <string name="pref_abbreviations_add_space_summary">Nahradí skratky pomocou medzery alebo zadajte a pridá medzeru.</string>
+    <string name="nothing_to_expand">Niet čo rozširovať</string>
+    <!--  Gesture Names  -->
+    <string name="swipe_one_left">Bod 1: Potiahnite prstom doľava.</string>
+    <string name="swipe_one_right">Bod 1: Prejdite prstom doprava.</string>
+    <string name="swipe_one_up">Bod 1: Potiahnite prstom nahor.</string>
+    <string name="swipe_one_down">Bod 1: Potiahnite prstom nadol.</string>
+    <string name="swipe_two_left">Bod 2: Potiahnite prstom doľava.</string>
+    <string name="swipe_two_right">Bod 2: Potiahnite prstom doprava.</string>
+    <string name="swipe_two_up">Bod 2: Potiahnite prstom nahor.</string>
+    <string name="swipe_two_down">Bod 2: Potiahnite prstom nadol.</string>
+    <string name="swipe_three_left">Bod 3: Potiahnite prstom doľava.</string>
+    <string name="swipe_three_right">Bod 3: Potiahnite prstom doprava.</string>
+    <string name="swipe_three_up">Bod 3: Potiahnite prstom nahor.</string>
+    <string name="swipe_three_down">Bod 3: Potiahnite prstom nadol.</string>
+    <string name="swipe_four_left">Bod 4: Potiahnite prstom doľava.</string>
+    <string name="swipe_four_right">Bod 4: Potiahnite prstom doprava.</string>
+    <string name="swipe_four_up">Bod 4: Potiahnite prstom nahor.</string>
+    <string name="swipe_four_down">Bod 4: Potiahnite prstom nadol.</string>
+    <string name="swipe_five_left">Bod 5: Potiahnite prstom doľava.</string>
+    <string name="swipe_five_right">Bod 5: Prejdite prstom doprava.</string>
+    <string name="swipe_five_up">Bod 5: Potiahnite prstom nahor.</string>
+    <string name="swipe_five_down">Bod 5: Potiahnite prstom nadol.</string>
+    <string name="swipe_six_left">Bod 6: Potiahnite prstom doľava.</string>
+    <string name="swipe_six_right">Bod 6: Potiahnite prstom doprava.</string>
+    <string name="swipe_six_up">Bod 6: Potiahnite prstom nahor.</string>
+    <string name="swipe_six_down">Bod 6: Potiahnite prstom nadol.</string>
+    <string name="swipe_left_two_down">Vľavo: Dva prsty nadol.</string>
+    <string name="swipe_right_two_down">Vpravo: Dva prsty dole.</string>
+    <string name="swipe_hold_one_left">Bod 1: Podržte a druhou rukou potiahnite doľava.</string>
+    <string name="swipe_hold_one_right">Bod 1: Podržte a druhou rukou potiahnite doprava.</string>
+    <string name="swipe_hold_one_up">Bod 1: Podržte a potiahnite nahor druhou rukou.</string>
+    <string name="swipe_hold_one_down">Bod 1: Podržte a potiahnite nadol druhou rukou.</string>
+    <string name="swipe_hold_two_left">Bod 2: Podržte a druhou rukou potiahnite doľava.</string>
+    <string name="swipe_hold_two_right">Bod 2: Podržte a druhou rukou potiahnite doprava.</string>
+    <string name="swipe_hold_two_up">Bod 2: Podržte a potiahnite nahor druhou rukou.</string>
+    <string name="swipe_hold_two_down">Bod 2: Podržte a potiahnite nadol druhou rukou.</string>
+    <string name="swipe_hold_three_left">Bod 3: Podržte a druhou rukou potiahnite doľava.</string>
+    <string name="swipe_hold_three_right">Bod 3: Podržte a druhou rukou potiahnite doprava.</string>
+    <string name="swipe_hold_three_up">Bod 3: Podržte a potiahnite nahor druhou rukou.</string>
+    <string name="swipe_hold_three_down">Bod 3: Podržte a potiahnite nadol druhou rukou.</string>
+    <string name="swipe_hold_four_left">Bod 4: Podržte a druhou rukou potiahnite doľava.</string>
+    <string name="swipe_hold_four_right">Bod 4: Podržte a druhou rukou potiahnite doprava.</string>
+    <string name="swipe_hold_four_up">Bod 4: Podržte a potiahnite nahor druhou rukou.</string>
+    <string name="swipe_hold_four_down">Bod 4: Podržte a potiahnite nadol druhou rukou.</string>
+    <string name="swipe_hold_five_left">Bod 5: Podržte a druhou rukou potiahnite doľava.</string>
+    <string name="swipe_hold_five_right">Bod 5: Podržte a druhou rukou potiahnite doprava.</string>
+    <string name="swipe_hold_five_up">Bod 5: Podržte a potiahnite nahor druhou rukou.</string>
+    <string name="swipe_hold_five_down">Bod 5: Podržte a potiahnite nadol druhou rukou.</string>
+    <string name="swipe_hold_six_left">Bod 6: Podržte a druhou rukou potiahnite doľava.</string>
+    <string name="swipe_hold_six_right">Bod 6: Podržte a druhou rukou potiahnite doprava.</string>
+    <string name="swipe_hold_six_up">Bod 6: Podržte a potiahnite nahor druhou rukou.</string>
+    <string name="swipe_hold_six_down">Bod 6: Podržte a potiahnite nadol druhou rukou.</string>
+    <!--  Storage Manager (Universal)  -->
+    <string name="label_active_abbreviations">[Aktívny slovník skratiek]</string>
+    <string name="label_active_gestures">[Schéma aktívnych gest]</string>
+    <string name="msg_confirm_clear_active">Naozaj chcete vymazať všetky aktívne údaje z klávesnice? Túto akciu nie je možné vrátiť späť.</string>
+    <string name="checkbox_delete_backup_file">Vymažte aj záložný súbor v priečinku Braillovho písma</string>
+    <string name="btn_setup_sync_folder">Udeľte prístup k priečinku na synchronizáciu</string>
+    <string name="title_storage_manager">Správca úložiska</string>
+    <string name="btn_create_new_table">Vytvoriť novú tabuľku</string>
+    <string name="label_file_type_tables">Braillovo písmo</string>
+    <string name="label_file_type_abbreviations">Slovník skratiek</string>
+    <string name="label_file_type_gestures">Schéma gest</string>
+    <string name="msg_confirm_import_generic">Chcete importovať tento zdroj? Aktuálne údaje môžu byť prepísané.</string>
+    <string name="msg_sync_folder">Synchronizovaný priečinok</string>
+    <string name="msg_download_folder">Priečinok na stiahnutie</string>
+    <string name="pref_sync_folder_title">Synchronizácia priečinkov</string>
+    <string name="pref_sync_folder_summary">Vyberte priečinok na synchronizáciu tabuliek a záloh</string>
+    <!--  Backup & Restore  -->
+    <string name="btn_export">Exportovať</string>
+    <string name="btn_import">Importovať</string>
+    <string name="hint_search_items">Hľadať súbory...</string>
+    <string name="btn_export_system">Export pôvodnej tabuľky</string>
+    <string name="hint_search_tables">Prehľadať systémové tabuľky...</string>
+    <string name="title_export_system">Export Original Liblouis Table</string>
+    <string name="label_found_locales">Počet nájdených jazykov: %d</string>
+    <string name="label_auto_selected">Automaticky vybrané</string>
+    <string name="label_no_results">Nenašli sa žiadne výsledky</string>
+    <string name="hint_search_locale">Jazyk vyhľadávania...</string>
+    <string name="msg_exported_to">Súbor bol exportovaný do: %s</string>
+    <string name="msg_import_success">Údaje boli úspešne importované!</string>
+    <string name="msg_import_error">Chyba importu: %s</string>
+    <string name="title_select_backup">Vyberte možnosť Zálohovať</string>
+    <string name="msg_no_backups">V mäkkom Braillovom písme sa nenašli žiadne zálohy.</string>
+    <string name="msg_confirm_import">Prepísať aktuálne dáta touto zálohou?</string>
+    <string name="menu_share">zdieľať</string>
+    <string name="menu_delete">Odstrániť</string>
+    <string name="pref_category_gestures_title">Prispôsobenie gestami</string>
+    <string name="pref_gestures_summary">Priraďte funkcie gestám potiahnutia a podržania</string>
+    <string name="pref_gestures_title">Prispôsobenie gest</string>
+    <string name="pref_reset_gestures_title">Obnoviť predvolené nastavenia gest</string>
+    <string name="pref_reset_gestures_summary">Obnovte pôvodné priradenia gest</string>
+    <string name="pref_reset_gestures_confirm">Naozaj chcete obnoviť všetky gestá na ich predvolené priradenia?</string>
+    <string name="pref_export_gestures_title">Exportovať gestá</string>
+    <string name="pref_export_gestures_summary">Uložte si vlastnú mapu gest do súboru</string>
+    <string name="pref_import_gestures_title">Importovať gestá</string>
+    <string name="pref_import_gestures_summary">Načítať mapu gest zo súboru</string>
+    <string name="pref_gesture_default_format">Predvolená hodnota: %1$s</string>
+    <string name="export_success">Gestá boli úspešne exportované do %1$s</string>
+    <string name="export_error">Chyba pri exportovaní gest: %1$s</string>
+    <string name="import_success">Gestá boli úspešne importované</string>
+    <string name="import_error">Chyba pri importovaní gest: %1$s</string>
+    <string name="import_no_valid_data">V súbore sa nenašli žiadne platné údaje gesta</string>
+    <string name="pref_group_single_finger">Prejdenie jedným prstom</string>
+    <string name="pref_group_two_fingers">Potiahnutie dvoma prstami (iba nadol)</string>
+    <string name="pref_group_hold_swipe">Jednou rukou držte bod a druhou potiahnite prstom</string>
     <string name="high">Vysoká</string>
+    <string name="hint_author">Autor (napr. Sergio)</string>
+    <string name="hint_char">Char</string>
+    <string name="hint_description">Popis tabuľky</string>
+    <string name="hint_dots_format">Bodky (napr. 123 – 45)</string>
+    <string name="hint_enter_dots">Zadajte bodky (napr. 123)</string>
+    <string name="hint_search_rules">Hľadať znak alebo bodky...</string>
+    <string name="hint_table_name">Zadajte názov tabuľky (napr. moja_tabuľka)</string>
     <string name="info_url">https://docs.google.com/document/d/1j-Vc15z9xRt9ULTZcNIVCvUBshBeXZkttVidSaaBePg/pub</string>
     <string name="keyboard_auto">Automaticky</string>
     <string name="keyboard_echo_all">Oboje, znaky aj slová</string>
@@ -38,6 +295,20 @@
     <string name="keyboard_feedback_sound">Len zvuk</string>
     <string name="keyboard_feedback_vibrate">Len vybrácia</string>
     <string name="keyboard_full_screen">Klávesnica je roztiahnutá</string>
+    <string name="keyboard_help_active_table_label">Aktívna tabuľka: %s</string>
+    <string name="keyboard_help_dots_hint">Bodky alebo znak</string>
+    <string name="keyboard_help_dots_result">Bodky: %1$s</string>
+    <string name="keyboard_help_enter_dots_toast">Ak chcete hľadať, zadajte bodky alebo znaky</string>
+    <string name="keyboard_help_error_no_table">Chyba: Aktívna tabuľka sa nenašla.</string>
+    <string name="keyboard_help_file_not_available">Súbor tabuľky nie je k dispozícii</string>
+    <string name="keyboard_help_how_to_write_title">Ako napísať „%1$s“</string>
+    <string name="keyboard_help_instruction">Zadajte bodky (napr. 45), aby ste videli, čo robia, alebo zadajte znak (napr. A), aby ste videli, ako to napísať.</string>
+    <string name="keyboard_help_no_results">Nenašli sa žiadne výsledky pre „%s“</string>
+    <string name="keyboard_help_pref_summary">Zistite, čo robia bodky v Braillovom písme v aktuálnom jazyku</string>
+    <string name="keyboard_help_pref_title">Pomocník klávesnice (aktívna tabuľka)</string>
+    <string name="keyboard_help_result_line">Riadok %1$d</string>
+    <string name="keyboard_help_search_btn">Hľadať</string>
+    <string name="keyboard_help_title">Pomocník klávesnice (aktívna tabuľka)</string>
     <string name="keyboard_horizontal">Vodorovné</string>
     <string name="keyboard_next_three">Prosím pridržte na obrazovke ďalšie tri prsty.</string>
     <string name="keyboard_not_set">Prosím, pridržte na obrazovke všetkých 6 prstov, aby Ste nastavili rozloženie klávesov Braillovho písma</string>
@@ -45,71 +316,362 @@
     <string name="keyboard_style_normal">Normálny</string>
     <string name="keyboard_style_slate">Režim bodiatkovej tabuľky</string>
     <string name="keyboard_style_top_bottom">Vymeniť body 1 a 4 s bodmi 3 a 6</string>
+    <string name="keyboard_tabletop">Stolová doska</string>
     <string name="keyboard_vertical">Zvislé</string>
+    <string name="label_a_grave">hrob</string>
+    <string name="label_arabic">arabčina</string>
+    <string name="label_auto_link">(automatické prepojenie)</string>
+    <string name="label_base_script">Základná abeceda / skript:</string>
+    <string name="label_base_script_short">Abeceda</string>
+    <string name="label_class_prefix">[CLASS] trieda</string>
+    <string name="label_cyrillic">azbuka</string>
+    <string name="label_dot">Bodka %d</string>
+    <string name="label_dots_dialog">Vyberte bodky pre túto bunku</string>
+    <string name="label_e_acute">e akútny</string>
+    <string name="label_e_grave">e hrob</string>
+    <string name="label_error_prefix">Chyba: %s</string>
+    <string name="label_external_synced">[Externé]</string>
+    <string name="label_found_rules">Našlo sa %1$d pravidiel z %2$d</string>
+    <string name="label_greek">grécky</string>
+    <string name="label_hebrew">hebrejčina</string>
+    <string name="label_hindi">hindčina</string>
+    <string name="label_i_grave">som hrob</string>
+    <string name="label_korean">kórejský</string>
+    <string name="label_latin">latinčina</string>
+    <string name="label_locale">Jazyk tabuľky (miestne):</string>
+    <string name="label_locale_short">Jazyk</string>
+    <string name="label_logic_prefix">[LOGIC] kontext</string>
+    <string name="label_long_press_delete">Zoznam vlastných tabuliek. Dlhým stlačením položky ju odstránite.</string>
+    <string name="label_mapped_items">Mapované položky</string>
+    <string name="label_mapped_items_short">Mapovania</string>
+    <string name="label_n_mapped_items">%d položiek namapovaných (upravte klepnutím)</string>
+    <string name="label_no_mapped_items">Nie sú namapované žiadne položky</string>
+    <string name="label_none">žiadne</string>
+    <string name="label_number_system">Systém číslovania:</string>
+    <string name="label_number_system_short">čísla</string>
+    <string name="label_o_grave">o hrob</string>
+    <string name="label_opcode">Liblouis Opcode:</string>
+    <string name="label_opcode_short">Pravidlo</string>
+    <string name="label_priority_short">Priorita</string>
+    <string name="label_results_count">Výsledky: %d</string>
+    <string name="label_select_all">Vyberte možnosť Všetky</string>
+    <string name="label_show_visual_picker">Zobraziť vizuálny výber buniek</string>
+    <string name="label_source">Zdroj</string>
+    <string name="label_spazio">priestor</string>
+    <string name="label_structure_prefix">[ŠTRUKTÚRA] zahŕňajú</string>
+    <string name="label_table_locale">Jazyk tabuľky (miestne):</string>
+    <string name="label_tap_to_edit">Klepnutím upravíte, dlhým stlačením odstránite</string>
+    <string name="label_thai">thajčina</string>
+    <string name="label_u_grave">u hrob</string>
+    <string name="label_unicode_braille">Unicode Braillovo písmo</string>
+    <string name="label_use_8_dots">Použiť 8 bodov (počítačové Braillovo písmo)</string>
+    <string name="label_vietnamese">Vietnamci</string>
     <string name="low">Nízka</string>
     <string name="mark_not_set">Značka nebola nastavená</string>
     <string name="medium">Stredná</string>
+    <string name="msg_already_bottom">Už na dne</string>
+    <string name="msg_already_top">Už na vrchole</string>
+    <string name="msg_char_empty">Pole znaku je prázdne</string>
+    <string name="msg_confirm_clone">Nahradiť aktuálny zoznam obsahom zdrojovej tabuľky?</string>
+    <string name="msg_confirm_delete_mass">Odstrániť %d vybratých pravidiel?</string>
+    <string name="msg_confirm_template">Použitím šablóny sa vymažú aktuálne mapovania. Pokračovať?</string>
+    <string name="msg_delete_external">Odstrániť aj z externého priečinka</string>
+    <string name="msg_deleted">Odstránené</string>
+    <string name="msg_duplicate_dots">Kombinácia %1$s sa už používa pre „%2$s“.</string>
+    <string name="msg_enter_dots">Zadajte bodky (napr. 123-45)</string>
+    <string name="msg_invalid_dots_format">Neplatný formát bodiek. Použite číslice 1-8 oddelené \'-\' alebo medzerami.</string>
+    <string name="msg_char_required">Toto pravidlo vyžaduje charakter.</string>
+    <string name="msg_dots_required">Zadajte aspoň jeden bodkový vzor.</string>
+    <string name="msg_error_logs">Chyba pri spracovaní denníkov</string>
+    <string name="msg_fixed_mapping">Toto je pevné mapovanie systému a nemožno ho odstrániť.</string>
+    <string name="btn_rename">Premenovať</string>
+    <string name="dialog_export_title">Súbor existuje</string>
+    <string name="msg_export_collision">Súbor s názvom %1$s už v priečinku exportu existuje. čo by ste chceli robiť?</string>
+    <string name="msg_save_collision">Tabuľka s názvom %1$s už existuje. čo by ste chceli robiť?</string>
+    <string name="msg_export_failed">Export zlyhal: %1$s</string>
+    <string name="msg_select_mapping_first">Najprv vyberte mapu zo zoznamu.</string>
+    <string name="msg_share_error">Chyba zdieľania</string>
+    <string name="label_sync_hub">Synchronizovaný rozbočovač</string>
+    <string name="msg_hands_overlapping">Prekrývajúce sa ruky</string>
+    <string name="hint_enter_new_name">Zadajte nový názov súboru</string>
+    <string name="msg_imported">Importované %s</string>
+    <string name="msg_invalid_pos">Neplatná pozícia</string>
+    <string name="msg_logs_cleared">Denníky boli úspešne vymazané</string>
+    <string name="msg_no_deletable_rules">Nenašli sa žiadne odstrániteľné pravidlá.</string>
+    <string name="msg_rule_removed">Pravidlo odstránené.</string>
+    <string name="msg_rule_found">Našlo sa existujúce pravidlo</string>
+    <string name="msg_rule_updated">Pravidlo aktualizované</string>
+    <string name="msg_rule_added">Pridané pravidlo</string>
+    <string name="msg_rules_filtered">pravidlá filtrované</string>
+    <string name="msg_select_opcode_first">Najprv vyberte pravidlo/operačný kód</string>
+    <string name="msg_select_source_first">Pred klonovaním vyberte zdrojovú tabuľku.</string>
+    <string name="msg_standard_char_override">Štandardný charakter vybranej zostavy. Vaša voľba bude mať prednosť.</string>
+    <string name="msg_structure_cloned">Pôvodná štruktúra klonovaná do zoznamu.</string>
+    <string name="msg_sync_desc">Vyberte priečinok „soft-braill“ na udelenie trvalého prístupu a automatické načítanie súborov v ňom.</string>
+    <string name="msg_sync_error">Chyba pri žiadaní o prístup k priečinku.</string>
+    <string name="msg_sync_success">Prístup k priečinku aktivovaný!</string>
+    <string name="msg_table_exported">Tabuľka bola exportovaná do Download/soft-braillovho písma</string>
+    <string name="msg_table_file_not_found">Súbor tabuľky sa nenašiel.</string>
+    <string name="msg_table_saved">Tabuľka bola úspešne uložená!</string>
+    <string name="msg_template_applied">Šablóna bola úspešne použitá!</string>
     <string name="newline">Nový riadok</string>
     <string name="no_braille_table">Žiadne tabuľky</string>
     <string name="no_more_misspellings">Žiadne ďalšie preklepy</string>
     <string name="no_password_echo">Neoznamovať heslá</string>
     <string name="no_rotate_keyboard">Neotáčať klávesnicu</string>
     <string name="no_suggestions">Nie sú dostupné žiadne návrhy</string>
+    <string name="none_selected">--- Žiadne vybraté ---</string>
     <string name="nothing_to_delete">Nie je čo vymazať</string>
+    <string name="num_sys_6dot_univocal">Počítačové Braillovo písmo (6 bodov, v štýle Antoine)</string>
+    <string name="num_sys_8dot_computer_lowered">Počítačové Braillovo písmo (8 bodov, zmenšené, 1=2)</string>
+    <string name="num_sys_8dot_standard">Štandardný 8-bodový (bod 8 pridaný, 1=18)</string>
+    <string name="num_sys_antoine">Antoine (bod 6 + literatúra, 1=16)</string>
+    <string name="num_sys_classic">Klasické (3456 + a-j, 1=1)</string>
+    <string name="num_sys_dropped">Vypustené čísla (3456 + nízke, 1=2)</string>
+    <string name="num_sys_literary">Literárne (kontext G2)</string>
+    <string name="num_sys_none">Žiadne / manuálne mapovania</string>
+    <string name="opcode_always">Prepísať (vždy)</string>
+    <string name="opcode_begcaps">Begin All Caps</string>
+    <string name="opcode_begcapsword">Začať slovo s veľkými písmenami (begcapsword)</string>
+    <string name="opcode_begnum">Číselná predpona</string>
+    <string name="opcode_capsletter">Veľký znak (6)</string>
+    <string name="opcode_class">triedy</string>
+    <string name="opcode_closepunc">Interpunkcia za slovom (postpunc)</string>
+    <string name="opcode_context">Kontext</string>
+    <string name="opcode_digit">Číslica (0-9)</string>
+    <string name="opcode_endcaps">Ukončiť všetky veľké písmená</string>
+    <string name="opcode_endcapsword">Koniec slova s veľkými písmenami (endcapsword)</string>
+    <string name="opcode_endnum">Ukončite číselný režim</string>
+    <string name="opcode_include">Zahrnúť</string>
+    <string name="opcode_letsign">Písmeno (5)</string>
+    <string name="opcode_letter">Všeobecný list</string>
+    <string name="opcode_litdigit">Literárna číslica</string>
+    <string name="opcode_lowercase">Malé písmeno</string>
+    <string name="opcode_math">Matematika</string>
+    <string name="opcode_midendnumericmodechars">Prípona/vnútorné číslo</string>
+    <string name="opcode_midnum">Znak vo vnútri čísel</string>
+    <string name="opcode_numericmodechars">Spúšť numerického režimu</string>
+    <string name="opcode_numsign">Znak čísla (3456)</string>
+    <string name="opcode_openpunc">Interpunkcia pred slovom (prepunc)</string>
+    <string name="opcode_partword">Časť Wordu</string>
+    <string name="opcode_punctuation">Interpunkcia</string>
+    <string name="opcode_sign">Podpísať</string>
+    <string name="opcode_space">Priestor</string>
+    <string name="opcode_uppercase">Veľké písmeno</string>
+    <string name="opcode_word">Celé slovo (kontrakcia)</string>
     <string name="pad_horizontal">Nastavené vodorovné rozloženie klávesov</string>
+    <string name="pad_tabletop">Nastavte klávesnicu na rozloženie stola</string>
     <string name="pad_vertical">Nastavené zvislé rozloženie klávesov</string>
-    <string name="pasted">Vložené</string>
     <string name="paste_error">Pri pokuse vložiť text sa vyskytla chyba</string>
+    <string name="pasted">Vložené</string>
+    <string name="pref_app_version_key">APP_VERSION</string>
     <string name="pref_app_version_title">Verzia aplikácie: %s.</string>
+    <string name="pref_auto_caps_default">pravda</string>
+    <string name="pref_auto_caps_key">AUTO_CAPS</string>
     <string name="pref_auto_caps_summary">Prvé slovo každej vety automaticky veľkým písmom.</string>
     <string name="pref_auto_caps_title">Automatické veľké písmená</string>
+    <string name="pref_auto_match_keyboard_default">pravda</string>
+    <string name="pref_auto_match_keyboard_key">Auto_MATCH_KEYBOARD</string>
     <string name="pref_auto_match_keyboard_summary">Ak je povolené, rozloženie klávesov je nastavené podľa priložených prstov počas ručne vykonanej kalibrácie.</string>
     <string name="pref_auto_match_keyboard_title">Automaticky určiť rozloženie klávesov podľa umiestnenia prstov na obrazovke</string>
+    <string name="pref_auto_rotate_keyboard_default">falošný</string>
+    <string name="pref_auto_rotate_keyboard_key">Auto_ROTATE_KEYBOARD</string>
+    <string name="pref_braille_computer_table_default">en-US-comp8</string>
+    <string name="pref_braille_computer_table_key">BRAILLE_TABLE_0</string>
     <string name="pref_braille_grade_summary">Nastaví predvolený typ Braillovho písma.</string>
+    <string name="pref_braille_literary_table_default">en-UEB-g1</string>
+    <string name="pref_braille_literary_table_key">BRAILLE_TABLE_1</string>
+    <string name="pref_braille_table_auto">auto</string>
+    <string name="pref_braille_type_default">1</string>
+    <string name="pref_braille_type_key">BRAILLE_GRADE_KEY</string>
+    <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
+    <string name="pref_category_advanced_title">Advanced &amp;amp; Logs</string>
+    <string name="pref_category_braille_key">BRAILLE_CATEGORY_KEY</string>
     <string name="pref_category_braille_title">Prekladové tabuľky Braillovho písma</string>
+    <string name="pref_category_custom_tables_title">Vlastné Braillovo písmo</string>
+    <string name="pref_category_feedback_key">KEYBOARD_FEEDBACK_Category</string>
     <string name="pref_category_feedback_title">Nastavenia spätnej väzby klávesnice</string>
+    <string name="pref_category_keyboard_key">KEYBOARD_CATEGORY</string>
     <string name="pref_category_keyboard_title">Nastavenia klávesnice</string>
+    <string name="pref_category_misc_key">RÔZNE</string>
     <string name="pref_category_misc_title">Rôzne Nastavenia</string>
+    <string name="pref_clear_log_key">CLEAR_LOG</string>
+    <string name="pref_clear_log_summary">Vymazať existujúcu vyrovnávaciu pamäť logcat</string>
+    <string name="pref_clear_log_title">Vymazať denníky</string>
+    <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
     <string name="pref_default_computer_braille_table_summary"></string>
     <string name="pref_default_computer_braille_table_title">Tabuľka počítačového Braillovho písma</string>
+    <string name="pref_default_keyboard_default">0</string>
+    <string name="pref_default_keyboard_key">DEFAULT_KEYBOARD</string>
     <string name="pref_default_keyboard_summary">Vyberte rozloženie klávesov, ktoré je zobrazené v predvolenej konfigurácii.</string>
     <string name="pref_default_keyboard_title">Predvolené rozloženie klávesov</string>
     <string name="pref_default_literary_braille_table_summary"></string>
     <string name="pref_default_literary_braille_table_title">Tabuľka literárneho Braillovho písma</string>
+    <string name="pref_double_space_period_default">pravda</string>
+    <string name="pref_double_space_period_key">DOUBLE_SPACE_PERIOD</string>
     <string name="pref_double_space_period_summary">Dvojitým švihnutím príkazu medzerník vložiť bodku nasledovanú medzerníkom.</string>
-    <string name="pref_double_space_period_title">Bodku dvojitým švihnutím medzerníka</string>    
+    <string name="pref_double_space_period_title">Bodku dvojitým švihnutím medzerníka</string>
+    <string name="pref_echo_feedback_key">KEYBOARD_ECHO</string>
     <string name="pref_echo_feedback_summary">Vyberte typ odozvy klávesov.</string>
     <string name="pref_echo_feedback_title">Odozva Klávesov</string>
+    <string name="pref_echo_misspellings_default">pravda</string>
+    <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
     <string name="pref_echo_misspellings_summary">Ak je zapnuté, klávesnica oznámi preklepy po napísaní medzerníka</string>
     <string name="pref_echo_misspellings_title">Oznamovať preklepy počas písania</string>
+    <string name="pref_misspelling_sound_default">falošný</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">Prehrajte zvuk pre preklepy namiesto hlasovej spätnej väzby.</string>
+    <string name="pref_misspelling_sound_title">Zvukové upozornenie na chybu pravopisu</string>
+    <string name="misspelling_sound_enabled">Zvukové upozornenie na chybu pravopisu je povolené</string>
+    <string name="misspelling_sound_disabled">Zvukové upozornenie na chybu pravopisu je vypnuté</string>
+    <string name="word_added_to_dictionary">Slovo %s bolo pridané do osobného slovníka</string>
+    <string name="no_word_to_add">Nenašlo sa žiadne slovo na pridanie do slovníka</string>
+    <string name="word_removed_from_dictionary">Slovo %s bolo odstránené z osobného slovníka</string>
+    <string name="word_not_in_dictionary">Slovo %s sa nenašlo v osobnom slovníku</string>
+    <string name="no_word_to_remove">Nenašlo sa žiadne slovo na odstránenie zo slovníka</string>
+    <string name="pref_echo_passwords_default">falošný</string>
+    <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
     <string name="pref_echo_passwords_summary">Keď je zapnuté, aplikácia bude hovoriť počas písania hesiel.</string>
+    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
+    <string name="pref_has_asked_record_audio_key">RECORD_AUDIO</string>
+    <string name="pref_invert_horizontal_swipes_default">falošný</string>
+    <string name="pref_invert_horizontal_swipes_key">INVERT_HORIZONTAL_SWIPES</string>
+    <string name="pref_invert_horizontal_swipes_summary">Vymeňte smer potiahnutia doľava a doprava.</string>
+    <string name="pref_invert_horizontal_swipes_title">Invertovať horizontálne potiahnutia</string>
+    <string name="pref_invert_vertical_swipes_default">falošný</string>
+    <string name="pref_invert_vertical_swipes_key">INVERT_VERTICAL_SWIPES</string>
+    <string name="pref_invert_vertical_swipes_summary">Vymeňte smer potiahnutia prstom nahor a nadol.</string>
+    <string name="pref_invert_vertical_swipes_title">Invertovať vertikálne potiahnutia</string>
+    <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_feedback_summary">Nastavte vybračnú alebo zvukovú spätnú väzbu klávesnice.</string>
     <string name="pref_keyboard_feedback_title">Spätná väzba klávesnice</string>
+    <string name="pref_keyboard_invert_default">falošný</string>
+    <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">Ak sa rozloženie klávesov neotáča podľa orientácii zariadenia, použite toto nastavenie na prevrátenie rozloženia klávesov o 180 stupňov</string>
     <string name="pref_keyboard_invert_title">Obrátiť rozloženie klávesov</string>
+    <string name="pref_keyboard_save_horizontal_landscape_invert_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_landscape_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_horizontal_portrait_invert_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_portrait_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_invert_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE</string>
+    <string name="pref_keyboard_save_tabletop_portrait_invert_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_portrait_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT</string>
+    <string name="pref_keyboard_save_vertical_landscape_invert_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_vertical_landscape_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_vertical_portrait_invert_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_vertical_portrait_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT</string>
+    <string name="pref_keyboard_style_key">KEYBOARD_STYLE</string>
+    <string name="pref_keyboard_style_normal_value">0</string>
+    <string name="pref_keyboard_style_slate_value">1</string>
     <string name="pref_keyboard_style_summary">Predvoľby určujúce umiestnenie bodov na klávesnici.</string>
     <string name="pref_keyboard_style_title">Štýl klávesnice</string>
+    <string name="pref_keyboard_style_top_bottom_value">2</string>
+    <string name="pref_last_calibrated_layout_key">LAST_CALIBRATED_LAYOUT</string>
+    <string name="pref_lock_calibration_default">falošný</string>
+    <string name="pref_lock_calibration_key">LOCK_CALIBRATION</string>
+    <string name="pref_lock_calibration_summary">Zabraňuje pohybu bodiek počas písania a zachováva vlastné rozloženie</string>
+    <string name="pref_lock_calibration_title">Zamknite pozície bodov</string>
+    <string name="pref_manage_tables_summary">Importujte, odstráňte alebo vytvorte vlastné braillovské tabuľky.</string>
+    <string name="pref_manage_tables_title">Spravujte/vytvárajte Braillovo písmo</string>
+    <string name="pref_privacy_default">falošný</string>
+    <string name="pref_privacy_key">SÚKROMIE</string>
     <string name="pref_privacy_summary">Ak je zapnuté, počas písania bude zobrazená len čierna obrazovka na zachovanie súkromia.</string>
     <string name="pref_privacy_title">Súkromná obrazovka</string>
+    <string name="pref_share_log_key">SHARE_LOG</string>
+    <string name="pref_share_log_summary">Zbierajte a zdieľajte systémové denníky na ladenie</string>
+    <string name="pref_share_log_title">Zdieľať denníky</string>
+    <string name="pref_show_circles_default">pravda</string>
+    <string name="pref_show_circles_key">SHOW_CIRCLE_KEY</string>
     <string name="pref_show_circles_summary">Ak je zapnuté, umiestnenie každého bodu Braillovho písma v rozložení klávesov je znázornené malými krúžkami.</string>
     <string name="pref_show_circles_title">Znázorniť body Braillovho písma?</string>
+    <string name="pref_show_ext_tables_default">falošný</string>
+    <string name="pref_show_ext_tables_key">SHOW_EXT_TABLES</string>
+    <string name="pref_show_ext_tables_summary">Zobraziť všetky dostupné tabuľky Liblouis vrátane tých, ktoré spoločnosť Google oficiálne nepodporuje.</string>
+    <string name="pref_show_ext_tables_title">Zobraziť rozšírené tabuľky Liblouis</string>
+    <string name="pref_speech_rate_default">50</string>
+    <string name="pref_speech_rate_key">SPEECH_RATE</string>
+    <string name="pref_speech_rate_summary">Vyberte, ako rýchlo klávesnica hovorí.</string>
+    <string name="pref_speech_rate_title">Rýchlosť reči</string>
+    <string name="pref_swap_swipe_axes_default">falošný</string>
+    <string name="pref_swap_swipe_axes_key">SWAP_SWIPE_AXES</string>
+    <string name="pref_swap_swipe_axes_summary">Interpretujte horizontálne potiahnutia ako vertikálne a naopak.</string>
+    <string name="pref_swap_swipe_axes_title">Vymeňte osi ťahania</string>
+    <string name="pref_swipe_sensitivity_key">SWIPE_SENSITIVITY_KEY</string>
     <string name="pref_swipe_sensitivity_summary">Vyberte citlivosť švihania.</string>
     <string name="pref_swipe_sensitivity_title">Citlivosť švihania</string>
+    <string name="pref_switch_tables_key">SWITCH_TABLES</string>
     <string name="pref_switch_tables_summary">Vybrať jazyky, medzi ktorými je možné rýchlo prepínať počas písania.</string>
     <string name="pref_switch_tables_title">Nastaviť tabuľky Braillovho písma na rýchle prepínanie.</string>
+    <string name="pref_text_to_speech_engine_key">TEXT_TO_SPEECH</string>
     <string name="pref_text_to_speech_engine_title">Hlasový výstup</string>
     <string name="pref_text_to_speech_title">Nastavenia prevodu textu na reč</string>
+    <string name="pref_two_hand_calibration_default">pravda</string>
+    <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
+    <string name="pref_two_hand_calibration_summary">Umožnite kalibráciu klávesnice dvoma samostatnými dotykmi.</string>
+    <string name="pref_two_hand_calibration_title">Dvojdotyková kalibrácia</string>
+    <string name="pref_use_accessibility_volume_default">falošný</string>
+    <string name="pref_use_accessibility_volume_key">USE_ACCESSIBILITY_VOLUME</string>
+    <string name="pref_use_accessibility_volume_summary">Použite hlasitosť dostupnosti pre spätnú väzbu TTS aj WAV.</string>
+    <string name="pref_use_accessibility_volume_title">Použite hlasitosť dostupnosti</string>
+    <string name="pref_use_eight_dots_default">falošný</string>
+    <string name="pref_use_eight_dots_key">USE_EIGHT_DOT</string>
     <string name="pref_use_eight_dots_summary">Ak je zapnuté, pod bodmi 3 a 6 sa zobrazia body 7 a 8.</string>
     <string name="pref_use_eight_dots_title">Zobraziť 8 bodovú klávesnicu</string>
+    <string name="pref_use_wav_default">falošný</string>
+    <string name="pref_use_wav_key">USE_WAV_TTS</string>
+    <string name="pref_use_wav_summary">Použite vopred vygenerované súbory WAV pre jednotlivé znaky namiesto nástroja TTS (rýchlejšie).</string>
+    <string name="pref_use_wav_title">Použite spätnú väzbu WAV</string>
+    <string name="pref_vibrate_on_exit_default">pravda</string>
+    <string name="pref_vibrate_on_exit_key">VIBRATE_EXIT</string>
     <string name="pref_vibrate_on_exit_title">Vybrovať pri zatvorení klávesnice</string>
-    <string name="pref_voice_shortcut_summary">Ak je zapnuté, pri spustenom programe Talkback je možné dvojitým klepnutím a pridržaním spustiť hlasové zadávanie textu.</string> 
+    <string name="pref_voice_shortcut_default">pravda</string>
+    <string name="pref_voice_shortcut_key">VOICE_INPUT_SHORTCUT</string>
+    <string name="pref_voice_shortcut_summary">Ak je zapnuté, pri spustenom programe Talkback je možné dvojitým klepnutím a pridržaním spustiť hlasové zadávanie textu.</string>
     <string name="pref_voice_shortcut_title">Skratka hlasového zadávania textu</string>
+    <string name="preset_caps_sign">Veľké znamenie</string>
+    <string name="preset_cat_acute">Akútny/španielsky (á, ñ...)</string>
+    <string name="preset_cat_base">Základná abeceda (a-z)</string>
+    <string name="preset_cat_circ">Circumflex/francúzština (â, œ...)</string>
+    <string name="preset_cat_control">Kontrolné kódy (6 bodov)</string>
+    <string name="preset_cat_dier">Diaeréza (ä, ë...)</string>
+    <string name="preset_cat_it_accents">Talianske akcenty</string>
+    <string name="preset_cat_math">Matematika a symboly (+, €, ...)</string>
+    <string name="preset_cat_punc">Interpunkcia (štandardná/literárna)</string>
+    <string name="preset_let_sign">Letter Sign</string>
+    <string name="preset_num_sign">Znak čísla</string>
     <string name="privacy_disabled">Súkromná obrazovka vypnutá</string>
     <string name="privacy_enabled">Súkromná obrazovka zapnutá</string>
+    <string name="punctuation_backslash">Opačná lomka</string>
+    <string name="punctuation_close_paren">Zátvorka zatvoriť</string>
+    <string name="punctuation_colon">Dvojbodka</string>
+    <string name="punctuation_comma">Čiarka</string>
+    <string name="punctuation_dot">Bodka</string>
+    <string name="punctuation_double_quote">úvodzovky</string>
+    <string name="punctuation_exclamation">Výkričník</string>
+    <string name="punctuation_left_brace">Zložená zátvorka</string>
+    <string name="punctuation_open_paren">Zátvorka</string>
+    <string name="punctuation_questionmark">Otáznik</string>
+    <string name="punctuation_right_brace">Zložená zatvoriť</string>
+    <string name="punctuation_semicolon">Bodkočiarka</string>
+    <string name="punctuation_single_quote">Apostrof</string>
+    <string name="punctuation_slash">Lomka</string>
+    <string name="punctuation_space">Medzera</string>
     <string name="ready">Klávesnica je pripravená</string>
+    <string name="require_record_audio_now">REQUIRE_RECORD_AUDIO</string>
     <string name="return_key">Enter</string>
     <string name="rotate_keyboard">Otáčať rozloženie klávesov podľa orientácii zariadenia</string>
     <string name="rotate_summary">Ak je zapnuté, rozloženie klávesov sa bude otáčať podľa orientácii zariadenia.</string>
+    <string name="script_arabic">arabčina</string>
+    <string name="script_cyrillic">cyrilika (ruština/slovančina)</string>
+    <string name="script_greek">grécky</string>
+    <string name="script_hebrew">hebrejčina</string>
+    <string name="script_hindi">indická (dévanágarí)</string>
+    <string name="script_korean">kórejčina (hangul)</string>
+    <string name="script_latin">latinčina (európska)</string>
+    <string name="script_thai">thajčina</string>
+    <string name="script_unicode">Iba symboly (Unicode)</string>
+    <string name="script_vietnamese">Vietnamci</string>
     <string name="select_all">Vybrať všetko</string>
     <string name="selected_all">Vybratý celý text</string>
     <string name="set_mark">Značka nastavená</string>
@@ -121,11 +683,41 @@
     <string name="speak_selection">Prečítať výber</string>
     <string name="spellcheck_not_supported">Kontrola preklepov nie je podporovaná v tejto verzii systému Android.</string>
     <string name="start_of_text">začiatok textu</string>
-    <string name="swipe_confirm_input">Švihnite ešte raz ak si želáte zobraziť výber metódy vstupu</string>
     <string name="swipe_confirm">Potvrďte ďalším švihnutím</string>
+    <string name="swipe_confirm_input">Švihnite ešte raz ak si želáte zobraziť výber metódy vstupu</string>
     <string name="swipe_confirm_settings">Švihnite ešte raz ak si želáte zobraziť nastavenia Soft Braille Keyboard</string>
+    <string name="table_header_author">autor:</string>
+    <string name="table_header_desc">Popis:</string>
+    <string name="table_section_base">Základné pravidlá</string>
+    <string name="table_section_high">HIGH PRIORITY</string>
+    <string name="table_section_standard">STANDARD PRIORITY</string>
+    <string name="table_variant_unofficial">Neoficiálne</string>
+    <string name="btn_edit_header">Upraviť hlavičku tabuľky / metadáta</string>
+    <string name="btn_move_to_pos">Presuňte sa na pozíciu</string>
+    <string name="btn_pin_mapping">Mapovanie pinov (ochrana)</string>
+    <string name="btn_unpin_mapping">Odopnúť mapovanie</string>
+    <string name="hint_enter_pos">Zadajte pozíciu (1 až %d)</string>
+    <string name="btn_move_up">Move Up</string>
+    <string name="btn_move_down">Posunúť nadol</string>
+    <string name="btn_move_top">Presunúť na začiatok</string>
+    <string name="btn_insert_alphabet_here">Sem vložte abecedu (%s).</string>
+    <string name="btn_insert_numeric_here">Sem vložte čísla (%s).</string>
+    <string name="title_activity_keyboard_help">Pomocník klávesnice</string>
+    <string name="title_activity_table_creator">Tvorca tabuliek</string>
+    <string name="title_confirm_delete">Potvrďte Odstrániť</string>
+    <string name="title_duplicate_combination">Duplicitná kombinácia</string>
+    <string name="title_mass_actions">Hromadné akcie</string>
+    <string name="title_order_actions">Akcia zmeny poradia</string>
+    <string name="title_select_prefix">Vyberte predponu (napr. bodka 4, 5 alebo 6)</string>
+    <string name="title_select_table_file">Vyberte súbor Braillovej tabuľky</string>
+    <string name="title_select_template">Vyberte položku Šablóna</string>
+    <string name="title_share_table">Zdieľať tabuľku</string>
     <string name="translator_error">Vyskytla sa chyba v súvislosti s prekladovou službou z Braillovho písma</string>
+    <string name="trial_buy">Kúpiť</string>
+    <string name="trial_expired_message">Skúšobná verzia vypršala.</string>
+    <string name="trial_expired_title">Skúšobná verzia vypršala</string>
     <string name="try_box">Klávesnicu odskúšajte písaním do tohoto poľa.</string>
+    <string name="txt_id_practice">TXT_PRACTICE</string>
     <string name="unknown_character">Neznámy znak</string>
     <string name="unset_mark">Nastavená značka zrušená</string>
     <string name="voice_input_enable">Prosím zopakujte toto gesto 2 krát rýchlo za sebou. Zobrazí sa dialógové okno systému, kde pomocou spusteného programu Talkback akceptujte povolenie používať mikrofón, aby správne fungovalo hlasové zadávanie textu.</string>
@@ -133,100 +725,122 @@
     <string name="voice_input_is_not_available">Hlasové zadávanie textu nie je k dispozícii na tomto zariadení.</string>
     <string name="voice_input_permission_message">Pre správne fungovanie hlasového zadávania textu musíte schváliť oprávnenie nahrávania zvuku.</string>
     <string name="voice_input_permission_title">Oprávnenie pre hlasové zadávanie textu</string>
-    <string name="word_correction_misspelled">%s preklep</string>
     <string name="word_correct">Slovo je napísané správne</string>
+    <string name="word_correction_correct">%s správne</string>
+    <string name="word_correction_misspelled">%s preklep</string>
     <string name="word_count">%1$d riadkov, %2$d slov, %3$d znakov</string>
     <string name="word_misspelled">Preklep</string>
-
-    <!-- PUNCTUATION -->
-
-    <!--
-      Source: A value for announcing a question mark.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_questionmark">Otáznik</string>
-
-    <!--
-      Source: A value for announcing a space.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_space">Medzera</string>
-
-    <!--
-      Source: A value for announcing a comma.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_comma">Čiarka</string>
-
-    <!--
-      Source: A value for announcing a dot.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_dot">Bodka</string>
-
-    <!--
-      Source: A value for announcing an exclamation.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_exclamation">Výkričník</string>
-
-    <!--
-      Source: A value for announcing an opening parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_open_paren">Zátvorka</string>
-
-    <!--
-      Source: A value for announcing a closing parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_close_paren">Zátvorka zatvoriť</string>
-
-    <!--
-      Source: A value for announcing a double quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_double_quote">úvodzovky</string>
-
-    <!--
-      Source: A value for announcing a single quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_single_quote">Apostrof</string>
-
-    <!--
-      Source: A value for announcing a slash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_slash">Lomka</string>
-
-    <!--
-      Source: A value for announcing a backslash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_backslash">Opačná lomka</string>
-
-    <!--
-      Source: A value for announcing a semicolon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_semicolon">Bodkočiarka</string>
-
-    <!--
-      Source: A value for announcing a colon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_colon">Dvojbodka</string>
-    
-    <!--
-      Source: A value for announcing a left brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_left_brace">Zložená zátvorka</string>
-    
-    <!--
-      Source: A value for announcing a right brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_right_brace">Zložená zatvoriť</string>
+    <!--  BrailleAction Arrays  -->
+    <string-array name="braille_action_entries">
+        <item>@string/action_none</item>
+        <item>@string/action_move_left_char</item>
+        <item>@string/action_move_right_char</item>
+        <item>@string/action_move_left_word</item>
+        <item>@string/action_move_right_word</item>
+        <item>@string/action_move_left_line</item>
+        <item>@string/action_move_right_line</item>
+        <item>@string/action_move_left_all</item>
+        <item>@string/action_move_right_all</item>
+        <item>@string/action_backspace_char</item>
+        <item>@string/action_backspace_word</item>
+        <item>@string/action_backspace_line</item>
+        <item>@string/action_backspace_all</item>
+        <item>@string/action_read_char</item>
+        <item>@string/action_read_word</item>
+        <item>@string/action_read_line</item>
+        <item>@string/action_read_all</item>
+        <item>@string/action_space</item>
+        <item>@string/action_newline</item>
+        <item>@string/action_voice_input</item>
+        <item>@string/action_toggle_privacy</item>
+        <item>@string/action_toggle_auto_caps</item>
+        <item>@string/action_toggle_echo_passwords</item>
+        <item>@string/action_toggle_mark</item>
+        <item>@string/action_cycle_keyboard_feedback</item>
+        <item>@string/action_cycle_echo_feedback</item>
+        <item>@string/action_switch_braille_type</item>
+        <item>@string/action_switch_braille_table</item>
+        <item>@string/action_open_settings</item>
+        <item>@string/action_open_input_switcher</item>
+        <item>@string/action_close_keyboard</item>
+        <item>@string/action_shrink_keyboard</item>
+        <item>@string/action_word_count</item>
+        <item>@string/action_next_field_action</item>
+        <item>@string/action_select_text_action</item>
+        <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_edit_select_all</item>
+        <item>@string/action_edit_copy</item>
+        <item>@string/action_edit_cut</item>
+        <item>@string/action_edit_paste</item>
+        <item>@string/action_edit_speak</item>
+        <item>@string/action_edit_delete</item>
+        <item>@string/action_spell_check_left</item>
+        <item>@string/action_spell_check_right</item>
+        <item>@string/action_spell_check_next_suggestion</item>
+        <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_abbreviations_no_space</item>
+        <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_toggle_misspelling_sound</item>
+        <item>@string/action_add_to_dictionary</item>
+        <item>@string/action_remove_from_dictionary</item>
+        <item>@string/action_set_dot_7</item>
+        <item>@string/action_set_dot_8</item>
+    </string-array>
+    <string-array name="braille_action_values">
+        <item>NONE</item>
+        <item>MOVE_LEFT_CHAR</item>
+        <item>MOVE_RIGHT_CHAR</item>
+        <item>MOVE_LEFT_WORD</item>
+        <item>MOVE_RIGHT_WORD</item>
+        <item>MOVE_LEFT_LINE</item>
+        <item>MOVE_RIGHT_LINE</item>
+        <item>MOVE_LEFT_ALL</item>
+        <item>MOVE_RIGHT_ALL</item>
+        <item>BACKSPACE_CHAR</item>
+        <item>BACKSPACE_WORD</item>
+        <item>BACKSPACE_LINE</item>
+        <item>BACKSPACE_ALL</item>
+        <item>READ_CHAR</item>
+        <item>READ_WORD</item>
+        <item>READ_LINE</item>
+        <item>READ_ALL</item>
+        <item>SPACE</item>
+        <item>NEWLINE</item>
+        <item>VOICE_INPUT</item>
+        <item>TOGGLE_PRIVACY</item>
+        <item>TOGGLE_AUTO_CAPS</item>
+        <item>TOGGLE_ECHO_PASSWORDS</item>
+        <item>TOGGLE_MARK</item>
+        <item>CYCLE_KEYBOARD_FEEDBACK</item>
+        <item>CYCLE_ECHO_FEEDBACK</item>
+        <item>SWITCH_BRAILLE_TYPE</item>
+        <item>SWITCH_BRAILLE_TABLE</item>
+        <item>OPEN_SETTINGS</item>
+        <item>OPEN_INPUT_SWITCHER</item>
+        <item>CLOSE_KEYBOARD</item>
+        <item>SHRINK_KEYBOARD</item>
+        <item>WORD_COUNT</item>
+        <item>NEXT_FIELD_ACTION</item>
+        <item>SELECT_TEXT_ACTION</item>
+        <item>EMOJI_MODE_TOGGLE</item>
+        <item>EDIT_SELECT_ALL</item>
+        <item>EDIT_COPY</item>
+        <item>EDIT_CUT</item>
+        <item>EDIT_PASTE</item>
+        <item>EDIT_SPEAK</item>
+        <item>EDIT_DELETE</item>
+        <item>SPELL_CHECK_LEFT</item>
+        <item>SPELL_CHECK_RIGHT</item>
+        <item>SPELL_CHECK_NEXT_SUGGESTION</item>
+        <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
+        <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>TOGGLE_MISSPELLING_SOUND</item>
+        <item>ADD_TO_DICTIONARY</item>
+        <item>REMOVE_FROM_DICTIONARY</item>
+        <item>SET_DOT_7</item>
+        <item>SET_DOT_8</item>
+    </string-array>
 </resources>

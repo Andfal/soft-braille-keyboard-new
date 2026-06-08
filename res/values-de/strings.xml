@@ -1,31 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- User interface strings go below here -->
+    <string name="accessibility_service_description">Ermöglicht die ordnungsgemäße Funktion der Soft-Braille-Tastatur, wenn TalkBack aktiv ist, indem ein Bereich erstellt wird, in dem Berührungen nicht vom Bildschirmleser abgefangen werden.</string>
+    <string name="accessibility_service_dialog_message">Um diese Tastatur mit TalkBack zu verwenden, müssen Sie „Soft Braille Keyboard“ in den Eingabehilfeneinstellungen aktivieren. Dadurch kann die Tastatur Ihre Berührungen empfangen, während TalkBack aktiv ist.</string>
+    <string name="accessibility_service_label">Barrierefreiheit der Soft-Braille-Tastatur</string>
+    <string name="action_record_audio_permission">ACTION_RECORD_AUDIO_PERMISSION</string>
     <string name="action_settings">Einstellungen</string>
-    <string name="app_name">Soft Braille Tastatur</string>	<!-- ANNI: Do you want to translate "keyboard"? -->
+    <string name="app_name">Soft Braille Tastatur</string>
     <string name="auto_caps_disabled">Keine automatische Großschreibung</string>
     <string name="auto_caps_enabled">Automatische Großschreibung</string>
     <string name="blank">Leerzeichen</string>
     <string name="braille_ime">Soft Braille Tastatur</string>
+    <string name="btn_move_to_bottom">Nach unten bewegen</string>
+    <string name="label_high_priority_prefix">[H]</string>
+    <string name="btn_add">HINZUFÜGEN</string>
+    <string name="btn_add_anyway">Trotzdem hinzufügen</string>
+    <string name="btn_add_prefix">Präfix hinzufügen...</string>
+    <string name="btn_append_cell">+ Zelle anhängen</string>
+    <string name="btn_cancel">Abbrechen</string>
+    <string name="btn_clear_dots">Klar</string>
+    <string name="btn_clone_table">Klonquelle</string>
+    <string name="btn_create_table">Erstellen Sie eine benutzerdefinierte Tabelle</string>
+    <string name="btn_delete">Löschen</string>
+    <string name="btn_export_system_table">Systemtabelle exportieren</string>
+    <string name="btn_export_original">Original exportieren</string>
+    <string name="btn_export_table">Exportieren Sie Ihre Arbeit</string>
+    <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
+    <string name="btn_id_enable">BTN_ENABLED</string>
+    <string name="btn_import_base_rules">Alle Regeln importieren</string>
+    <string name="btn_import_table">Vorhandene Tabellendatei importieren</string>
+    <string name="btn_import_visual">Regeln importieren</string>
+    <string name="btn_insert_above">Fügen Sie oberhalb dieser Regel ein</string>
+    <string name="btn_load_template">Vorlage laden</string>
+    <string name="btn_ok">Okay</string>
+    <string name="btn_overwrite">Überschreiben / Fortfahren</string>
+    <string name="dialog_overwrite_title">Datei überschreiben?</string>
+    <string name="dialog_overwrite_msg">Die Datei %s existiert bereits. Möchten Sie es überschreiben?</string>
+    <string name="btn_remove_mapping">Entfernen Sie diese Zuordnung</string>
+    <string name="btn_save">SPEICHERN</string>
+    <string name="btn_select_mass">Wählen Sie...</string>
+    <string name="btn_set_cell">Zelle festlegen</string>
+    <string name="btn_sync_folder">Gewähren Sie Ordnerzugriff zum Scannen</string>
+    <string name="btn_update">UPDATE</string>
     <string name="button_choose_default_keyboard">Soft Braille Tastatur als Standard-Tastatur festlegen</string>
     <string name="button_keyboard_settings">Soft Braille Tastatur einschalten</string>
     <string name="button_more_info">Schnellstart-Hilfe lesen</string>
+    <string name="calibration_aborted">Kalibrierung abgebrochen</string>
+    <string name="calibration_init_message">Platzieren Sie 6 oder 8 Finger, um die Kalibrierung sofort durchzuführen, oder berühren Sie die Punkte einzeln, um eine manuelle Kalibrierung durchzuführen</string>
+    <string name="calibration_step">Berühren Sie den Punkt %d</string>
+    <string name="calibration_success">Kalibrierung gespeichert und gesperrt</string>
     <string name="capital">Großes %s</string>
     <string name="closing_keyboard">Tastatur wird geschlossen</string>
+    <string name="confirm_delete_msg">Möchten Sie %s löschen?</string>
+    <string name="confirm_delete_title">Tabelle löschen</string>
     <string name="copied">Kopiert</string>
     <string name="copy_error">Fehler beim Kopieren</string>
+    <string name="custom_table_label_prefix">Benutzerdefiniert:</string>
     <string name="cut_error">Fehler beim Ausschneiden</string>
-    <string name="deleted">%s gelöscht</string>
+    <string name="default_swipe_sensitivity">50</string>
     <string name="delete_selection">Auswahl löschen</string>
+    <string name="deleted">%s gelöscht</string>
+    <string name="emoji_count_summary">%1$s, %2$d von %3$d</string>
+    <string name="emoji_inserted">Eingefügt</string>
+    <string name="emoji_no_results">Keine Emoji-Ergebnisse</string>
+    <string name="emoji_no_results_query">Keine Ergebnisse für %s</string>
+    <string name="emoji_no_to_insert">Kein Emoji zum Einfügen</string>
+    <string name="emoji_search_mode_off">Emoji-Suchmodus deaktiviert</string>
+    <string name="emoji_search_mode_on">Emoji-Suchmodus aktiviert (%s)</string>
+    <string name="emoji_search_prefix">Emoji-Suche:</string>
+    <string name="emoji_search_query_empty">Emoji-Suchanfrage leer</string>
     <string name="end_of_text">Textende</string>
+    <string name="error_invalid_file">Ungültiger Dateityp. Wählen Sie .ctb oder .utb</string>
+    <string name="error_no_name">Bitte geben Sie einen Tabellennamen ein</string>
     <string name="expand_keyboard">Einmal hier tippen um die Tastatur auszuklappen</string>
     <string name="expand_keyboard_talkback">Einmal hier tippen um die Tastatur auszuklappen</string>
     <string name="grade">Standard Braille Typ</string>
     <string name="grade_computer">Computer Braille</string>
-    <string name="grade_literary">Literary Braille</string>	<!-- ANNI: Can't find any braille related translation for this -->
-    <string name="grade_table">Typ %s</string>	<!-- ANNI: Same here, not sure if those "grades" exist in German? -->
+    <string name="grade_literary">Literary Braille</string>
+    <string name="grade_table">Typ %s</string>
+    <string name="help_desc_autocorrect">Autokorrektur: Passt die Position oder den Stil dieses Symbols an.</string>
+    <string name="help_desc_bold">Fettgedruckte Modusanzeige.</string>
+    <string name="help_desc_caps_letter">Großschreibungsindikator: Macht den nächsten Buchstaben groß.</string>
+    <string name="help_desc_caps_lock">Feststelltaste: Schreibt das ganze Wort in Großbuchstaben.</string>
+    <string name="help_desc_default">Zuordnung für: %s</string>
+    <string name="help_desc_diacritic">Diakritisches Zeichen: Wird zum Ändern des vorherigen oder nächsten Zeichens verwendet.</string>
+    <string name="help_desc_greek_mode">Wechseln Sie in den griechischen Modus.</string>
+    <string name="help_desc_italic">Kursivmodusanzeige.</string>
+    <string name="help_desc_latin_mode">Wechseln Sie in den lateinischen (internationalen) Modus.</string>
+    <string name="help_desc_numeric">Ordinal-/Numerische Regel: gilt nach einer Zahl.</string>
+    <string name="help_desc_numsign">Nummernzeichen: Startet den numerischen Modus (die folgenden Tasten sind Zahlen).</string>
+    <string name="help_desc_state_change">Interne Statusänderung (beeinflusst die Interpretation der nächsten Schlüssel).</string>
+    <string name="help_desc_underline">Unterstreichungsmodusanzeige.</string>
+    <string name="help_desc_whole_word">Ganzwortkontraktion: Funktioniert nur als eigenständiges Wort.</string>
     <string name="hide_keyboard">Tastatur wird eingeklappt</string>
-    <string name="high">Oben</string>	<!-- ANNI: To what does high refer? -->
+    <!--  Braille Actions  -->
+    <string name="action_none">Keine</string>
+    <string name="action_move_left_char">Bewegen Sie sich zeichenweise nach links</string>
+    <string name="action_move_right_char">Bewegen Sie sich zeichenweise nach rechts</string>
+    <string name="action_move_left_word">Gehen Sie wortweise nach links</string>
+    <string name="action_move_right_word">Bewegen Sie sich wortweise nach rechts</string>
+    <string name="action_move_left_line">Bewegen Sie sich zeilenweise nach links</string>
+    <string name="action_move_right_line">Bewegen Sie sich zeilenweise nach rechts</string>
+    <string name="action_move_left_all">Zum Textanfang wechseln</string>
+    <string name="action_move_right_all">Zum Ende des Textes wechseln</string>
+    <string name="action_backspace_char">Zeichen löschen</string>
+    <string name="action_backspace_word">Wort löschen</string>
+    <string name="action_backspace_line">Zeile löschen</string>
+    <string name="action_backspace_all">Löschen Sie den gesamten Text</string>
+    <string name="action_read_char">Aktuelles Zeichen lesen</string>
+    <string name="action_read_word">Aktuelles Wort lesen</string>
+    <string name="action_read_line">Aktuelle Zeile lesen</string>
+    <string name="action_read_all">Lesen Sie den gesamten Text</string>
+    <string name="action_space">Leerzeichen einfügen</string>
+    <string name="action_newline">Zeilenumbruch einfügen</string>
+    <string name="action_voice_input">Spracheingabe</string>
+    <string name="action_toggle_privacy">Datenschutzmodus umschalten</string>
+    <string name="action_toggle_auto_caps">Automatische Großschreibung umschalten</string>
+    <string name="action_toggle_echo_passwords">Schalten Sie das Sprechen von Passwörtern um</string>
+    <string name="action_toggle_mark">Auswahlmarkierung umschalten</string>
+    <string name="action_cycle_keyboard_feedback">Tastatur-Feedback wechseln (Ton/Vibration)</string>
+    <string name="action_cycle_echo_feedback">Echo-Feedback durchlaufen (Zeichen/Wort/Keine)</string>
+    <string name="action_switch_braille_type">Wechseln Sie zwischen Literatur- und Computerbrailleschrift</string>
+    <string name="action_switch_braille_table">Brailletabelle wechseln</string>
+    <string name="action_open_settings">Öffnen Sie die Tastatureinstellungen</string>
+    <string name="action_open_input_switcher">Eingabemethodenauswahl öffnen</string>
+    <string name="action_close_keyboard">Tastatur schließen</string>
+    <string name="action_shrink_keyboard">Tastatur verkleinern</string>
+    <string name="action_word_count">Wort- und Zeichenzählung</string>
+    <string name="action_next_field_action">Nächstes Feld/Aktion</string>
+    <string name="action_select_text_action">Wählen Sie / Aktion</string>
+    <string name="action_emoji_mode_toggle">Emoji-Suchmodus umschalten</string>
+    <string name="action_edit_select_all">Aktion: Alle auswählen</string>
+    <string name="action_edit_copy">Aktion: Kopieren</string>
+    <string name="action_edit_cut">Aktion: Schneiden</string>
+    <string name="action_edit_paste">Aktion: Einfügen</string>
+    <string name="action_edit_speak">Aktion: Auswahl ansprechen</string>
+    <string name="action_edit_delete">Aktion: Auswahl löschen</string>
+    <string name="action_spell_check_left">Überprüfen Sie die Rechtschreibung des vorherigen Wortes</string>
+    <string name="action_spell_check_right">Überprüfen Sie die Rechtschreibung des nächsten Wortes</string>
+    <string name="action_spell_check_next_suggestion">Nächster Rechtschreibvorschlag</string>
+    <string name="action_spell_check_prev_suggestion">Vorheriger Rechtschreibvorschlag</string>
+    <string name="action_set_dot_7">Geben Sie Punkt 7 ein</string>
+    <string name="action_set_dot_8">Fügen Sie Punkt 8 ein</string>
+    <string name="action_toggle_abbreviations">Abkürzungen mit Leerzeichen umschalten</string>
+    <string name="action_toggle_abbreviations_no_space">Abkürzungen ohne Leerzeichen umschalten</string>
+    <string name="action_toggle_instant_abbreviations">Schalten Sie die sofortige Erweiterung um</string>
+    <string name="action_toggle_misspelling_sound">Schalten Sie die Tonbenachrichtigung bei Rechtschreibfehlern um</string>
+    <string name="action_add_to_dictionary">Wort zum persönlichen Wörterbuch hinzufügen</string>
+    <string name="action_add_to_dictionary_option">%s zum persönlichen Wörterbuch hinzufügen</string>
+    <string name="action_remove_from_dictionary">Wort aus persönlichem Wörterbuch entfernen</string>
+    <string name="action_remove_from_dictionary_option">Entfernen Sie %s aus dem persönlichen Wörterbuch</string>
+    <!--  Abbreviations  -->
+    <string name="pref_abbreviations_title">Abkürzungen</string>
+    <string name="pref_abbreviations_summary">Verwalten Sie die Texterweiterung (mit Leerzeichen, ohne Leerzeichen oder sofort).</string>
+    <string name="pref_abbreviations_instant_title">Sofortige Erweiterung</string>
+    <string name="pref_abbreviations_instant_summary">Ersetzt Tastenkombinationen, sobald sie eingegeben werden.</string>
+    <string name="abbreviations_instant_enabled">Sofortige Erweiterung aktiviert</string>
+    <string name="abbreviations_instant_disabled">Sofortige Erweiterung deaktiviert</string>
+    <string name="pref_abbreviations_enabled_title">Erweiterung ohne Raum</string>
+    <string name="pref_abbreviations_enabled_summary">Ersetzt Verknüpfungen durch Leerzeichen oder gibt sie nur als Modifikatoren ein (es wird kein zusätzliches Leerzeichen eingefügt).</string>
+    <string name="abbreviations_enabled">Abkürzungen mit aktiviertem Leerzeichen</string>
+    <string name="abbreviations_disabled">Abkürzungen ohne Leerzeichen</string>
+    <string name="abbreviations_no_space_enabled">Abkürzungen ohne Leerzeichen</string>
+    <string name="abbreviations_no_space_disabled">Abkürzungen ohne Leerzeichen deaktiviert</string>
+    <string name="title_abbreviation_editor">Abkürzungseditor</string>
+    <string name="hint_shortcut">Abkürzung (z. B. hru oder 6-s)</string>
+    <string name="hint_expansion">Erweiterter Text (z. B. „Wie geht es dir?“)</string>
+    <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
+    <string name="pref_abbreviations_enabled_default">falsch</string>
+    <string name="pref_abbreviations_add_space_title">Erweiterung mit Raum</string>
+    <string name="pref_abbreviations_add_space_summary">Ersetzt Tastenkombinationen durch Leerzeichen oder Eingabetaste und fügt ein Leerzeichen hinzu.</string>
+    <string name="nothing_to_expand">Nichts zu erweitern</string>
+    <!--  Gesture Names  -->
+    <string name="swipe_one_left">Punkt 1: Wischen Sie nach links.</string>
+    <string name="swipe_one_right">Punkt 1: Wischen Sie nach rechts.</string>
+    <string name="swipe_one_up">Punkt 1: Nach oben wischen.</string>
+    <string name="swipe_one_down">Punkt 1: Nach unten wischen.</string>
+    <string name="swipe_two_left">Punkt 2: Wischen Sie nach links.</string>
+    <string name="swipe_two_right">Punkt 2: Wischen Sie nach rechts.</string>
+    <string name="swipe_two_up">Punkt 2: Nach oben wischen.</string>
+    <string name="swipe_two_down">Punkt 2: Nach unten wischen.</string>
+    <string name="swipe_three_left">Punkt 3: Wischen Sie nach links.</string>
+    <string name="swipe_three_right">Punkt 3: Wischen Sie nach rechts.</string>
+    <string name="swipe_three_up">Punkt 3: Nach oben wischen.</string>
+    <string name="swipe_three_down">Punkt 3: Nach unten wischen.</string>
+    <string name="swipe_four_left">Punkt 4: Wischen Sie nach links.</string>
+    <string name="swipe_four_right">Punkt 4: Wischen Sie nach rechts.</string>
+    <string name="swipe_four_up">Punkt 4: Nach oben wischen.</string>
+    <string name="swipe_four_down">Punkt 4: Nach unten wischen.</string>
+    <string name="swipe_five_left">Punkt 5: Wischen Sie nach links.</string>
+    <string name="swipe_five_right">Punkt 5: Wischen Sie nach rechts.</string>
+    <string name="swipe_five_up">Punkt 5: Nach oben wischen.</string>
+    <string name="swipe_five_down">Punkt 5: Nach unten wischen.</string>
+    <string name="swipe_six_left">Punkt 6: Wischen Sie nach links.</string>
+    <string name="swipe_six_right">Punkt 6: Wischen Sie nach rechts.</string>
+    <string name="swipe_six_up">Punkt 6: Nach oben wischen.</string>
+    <string name="swipe_six_down">Punkt 6: Nach unten wischen.</string>
+    <string name="swipe_left_two_down">Links: Zwei Finger nach unten.</string>
+    <string name="swipe_right_two_down">Rechts: Zwei Finger nach unten.</string>
+    <string name="swipe_hold_one_left">Punkt 1: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach links.</string>
+    <string name="swipe_hold_one_right">Punkt 1: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach rechts.</string>
+    <string name="swipe_hold_one_up">Punkt 1: Halten und mit der anderen Hand nach oben wischen.</string>
+    <string name="swipe_hold_one_down">Punkt 1: Halten Sie gedrückt und wischen Sie mit der anderen Hand nach unten.</string>
+    <string name="swipe_hold_two_left">Punkt 2: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach links.</string>
+    <string name="swipe_hold_two_right">Punkt 2: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach rechts.</string>
+    <string name="swipe_hold_two_up">Punkt 2: Halten und mit der anderen Hand nach oben wischen.</string>
+    <string name="swipe_hold_two_down">Punkt 2: Halten Sie gedrückt und wischen Sie mit der anderen Hand nach unten.</string>
+    <string name="swipe_hold_three_left">Punkt 3: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach links.</string>
+    <string name="swipe_hold_three_right">Punkt 3: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach rechts.</string>
+    <string name="swipe_hold_three_up">Punkt 3: Halten und mit der anderen Hand nach oben wischen.</string>
+    <string name="swipe_hold_three_down">Punkt 3: Halten Sie gedrückt und wischen Sie mit der anderen Hand nach unten.</string>
+    <string name="swipe_hold_four_left">Punkt 4: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach links.</string>
+    <string name="swipe_hold_four_right">Punkt 4: Halten Sie gedrückt und wischen Sie mit der anderen Hand nach rechts.</string>
+    <string name="swipe_hold_four_up">Punkt 4: Halten und mit der anderen Hand nach oben wischen.</string>
+    <string name="swipe_hold_four_down">Punkt 4: Halten Sie gedrückt und wischen Sie mit der anderen Hand nach unten.</string>
+    <string name="swipe_hold_five_left">Punkt 5: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach links.</string>
+    <string name="swipe_hold_five_right">Punkt 5: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach rechts.</string>
+    <string name="swipe_hold_five_up">Punkt 5: Mit der anderen Hand gedrückt halten und nach oben wischen.</string>
+    <string name="swipe_hold_five_down">Punkt 5: Halten Sie gedrückt und wischen Sie mit der anderen Hand nach unten.</string>
+    <string name="swipe_hold_six_left">Punkt 6: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach links.</string>
+    <string name="swipe_hold_six_right">Punkt 6: Halten Sie die Taste gedrückt und wischen Sie mit der anderen Hand nach rechts.</string>
+    <string name="swipe_hold_six_up">Punkt 6: Mit der anderen Hand gedrückt halten und nach oben wischen.</string>
+    <string name="swipe_hold_six_down">Punkt 6: Halten Sie gedrückt und wischen Sie mit der anderen Hand nach unten.</string>
+    <!--  Storage Manager (Universal)  -->
+    <string name="label_active_abbreviations">[Aktives Abkürzungswörterbuch]</string>
+    <string name="label_active_gestures">[Schema für aktive Gesten]</string>
+    <string name="msg_confirm_clear_active">Sind Sie sicher, dass Sie alle aktiven Daten von der Tastatur löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.</string>
+    <string name="checkbox_delete_backup_file">Löschen Sie auch die Sicherungsdatei im Soft-Braille-Ordner</string>
+    <string name="btn_setup_sync_folder">Gewähren Sie Ordnerzugriff für die Synchronisierung</string>
+    <string name="title_storage_manager">Speichermanager</string>
+    <string name="btn_create_new_table">Neue Tabelle erstellen</string>
+    <string name="label_file_type_tables">Braille-Tabellen</string>
+    <string name="label_file_type_abbreviations">Abkürzungswörterbuch</string>
+    <string name="label_file_type_gestures">Gestenschema</string>
+    <string name="msg_confirm_import_generic">Möchten Sie diese Ressource importieren? Aktuelle Daten könnten überschrieben werden.</string>
+    <string name="msg_sync_folder">Synchronisierter Ordner</string>
+    <string name="msg_download_folder">Ordner herunterladen</string>
+    <string name="pref_sync_folder_title">Ordnersynchronisierung</string>
+    <string name="pref_sync_folder_summary">Wählen Sie einen Ordner zum Synchronisieren von Tabellen und Backups</string>
+    <!--  Backup & Restore  -->
+    <string name="btn_export">Exportieren</string>
+    <string name="btn_import">Importieren</string>
+    <string name="hint_search_items">Dateien durchsuchen...</string>
+    <string name="btn_export_system">Originaltabelle exportieren</string>
+    <string name="hint_search_tables">Systemtabellen durchsuchen...</string>
+    <string name="title_export_system">Exportieren Sie die Original-Liblouis-Tabelle</string>
+    <string name="label_found_locales">%d Sprachen gefunden</string>
+    <string name="label_auto_selected">Automatisch ausgewählt</string>
+    <string name="label_no_results">Keine Ergebnisse gefunden</string>
+    <string name="hint_search_locale">Sprache suchen...</string>
+    <string name="msg_exported_to">Datei exportiert nach: %s</string>
+    <string name="msg_import_success">Daten erfolgreich importiert!</string>
+    <string name="msg_import_error">Importfehler: %s</string>
+    <string name="title_select_backup">Wählen Sie „Sichern“.</string>
+    <string name="msg_no_backups">Keine Backups in Soft-Braille gefunden.</string>
+    <string name="msg_confirm_import">Aktuelle Daten mit diesem Backup überschreiben?</string>
+    <string name="menu_share">Teilen</string>
+    <string name="menu_delete">Löschen</string>
+    <string name="pref_category_gestures_title">Gestenanpassung</string>
+    <string name="pref_gestures_summary">Weisen Sie Wisch- und Haltegesten Funktionen zu</string>
+    <string name="pref_gestures_title">Gesten anpassen</string>
+    <string name="pref_reset_gestures_title">Gesten auf Standard zurücksetzen</string>
+    <string name="pref_reset_gestures_summary">Stellen Sie die ursprünglichen Gestenzuweisungen wieder her</string>
+    <string name="pref_reset_gestures_confirm">Sind Sie sicher, dass Sie alle Gesten auf ihre Standardzuweisungen zurücksetzen möchten?</string>
+    <string name="pref_export_gestures_title">Gesten exportieren</string>
+    <string name="pref_export_gestures_summary">Speichern Sie Ihre benutzerdefinierte Gestenkarte in einer Datei</string>
+    <string name="pref_import_gestures_title">Gesten importieren</string>
+    <string name="pref_import_gestures_summary">Laden Sie eine Gestenkarte aus einer Datei</string>
+    <string name="pref_gesture_default_format">Standard: %1$s</string>
+    <string name="export_success">Gesten wurden erfolgreich nach %1$s exportiert</string>
+    <string name="export_error">Fehler beim Exportieren von Gesten: %1$s</string>
+    <string name="import_success">Gesten erfolgreich importiert</string>
+    <string name="import_error">Fehler beim Importieren von Gesten: %1$s</string>
+    <string name="import_no_valid_data">In der Datei wurden keine gültigen Gestendaten gefunden</string>
+    <string name="pref_group_single_finger">Wischen mit einem Finger</string>
+    <string name="pref_group_two_fingers">Zwei-Finger-Wischen (nur nach unten)</string>
+    <string name="pref_group_hold_swipe">Halten Sie einen Punkt mit einer Hand und streichen Sie mit der anderen</string>
+    <string name="high">Oben</string>
+    <string name="hint_author">Autor (z. B. Sergio)</string>
+    <string name="hint_char">Char</string>
+    <string name="hint_description">Tabellenbeschreibung</string>
+    <string name="hint_dots_format">Punkte (z. B. 123-45)</string>
+    <string name="hint_enter_dots">Geben Sie Punkte ein (z. B. 123)</string>
+    <string name="hint_search_rules">Zeichen oder Punkte suchen...</string>
+    <string name="hint_table_name">Tabellennamen eingeben (z. B. my_table)</string>
     <string name="info_url">https://docs.google.com/document/d/1OX6yFjkK61VfROdU9uQNxjEZ_QNWxiMnUY_1ECnIyRQ/pub</string>
     <string name="keyboard_auto">Automatisch</string>
     <string name="keyboard_echo_all">Buchstaben und Worte</string>
@@ -33,72 +290,388 @@
     <string name="keyboard_echo_none">Keine</string>
     <string name="keyboard_echo_word">Nur Worte</string>
     <string name="keyboard_error">Tastatur konnte nicht festgelegt werden</string>
-    <string name="keyboard_feedback_none">Keines</string>
-    <string name="keyboard_feedback_vibrate">Nur Vibration</string>
-    <string name="keyboard_feedback_sound">Nur Ton</string>
     <string name="keyboard_feedback_all">Ton und Vibration</string>
+    <string name="keyboard_feedback_none">Keines</string>
+    <string name="keyboard_feedback_sound">Nur Ton</string>
+    <string name="keyboard_feedback_vibrate">Nur Vibration</string>
     <string name="keyboard_full_screen">Tastatur ausgeklappt</string>
+    <string name="keyboard_help_active_table_label">Aktive Tabelle: %s</string>
+    <string name="keyboard_help_dots_hint">Punkte oder Zeichen</string>
+    <string name="keyboard_help_dots_result">Punkte: %1$s</string>
+    <string name="keyboard_help_enter_dots_toast">Bitte geben Sie zur Suche Punkte oder Zeichen ein</string>
+    <string name="keyboard_help_error_no_table">Fehler: Aktive Tabelle nicht gefunden.</string>
+    <string name="keyboard_help_file_not_available">Tabellendatei nicht verfügbar</string>
+    <string name="keyboard_help_how_to_write_title">So schreiben Sie „%1$s“</string>
+    <string name="keyboard_help_instruction">Geben Sie Punkte (z. B. 45) ein, um zu sehen, was sie bewirken, oder ein Zeichen (z. B. A), um zu sehen, wie es geschrieben wird.</string>
+    <string name="keyboard_help_no_results">Keine Ergebnisse für „%s“ gefunden</string>
+    <string name="keyboard_help_pref_summary">Entdecken Sie, was Braillepunkte in der aktuellen Sprache bewirken</string>
+    <string name="keyboard_help_pref_title">Tastaturhilfe (Aktive Tabelle)</string>
+    <string name="keyboard_help_result_line">Zeile %1$d</string>
+    <string name="keyboard_help_search_btn">Suchen</string>
+    <string name="keyboard_help_title">Tastaturhilfe (Aktive Tabelle)</string>
     <string name="keyboard_horizontal">Horizontal</string>
     <string name="keyboard_next_three">Nun bitte die anderen drei Finger auf dem Bildschirm platzieren.</string>
     <string name="keyboard_not_set">Bitte alle sechs Finger auf dem Bildschirm platzieren um die Braille Tastatur einzustellen.</string>
     <string name="keyboard_shrink">Tastatur eingeklappt</string>
+    <string name="keyboard_style_normal">Normal</string>
+    <string name="keyboard_style_slate">Slate- und Stylus-Modus</string>
+    <string name="keyboard_style_top_bottom">Vertauschen Sie die Punkte 1 und 4 mit den Punkten 3 und 6</string>
+    <string name="keyboard_tabletop">Tischplatte</string>
     <string name="keyboard_vertical">Vertikal</string>
-    <string name="low">Unten</string>	<!-- ANNI: To what does low refer? -->
-    <string name="mark_not_set">Die Markierung wurde nicht gesetzt</string>	<!-- ANNI: What kind of mark? -->
-    <string name="medium">Medium</string>	<!-- ANNI: Same as low and high - what does this refer to? -->
+    <string name="label_a_grave">ein Grab</string>
+    <string name="label_arabic">Arabisch</string>
+    <string name="label_auto_link">(Auto-Link)</string>
+    <string name="label_base_script">Basisalphabet/-schrift:</string>
+    <string name="label_base_script_short">Alphabet</string>
+    <string name="label_class_prefix">[KLASSE] Klasse</string>
+    <string name="label_cyrillic">Kyrillisch</string>
+    <string name="label_dot">Punkt %d</string>
+    <string name="label_dots_dialog">Wählen Sie Punkte für diese Zelle aus</string>
+    <string name="label_e_acute">e akut</string>
+    <string name="label_e_grave">e Grab</string>
+    <string name="label_error_prefix">Fehler: %s</string>
+    <string name="label_external_synced">[Extern]</string>
+    <string name="label_found_rules">%1$d Regeln von %2$d gefunden</string>
+    <string name="label_greek">Griechisch</string>
+    <string name="label_hebrew">Hebräisch</string>
+    <string name="label_hindi">Hindi</string>
+    <string name="label_i_grave">ich bin ernst</string>
+    <string name="label_korean">Koreanisch</string>
+    <string name="label_latin">Latein</string>
+    <string name="label_locale">Tabellensprache (Gebietsschema):</string>
+    <string name="label_locale_short">Sprache</string>
+    <string name="label_logic_prefix">[LOGIC]-Kontext</string>
+    <string name="label_long_press_delete">Liste der benutzerdefinierten Tabellen. Drücken Sie lange auf ein Element, um es zu löschen.</string>
+    <string name="label_mapped_items">Zugeordnete Elemente</string>
+    <string name="label_mapped_items_short">Zuordnungen</string>
+    <string name="label_n_mapped_items">%d Elemente zugeordnet (zum Bearbeiten tippen)</string>
+    <string name="label_no_mapped_items">Keine Elemente zugeordnet</string>
+    <string name="label_none">Keine</string>
+    <string name="label_number_system">Nummerierungssystem:</string>
+    <string name="label_number_system_short">Zahlen</string>
+    <string name="label_o_grave">o ernst</string>
+    <string name="label_opcode">Liblouis-Opcode:</string>
+    <string name="label_opcode_short">Regel</string>
+    <string name="label_priority_short">Priorität</string>
+    <string name="label_results_count">Ergebnisse: %d</string>
+    <string name="label_select_all">Wählen Sie „Alle“ aus</string>
+    <string name="label_show_visual_picker">Visuelle Zellenauswahl anzeigen</string>
+    <string name="label_source">Quelle</string>
+    <string name="label_spazio">Raum</string>
+    <string name="label_structure_prefix">[STRUKTUR] einschließen</string>
+    <string name="label_table_locale">Tabellensprache (Gebietsschema):</string>
+    <string name="label_tap_to_edit">Zum Bearbeiten tippen, zum Löschen lange drücken</string>
+    <string name="label_thai">Thailändisch</string>
+    <string name="label_u_grave">Du bist ernst</string>
+    <string name="label_unicode_braille">Unicode-Brailleschrift</string>
+    <string name="label_use_8_dots">Verwenden Sie 8 Punkte (Computerbraille)</string>
+    <string name="label_vietnamese">Vietnamesisch</string>
+    <string name="low">Unten</string>
+    <string name="mark_not_set">Die Markierung wurde nicht gesetzt</string>
+    <string name="medium">Medium</string>
+    <string name="msg_already_bottom">Schon ganz unten</string>
+    <string name="msg_already_top">Schon ganz oben</string>
+    <string name="msg_char_empty">Das Zeichenfeld ist leer</string>
+    <string name="msg_confirm_clone">Aktuelle Liste durch den Inhalt der Quelltabelle ersetzen?</string>
+    <string name="msg_confirm_delete_mass">%d ausgewählte Regeln löschen?</string>
+    <string name="msg_confirm_template">Durch Anwenden einer Vorlage werden aktuelle Zuordnungen gelöscht. Weitermachen?</string>
+    <string name="msg_delete_external">Auch aus externem Ordner löschen</string>
+    <string name="msg_deleted">Gelöscht</string>
+    <string name="msg_duplicate_dots">Die Kombination %1$s wird bereits für „%2$s“ verwendet.</string>
+    <string name="msg_enter_dots">Bitte geben Sie Punkte ein (z. B. 123-45)</string>
+    <string name="msg_invalid_dots_format">Ungültiges Punktformat. Verwenden Sie die Ziffern 1–8, getrennt durch „-“ oder Leerzeichen.</string>
+    <string name="msg_char_required">Diese Regel erfordert ein Zeichen.</string>
+    <string name="msg_dots_required">Bitte geben Sie mindestens ein Punktmuster ein.</string>
+    <string name="msg_error_logs">Fehler beim Verarbeiten von Protokollen</string>
+    <string name="msg_fixed_mapping">Dies ist eine feste Systemzuordnung und kann nicht entfernt werden.</string>
+    <string name="btn_rename">Umbenennen</string>
+    <string name="dialog_export_title">Datei existiert</string>
+    <string name="msg_export_collision">Im Exportordner ist bereits eine Datei mit dem Namen %1$s vorhanden. Was möchten Sie tun?</string>
+    <string name="msg_save_collision">Eine Tabelle mit dem Namen %1$s existiert bereits. Was möchten Sie tun?</string>
+    <string name="msg_export_failed">Export fehlgeschlagen: %1$s</string>
+    <string name="msg_select_mapping_first">Bitte wählen Sie zunächst eine Zuordnung aus der Liste aus.</string>
+    <string name="msg_share_error">Fehler beim Teilen</string>
+    <string name="label_sync_hub">Synchronisierter Hub</string>
+    <string name="msg_hands_overlapping">Hände überlappen sich</string>
+    <string name="hint_enter_new_name">Geben Sie einen neuen Dateinamen ein</string>
+    <string name="msg_imported">%s wurde importiert</string>
+    <string name="msg_invalid_pos">Ungültige Position</string>
+    <string name="msg_logs_cleared">Protokolle erfolgreich gelöscht</string>
+    <string name="msg_no_deletable_rules">Keine löschbaren Regeln gefunden.</string>
+    <string name="msg_rule_removed">Regel entfernt.</string>
+    <string name="msg_rule_found">Vorhandene Regel gefunden</string>
+    <string name="msg_rule_updated">Regel aktualisiert</string>
+    <string name="msg_rule_added">Regel hinzugefügt</string>
+    <string name="msg_rules_filtered">Regeln gefiltert</string>
+    <string name="msg_select_opcode_first">Bitte wählen Sie zuerst eine Regel/einen Opcode aus</string>
+    <string name="msg_select_source_first">Wählen Sie vor dem Klonen eine Quelltabelle aus.</string>
+    <string name="msg_standard_char_override">Standardzeichen des ausgewählten Satzes. Ihre Wahl hat Vorrang.</string>
+    <string name="msg_structure_cloned">Ursprüngliche Struktur in die Liste geklont.</string>
+    <string name="msg_sync_desc">Wählen Sie den Ordner „Soft-Braille“, um dauerhaften Zugriff zu gewähren und darin enthaltene Dateien automatisch zu laden.</string>
+    <string name="msg_sync_error">Fehler beim Anfordern des Ordnerzugriffs.</string>
+    <string name="msg_sync_success">Ordnerzugriff aktiviert!</string>
+    <string name="msg_table_exported">Tabelle nach Download/Soft-Braille exportiert</string>
+    <string name="msg_table_file_not_found">Tabellendatei nicht gefunden.</string>
+    <string name="msg_table_saved">Tabelle erfolgreich gespeichert!</string>
+    <string name="msg_template_applied">Vorlage erfolgreich angewendet!</string>
     <string name="newline">Neue Zeile</string>
-    <string name="no_password_echo">Passwörter nicht vorlesen</string>
     <string name="no_braille_table">Keine Tabellen</string>
+    <string name="no_more_misspellings">Keine Rechtschreibfehler mehr</string>
+    <string name="no_password_echo">Passwörter nicht vorlesen</string>
     <string name="no_rotate_keyboard">Tastatur nicht rotieren</string>
     <string name="no_suggestions">Keine Vorschläge verfügbar</string>
+    <string name="none_selected">--- Keine ausgewählt ---</string>
     <string name="nothing_to_delete">Nichts zu löschen</string>
+    <string name="num_sys_6dot_univocal">Computerbraille (6 Punkte, Antoine-Stil)</string>
+    <string name="num_sys_8dot_computer_lowered">Computerbraille (8 Punkte, abgesenkt, 1=2)</string>
+    <string name="num_sys_8dot_standard">Standard 8-Punkt (Punkt 8 hinzugefügt, 1=18)</string>
+    <string name="num_sys_antoine">Antoine (Punkt 6 + Literatur, 1=16)</string>
+    <string name="num_sys_classic">Klassisch (3456 + a-j, 1=1)</string>
+    <string name="num_sys_dropped">Weggefallene Zahlen (3456 + Niedrig, 1=2)</string>
+    <string name="num_sys_literary">Literatur (G2-Kontext)</string>
+    <string name="num_sys_none">Keine / Manuelle Zuordnungen</string>
+    <string name="opcode_always">Überschreiben (immer)</string>
+    <string name="opcode_begcaps">Beginnen Sie mit Großbuchstaben</string>
+    <string name="opcode_begcapsword">Großgeschriebenes Wort beginnen (begcapsword)</string>
+    <string name="opcode_begnum">Numerisches Präfix</string>
+    <string name="opcode_capsletter">Großbuchstaben (6)</string>
+    <string name="opcode_class">Klasse</string>
+    <string name="opcode_closepunc">Post-Wort-Interpunktion (postpunc)</string>
+    <string name="opcode_context">Kontext</string>
+    <string name="opcode_digit">Ziffer (0-9)</string>
+    <string name="opcode_endcaps">Schluss mit Großbuchstaben</string>
+    <string name="opcode_endcapsword">Endgroßgeschriebenes Wort (Endcapsword)</string>
+    <string name="opcode_endnum">Beenden Sie den numerischen Modus</string>
+    <string name="opcode_include">Einschließen</string>
+    <string name="opcode_letsign">Buchstabenschild (5)</string>
+    <string name="opcode_letter">Allgemeiner Brief</string>
+    <string name="opcode_litdigit">Literarische Ziffer</string>
+    <string name="opcode_lowercase">Kleinbuchstabe</string>
+    <string name="opcode_math">Mathe</string>
+    <string name="opcode_midendnumericmodechars">Suffix/Interner numerischer Wert</string>
+    <string name="opcode_midnum">Zeichen in Zahlen</string>
+    <string name="opcode_numericmodechars">Auslöser im numerischen Modus</string>
+    <string name="opcode_numsign">Nummernschild (3456)</string>
+    <string name="opcode_openpunc">Interpunktion vor dem Wort (prepunc)</string>
+    <string name="opcode_partword">Teil von Word</string>
+    <string name="opcode_punctuation">Interpunktion</string>
+    <string name="opcode_sign">Unterschreiben</string>
+    <string name="opcode_space">Raum</string>
+    <string name="opcode_uppercase">Großbuchstabe</string>
+    <string name="opcode_word">Vollständiges Wort (Kontraktion)</string>
     <string name="pad_horizontal">Horizontales Tastatur-Layout einstellen</string>
+    <string name="pad_tabletop">Stellen Sie die Tastatur auf Tischlayout ein</string>
     <string name="pad_vertical">Vertikales Tastatur-Layout einstellen</string>
     <string name="paste_error">Fehler beim Einfügen des Textes</string>
     <string name="pasted">Eingefügt</string>
+    <string name="pref_app_version_key">APP_VERSION</string>
     <string name="pref_app_version_title">App Version: %s.</string>
+    <string name="pref_auto_caps_default">wahr</string>
+    <string name="pref_auto_caps_key">AUTO_CAPS</string>
     <string name="pref_auto_caps_summary">Erstes Wort im Satz groß schreiben</string>
     <string name="pref_auto_caps_title">Automatische Großschreibung</string>
+    <string name="pref_auto_match_keyboard_default">wahr</string>
+    <string name="pref_auto_match_keyboard_key">Auto_MATCH_KEYBOARD</string>
     <string name="pref_auto_match_keyboard_summary">Tastatur wird anhand der Position der Finger ausgewählt wenn die Tastatur manuell kalibriert wird.</string>
     <string name="pref_auto_match_keyboard_title">Tastatur-Layout wird automatisch anhand der Position der Finger ausgewählt.</string>
-    <string name="pref_braille_grade_summary">Legt den bevorzugten Braille Typ fest.</string> 	<!-- ANNI: Again, not sure what the grade is in German -->
+    <string name="pref_auto_rotate_keyboard_default">falsch</string>
+    <string name="pref_auto_rotate_keyboard_key">Auto_ROTATE_KEYBOARD</string>
+    <string name="pref_braille_computer_table_default">en-US-comp8</string>
+    <string name="pref_braille_computer_table_key">BRAILLE_TABLE_0</string>
+    <string name="pref_braille_grade_summary">Legt den bevorzugten Braille Typ fest.</string>
+    <string name="pref_braille_literary_table_default">de-UEB-g1</string>
+    <string name="pref_braille_literary_table_key">BRAILLE_TABLE_1</string>
+    <string name="pref_braille_table_auto">auto</string>
+    <string name="pref_braille_type_default">1</string>
+    <string name="pref_braille_type_key">BRAILLE_GRADE_KEY</string>
+    <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
+    <string name="pref_category_advanced_title">Erweitert und Protokolle</string>
+    <string name="pref_category_braille_key">BRAILLE_CATEGORY_KEY</string>
     <string name="pref_category_braille_title">Braille Tabellen</string>
+    <string name="pref_category_custom_tables_title">Benutzerdefinierte Braille-Tabellen</string>
+    <string name="pref_category_feedback_key">KEYBOARD_FEEDBACK_Kategorie</string>
     <string name="pref_category_feedback_title">Tastatur-Feedback Einstellungen</string>
+    <string name="pref_category_keyboard_key">KEYBOARD_CATEGORY</string>
     <string name="pref_category_keyboard_title">Tastatur Einstellungen</string>
+    <string name="pref_category_misc_key">VERSCHIEDENES</string>
     <string name="pref_category_misc_title">Sonstige Einstellungen</string>
+    <string name="pref_clear_log_key">CLEAR_LOG</string>
+    <string name="pref_clear_log_summary">Löschen Sie den vorhandenen Logcat-Puffer</string>
+    <string name="pref_clear_log_title">Protokolle löschen</string>
+    <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
     <string name="pref_default_computer_braille_table_summary"></string>
     <string name="pref_default_computer_braille_table_title">Computer Braille Tabelle</string>
+    <string name="pref_default_keyboard_default">0</string>
+    <string name="pref_default_keyboard_key">DEFAULT_KEYBOARD</string>
     <string name="pref_default_keyboard_summary">Standard Tastatur-Layout auswählen</string>
     <string name="pref_default_keyboard_title">Standard Tastatur-Layout</string>
     <string name="pref_default_literary_braille_table_summary"></string>
-    <string name="pref_default_literary_braille_table_title">Literary Braille table</string>	<!-- ANNI: Same as above -->
+    <string name="pref_default_literary_braille_table_title">Literary Braille table</string>
+    <string name="pref_double_space_period_default">wahr</string>
+    <string name="pref_double_space_period_key">DOUBLE_SPACE_PERIOD</string>
     <string name="pref_double_space_period_summary">Doppeltes Wischen des Leerzeichens fügt Punkt und Leerzeichen ein</string>
-    <string name="pref_double_space_period_title">Doppeltes Leerzeichen für Punkt</string>    
+    <string name="pref_double_space_period_title">Doppeltes Leerzeichen für Punkt</string>
+    <string name="pref_echo_feedback_key">KEYBOARD_ECHO</string>
     <string name="pref_echo_feedback_summary">Art der Tastatur-Wiedergabe auswählen</string>
     <string name="pref_echo_feedback_title">Tastatur-Wiedergabe</string>
+    <string name="pref_echo_misspellings_default">wahr</string>
+    <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
+    <string name="pref_echo_misspellings_summary">Wenn diese Option aktiviert ist, werden Rechtschreibfehler bei der Eingabe eines Leerzeichens angekündigt</string>
+    <string name="pref_echo_misspellings_title">Geben Sie Rechtschreibfehler während der Eingabe wieder</string>
+    <string name="pref_misspelling_sound_default">falsch</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">Spielen Sie bei Rechtschreibfehlern einen Ton ab, anstatt eine stimmliche Rückmeldung zu geben.</string>
+    <string name="pref_misspelling_sound_title">Tonbenachrichtigung bei Rechtschreibfehlern</string>
+    <string name="misspelling_sound_enabled">Tonbenachrichtigung bei Rechtschreibfehlern aktiviert</string>
+    <string name="misspelling_sound_disabled">Tonbenachrichtigung bei Rechtschreibfehlern deaktiviert</string>
+    <string name="word_added_to_dictionary">Wort %s zum persönlichen Wörterbuch hinzugefügt</string>
+    <string name="no_word_to_add">Kein Wort zum Hinzufügen zum Wörterbuch gefunden</string>
+    <string name="word_removed_from_dictionary">Wort %s wurde aus dem persönlichen Wörterbuch entfernt</string>
+    <string name="word_not_in_dictionary">Das Wort %s wurde im persönlichen Wörterbuch nicht gefunden</string>
+    <string name="no_word_to_remove">Kein Wort zum Entfernen aus dem Wörterbuch gefunden</string>
+    <string name="pref_echo_passwords_default">falsch</string>
+    <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
+    <string name="pref_echo_passwords_summary">Eingabe von Passwörtern wird wiedergegeben.</string>
+    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
+    <string name="pref_has_asked_record_audio_key">RECORD_AUDIO</string>
+    <string name="pref_invert_horizontal_swipes_default">falsch</string>
+    <string name="pref_invert_horizontal_swipes_key">INVERT_HORIZONTAL_SWIPES</string>
+    <string name="pref_invert_horizontal_swipes_summary">Vertauschen Sie die Wischrichtung nach links und rechts.</string>
+    <string name="pref_invert_horizontal_swipes_title">Horizontale Wischbewegungen umkehren</string>
+    <string name="pref_invert_vertical_swipes_default">falsch</string>
+    <string name="pref_invert_vertical_swipes_key">INVERT_VERTICAL_SWIPES</string>
+    <string name="pref_invert_vertical_swipes_summary">Tauschen Sie die Wischrichtung nach oben und unten aus.</string>
+    <string name="pref_invert_vertical_swipes_title">Vertikale Wischbewegungen umkehren</string>
+    <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_feedback_summary">Art des haptischen und klanglichen Tastatur-Feedbacks wählen.</string>
     <string name="pref_keyboard_feedback_title">Tastatur-Feedback</string>
+    <string name="pref_keyboard_invert_default">falsch</string>
+    <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">Wenn die Tastatur nicht automatisch mit der Orientierung des Gerätes rotiert, diese Einstellung nutzen um die Tastatur um 180 Grad zu drehen.</string>
     <string name="pref_keyboard_invert_title">Tastatur umdrehen</string>
-    <string name="pref_echo_passwords_summary">Eingabe von Passwörtern wird wiedergegeben.</string>
+    <string name="pref_keyboard_save_horizontal_landscape_invert_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_landscape_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_horizontal_portrait_invert_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_portrait_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_invert_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE</string>
+    <string name="pref_keyboard_save_tabletop_portrait_invert_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_portrait_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT</string>
+    <string name="pref_keyboard_save_vertical_landscape_invert_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_vertical_landscape_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_vertical_portrait_invert_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_vertical_portrait_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT</string>
+    <string name="pref_keyboard_style_key">KEYBOARD_STYLE</string>
+    <string name="pref_keyboard_style_normal_value">0</string>
+    <string name="pref_keyboard_style_slate_value">1</string>
+    <string name="pref_keyboard_style_summary">Konfigurieren Sie die Anordnung der Punkte auf der Tastatur.</string>
+    <string name="pref_keyboard_style_title">Tastaturstil</string>
+    <string name="pref_keyboard_style_top_bottom_value">2</string>
+    <string name="pref_last_calibrated_layout_key">LAST_CALIBRATED_LAYOUT</string>
+    <string name="pref_lock_calibration_default">falsch</string>
+    <string name="pref_lock_calibration_key">LOCK_CALIBRATION</string>
+    <string name="pref_lock_calibration_summary">Verhindert, dass sich Punkte während der Eingabe bewegen, und behält das benutzerdefinierte Layout bei</string>
+    <string name="pref_lock_calibration_title">Punktpositionen sperren</string>
+    <string name="pref_manage_tables_summary">Importieren, löschen oder erstellen Sie Ihre eigenen Brailletabellen.</string>
+    <string name="pref_manage_tables_title">Brailletabellen verwalten/erstellen</string>
+    <string name="pref_privacy_default">falsch</string>
+    <string name="pref_privacy_key">DATENSCHUTZ</string>
     <string name="pref_privacy_summary">Schaltet den Bildschirm zum Schutz der Privatsphähre während des Tippens aus.</string>
     <string name="pref_privacy_title">Privatsphähre</string>
+    <string name="pref_share_log_key">SHARE_LOG</string>
+    <string name="pref_share_log_summary">Sammeln und teilen Sie Systemprotokolle zum Debuggen</string>
+    <string name="pref_share_log_title">Protokolle teilen</string>
+    <string name="pref_show_circles_default">wahr</string>
+    <string name="pref_show_circles_key">SHOW_CIRCLE_KEY</string>
     <string name="pref_show_circles_summary">Es werden kleine Kreise an den Positionen der Braille-Punkte angezeigt.</string>
     <string name="pref_show_circles_title">Kreise anzeigen?</string>
+    <string name="pref_show_ext_tables_default">falsch</string>
+    <string name="pref_show_ext_tables_key">SHOW_EXT_TABLES</string>
+    <string name="pref_show_ext_tables_summary">Alle verfügbaren Liblouis-Tabellen anzeigen, einschließlich derjenigen, die nicht offiziell von Google unterstützt werden.</string>
+    <string name="pref_show_ext_tables_title">Erweiterte Liblouis-Tabellen anzeigen</string>
+    <string name="pref_speech_rate_default">50</string>
+    <string name="pref_speech_rate_key">SPEECH_RATE</string>
+    <string name="pref_speech_rate_summary">Wählen Sie, wie schnell die Tastatur spricht.</string>
+    <string name="pref_speech_rate_title">Sprechgeschwindigkeit</string>
+    <string name="pref_swap_swipe_axes_default">falsch</string>
+    <string name="pref_swap_swipe_axes_key">SWAP_SWIPE_AXES</string>
+    <string name="pref_swap_swipe_axes_summary">Interpretieren Sie horizontale Wischbewegungen als vertikale Wischbewegungen und umgekehrt.</string>
+    <string name="pref_swap_swipe_axes_title">Wischachsen tauschen</string>
+    <string name="pref_swipe_sensitivity_key">SWIPE_SENSITIVITY_KEY</string>
     <string name="pref_swipe_sensitivity_summary">Empfindlichkeit von Wisch-Gesten auswählen</string>
     <string name="pref_swipe_sensitivity_title">Wisch-Empfindlichkeit</string>
+    <string name="pref_switch_tables_key">SWITCH_TABLES</string>
     <string name="pref_switch_tables_summary">Sprachen wählen, zwischen denen während des Tippens gewechselt werden kann.</string>
     <string name="pref_switch_tables_title">Direktes Wechseln von Braille Tabellen anschalten.</string>
+    <string name="pref_text_to_speech_engine_key">TEXT_TO_SPEECH</string>
+    <string name="pref_text_to_speech_engine_title">Text-to-Speech-Engine</string>
+    <string name="pref_text_to_speech_title">Text-zu-Sprache-Einstellungen</string>
+    <string name="pref_two_hand_calibration_default">wahr</string>
+    <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
     <string name="pref_two_hand_calibration_summary">Tastatur kann mit zwei einzelnen Berührungen kalibriert werden.</string>
     <string name="pref_two_hand_calibration_title">Zweimaliges Berühren zur Kalibrierung</string>
+    <string name="pref_use_accessibility_volume_default">falsch</string>
+    <string name="pref_use_accessibility_volume_key">USE_ACCESSIBILITY_VOLUME</string>
+    <string name="pref_use_accessibility_volume_summary">Verwenden Sie die Barrierefreiheitslautstärke sowohl für TTS- als auch für WAV-Feedback.</string>
+    <string name="pref_use_accessibility_volume_title">Verwenden Sie die Barrierefreiheitslautstärke</string>
+    <string name="pref_use_eight_dots_default">falsch</string>
+    <string name="pref_use_eight_dots_key">USE_EIGHT_DOT</string>
     <string name="pref_use_eight_dots_summary">Punkte 7 und 8 anzeigen.</string>
     <string name="pref_use_eight_dots_title">Acht-Punkt-Tastatur nutzen</string>
+    <string name="pref_use_wav_default">falsch</string>
+    <string name="pref_use_wav_key">USE_WAV_TTS</string>
+    <string name="pref_use_wav_summary">Verwenden Sie vorgenerierte WAV-Dateien für einzelne Zeichen anstelle der TTS-Engine (schneller).</string>
+    <string name="pref_use_wav_title">Verwenden Sie WAV-Feedback</string>
+    <string name="pref_vibrate_on_exit_default">wahr</string>
+    <string name="pref_vibrate_on_exit_key">VIBRATE_EXIT</string>
+    <string name="pref_vibrate_on_exit_title">Vibrieren Sie, wenn die Tastatur geschlossen wird</string>
+    <string name="pref_voice_shortcut_default">wahr</string>
+    <string name="pref_voice_shortcut_key">VOICE_INPUT_SHORTCUT</string>
+    <string name="pref_voice_shortcut_summary">Wenn diese Option aktiviert ist, tippen Sie zweimal und halten Sie sie gedrückt, um das Sprachdiktieren zu starten, während Talkback aktiviert ist.</string>
+    <string name="pref_voice_shortcut_title">Verknüpfung zur Spracheingabe</string>
+    <string name="preset_caps_sign">Großbuchstaben</string>
+    <string name="preset_cat_acute">Akut/Spanisch (á, ñ...)</string>
+    <string name="preset_cat_base">Basisalphabet (a-z)</string>
+    <string name="preset_cat_circ">Zirkumflex/Französisch (â, œ...)</string>
+    <string name="preset_cat_control">Kontrollcodes (6 Punkte)</string>
+    <string name="preset_cat_dier">Diaeresis (ä, ë...)</string>
+    <string name="preset_cat_it_accents">Italienische Akzente</string>
+    <string name="preset_cat_math">Mathematik &amp;amp; Symbole (+, €, ...)</string>
+    <string name="preset_cat_punc">Interpunktion (Standard/Literatur)</string>
+    <string name="preset_let_sign">Briefzeichen</string>
+    <string name="preset_num_sign">Zahlenzeichen</string>
     <string name="privacy_disabled">Privatsphähre-Bildschirm aus</string>
     <string name="privacy_enabled">Privatsphähre-Bildschirm an</string>
+    <string name="punctuation_backslash">Rückstrich</string>
+    <string name="punctuation_close_paren">Schließende runde Klammer</string>
+    <string name="punctuation_colon">Doppelpunkt</string>
+    <string name="punctuation_comma">Komma</string>
+    <string name="punctuation_dot">Punkt</string>
+    <string name="punctuation_double_quote">Anführungszeichen</string>
+    <string name="punctuation_exclamation">Ausrufezeichen</string>
+    <string name="punctuation_left_brace">Linke Klammer</string>
+    <string name="punctuation_open_paren">Öffnende runde Klammer</string>
+    <string name="punctuation_questionmark">Fragezeichen</string>
+    <string name="punctuation_right_brace">Rechte Klammer</string>
+    <string name="punctuation_semicolon">Semikolon</string>
+    <string name="punctuation_single_quote">Hochkomma</string>
+    <string name="punctuation_slash">Schrägstrich</string>
+    <string name="punctuation_space">Leerzeichen</string>
     <string name="ready">Tastatur bereit</string>
-    <string name="return_key">Enter</string> <!-- Return as in "Return key" on a keyboard? -->
+    <string name="require_record_audio_now">REQUIRE_RECORD_AUDIO</string>
+    <string name="return_key">Enter</string>
     <string name="rotate_keyboard">Tastatur nach Gerät-Orientierung ausrichten</string>
     <string name="rotate_summary">Die Tastatur wird anhand der Orientierung des Gerätes rotiert.</string>
+    <string name="script_arabic">Arabisch</string>
+    <string name="script_cyrillic">Kyrillisch (Russisch/Slawisch)</string>
+    <string name="script_greek">Griechisch</string>
+    <string name="script_hebrew">Hebräisch</string>
+    <string name="script_hindi">Indisch (Devanagari)</string>
+    <string name="script_korean">Koreanisch (Hangul)</string>
+    <string name="script_latin">Latein (europäisch)</string>
+    <string name="script_thai">Thailändisch</string>
+    <string name="script_unicode">Nur Symbole (Unicode)</string>
+    <string name="script_vietnamese">Vietnamesisch</string>
     <string name="select_all">Alles auswählen</string>
     <string name="selected_all">Alles ausgewählt</string>
     <string name="set_mark">Markierung gesetzt</string>
@@ -108,108 +681,166 @@
     <string name="space">Leerzeichen</string>
     <string name="speak_passwords">Passwörter wiedergeben</string>
     <string name="speak_selection">Auswahl wiedergeben</string>
+    <string name="spellcheck_not_supported">Die Rechtschreibprüfung wird in dieser Android-Version nicht unterstützt.</string>
     <string name="start_of_text">Beginn des Textes</string>
     <string name="swipe_confirm">Zum Bestätigen erneut wischen</string>
     <string name="swipe_confirm_input">Erneut wischen um den Bildschirm zur Tastatur-Auswahl anzuzeigen</string>
-    <string name="swipe_confirm_settings">Erneut wischen um Soft Braille Tastatur Einstellungen anzuzeigen</string> <!-- ANNI: I think you have a typo in your English version: "two" should be "to" -->
+    <string name="swipe_confirm_settings">Erneut wischen um Soft Braille Tastatur Einstellungen anzuzeigen</string>
+    <string name="table_header_author">Autor:</string>
+    <string name="table_header_desc">Beschreibung:</string>
+    <string name="table_section_base">Grundregeln</string>
+    <string name="table_section_high">HIGH PRIORITY</string>
+    <string name="table_section_standard">STANDARD PRIORITY</string>
+    <string name="table_variant_unofficial">Inoffiziell</string>
+    <string name="btn_edit_header">Tabellenkopf/Metadaten bearbeiten</string>
+    <string name="btn_move_to_pos">Zur Position bewegen</string>
+    <string name="btn_pin_mapping">Pin-Zuordnung (schützen)</string>
+    <string name="btn_unpin_mapping">Zuordnung lösen</string>
+    <string name="hint_enter_pos">Position eingeben (1 bis %d)</string>
+    <string name="btn_move_up">Nach oben bewegen</string>
+    <string name="btn_move_down">Nach unten bewegen</string>
+    <string name="btn_move_top">Nach oben verschieben</string>
+    <string name="btn_insert_alphabet_here">Fügen Sie hier das Alphabet (%s) ein</string>
+    <string name="btn_insert_numeric_here">Fügen Sie hier Zahlen (%s) ein</string>
+    <string name="title_activity_keyboard_help">Tastaturhilfe</string>
+    <string name="title_activity_table_creator">Tabellenersteller</string>
+    <string name="title_confirm_delete">Bestätigen Sie Löschen</string>
+    <string name="title_duplicate_combination">Doppelte Kombination</string>
+    <string name="title_mass_actions">Massenaktionen</string>
+    <string name="title_order_actions">Aktion neu anordnen</string>
+    <string name="title_select_prefix">Präfix auswählen (z. B. Punkt 4, 5 oder 6)</string>
+    <string name="title_select_table_file">Wählen Sie die Braille-Tabellendatei aus</string>
+    <string name="title_select_template">Wählen Sie Vorlage aus</string>
+    <string name="title_share_table">Tabelle teilen</string>
     <string name="translator_error">Es ist ein Problem bezüglich des Braille-Services aufgetreten</string>
     <string name="trial_buy">Kaufen</string>
     <string name="trial_expired_message">Test-Phase ist abgelaufen. Wenn Sie die App weiterhin nutzen möchten, laden Sie sie aus dem Google Play Store herunter oder kontaktieren Sie den App-Entwickler Daniel Dalton per Email: daniel.dalton10@gmail.com, um eine verbesserte Test-Versioin zu erhalten.\nVielen Dank für das Testen der Beta-Version!</string>
     <string name="trial_expired_title">Test-Phase abgelaufen</string>
     <string name="try_box">Probieren Sie das Tippen mit der Tastatur hier aus.</string>
+    <string name="txt_id_practice">TXT_PRACTICE</string>
     <string name="unknown_character">Unbekanntes Zeichen</string>
     <string name="unset_mark">Markierung nicht gesetzt</string>
+    <string name="voice_input_enable">Bitte führen Sie diese Geste zweimal schnell aus. Es wird ein Dialog angezeigt. Verwenden Sie Talkback, um die Erlaubnis zu akzeptieren, sodass die Spracheingabe funktioniert.</string>
+    <string name="voice_input_error">Bei der Spracheingabe-Engine ist ein Fehler aufgetreten, Code: %d</string>
+    <string name="voice_input_is_not_available">Die Spracheingabe ist auf dem Gerät nicht verfügbar.</string>
+    <string name="voice_input_permission_message">Sie müssen die Berechtigung zum Aufzeichnen von Audio aktivieren, damit die Spracheingabe funktioniert.</string>
+    <string name="voice_input_permission_title">Berechtigung zur Spracheingabe</string>
+    <string name="word_correct">Das Wort ist richtig</string>
+    <string name="word_correction_correct">%s richtig</string>
+    <string name="word_correction_misspelled">%s falsch geschrieben</string>
     <string name="word_count">%1$d Zeilen, %2$d Wörter, %3$d Zeichen</string>
-
-    <!-- PUNCTUATION -->
-
-    <!--
-      Source: A value for announcing a question mark.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_questionmark">Fragezeichen</string>
-
-    <!--
-      Source: A value for announcing a space.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_space">Leerzeichen</string>
-
-    <!--
-      Source: A value for announcing a comma.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_comma">Komma</string>
-
-    <!--
-      Source: A value for announcing a dot.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_dot">Punkt</string>
-
-    <!--
-      Source: A value for announcing an exclamation.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_exclamation">Ausrufezeichen</string>
-
-    <!--
-      Source: A value for announcing an opening parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_open_paren">Öffnende runde Klammer</string>
-
-    <!--
-      Source: A value for announcing a closing parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_close_paren">Schließende runde Klammer</string>
-
-    <!--
-      Source: A value for announcing a double quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_double_quote">Anführungszeichen</string>
-
-    <!--
-      Source: A value for announcing a single quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_single_quote">Hochkomma</string>
-
-    <!--
-      Source: A value for announcing a slash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_slash">Schrägstrich</string>
-
-    <!--
-      Source: A value for announcing a backslash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_backslash">Rückstrich</string>
-
-    <!--
-      Source: A value for announcing a semicolon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_semicolon">Semikolon</string>
-
-    <!--
-      Source: A value for announcing a colon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_colon">Doppelpunkt</string>
-    
-    <!--
-      Source: A value for announcing a left brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_left_brace">Linke Klammer</string>	<!-- ANNI: Not sure what the difference is between this and paren above -->
-    
-    <!--
-      Source: A value for announcing a right brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_right_brace">Rechte Klammer</string>
+    <string name="word_misspelled">Falsch geschrieben</string>
+    <!--  BrailleAction Arrays  -->
+    <string-array name="braille_action_entries">
+        <item>@string/action_none</item>
+        <item>@string/action_move_left_char</item>
+        <item>@string/action_move_right_char</item>
+        <item>@string/action_move_left_word</item>
+        <item>@string/action_move_right_word</item>
+        <item>@string/action_move_left_line</item>
+        <item>@string/action_move_right_line</item>
+        <item>@string/action_move_left_all</item>
+        <item>@string/action_move_right_all</item>
+        <item>@string/action_backspace_char</item>
+        <item>@string/action_backspace_word</item>
+        <item>@string/action_backspace_line</item>
+        <item>@string/action_backspace_all</item>
+        <item>@string/action_read_char</item>
+        <item>@string/action_read_word</item>
+        <item>@string/action_read_line</item>
+        <item>@string/action_read_all</item>
+        <item>@string/action_space</item>
+        <item>@string/action_newline</item>
+        <item>@string/action_voice_input</item>
+        <item>@string/action_toggle_privacy</item>
+        <item>@string/action_toggle_auto_caps</item>
+        <item>@string/action_toggle_echo_passwords</item>
+        <item>@string/action_toggle_mark</item>
+        <item>@string/action_cycle_keyboard_feedback</item>
+        <item>@string/action_cycle_echo_feedback</item>
+        <item>@string/action_switch_braille_type</item>
+        <item>@string/action_switch_braille_table</item>
+        <item>@string/action_open_settings</item>
+        <item>@string/action_open_input_switcher</item>
+        <item>@string/action_close_keyboard</item>
+        <item>@string/action_shrink_keyboard</item>
+        <item>@string/action_word_count</item>
+        <item>@string/action_next_field_action</item>
+        <item>@string/action_select_text_action</item>
+        <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_edit_select_all</item>
+        <item>@string/action_edit_copy</item>
+        <item>@string/action_edit_cut</item>
+        <item>@string/action_edit_paste</item>
+        <item>@string/action_edit_speak</item>
+        <item>@string/action_edit_delete</item>
+        <item>@string/action_spell_check_left</item>
+        <item>@string/action_spell_check_right</item>
+        <item>@string/action_spell_check_next_suggestion</item>
+        <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_abbreviations_no_space</item>
+        <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_toggle_misspelling_sound</item>
+        <item>@string/action_add_to_dictionary</item>
+        <item>@string/action_remove_from_dictionary</item>
+        <item>@string/action_set_dot_7</item>
+        <item>@string/action_set_dot_8</item>
+    </string-array>
+    <string-array name="braille_action_values">
+        <item>NONE</item>
+        <item>MOVE_LEFT_CHAR</item>
+        <item>MOVE_RIGHT_CHAR</item>
+        <item>MOVE_LEFT_WORD</item>
+        <item>MOVE_RIGHT_WORD</item>
+        <item>MOVE_LEFT_LINE</item>
+        <item>MOVE_RIGHT_LINE</item>
+        <item>MOVE_LEFT_ALL</item>
+        <item>MOVE_RIGHT_ALL</item>
+        <item>BACKSPACE_CHAR</item>
+        <item>BACKSPACE_WORD</item>
+        <item>BACKSPACE_LINE</item>
+        <item>BACKSPACE_ALL</item>
+        <item>READ_CHAR</item>
+        <item>READ_WORD</item>
+        <item>READ_LINE</item>
+        <item>READ_ALL</item>
+        <item>SPACE</item>
+        <item>NEWLINE</item>
+        <item>VOICE_INPUT</item>
+        <item>TOGGLE_PRIVACY</item>
+        <item>TOGGLE_AUTO_CAPS</item>
+        <item>TOGGLE_ECHO_PASSWORDS</item>
+        <item>TOGGLE_MARK</item>
+        <item>CYCLE_KEYBOARD_FEEDBACK</item>
+        <item>CYCLE_ECHO_FEEDBACK</item>
+        <item>SWITCH_BRAILLE_TYPE</item>
+        <item>SWITCH_BRAILLE_TABLE</item>
+        <item>OPEN_SETTINGS</item>
+        <item>OPEN_INPUT_SWITCHER</item>
+        <item>CLOSE_KEYBOARD</item>
+        <item>SHRINK_KEYBOARD</item>
+        <item>WORD_COUNT</item>
+        <item>NEXT_FIELD_ACTION</item>
+        <item>SELECT_TEXT_ACTION</item>
+        <item>EMOJI_MODE_TOGGLE</item>
+        <item>EDIT_SELECT_ALL</item>
+        <item>EDIT_COPY</item>
+        <item>EDIT_CUT</item>
+        <item>EDIT_PASTE</item>
+        <item>EDIT_SPEAK</item>
+        <item>EDIT_DELETE</item>
+        <item>SPELL_CHECK_LEFT</item>
+        <item>SPELL_CHECK_RIGHT</item>
+        <item>SPELL_CHECK_NEXT_SUGGESTION</item>
+        <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
+        <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>TOGGLE_MISSPELLING_SOUND</item>
+        <item>ADD_TO_DICTIONARY</item>
+        <item>REMOVE_FROM_DICTIONARY</item>
+        <item>SET_DOT_7</item>
+        <item>SET_DOT_8</item>
+    </string-array>
 </resources>
