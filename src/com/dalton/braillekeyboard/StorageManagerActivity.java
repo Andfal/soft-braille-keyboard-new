@@ -242,7 +242,11 @@ public class StorageManagerActivity extends Activity {
     }
 
     private void exportSpecificSystemTable(String fileName) {
-        File tableDir = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables");
+        Context storageContext = getApplicationContext();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = storageContext.createDeviceProtectedStorageContext();
+        }
+        File tableDir = new File(storageContext.getDir("translator", MODE_PRIVATE), "liblouis/tables");
         File sourceFile = new File(tableDir, fileName);
         if (!sourceFile.exists()) { Toast.makeText(this, R.string.msg_table_file_not_found, 0).show(); return; }
         try {

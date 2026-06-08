@@ -144,7 +144,7 @@ public class KeyboardHelpActivity extends Activity {
         String fileName = tableList.getFileName(tableId);
         
         if (fileName != null) {
-            File baseDir = getDir("translator", MODE_PRIVATE);
+            File baseDir = storageContext.getDir("translator", MODE_PRIVATE);
             File tablesDir = new File(baseDir, "liblouis/tables");
             File tableFile = new File(tablesDir, fileName);
             mActiveTablePath = tableFile.getAbsolutePath();

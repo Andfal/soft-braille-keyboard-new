@@ -482,8 +482,8 @@ public class SpellChecker {
             if (isUserDictWord) {
                 results.add("##REMOVE_FROM_DICTIONARY##");
             } else {
-                results.add("##ADD_TO_DICTIONARY##");
                 results.add("##REMOVE_FROM_DICTIONARY##");
+                results.add("##ADD_TO_DICTIONARY##");
             }
             results.add(word);
             current = results.indexOf(word);

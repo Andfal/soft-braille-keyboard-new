@@ -78,7 +78,11 @@ public class TranslatorService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mTableList = new TableList(this);
+        android.content.Context storageContext = this;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = createDeviceProtectedStorageContext();
+        }
+        mTableList = new TableList(storageContext);
         extractDataFiles();
         
         IntentFilter filter = new IntentFilter(ACTION_TABLE_UPDATED);
@@ -104,14 +108,17 @@ public class TranslatorService extends Service {
     }
 
     private void extractDataFiles() {
-
-        File baseDir = getDir("translator", MODE_PRIVATE);
+        android.content.Context storageContext = this;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = createDeviceProtectedStorageContext();
+        }
+        File baseDir = storageContext.getDir("translator", MODE_PRIVATE);
         // Do not clear directory every time if we want to preserve files, 
         // but here it's for system tables extracted from APK.
         clearDirectory(baseDir);
         
         ZipResourceExtractor extractor = new ZipResourceExtractor(
-            this, R.raw.translationtables, baseDir) {
+            storageContext, R.raw.translationtables, baseDir) {
             @Override
             protected void onPostExecute(Integer result) {
                 synchronized (TranslatorService.this) {
@@ -189,7 +196,11 @@ public class TranslatorService extends Service {
     }
 
     private String getTablePath(String tableName) {
-        File baseDir = getDir("translator", MODE_PRIVATE);
+        android.content.Context storageContext = this;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = createDeviceProtectedStorageContext();
+        }
+        File baseDir = storageContext.getDir("translator", MODE_PRIVATE);
         File tablesDir = new File(baseDir, "liblouis/tables");
         if (tableName.startsWith("/")) {
             // It's a custom table path. To allow Liblouis to find includes (UTIs)

@@ -23,7 +23,12 @@ public class CustomTableManager {
     private final Map<String, String> mTableFileNames = new HashMap<>();
 
     public CustomTableManager(Context context) {
-        mCustomDir = new File(context.getFilesDir(), CUSTOM_TABLE_DIR);
+        Context storageContext = context.getApplicationContext();
+        if (storageContext == null) storageContext = context;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = storageContext.createDeviceProtectedStorageContext();
+        }
+        mCustomDir = new File(storageContext.getFilesDir(), CUSTOM_TABLE_DIR);
         if (!mCustomDir.exists()) {
             mCustomDir.mkdirs();
         }
