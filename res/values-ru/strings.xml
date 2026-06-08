@@ -318,7 +318,7 @@
     <string name="keyboard_style_top_bottom">Поменять точки 1 и 4 местами с точками 3 и 6</string>
     <string name="keyboard_tabletop">Столешница</string>
     <string name="keyboard_vertical">Вертикальная</string>
-    <string name="label_a_grave">могила</string>
+    <string name="label_a_grave">а гравис</string>
     <string name="label_arabic">арабский</string>
     <string name="label_auto_link">(автоссылка)</string>
     <string name="label_base_script">Базовый алфавит/скрипт:</string>
@@ -328,14 +328,14 @@
     <string name="label_dot">Точка %d</string>
     <string name="label_dots_dialog">Выберите точки для этой ячейки</string>
     <string name="label_e_acute">е острый</string>
-    <string name="label_e_grave">е могила</string>
+    <string name="label_e_grave">е гравис</string>
     <string name="label_error_prefix">Ошибка: %s</string>
     <string name="label_external_synced">[Внешний]</string>
     <string name="label_found_rules">Найдено %1$d правил из %2$d</string>
     <string name="label_greek">Греческий</string>
     <string name="label_hebrew">иврит</string>
     <string name="label_hindi">Хинди</string>
-    <string name="label_i_grave">я серьезен</string>
+    <string name="label_i_grave">и гравис</string>
     <string name="label_korean">корейский</string>
     <string name="label_latin">латынь</string>
     <string name="label_locale">Язык таблицы (локаль):</string>
@@ -349,7 +349,7 @@
     <string name="label_none">Нет</string>
     <string name="label_number_system">Система нумерации:</string>
     <string name="label_number_system_short">Числа</string>
-    <string name="label_o_grave">о могила</string>
+    <string name="label_o_grave">о гравис</string>
     <string name="label_opcode">Код операции Либлуи:</string>
     <string name="label_opcode_short">Правило</string>
     <string name="label_priority_short">Приоритет</string>
@@ -362,7 +362,7 @@
     <string name="label_table_locale">Язык таблицы (локаль):</string>
     <string name="label_tap_to_edit">Нажмите, чтобы изменить, нажмите и удерживайте, чтобы удалить</string>
     <string name="label_thai">тайский</string>
-    <string name="label_u_grave">ты могила</string>
+    <string name="label_u_grave">у гравис</string>
     <string name="label_unicode_braille">Юникод Брайля</string>
     <string name="label_use_8_dots">Используйте 8 точек (компьютерный шрифт Брайля)</string>
     <string name="label_vietnamese">вьетнамский</string>

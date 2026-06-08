@@ -113,7 +113,7 @@
     <string name="keyboard_echo_character">Carattere</string>
     <string name="keyboard_echo_none">Nessuno</string>
     <string name="keyboard_echo_word">Parola</string>
-    <string name="keyboard_error">Impossibile calibrare la tastiera.</string>
+    <string name="keyboard_error">Impossibile impostare la tastiera.</string>
     <string name="keyboard_feedback_all">Suono e vibrazione</string>
     <string name="keyboard_feedback_none">Nessuno</string>
     <string name="keyboard_feedback_sound">Solo suono</string>

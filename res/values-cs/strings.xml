@@ -318,7 +318,7 @@
     <string name="keyboard_style_top_bottom">Prohodit body 1 a 4 s body 3 a 6</string>
     <string name="keyboard_tabletop">Stolní deska</string>
     <string name="keyboard_vertical">Svislé</string>
-    <string name="label_a_grave">hrob</string>
+    <string name="label_a_grave">a gravis</string>
     <string name="label_arabic">arabština</string>
     <string name="label_auto_link">(automatické propojení)</string>
     <string name="label_base_script">Základní abeceda / skript:</string>
@@ -328,14 +328,14 @@
     <string name="label_dot">Tečka %d</string>
     <string name="label_dots_dialog">Vyberte tečky pro tuto buňku</string>
     <string name="label_e_acute">e akutní</string>
-    <string name="label_e_grave">e hrob</string>
+    <string name="label_e_grave">e gravis</string>
     <string name="label_error_prefix">Chyba: %s</string>
     <string name="label_external_synced">[Externí]</string>
     <string name="label_found_rules">Nalezeno %1$d pravidel z %2$d</string>
     <string name="label_greek">řečtina</string>
     <string name="label_hebrew">hebrejština</string>
     <string name="label_hindi">hindština</string>
-    <string name="label_i_grave">já hrob</string>
+    <string name="label_i_grave">i gravis</string>
     <string name="label_korean">korejský</string>
     <string name="label_latin">latina</string>
     <string name="label_locale">Jazyk tabulky (místní nastavení):</string>
@@ -349,7 +349,7 @@
     <string name="label_none">žádný</string>
     <string name="label_number_system">Systém číslování:</string>
     <string name="label_number_system_short">Čísla</string>
-    <string name="label_o_grave">o hrob</string>
+    <string name="label_o_grave">o gravis</string>
     <string name="label_opcode">Liblouis Opcode:</string>
     <string name="label_opcode_short">Pravidlo</string>
     <string name="label_priority_short">Priorita</string>
@@ -362,7 +362,7 @@
     <string name="label_table_locale">Jazyk tabulky (místní nastavení):</string>
     <string name="label_tap_to_edit">Klepnutím upravíte, dlouhým stisknutím smažete</string>
     <string name="label_thai">thajština</string>
-    <string name="label_u_grave">u hrobu</string>
+    <string name="label_u_grave">u gravis</string>
     <string name="label_unicode_braille">Unicode Braillovo písmo</string>
     <string name="label_use_8_dots">Použít 8 bodů (počítačové Braillovo písmo)</string>
     <string name="label_vietnamese">Vietnamci</string>

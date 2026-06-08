@@ -318,7 +318,7 @@
     <string name="keyboard_style_top_bottom">Trocar os pontos 1 e 4 com os pontos 3 e 6</string>
     <string name="keyboard_tabletop">Mesa</string>
     <string name="keyboard_vertical">Vertical</string>
-    <string name="label_a_grave">um túmulo</string>
+    <string name="label_a_grave">a grave</string>
     <string name="label_arabic">Árabe</string>
     <string name="label_auto_link">(link automático)</string>
     <string name="label_base_script">Alfabeto / script básico:</string>
@@ -328,14 +328,14 @@
     <string name="label_dot">Ponto %d</string>
     <string name="label_dots_dialog">Selecione pontos para esta célula</string>
     <string name="label_e_acute">e agudo</string>
-    <string name="label_e_grave">e sepultura</string>
+    <string name="label_e_grave">e grave</string>
     <string name="label_error_prefix">Erro: %s</string>
     <string name="label_external_synced">[Externo]</string>
     <string name="label_found_rules">Foram encontradas %1$d regras de %2$d</string>
     <string name="label_greek">Grego</string>
     <string name="label_hebrew">Hebraico</string>
     <string name="label_hindi">Hindi</string>
-    <string name="label_i_grave">eu sou grave</string>
+    <string name="label_i_grave">i grave</string>
     <string name="label_korean">Coreano</string>
     <string name="label_latin">Latim</string>
     <string name="label_locale">Idioma da tabela (localidade):</string>
@@ -349,7 +349,7 @@
     <string name="label_none">Nenhum</string>
     <string name="label_number_system">Sistema de numeração:</string>
     <string name="label_number_system_short">Números</string>
-    <string name="label_o_grave">ó sepultura</string>
+    <string name="label_o_grave">o grave</string>
     <string name="label_opcode">Código de operação Liblouis:</string>
     <string name="label_opcode_short">Regra</string>
     <string name="label_priority_short">Prioridade</string>
@@ -362,7 +362,7 @@
     <string name="label_table_locale">Idioma da tabela (localidade):</string>
     <string name="label_tap_to_edit">Toque para editar, mantenha pressionado para excluir</string>
     <string name="label_thai">Tailandês</string>
-    <string name="label_u_grave">você é grave</string>
+    <string name="label_u_grave">u grave</string>
     <string name="label_unicode_braille">Braille Unicode</string>
     <string name="label_use_8_dots">Use 8 pontos (Braille de computador)</string>
     <string name="label_vietnamese">Vietnamita</string>

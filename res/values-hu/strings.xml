@@ -318,7 +318,7 @@
     <string name="keyboard_style_top_bottom">Cserélje fel az 1. és 4. pontot a 3. és 6. ponttal</string>
     <string name="keyboard_tabletop">Asztali</string>
     <string name="keyboard_vertical">Függőleges</string>
-    <string name="label_a_grave">egy sír</string>
+    <string name="label_a_grave">a gravis</string>
     <string name="label_arabic">arab</string>
     <string name="label_auto_link">(automatikus link)</string>
     <string name="label_base_script">Alapábécé/Szkript:</string>
@@ -328,14 +328,14 @@
     <string name="label_dot">%d pont</string>
     <string name="label_dots_dialog">Jelöljön ki pontokat ehhez a cellához</string>
     <string name="label_e_acute">e akut</string>
-    <string name="label_e_grave">e sír</string>
+    <string name="label_e_grave">e gravis</string>
     <string name="label_error_prefix">Hiba: %s</string>
     <string name="label_external_synced">[Külső]</string>
     <string name="label_found_rules">%2$d/%1$d szabályt találtunk</string>
     <string name="label_greek">görög</string>
     <string name="label_hebrew">héber</string>
     <string name="label_hindi">hindi</string>
-    <string name="label_i_grave">sírok</string>
+    <string name="label_i_grave">i gravis</string>
     <string name="label_korean">koreai</string>
     <string name="label_latin">latin</string>
     <string name="label_locale">Táblázat nyelve (nyelvi):</string>
@@ -349,7 +349,7 @@
     <string name="label_none">Egyik sem</string>
     <string name="label_number_system">Számozási rendszer:</string>
     <string name="label_number_system_short">Számok</string>
-    <string name="label_o_grave">o sír</string>
+    <string name="label_o_grave">o gravis</string>
     <string name="label_opcode">Liblouis Opcode:</string>
     <string name="label_opcode_short">szabály</string>
     <string name="label_priority_short">Prioritás</string>
@@ -362,7 +362,7 @@
     <string name="label_table_locale">Táblázat nyelve (nyelvi):</string>
     <string name="label_tap_to_edit">Érintse meg a szerkesztéshez, hosszan nyomja meg a törléshez</string>
     <string name="label_thai">thai</string>
-    <string name="label_u_grave">te sírsz</string>
+    <string name="label_u_grave">u gravis</string>
     <string name="label_unicode_braille">Unicode Braille</string>
     <string name="label_use_8_dots">8 pont használata (számítógépes Braille-írás)</string>
     <string name="label_vietnamese">vietnami</string>

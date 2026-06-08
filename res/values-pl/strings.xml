@@ -318,7 +318,7 @@
     <string name="keyboard_style_top_bottom">Zamień punkty 1 i 4 z punktami 3 i 6</string>
     <string name="keyboard_tabletop">Blat</string>
     <string name="keyboard_vertical">Pionowe</string>
-    <string name="label_a_grave">grób</string>
+    <string name="label_a_grave">a gravis</string>
     <string name="label_arabic">Arabski</string>
     <string name="label_auto_link">(autolink)</string>
     <string name="label_base_script">Podstawowy alfabet/skrypt:</string>
@@ -328,14 +328,14 @@
     <string name="label_dot">Kropka %d</string>
     <string name="label_dots_dialog">Wybierz kropki dla tej komórki</string>
     <string name="label_e_acute">e ostry</string>
-    <string name="label_e_grave">grób</string>
+    <string name="label_e_grave">e gravis</string>
     <string name="label_error_prefix">Błąd: %s</string>
     <string name="label_external_synced">[Zewnętrzne]</string>
     <string name="label_found_rules">Znaleziono reguły %1$d z %2$d</string>
     <string name="label_greek">grecki</string>
     <string name="label_hebrew">hebrajski</string>
     <string name="label_hindi">hindi</string>
-    <string name="label_i_grave">grób</string>
+    <string name="label_i_grave">i gravis</string>
     <string name="label_korean">koreański</string>
     <string name="label_latin">łacina</string>
     <string name="label_locale">Język tabeli (Locale):</string>
@@ -349,7 +349,7 @@
     <string name="label_none">Żadne</string>
     <string name="label_number_system">System numeracji:</string>
     <string name="label_number_system_short">Liczby</string>
-    <string name="label_o_grave">o grób</string>
+    <string name="label_o_grave">o gravis</string>
     <string name="label_opcode">Kod Liblouisa:</string>
     <string name="label_opcode_short">Reguła</string>
     <string name="label_priority_short">Priorytet</string>
@@ -362,7 +362,7 @@
     <string name="label_table_locale">Język tabeli (Locale):</string>
     <string name="label_tap_to_edit">Stuknij, aby edytować, naciśnij długo, aby usunąć</string>
     <string name="label_thai">Tajski</string>
-    <string name="label_u_grave">jesteś grobem</string>
+    <string name="label_u_grave">u gravis</string>
     <string name="label_unicode_braille">Unikodowy alfabet Braille’a</string>
     <string name="label_use_8_dots">Użyj 8 punktów (brajl komputerowy)</string>
     <string name="label_vietnamese">wietnamski</string>

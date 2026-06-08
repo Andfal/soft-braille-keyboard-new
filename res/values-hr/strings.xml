@@ -318,7 +318,7 @@
     <string name="keyboard_style_top_bottom">Zamijeni točkice 1 i 4 s točkicama 3 i 6</string>
     <string name="keyboard_tabletop">Stolna ploča</string>
     <string name="keyboard_vertical">Okomito</string>
-    <string name="label_a_grave">grob</string>
+    <string name="label_a_grave">a gravis</string>
     <string name="label_arabic">arapski</string>
     <string name="label_auto_link">(automatsko povezivanje)</string>
     <string name="label_base_script">Osnovna abeceda/skripta:</string>
@@ -328,14 +328,14 @@
     <string name="label_dot">Točka %d</string>
     <string name="label_dots_dialog">Odaberite točke za ovu ćeliju</string>
     <string name="label_e_acute">e akutno</string>
-    <string name="label_e_grave">e grob</string>
+    <string name="label_e_grave">e gravis</string>
     <string name="label_error_prefix">Greška: %s</string>
     <string name="label_external_synced">[Vanjski]</string>
     <string name="label_found_rules">Pronađeno %1$d pravila od %2$d</string>
     <string name="label_greek">grčki</string>
     <string name="label_hebrew">hebrejski</string>
     <string name="label_hindi">hindski</string>
-    <string name="label_i_grave">ja grob</string>
+    <string name="label_i_grave">i gravis</string>
     <string name="label_korean">korejski</string>
     <string name="label_latin">latinski</string>
     <string name="label_locale">Jezik tablice (jezik):</string>
@@ -349,7 +349,7 @@
     <string name="label_none">Nijedan</string>
     <string name="label_number_system">Sustav numeriranja:</string>
     <string name="label_number_system_short">Brojke</string>
-    <string name="label_o_grave">o grobu</string>
+    <string name="label_o_grave">o gravis</string>
     <string name="label_opcode">Liblouisov operativni kod:</string>
     <string name="label_opcode_short">pravilo</string>
     <string name="label_priority_short">Prioritet</string>
@@ -362,7 +362,7 @@
     <string name="label_table_locale">Jezik tablice (jezik):</string>
     <string name="label_tap_to_edit">Dodirnite za uređivanje, dugo pritisnite za brisanje</string>
     <string name="label_thai">tajlandski</string>
-    <string name="label_u_grave">u grobu</string>
+    <string name="label_u_grave">u gravis</string>
     <string name="label_unicode_braille">Unicode Braille</string>
     <string name="label_use_8_dots">Koristite 8 točaka (računalno Brailleovo pismo)</string>
     <string name="label_vietnamese">vijetnamski</string>

@@ -318,7 +318,7 @@
     <string name="keyboard_style_top_bottom">1, 4 點與 3, 6 點對調</string>
     <string name="keyboard_tabletop">桌面式</string>
     <string name="keyboard_vertical">直向</string>
-    <string name="label_a_grave">一座坟墓</string>
+    <string name="label_a_grave">a 钝音符</string>
     <string name="label_arabic">阿拉伯语</string>
     <string name="label_auto_link">（自动链接）</string>
     <string name="label_base_script">基本字母/脚本：</string>
@@ -328,14 +328,14 @@
     <string name="label_dot">点 %d</string>
     <string name="label_dots_dialog">为此单元格选择点</string>
     <string name="label_e_acute">急性</string>
-    <string name="label_e_grave">坟墓</string>
+    <string name="label_e_grave">e 钝音符</string>
     <string name="label_error_prefix">错误：%s</string>
     <string name="label_external_synced">[外部]</string>
     <string name="label_found_rules">找到 %1$d 条规则（共 %2$d 条）</string>
     <string name="label_greek">希腊语</string>
     <string name="label_hebrew">希伯来语</string>
     <string name="label_hindi">印地语</string>
-    <string name="label_i_grave">我坟墓</string>
+    <string name="label_i_grave">i 钝音符</string>
     <string name="label_korean">韩语</string>
     <string name="label_latin">拉丁语</string>
     <string name="label_locale">表语言（区域设置）：</string>
@@ -349,7 +349,7 @@
     <string name="label_none">无</string>
     <string name="label_number_system">编号系统：</string>
     <string name="label_number_system_short">数字</string>
-    <string name="label_o_grave">噢，坟墓</string>
+    <string name="label_o_grave">o 钝音符</string>
     <string name="label_opcode">利布卢操作码：</string>
     <string name="label_opcode_short">规则</string>
     <string name="label_priority_short">优先级</string>
@@ -362,7 +362,7 @@
     <string name="label_table_locale">表语言（区域设置）：</string>
     <string name="label_tap_to_edit">点击进行编辑，长按删除</string>
     <string name="label_thai">泰语</string>
-    <string name="label_u_grave">你坟墓</string>
+    <string name="label_u_grave">u 钝音符</string>
     <string name="label_unicode_braille">统一码盲文</string>
     <string name="label_use_8_dots">使用 8 点（计算机盲文）</string>
     <string name="label_vietnamese">越南语</string>
