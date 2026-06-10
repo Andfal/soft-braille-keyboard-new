@@ -16,38 +16,21 @@
 
 package com.dalton.braillekeyboard;
 
-import com.dalton.braillekeyboard.R;
-import com.dalton.braillekeyboard.Pad.Swipe;
-import com.dalton.braillekeyboard.Pad.Coords;
-import com.dalton.braillekeyboard.BrailleParser.BrailleType;
-import com.dalton.braillekeyboard.Options.KeyboardFeedback;
-import com.dalton.braillekeyboard.Options.KeyboardEcho;
-import com.dalton.braillekeyboard.Options.KeyboardType;
-import com.dalton.braillekeyboard.Options.OptionList;
-import com.dalton.braillekeyboard.EditingUtilities.Word;
-import com.dalton.braillekeyboard.EmojiDictionary.EmojiEntry;
-import com.dalton.braillekeyboard.SpellChecker.Suggestion;
-import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.HashSet;
 
-import android.annotation.SuppressLint;
+import android.content.ContentResolver;
 import android.content.Context;
-import android.os.Build;
+import android.database.Cursor;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.UserDictionary;
 import android.util.Log;
-import android.view.textservice.SentenceSuggestionsInfo;
-import android.view.textservice.SpellCheckerSession;
-import android.view.textservice.SpellCheckerSession.SpellCheckerSessionListener;
-import android.view.textservice.SuggestionsInfo;
-import android.view.textservice.TextInfo;
-import android.view.textservice.TextServicesManager;
 
 public class SpellChecker {
-    private static final String TAG = "SBK_SpellChecker";
     private static final int MAX_SUGGESTIONS = 8;
     private static final int MAX_SENTENCE_LENGTH = 200;
     private static final int SENTENCES_TO_CONSIDER = 6;
@@ -60,64 +43,8 @@ public class SpellChecker {
         LEFT, UNDER_CURSOR, RIGHT;
     }
 
-    private SpellCheckerSession spellChecker;
-    private Locale currentLocale;
-    private final Handler handler = new Handler(Looper.getMainLooper());
-    private Runnable initSessionRunnable = null;
-
-    private final SpellCheckerSessionListener spellCheckerListener = new SpellCheckerSessionListener() {
-        @Override
-        public void onGetSuggestions(final SuggestionsInfo[] arg0) {
-            Log.d(TAG, "Listener.onGetSuggestions() callback invoked by OS");
-        }
-
-        @Override
-        public void onGetSentenceSuggestions(SentenceSuggestionsInfo[] arg0) {
-            Log.d(TAG, "Listener.onGetSentenceSuggestions() callback invoked by OS");
-            handleSentenceSuggestions(arg0);
-        }
-    };
-
-    @SuppressLint("NewApi")
-    private void handleSentenceSuggestions(SentenceSuggestionsInfo[] arg0) {
-        Log.d(TAG, "onGetSentenceSuggestions() received. Results length: " + (arg0 != null ? arg0.length : "null"));
-        if (arg0 != null && arg0.length == 1) {
-            SentenceSuggestionsInfo ssi = arg0[0];
-            Suggestion results = null;
-            if (ssi != null) {
-                int count = ssi.getSuggestionsCount();
-                Log.d(TAG, "onGetSentenceSuggestions(): suggestions count = " + count);
-                int start = direction == Direction.LEFT ? count - 1 : 0;
-                int end = direction == Direction.LEFT ? -1 : count;
-                int step = end < start ? -1 : 1;
-                int i = start;
-                while (i != end && results == null) {
-                    int lengthAt = ssi.getLengthAt(i);
-                    int offsetAt = ssi.getOffsetAt(i) + startOffset;
-                    boolean matchDir = isDirection(direction, cursor, lengthAt, offsetAt);
-                    Log.d(TAG, "  suggestion index " + i + ": length=" + lengthAt + ", offset=" + offsetAt + ", matchDir=" + matchDir);
-                    if (matchDir) {
-                        results = compileSuggestions(
-                                ssi.getSuggestionsInfoAt(i),
-                                lengthAt, offsetAt);
-                    }
-                    i += step;
-                }
-            }
-
-            boolean moreToExpand = expandOffsets(true);
-            Log.d(TAG, "onGetSentenceSuggestions(): results = " + (results != null ? results.getCurrent() : "null") + ", moreToExpand = " + moreToExpand);
-            if (results != null || !moreToExpand) {
-                listener.suggestionsReady(results);
-            } else {
-                doSpellCheck();
-            }
-        } else {
-            Log.w(TAG, "onGetSentenceSuggestions(): invalid arg0 length: " + (arg0 != null ? arg0.length : 0));
-        }
-    }
-
     private final Context context;
+    private Locale currentLocale;
     private SpellingSuggestionsReadyListener listener;
     private int cursor;
     private Direction direction;
@@ -125,186 +52,391 @@ public class SpellChecker {
     private int startOffset;
     private int endOffset;
 
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    
+    // Local dictionary fields
+    private final Set<String> localDictionary = new HashSet<String>();
+    private final List<String> dictionaryList = new ArrayList<String>();
+    private String loadedLanguage = "";
+
+    private static class WordToken {
+        final String text;
+        final int offset;
+        final int length;
+
+        WordToken(String text, int offset, int length) {
+            this.text = text;
+            this.offset = offset;
+            this.length = length;
+        }
+    }
+
     public SpellChecker(Context context) {
         this.context = context;
+        Log.d("SBK_SpellChecker", "Local SpellChecker constructor called.");
     }
 
-    private synchronized void initSession() {
-        Log.d(TAG, "initSession() called. currentLocale = " + currentLocale);
-        if (spellChecker != null) {
-            Log.d(TAG, "initSession(): spellChecker already exists");
-            return;
-        }
-        if (currentLocale == null) {
-            currentLocale = Locale.getDefault();
-            Log.d(TAG, "initSession(): currentLocale was null, set to default: " + currentLocale);
-        }
-        final TextServicesManager tsm = (TextServicesManager) context
-                .getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);
-        if (tsm != null) {
-            try {
-                Log.d(TAG, "initSession(): creating newSpellCheckerSession");
-                spellChecker = tsm.newSpellCheckerSession(null, currentLocale,
-                        spellCheckerListener, true);
-                Log.d(TAG, "initSession(): newSpellCheckerSession returned: " + spellChecker);
-            } catch (Exception e) {
-                Log.e(TAG, "initSession(): Exception creating spell checker session", e);
-            }
-        } else {
-            Log.w(TAG, "initSession(): TextServicesManager is null");
-        }
-    }
-
-    public synchronized void onStartInput(Locale locale) {
-        Log.d(TAG, "onStartInput() called with locale: " + locale);
+    public void onStartInput(Locale locale) {
         if (locale == null) {
             locale = Locale.getDefault();
         }
-        if (currentLocale == null || !locale.equals(currentLocale)) {
-            currentLocale = locale;
-            Log.d(TAG, "onStartInput(): locale changed to " + currentLocale + ", closing old spellChecker");
-            if (spellChecker != null) {
-                spellChecker.close();
-                spellChecker = null;
-            }
-        }
-        
-        if (initSessionRunnable != null) {
-            handler.removeCallbacks(initSessionRunnable);
-        }
-        initSessionRunnable = new Runnable() {
-            @Override
-            public void run() {
-                synchronized (SpellChecker.this) {
-                    Log.d(TAG, "Delayed initSessionRunnable running...");
-                    initSession();
-                    initSessionRunnable = null;
-                }
-            }
-        };
-        handler.postDelayed(initSessionRunnable, 500);
+        currentLocale = locale;
+        Log.d("SBK_SpellChecker", "onStartInput called with locale: " + locale);
+        loadDictionaryForLanguage(locale.getLanguage());
     }
 
-    public boolean checkSpelling(SpellingSuggestionsReadyListener listener,
-            String text, int cursor, Direction direction) {
-        Log.d(TAG, "checkSpelling() called: text='" + text + "', cursor=" + cursor + ", direction=" + direction);
-        synchronized (this) {
-            if (initSessionRunnable != null) {
-                handler.removeCallbacks(initSessionRunnable);
-                initSessionRunnable = null;
-                initSession();
-            } else {
-                initSession();
-            }
-        }
-        if (text != null && text.length() > 0) {
+    public boolean checkSpelling(final SpellingSuggestionsReadyListener listener,
+            final String text, final int cursor, final Direction direction) {
+        Log.d("SBK_SpellChecker", "checkSpelling called. text length: " + text.length() + ", cursor: " + cursor + ", direction: " + direction);
+        if (text.length() > 0) {
             this.cursor = cursor;
             this.direction = direction;
             this.text = text;
             this.listener = listener;
+            initOffsets();
+            
+            // Run spell check on main thread, but post it to execute asynchronously matching original callback behavior
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    doLocalSpellCheck();
+                }
+            });
+            return true;
+        } else {
+            Log.d("SBK_SpellChecker", "checkSpelling returning false (empty text).");
+            return false;
+        }
+    }
 
+    private void doLocalSpellCheck() {
+        if (currentLocale == null) {
+            currentLocale = Locale.getDefault();
+        }
+        loadDictionaryForLanguage(currentLocale.getLanguage());
+        
+        String sub = text.substring(startOffset, endOffset);
+        
+        // Find all word tokens in the substring (supporting letters and internal apostrophes)
+        List<WordToken> tokens = new ArrayList<WordToken>();
+        int i = 0;
+        int subLen = sub.length();
+        while (i < subLen) {
+            while (i < subLen && !isWordChar(sub.charAt(i))) {
+                i++;
+            }
+            if (i >= subLen) {
+                break;
+            }
+            int start = i;
+            while (i < subLen && isWordChar(sub.charAt(i))) {
+                i++;
+            }
+            String wordText = sub.substring(start, i);
+            
+            // Strip leading and trailing apostrophes
+            int tokenStart = 0;
+            int tokenEnd = wordText.length();
+            while (tokenStart < tokenEnd && isApostrophe(wordText.charAt(tokenStart))) {
+                tokenStart++;
+            }
+            while (tokenEnd > tokenStart && isApostrophe(wordText.charAt(tokenEnd - 1))) {
+                tokenEnd--;
+            }
+            
+            if (tokenStart < tokenEnd) {
+                String cleanWord = wordText.substring(tokenStart, tokenEnd);
+                tokens.add(new WordToken(cleanWord, start + tokenStart, tokenEnd - tokenStart));
+            }
+        }
+        
+        int count = tokens.size();
+        int start = direction == Direction.LEFT ? count - 1 : 0;
+        int end = direction == Direction.LEFT ? -1 : count;
+        int step = end < start ? -1 : 1;
+        
+        Log.d("SBK_SpellChecker", "doLocalSpellCheck: direction=" + direction + ", cursor=" + cursor + ", startOffset=" + startOffset + ", endOffset=" + endOffset + ", tokens count=" + count);
+
+        Suggestion results = null;
+        int idx = start;
+        while (idx != end && results == null) {
+            WordToken token = tokens.get(idx);
+            int absOffset = token.offset + startOffset;
+            
+            boolean match = false;
             if (direction == Direction.UNDER_CURSOR) {
-                int start = cursor;
-                while (start > 0 && isWordChar(text.charAt(start - 1))) {
-                    start--;
+                if (cursor >= absOffset) {
+                    if (idx == count - 1) {
+                        match = true;
+                    } else {
+                        WordToken nextToken = tokens.get(idx + 1);
+                        int nextAbsOffset = nextToken.offset + startOffset;
+                        match = cursor < nextAbsOffset;
+                    }
                 }
-                int end = cursor;
-                while (end < text.length() && isWordChar(text.charAt(end))) {
-                    end++;
-                }
-                if (start < end) {
-                    String word = text.substring(start, end);
-                    boolean inDict = isWordInUserDictionary(word) || isWordInUserDictionary(word.toLowerCase());
-                    Log.d(TAG, "checkSpelling(): checking under cursor word='" + word + "', inDict=" + inDict);
-                    if (inDict) {
-                        listener.suggestionsReady(new Suggestion(word, start, true));
-                        return true;
+            } else {
+                match = isDirection(direction, cursor, token.length, absOffset);
+            }
+            
+            boolean misspelled = isWordMisspelled(token.text);
+            Log.d("SBK_SpellChecker", "token='" + token.text + "', absOffset=" + absOffset + ", length=" + token.length + ", match=" + match + ", misspelled=" + misspelled);
+
+            if (match) {
+                if (misspelled) {
+                    results = generateSuggestionsForWord(token.text, absOffset);
+                } else if (direction == Direction.UNDER_CURSOR) {
+                    boolean isUserDict = isWordInUserDictionary(token.text) || isWordInUserDictionary(token.text.toLowerCase());
+                    if (isUserDict) {
+                        results = generateUserDictRemoveSuggestions(token.text, absOffset);
                     }
                 }
             }
-
-            if (spellChecker != null) {
-                initOffsets();
-                Log.d(TAG, "checkSpelling(): triggering doSpellCheck() with offsets: " + startOffset + " to " + endOffset);
-                doSpellCheck();
-                return true;
-            } else {
-                Log.w(TAG, "checkSpelling(): spellChecker is null!");
-            }
+            idx += step;
         }
-        return false;
-    }
-
-    @SuppressLint("NewApi")
-    private void doSpellCheck() {
-        if (spellChecker != null) {
-            Log.d(TAG, "doSpellCheck(): requesting suggestions for: '" + text.substring(startOffset, endOffset) + "'");
-            // Removed spellChecker.cancel() to prevent session state issues
-            spellChecker.getSentenceSuggestions(
-                    new TextInfo[] { new TextInfo(text.substring(startOffset,
-                            endOffset) + " ") }, MAX_SUGGESTIONS);
+        
+        boolean moreToExpand = expandOffsets(true);
+        Log.d("SBK_SpellChecker", "results: " + (results != null ? results.getCurrent() : "null") + ", moreToExpand: " + moreToExpand);
+        if (results != null || !moreToExpand) {
+            if (listener != null) {
+                listener.suggestionsReady(results);
+            }
         } else {
-            Log.w(TAG, "doSpellCheck(): spellChecker is null!");
+            // Expand search range and retry
+            doLocalSpellCheck();
         }
     }
 
-    public synchronized void destroy() {
-        Log.d(TAG, "destroy() called. spellChecker is null? " + (spellChecker == null));
-        if (initSessionRunnable != null) {
-            handler.removeCallbacks(initSessionRunnable);
-            initSessionRunnable = null;
+    private boolean isWordMisspelled(String word) {
+        if (localDictionary.isEmpty()) {
+            // Dictionary not loaded/supported for this language, treat all words as correct
+            return false;
         }
-        if (spellChecker != null) {
-            try {
-                spellChecker.close();
-            } catch (Exception e) {
-                Log.w(TAG, "destroy(): error closing spellChecker", e);
+        String normalized = word.toLowerCase().replace('\u2019', '\'');
+        if (localDictionary.contains(normalized)) {
+            return false;
+        }
+        if (isWordInUserDictionary(word) || isWordInUserDictionary(normalized)) {
+            return false;
+        }
+        
+        // Language-specific rules for apostrophes/contractions/elisions
+        if ("en".equals(loadedLanguage)) {
+            if (normalized.endsWith("'s") && normalized.length() > 2) {
+                String base = normalized.substring(0, normalized.length() - 2);
+                if (localDictionary.contains(base) || isWordInUserDictionary(base)) {
+                    return false;
+                }
             }
-            spellChecker = null;
+        } else if ("it".equals(loadedLanguage)) {
+            int apoIdx = normalized.indexOf('\'');
+            if (apoIdx > 0 && apoIdx < normalized.length() - 1) {
+                String prefix = normalized.substring(0, apoIdx);
+                String suffix = normalized.substring(apoIdx + 1);
+                if (isItalianElisionPrefix(prefix)) {
+                    if (localDictionary.contains(suffix) || isWordInUserDictionary(suffix)) {
+                        return false;
+                    }
+                }
+            }
+        } else if ("fr".equals(loadedLanguage)) {
+            int apoIdx = normalized.indexOf('\'');
+            if (apoIdx > 0 && apoIdx < normalized.length() - 1) {
+                String prefix = normalized.substring(0, apoIdx);
+                String suffix = normalized.substring(apoIdx + 1);
+                if (isFrenchElisionPrefix(prefix)) {
+                    if (localDictionary.contains(suffix) || isWordInUserDictionary(suffix)) {
+                        return false;
+                    }
+                }
+            }
+        } else if ("ca".equals(loadedLanguage)) {
+            int apoIdx = normalized.indexOf('\'');
+            if (apoIdx > 0 && apoIdx < normalized.length() - 1) {
+                String prefix = normalized.substring(0, apoIdx);
+                String suffix = normalized.substring(apoIdx + 1);
+                if (isCatalanElisionPrefix(prefix)) {
+                    if (localDictionary.contains(suffix) || isWordInUserDictionary(suffix)) {
+                        return false;
+                    }
+                }
+            }
         }
+        
+        return true;
+    }
+
+    private Suggestion generateSuggestionsForWord(String word, int offset) {
+        Suggestion suggestion = new Suggestion(word, offset);
+        
+        List<String> dist1 = new ArrayList<String>();
+        List<String> dist2 = new ArrayList<String>();
+        
+        String normalizedWord = word.replace('\u2019', '\'');
+        int apoIdx = normalizedWord.indexOf('\'');
+        String prefix = "";
+        String suffix = "";
+        String lookupWord = normalizedWord.toLowerCase();
+        
+        if (apoIdx > 0 && apoIdx < normalizedWord.length() - 1) {
+            String prefixPart = normalizedWord.substring(0, apoIdx);
+            boolean isValidElision = false;
+            if ("it".equals(loadedLanguage)) {
+                isValidElision = isItalianElisionPrefix(prefixPart.toLowerCase());
+            } else if ("fr".equals(loadedLanguage)) {
+                isValidElision = isFrenchElisionPrefix(prefixPart.toLowerCase());
+            } else if ("ca".equals(loadedLanguage)) {
+                isValidElision = isCatalanElisionPrefix(prefixPart.toLowerCase());
+            }
+            
+            if (isValidElision) {
+                prefix = normalizedWord.substring(0, apoIdx + 1);
+                lookupWord = normalizedWord.substring(apoIdx + 1).toLowerCase();
+            }
+        }
+        
+        if ("en".equals(loadedLanguage) && lookupWord.endsWith("'s") && lookupWord.length() > 2) {
+            suffix = normalizedWord.substring(normalizedWord.length() - 2);
+            lookupWord = lookupWord.substring(0, lookupWord.length() - 2);
+        }
+        
+        int wordLen = lookupWord.length();
+        
+        // Iterate through the list of dictionary words (already sorted by frequency)
+        for (String dictWord : dictionaryList) {
+            int dictLen = dictWord.length();
+            if (Math.abs(dictLen - wordLen) > 2) {
+                continue;
+            }
+            
+            int dist = getLevenshteinDistance(lookupWord, dictWord);
+            if (dist == 1) {
+                int origStart = prefix.length();
+                int origEnd = word.length() - suffix.length();
+                String origPart = (origStart < origEnd) ? word.substring(origStart, origEnd) : "";
+                dist1.add(prefix + matchCapitalization(origPart, dictWord) + suffix);
+            } else if (dist == 2) {
+                int origStart = prefix.length();
+                int origEnd = word.length() - suffix.length();
+                String origPart = (origStart < origEnd) ? word.substring(origStart, origEnd) : "";
+                dist2.add(prefix + matchCapitalization(origPart, dictWord) + suffix);
+            }
+        }
+        
+        // Populate suggestion results, prioritizing distance 1 then distance 2
+        int added = 0;
+        for (String s : dist1) {
+            if (added >= MAX_SUGGESTIONS) break;
+            suggestion.results.add(s);
+            added++;
+        }
+        for (String s : dist2) {
+            if (added >= MAX_SUGGESTIONS) break;
+            suggestion.results.add(s);
+            added++;
+        }
+        
+        return suggestion;
+    }
+
+    private Suggestion generateUserDictRemoveSuggestions(String word, int offset) {
+        return new Suggestion(word, offset, true);
+    }
+
+    private String matchCapitalization(String original, String suggestion) {
+        if (original == null || original.isEmpty() || suggestion == null || suggestion.isEmpty()) {
+            return suggestion;
+        }
+        boolean isAllUpper = true;
+        for (int i = 0; i < original.length(); i++) {
+            if (Character.isLetter(original.charAt(i)) && !Character.isUpperCase(original.charAt(i))) {
+                isAllUpper = false;
+                break;
+            }
+        }
+        if (isAllUpper) {
+            return suggestion.toUpperCase();
+        }
+        if (Character.isUpperCase(original.charAt(0))) {
+            return Character.toUpperCase(suggestion.charAt(0)) + (suggestion.length() > 1 ? suggestion.substring(1) : "");
+        }
+        return suggestion;
+    }
+
+    private synchronized void loadDictionaryForLanguage(String lang) {
+        if (lang == null || lang.isEmpty()) {
+            lang = "en";
+        }
+        if (lang.equals(loadedLanguage)) {
+            return;
+        }
+        
+        localDictionary.clear();
+        dictionaryList.clear();
+        loadedLanguage = lang;
+        
+        String fileName = "dictionaries/" + lang + ".txt";
+        Log.d("SBK_SpellChecker", "Loading local dictionary: " + fileName);
+        
+        java.io.BufferedReader reader = null;
+        try {
+            reader = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(context.getAssets().open(fileName), "UTF-8"));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (!line.isEmpty()) {
+                    localDictionary.add(line);
+                    dictionaryList.add(line);
+                }
+            }
+            Log.d("SBK_SpellChecker", "Successfully loaded " + localDictionary.size() + " words from " + fileName);
+        } catch (Exception e) {
+            Log.e("SBK_SpellChecker", "Error loading dictionary " + fileName + ". Leaving dictionary empty (spellcheck disabled for " + lang + ").", e);
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (Exception e) {
+                    // Ignore
+                }
+            }
+        }
+    }
+
+    public void destroy() {
+        Log.d("SBK_SpellChecker", "destroy called.");
+        localDictionary.clear();
+        dictionaryList.clear();
+        loadedLanguage = "";
     }
 
     public boolean isSpellCheckAvailable() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
-    }
-
-    private Suggestion compileSuggestions(SuggestionsInfo suggestionInfo,
-            int length, int offset) {
-        String originalWord = text.substring(offset, length + offset);
-        int attrs = suggestionInfo.getSuggestionsAttributes();
-        int count = suggestionInfo.getSuggestionsCount();
-        Log.d(TAG, "compileSuggestions(): word='" + originalWord + "', attributes=" + attrs + ", count=" + count);
-        if (suggestionInfo.getSuggestionsAttributes() == SuggestionsInfo.RESULT_ATTR_IN_THE_DICTIONARY
-                || !isPotentialWord(text.substring(offset, offset + length))) {
-            Log.d(TAG, "compileSuggestions(): word is in dictionary or not potential word, returning null");
-            return null;
-        }
-
-        boolean isUser = isWordInUserDictionary(originalWord);
-        Suggestion suggestion = new Suggestion(originalWord, offset, isUser);
-        for (int i = 0; i < count; i++) {
-            String sug = suggestionInfo.getSuggestionAt(i);
-            Log.d(TAG, "  suggestion result " + i + ": " + sug);
-            if (sug != null && !sug.isEmpty()) {
-                suggestion.results.add(sug);
-            }
-        }
-
-        return suggestion;
+        return true;
     }
 
     private boolean isWordInUserDictionary(String word) {
         if (word == null || word.trim().isEmpty()) {
             return false;
         }
-        android.database.Cursor cursor = null;
+        String normalized = word.replace('\u2019', '\'');
+        if (checkUserDb(normalized)) {
+            return true;
+        }
+        if (!word.equals(normalized) && checkUserDb(word)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkUserDb(String word) {
+        Cursor cursor = null;
         try {
-            android.content.ContentResolver resolver = context.getContentResolver();
-            String selection = android.provider.UserDictionary.Words.WORD + "=?";
+            ContentResolver resolver = context.getContentResolver();
+            String selection = UserDictionary.Words.WORD + "=?";
             String[] selectionArgs = new String[] { word };
             cursor = resolver.query(
-                    android.provider.UserDictionary.Words.CONTENT_URI,
-                    new String[] { android.provider.UserDictionary.Words.WORD },
+                    UserDictionary.Words.CONTENT_URI,
+                    new String[] { UserDictionary.Words.WORD },
                     selection,
                     selectionArgs,
                     null
@@ -322,6 +454,35 @@ public class SpellChecker {
         return false;
     }
 
+    private static boolean isWordChar(char c) {
+        return Character.isLetter(c) || c == '\'' || c == '\u2019';
+    }
+
+    private static boolean isApostrophe(char c) {
+        return c == '\'' || c == '\u2019';
+    }
+
+    private static final Set<String> ITALIAN_PREFIXES = new HashSet<String>(java.util.Arrays.asList(
+        "l", "d", "c", "s", "m", "t", "v", "n", "un", "bell", "quell", "quest", "anch", "tutt", "all", "dell", "nell", "sull", "coll", "dall", "pell"
+    ));
+    private static boolean isItalianElisionPrefix(String prefix) {
+        return ITALIAN_PREFIXES.contains(prefix);
+    }
+
+    private static final Set<String> FRENCH_PREFIXES = new HashSet<String>(java.util.Arrays.asList(
+        "j", "n", "m", "t", "s", "c", "d", "l", "qu", "puisqu", "lorsqu", "quoiqu", "jusqu"
+    ));
+    private static boolean isFrenchElisionPrefix(String prefix) {
+        return FRENCH_PREFIXES.contains(prefix);
+    }
+
+    private static final Set<String> CATALAN_PREFIXES = new HashSet<String>(java.util.Arrays.asList(
+        "l", "d", "m", "t", "s", "n"
+    ));
+    private static boolean isCatalanElisionPrefix(String prefix) {
+        return CATALAN_PREFIXES.contains(prefix);
+    }
+
     private static boolean isDirection(Direction direction, int cursor,
             int length, int offset) {
         switch (direction) {
@@ -335,19 +496,6 @@ public class SpellChecker {
             throw new IllegalArgumentException(
                     "No implementation for direction = " + direction);
         }
-    }
-
-    private static boolean isPotentialWord(String word) {
-        for (int i = 0; i < word.length(); i++) {
-            if (Character.isLetter(word.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static boolean isWordChar(char c) {
-        return Character.isLetter(c) || c == '\'' || c == '\u2019';
     }
 
     private void initOffsets() {
@@ -407,6 +555,45 @@ public class SpellChecker {
         }
     }
 
+    private static int getLevenshteinDistance(String s, String t) {
+        if (s == null || t == null) {
+            throw new IllegalArgumentException("Strings must not be null");
+        }
+        int n = s.length();
+        int m = t.length();
+        if (n == 0) return m;
+        if (m == 0) return n;
+        if (n > m) {
+            String tmp = s;
+            s = t;
+            t = tmp;
+            n = s.length();
+            m = t.length();
+        }
+        int p[] = new int[n + 1];
+        int d[] = new int[n + 1];
+        int _d[];
+        int i, j, cost;
+        char sa;
+        char ta;
+        for (i = 0; i <= n; i++) {
+            p[i] = i;
+        }
+        for (j = 1; j <= m; j++) {
+            ta = t.charAt(j - 1);
+            d[0] = j;
+            for (i = 1; i <= n; i++) {
+                sa = s.charAt(i - 1);
+                cost = sa == ta ? 0 : 1;
+                d[i] = Math.min(Math.min(d[i - 1] + 1, p[i] + 1), p[i - 1] + cost);
+            }
+            _d = p;
+            p = d;
+            d = _d;
+        }
+        return p[n];
+    }
+
     public static class Suggestion {
         public final List<String> results = new ArrayList<String>();
         public final int offset;
@@ -414,6 +601,10 @@ public class SpellChecker {
         private final String originalWord;
         private int current = 0;
         private int length = -1;
+
+        public Suggestion(String word, int offset) {
+            this(word, offset, false);
+        }
 
         public Suggestion(String word, int offset, boolean isUserDictWord) {
             this.offset = offset;
@@ -472,5 +663,3 @@ public class SpellChecker {
         }
     }
 }
-
-

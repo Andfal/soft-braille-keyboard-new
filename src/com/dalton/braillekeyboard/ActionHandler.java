@@ -698,8 +698,6 @@ public class ActionHandler {
         }
         if (cursorShift > 0) {
             listener.setSelection(suggestion.offset + text.length() + cursorShift);
-        } else {
-            listener.setSelection(suggestion.offset);
         }
         
         suggestion.setLength();
