@@ -6,6 +6,7 @@ package com.dalton.braillekeyboard;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
