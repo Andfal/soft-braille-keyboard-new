@@ -1,31 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- User interface strings go below here -->
+    <string name="accessibility_service_description">Позволяет программной клавиатуре Брайля работать правильно, когда TalkBack активен, создавая область, в которой прикосновения не перехватываются программой чтения с экрана.</string>
+    <string name="accessibility_service_dialog_message">Чтобы использовать эту клавиатуру с TalkBack, необходимо включить «Мягкую клавиатуру Брайля» в настройках специальных возможностей. Это позволяет клавиатуре воспринимать ваши касания, пока TalkBack активен.</string>
+    <string name="accessibility_service_label">Доступность мягкой клавиатуры Брайля</string>
+    <string name="action_record_audio_permission">ACTION_RECORD_AUDIO_PERMISSION</string>
     <string name="action_settings">Настройки</string>
-    <string name="app_name">SBK Modern</string>
+    <string name="app_name">Soft Braille Keyboard</string>
     <string name="auto_caps_disabled">Автоматическая смена регистра отключена</string>
     <string name="auto_caps_enabled">Автоматическая смена регистра включена</string>
     <string name="blank">Пусто</string>
-    <string name="braille_ime">SBK Modern</string>
+    <string name="braille_ime">Soft Braille Keyboard</string>
+    <string name="btn_move_to_bottom">Перейти вниз</string>
+    <string name="label_high_priority_prefix">[Ч]</string>
+    <string name="btn_add">ДОБАВИТЬ</string>
+    <string name="btn_add_anyway">Все равно добавить</string>
+    <string name="btn_add_prefix">Добавить префикс...</string>
+    <string name="btn_append_cell">+ Добавить ячейку</string>
+    <string name="btn_cancel">Отмена</string>
+    <string name="btn_clear_dots">Очистить</string>
+    <string name="btn_clone_table">Источник клонирования</string>
+    <string name="btn_create_table">Создать пользовательскую таблицу</string>
+    <string name="btn_delete">Удалить</string>
+    <string name="btn_export_system_table">Экспортировать системную таблицу</string>
+    <string name="btn_export_original">Экспорт оригинала</string>
+    <string name="btn_export_table">Экспортируйте свою работу</string>
+    <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
+    <string name="btn_id_enable">BTN_ENABLED</string>
+    <string name="btn_import_base_rules">Импортировать все правила</string>
+    <string name="btn_import_table">Импортировать существующий файл таблицы</string>
+    <string name="btn_import_visual">Правила импорта</string>
+    <string name="btn_insert_above">Вставьте выше этого правила</string>
+    <string name="btn_load_template">Загрузить шаблон</string>
+    <string name="btn_ok">ОК</string>
+    <string name="btn_overwrite">Перезаписать/Продолжить</string>
+    <string name="dialog_overwrite_title">Перезаписать файл?</string>
+    <string name="dialog_overwrite_msg">Файл %s уже существует. Вы хотите перезаписать его?</string>
+    <string name="btn_remove_mapping">Удалить это сопоставление</string>
+    <string name="btn_save">СОХРАНИТЬ</string>
+    <string name="btn_select_mass">Выберите...</string>
+    <string name="btn_set_cell">Установить ячейку</string>
+    <string name="btn_sync_folder">Предоставить доступ к папке для сканирования</string>
+    <string name="btn_update">ОБНОВЛЕНИЕ</string>
     <string name="button_choose_default_keyboard">Установите Soft Braille Keyboard в качестве клавиатуры по умолчанию</string>
     <string name="button_keyboard_settings">Активировать Soft Braille Keyboard</string>
     <string name="button_more_info">Прочитать краткое руководство</string>
+    <string name="calibration_aborted">Калибровка прервана</string>
+    <string name="calibration_init_message">Поместите 6 или 8 пальцев для мгновенной калибровки или коснитесь точек одну за другой для ручной калибровки.</string>
+    <string name="calibration_step">Коснитесь точки %d</string>
+    <string name="calibration_success">Калибровка сохранена и заблокирована</string>
     <string name="capital">Заглавное %s</string>
     <string name="closing_keyboard">Клавиатура закрывается</string>
+    <string name="confirm_delete_msg">Вы хотите удалить %s?</string>
+    <string name="confirm_delete_title">Удалить таблицу</string>
     <string name="copied">Скопировано</string>
     <string name="copy_error">Ошибка копирования</string>
+    <string name="custom_table_label_prefix">Пользовательский:</string>
     <string name="cut_error">Ошибка вырезания</string>
-    <string name="deleted">Удалено %s</string>
+    <string name="default_swipe_sensitivity">50</string>
     <string name="delete_selection">Удалить выделение</string>
+    <string name="deleted">Удалено %s</string>
+    <string name="emoji_count_summary">%1$s, %2$d из %3$d</string>
+    <string name="emoji_inserted">Вставлено</string>
+    <string name="emoji_no_results">Нет результатов для смайлов</string>
+    <string name="emoji_no_results_query">Нет результатов для %s</string>
+    <string name="emoji_no_to_insert">Нет смайлов для вставки</string>
+    <string name="emoji_search_mode_off">Режим поиска смайлов отключен</string>
+    <string name="emoji_search_mode_on">Режим поиска эмодзи включен (%s)</string>
+    <string name="emoji_search_prefix">Поиск смайликов:</string>
+    <string name="emoji_search_query_empty">Поисковый запрос Emoji пуст</string>
     <string name="end_of_text">Конец текста</string>
-    <string name="expand_keyboard_talkback">Коснитесь один раз здесь, чтобы развернуть клавиатуру</string>
+    <string name="error_invalid_file">Неверный тип файла. Выберите .ctb или .utb.</string>
+    <string name="error_no_name">Пожалуйста, введите название таблицы</string>
     <string name="expand_keyboard">Коснитесь один раз здесь, чтобы развернуть клавиатуру</string>
+    <string name="expand_keyboard_talkback">Коснитесь один раз здесь, чтобы развернуть клавиатуру</string>
+    <string name="grade">Степень Брайля по умолчанию</string>
     <string name="grade_computer">Компьютерный Брайль</string>
     <string name="grade_literary">Литературный Брайль</string>
     <string name="grade_table">Степень %s</string>
-    <string name="grade">Степень Брайля по умолчанию</string>
+    <string name="help_desc_autocorrect">Автокоррекция: регулирует положение или стиль этого символа.</string>
+    <string name="help_desc_bold">Индикатор жирного режима.</string>
+    <string name="help_desc_caps_letter">Индикатор капитализации: делает следующую букву заглавной.</string>
+    <string name="help_desc_caps_lock">Caps Lock: переводит все слово в верхний регистр.</string>
+    <string name="help_desc_default">Сопоставление для: %s</string>
+    <string name="help_desc_diacritic">Диакритический знак: используется для изменения предыдущего или следующего символа.</string>
+    <string name="help_desc_greek_mode">Переключитесь в греческий режим.</string>
+    <string name="help_desc_italic">Индикатор режима курсива.</string>
+    <string name="help_desc_latin_mode">Переключитесь в режим латиницы (международный).</string>
+    <string name="help_desc_numeric">Порядковое/числовое правило: применяется после числа.</string>
+    <string name="help_desc_numsign">Знак номера: запускает цифровой режим (следующие клавиши — цифры).</string>
+    <string name="help_desc_state_change">Изменение внутреннего состояния (влияет на интерпретацию следующих ключей).</string>
+    <string name="help_desc_underline">Индикатор режима подчеркивания.</string>
+    <string name="help_desc_whole_word">Сокращение всего слова: работает только как отдельное слово.</string>
     <string name="hide_keyboard">клавиатура сворачивается.</string>
+    <!--  Braille Actions  -->
+    <string name="action_none">Нет</string>
+    <string name="action_move_left_char">Перемещение влево по персонажу</string>
+    <string name="action_move_right_char">Перемещение вправо по персонажу</string>
+    <string name="action_move_left_word">Переместиться влево по слову</string>
+    <string name="action_move_right_word">Двигайтесь вправо по слову</string>
+    <string name="action_move_left_line">Переместиться влево по строке</string>
+    <string name="action_move_right_line">Двигаться вправо по строке</string>
+    <string name="action_move_left_all">Перейти к началу текста</string>
+    <string name="action_move_right_all">Перейти в конец текста</string>
+    <string name="action_backspace_char">Удалить персонажа</string>
+    <string name="action_backspace_word">Удалить слово</string>
+    <string name="action_backspace_line">Удалить строку</string>
+    <string name="action_backspace_all">Удалить весь текст</string>
+    <string name="action_read_char">Прочитать текущий символ</string>
+    <string name="action_read_word">Прочитать текущее слово</string>
+    <string name="action_read_line">Читать текущую строку</string>
+    <string name="action_read_all">Читать весь текст</string>
+    <string name="action_space">Вставить пробел</string>
+    <string name="action_newline">Вставить новую строку</string>
+    <string name="action_voice_input">Голосовой ввод</string>
+    <string name="action_toggle_privacy">Переключить режим конфиденциальности</string>
+    <string name="action_toggle_auto_caps">Переключить автоматическую капитализацию</string>
+    <string name="action_toggle_echo_passwords">Переключить произносимые пароли</string>
+    <string name="action_toggle_mark">Переключить знак выбора</string>
+    <string name="action_cycle_keyboard_feedback">Циклическая обратная связь с клавиатуры (звук/вибрация)</string>
+    <string name="action_cycle_echo_feedback">Циклическая эхо-обратная связь (Char/Word/None)</string>
+    <string name="action_switch_braille_type">Переключить литературный/компьютерный шрифт Брайля</string>
+    <string name="action_switch_braille_table">Переключить стол Брайля</string>
+    <string name="action_open_settings">Открыть настройки клавиатуры</string>
+    <string name="action_open_input_switcher">Открыть выбор метода ввода</string>
+    <string name="action_close_keyboard">Закрыть клавиатуру</string>
+    <string name="action_shrink_keyboard">Сжать клавиатуру</string>
+    <string name="action_word_count">Количество слов и символов</string>
+    <string name="action_next_field_action">Следующее поле/действие</string>
+    <string name="action_select_text_action">Выбор/Действие</string>
+    <string name="action_emoji_mode_toggle">Переключить режим поиска смайлов</string>
+    <string name="action_edit_select_all">Действие: Выбрать все</string>
+    <string name="action_edit_copy">Действие: Копировать</string>
+    <string name="action_edit_cut">Действие: Вырезать</string>
+    <string name="action_edit_paste">Действие: Вставить</string>
+    <string name="action_edit_speak">Действие: Озвучить выбор</string>
+    <string name="action_edit_delete">Действие: Удалить выделение</string>
+    <string name="action_spell_check_left">Проверка правописания предыдущего слова</string>
+    <string name="action_spell_check_right">Проверка правописания следующего слова</string>
+    <string name="action_spell_check_next_suggestion">Следующий вариант написания</string>
+    <string name="action_spell_check_prev_suggestion">Предыдущий вариант написания</string>
+    <string name="action_set_dot_7">Введите точку 7</string>
+    <string name="action_set_dot_8">Вставьте точку 8</string>
+    <string name="action_toggle_abbreviations">Переключение сокращений с помощью пробела</string>
+    <string name="action_toggle_abbreviations_no_space">Переключить сокращения без пробела</string>
+    <string name="action_toggle_instant_abbreviations">Переключить мгновенное расширение</string>
+    <string name="action_toggle_misspelling_sound">Переключить звуковое уведомление об орфографической ошибке</string>
+    <string name="action_add_to_dictionary">Добавить слово в личный словарь</string>
+    <string name="action_add_to_dictionary_option">Добавить %s в личный словарь</string>
+    <string name="action_remove_from_dictionary">Удалить слово из личного словаря</string>
+    <string name="action_remove_from_dictionary_option">Удалить %s из личного словаря</string>
+    <!--  Abbreviations  -->
+    <string name="pref_abbreviations_title">Сокращения</string>
+    <string name="pref_abbreviations_summary">Управляйте расширением текста (с пробелом, без пробела или мгновенно).</string>
+    <string name="pref_abbreviations_instant_title">Мгновенное расширение</string>
+    <string name="pref_abbreviations_instant_summary">Заменяет ярлыки сразу после их ввода.</string>
+    <string name="abbreviations_instant_enabled">Мгновенное расширение включено</string>
+    <string name="abbreviations_instant_disabled">Мгновенное расширение отключено</string>
+    <string name="pref_abbreviations_enabled_title">Расширение без места</string>
+    <string name="pref_abbreviations_enabled_summary">Заменяет ярлыки, используя пробел или ввод только в качестве модификаторов (лишний пробел не вставляется).</string>
+    <string name="abbreviations_enabled">Сокращения с включенным пробелом</string>
+    <string name="abbreviations_disabled">Сокращения с отключенным пробелом</string>
+    <string name="abbreviations_no_space_enabled">Сокращения без пробела включены</string>
+    <string name="abbreviations_no_space_disabled">Сокращения без пробела отключены</string>
+    <string name="title_abbreviation_editor">Редактор сокращений</string>
+    <string name="hint_shortcut">Ярлык (например, hru или 6-s)</string>
+    <string name="hint_expansion">Развернутый текст (например, «Как дела?»)</string>
+    <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
+    <string name="pref_abbreviations_enabled_default">ложный</string>
+    <string name="pref_abbreviations_add_space_title">Расширение с пространством</string>
+    <string name="pref_abbreviations_add_space_summary">Заменяет ярлыки с помощью пробела или ввода и добавляет пробел.</string>
+    <string name="nothing_to_expand">Нечего расширять</string>
+    <!--  Gesture Names  -->
+    <string name="swipe_one_left">Точка 1: проведите пальцем влево.</string>
+    <string name="swipe_one_right">Точка 1: проведите пальцем вправо.</string>
+    <string name="swipe_one_up">Точка 1: проведите пальцем вверх.</string>
+    <string name="swipe_one_down">Точка 1: проведите пальцем вниз.</string>
+    <string name="swipe_two_left">Точка 2: проведите пальцем влево.</string>
+    <string name="swipe_two_right">Точка 2: проведите пальцем вправо.</string>
+    <string name="swipe_two_up">Точка 2: проведите пальцем вверх.</string>
+    <string name="swipe_two_down">Точка 2: проведите пальцем вниз.</string>
+    <string name="swipe_three_left">Точка 3: проведите пальцем влево.</string>
+    <string name="swipe_three_right">Точка 3: проведите пальцем вправо.</string>
+    <string name="swipe_three_up">Точка 3: проведите пальцем вверх.</string>
+    <string name="swipe_three_down">Точка 3: проведите пальцем вниз.</string>
+    <string name="swipe_four_left">Точка 4: проведите пальцем влево.</string>
+    <string name="swipe_four_right">Точка 4: проведите пальцем вправо.</string>
+    <string name="swipe_four_up">Точка 4: проведите пальцем вверх.</string>
+    <string name="swipe_four_down">Точка 4: проведите пальцем вниз.</string>
+    <string name="swipe_five_left">Точка 5: проведите пальцем влево.</string>
+    <string name="swipe_five_right">Точка 5: проведите пальцем вправо.</string>
+    <string name="swipe_five_up">Точка 5: проведите пальцем вверх.</string>
+    <string name="swipe_five_down">Точка 5: проведите пальцем вниз.</string>
+    <string name="swipe_six_left">Точка 6: проведите пальцем влево.</string>
+    <string name="swipe_six_right">Точка 6: проведите пальцем вправо.</string>
+    <string name="swipe_six_up">Точка 6: проведите пальцем вверх.</string>
+    <string name="swipe_six_down">Точка 6: проведите пальцем вниз.</string>
+    <string name="swipe_left_two_down">Слева: два пальца вниз.</string>
+    <string name="swipe_right_two_down">Справа: два пальца вниз.</string>
+    <string name="swipe_hold_one_left">Точка 1: удерживайте и проведите влево другой рукой.</string>
+    <string name="swipe_hold_one_right">Точка 1: удерживайте и проведите другой рукой вправо.</string>
+    <string name="swipe_hold_one_up">Точка 1: удерживайте и проведите вверх другой рукой.</string>
+    <string name="swipe_hold_one_down">Точка 1: удерживайте и проведите вниз другой рукой.</string>
+    <string name="swipe_hold_two_left">Точка 2: удерживайте и проведите влево другой рукой.</string>
+    <string name="swipe_hold_two_right">Точка 2: удерживайте и проведите другой рукой вправо.</string>
+    <string name="swipe_hold_two_up">Точка 2: удерживайте и проведите вверх другой рукой.</string>
+    <string name="swipe_hold_two_down">Точка 2: удерживайте и проведите вниз другой рукой.</string>
+    <string name="swipe_hold_three_left">Точка 3: удерживайте и проведите влево другой рукой.</string>
+    <string name="swipe_hold_three_right">Точка 3: удерживайте и проведите другой рукой вправо.</string>
+    <string name="swipe_hold_three_up">Точка 3: удерживайте и проведите вверх другой рукой.</string>
+    <string name="swipe_hold_three_down">Точка 3: удерживайте и проведите вниз другой рукой.</string>
+    <string name="swipe_hold_four_left">Точка 4: удерживайте и проведите влево другой рукой.</string>
+    <string name="swipe_hold_four_right">Точка 4: удерживайте и проведите другой рукой вправо.</string>
+    <string name="swipe_hold_four_up">Точка 4: удерживайте и проведите вверх другой рукой.</string>
+    <string name="swipe_hold_four_down">Точка 4: удерживайте и проведите вниз другой рукой.</string>
+    <string name="swipe_hold_five_left">Точка 5: удерживайте и проведите влево другой рукой.</string>
+    <string name="swipe_hold_five_right">Точка 5: удерживайте и проведите другой рукой вправо.</string>
+    <string name="swipe_hold_five_up">Точка 5: удерживайте и проведите вверх другой рукой.</string>
+    <string name="swipe_hold_five_down">Точка 5: удерживайте и проведите вниз другой рукой.</string>
+    <string name="swipe_hold_six_left">Точка 6: удерживайте и проведите влево другой рукой.</string>
+    <string name="swipe_hold_six_right">Точка 6: удерживайте и проведите другой рукой вправо.</string>
+    <string name="swipe_hold_six_up">Точка 6: удерживайте и проведите вверх другой рукой.</string>
+    <string name="swipe_hold_six_down">Точка 6: удерживайте и проведите вниз другой рукой.</string>
+    <!--  Storage Manager (Universal)  -->
+    <string name="label_active_abbreviations">[Активный словарь сокращений]</string>
+    <string name="label_active_gestures">[Схема активных жестов]</string>
+    <string name="msg_confirm_clear_active">Вы уверены, что хотите удалить все активные данные с клавиатуры? Это действие невозможно отменить.</string>
+    <string name="checkbox_delete_backup_file">Также удалите файл резервной копии в папке с программным шрифтом Брайля.</string>
+    <string name="btn_setup_sync_folder">Предоставить доступ к папке для синхронизации</string>
+    <string name="title_storage_manager">Менеджер хранилища</string>
+    <string name="btn_create_new_table">Создать новую таблицу</string>
+    <string name="label_file_type_tables">Таблицы Брайля</string>
+    <string name="label_file_type_abbreviations">Словарь сокращений</string>
+    <string name="label_file_type_gestures">Схема жестов</string>
+    <string name="msg_confirm_import_generic">Вы хотите импортировать этот ресурс? Текущие данные могут быть перезаписаны.</string>
+    <string name="msg_sync_folder">Синхронизированная папка</string>
+    <string name="msg_download_folder">Скачать папку</string>
+    <string name="pref_sync_folder_title">Синхронизация папок</string>
+    <string name="pref_sync_folder_summary">Выберите папку для синхронизации таблиц и резервных копий</string>
+    <!--  Backup & Restore  -->
+    <string name="btn_export">Экспорт</string>
+    <string name="btn_import">Импорт</string>
+    <string name="hint_search_items">Поиск файлов...</string>
+    <string name="btn_export_system">Экспортировать исходную таблицу</string>
+    <string name="hint_search_tables">Поиск в системных таблицах...</string>
+    <string name="title_export_system">Экспорт оригинальной таблицы Liblouis</string>
+    <string name="label_found_locales">Найдено %d языков</string>
+    <string name="label_auto_selected">Автоматически выбрано</string>
+    <string name="label_no_results">Результаты не найдены</string>
+    <string name="hint_search_locale">Язык поиска...</string>
+    <string name="msg_exported_to">Файл экспортирован в: %s</string>
+    <string name="msg_import_success">Данные успешно импортированы!</string>
+    <string name="msg_import_error">Ошибка импорта: %s</string>
+    <string name="title_select_backup">Выберите резервное копирование</string>
+    <string name="msg_no_backups">Резервные копии в программном шрифте Брайля не найдены.</string>
+    <string name="msg_confirm_import">Перезаписать текущие данные этой резервной копией?</string>
+    <string name="menu_share">Поделиться</string>
+    <string name="menu_delete">Удалить</string>
+    <string name="pref_category_gestures_title">Настройка жестов</string>
+    <string name="pref_gestures_summary">Назначайте функции для пролистывания и удержания жестов</string>
+    <string name="pref_gestures_title">Настройте жесты</string>
+    <string name="pref_reset_gestures_title">Сбросить жесты по умолчанию</string>
+    <string name="pref_reset_gestures_summary">Восстановить исходные назначения жестов</string>
+    <string name="pref_reset_gestures_confirm">Вы уверены, что хотите сбросить для всех жестов их назначения по умолчанию?</string>
+    <string name="pref_export_gestures_title">Экспортировать жесты</string>
+    <string name="pref_export_gestures_summary">Сохраните свою собственную карту жестов в файл.</string>
+    <string name="pref_import_gestures_title">Импортировать жесты</string>
+    <string name="pref_import_gestures_summary">Загрузить карту жестов из файла</string>
+    <string name="pref_gesture_default_format">По умолчанию: %1$s</string>
+    <string name="export_success">Жесты успешно экспортированы в %1$s.</string>
+    <string name="export_error">Ошибка экспорта жестов: %1$s.</string>
+    <string name="import_success">Жесты успешно импортированы</string>
+    <string name="import_error">Ошибка импорта жестов: %1$s.</string>
+    <string name="import_no_valid_data">В файле не найдены действительные данные о жестах</string>
+    <string name="pref_group_single_finger">Проведение одним пальцем</string>
+    <string name="pref_group_two_fingers">Проведение двумя пальцами (только вниз)</string>
+    <string name="pref_group_hold_swipe">Удерживайте точку одной рукой и проведите по ней другой</string>
     <string name="high">Высокая</string>
+    <string name="hint_author">Автор (например, Серджио)</string>
+    <string name="hint_char">Чар</string>
+    <string name="hint_description">Описание таблицы</string>
+    <string name="hint_dots_format">Точки (например, 123–45)</string>
+    <string name="hint_enter_dots">Введите точки (например, 123)</string>
+    <string name="hint_search_rules">Поиск символа или точки...</string>
+    <string name="hint_table_name">Введите имя таблицы (например, my_table)</string>
     <string name="info_url">https://docs.google.com/document/d/1OX6yFjkK61VfROdU9uQNxjEZ_QNWxiMnUY_1ECnIyRQ/pub</string>
     <string name="keyboard_auto">Автоматически</string>
     <string name="keyboard_echo_all">Слова и символы</string>
@@ -38,6 +295,20 @@
     <string name="keyboard_feedback_sound">Только звук</string>
     <string name="keyboard_feedback_vibrate">Только вибрация</string>
     <string name="keyboard_full_screen">Клавиатура развёрнута</string>
+    <string name="keyboard_help_active_table_label">Активная таблица: %s</string>
+    <string name="keyboard_help_dots_hint">Точки или символ</string>
+    <string name="keyboard_help_dots_result">Точки: %1$s</string>
+    <string name="keyboard_help_enter_dots_toast">Пожалуйста, введите точки или символы для поиска</string>
+    <string name="keyboard_help_error_no_table">Ошибка: Активная таблица не найдена.</string>
+    <string name="keyboard_help_file_not_available">Файл таблицы недоступен</string>
+    <string name="keyboard_help_how_to_write_title">Как написать \"%1$s\"</string>
+    <string name="keyboard_help_instruction">Введите точки (например, 45), чтобы узнать, что они делают, или символ (например, A), чтобы узнать, как его написать.</string>
+    <string name="keyboard_help_no_results">По запросу \"%s\" результатов не найдено.</string>
+    <string name="keyboard_help_pref_summary">Узнайте, что делают точки Брайля на текущем языке</string>
+    <string name="keyboard_help_pref_title">Справка по клавиатуре (активная таблица)</string>
+    <string name="keyboard_help_result_line">Строка %1$d</string>
+    <string name="keyboard_help_search_btn">Поиск</string>
+    <string name="keyboard_help_title">Справка по клавиатуре (активная таблица)</string>
     <string name="keyboard_horizontal">Горизонтальная</string>
     <string name="keyboard_next_three">А теперь приложите к экрану три пальца другой руки.</string>
     <string name="keyboard_not_set">Приложите, пожалуйста, к экрану все шесть пальцев, чтобы установить клавиатуру</string>
@@ -45,75 +316,366 @@
     <string name="keyboard_style_normal">Обычный</string>
     <string name="keyboard_style_slate">Прибор и грифель</string>
     <string name="keyboard_style_top_bottom">Поменять точки 1 и 4 местами с точками 3 и 6</string>
+    <string name="keyboard_tabletop">Столешница</string>
     <string name="keyboard_vertical">Вертикальная</string>
+    <string name="label_a_grave">а гравис</string>
+    <string name="label_arabic">арабский</string>
+    <string name="label_auto_link">(автоссылка)</string>
+    <string name="label_base_script">Базовый алфавит/скрипт:</string>
+    <string name="label_base_script_short">алфавит</string>
+    <string name="label_class_prefix">[КЛАСС] класс</string>
+    <string name="label_cyrillic">Кириллица</string>
+    <string name="label_dot">Точка %d</string>
+    <string name="label_dots_dialog">Выберите точки для этой ячейки</string>
+    <string name="label_e_acute">е острый</string>
+    <string name="label_e_grave">е гравис</string>
+    <string name="label_error_prefix">Ошибка: %s</string>
+    <string name="label_external_synced">[Внешний]</string>
+    <string name="label_found_rules">Найдено %1$d правил из %2$d</string>
+    <string name="label_greek">Греческий</string>
+    <string name="label_hebrew">иврит</string>
+    <string name="label_hindi">Хинди</string>
+    <string name="label_i_grave">и гравис</string>
+    <string name="label_korean">корейский</string>
+    <string name="label_latin">латынь</string>
+    <string name="label_locale">Язык таблицы (локаль):</string>
+    <string name="label_locale_short">Язык</string>
+    <string name="label_logic_prefix">[ЛОГИКА] контекст</string>
+    <string name="label_long_press_delete">Список пользовательских таблиц. Нажмите и удерживайте элемент, чтобы удалить его.</string>
+    <string name="label_mapped_items">Сопоставленные элементы</string>
+    <string name="label_mapped_items_short">Сопоставления</string>
+    <string name="label_n_mapped_items">Сопоставлено %d элементов (нажмите, чтобы изменить)</string>
+    <string name="label_no_mapped_items">Нет сопоставленных элементов</string>
+    <string name="label_none">Нет</string>
+    <string name="label_number_system">Система нумерации:</string>
+    <string name="label_number_system_short">Числа</string>
+    <string name="label_o_grave">о гравис</string>
+    <string name="label_opcode">Код операции Либлуи:</string>
+    <string name="label_opcode_short">Правило</string>
+    <string name="label_priority_short">Приоритет</string>
+    <string name="label_results_count">Результаты: %d</string>
+    <string name="label_select_all">Выбрать все</string>
+    <string name="label_show_visual_picker">Показать визуальное средство выбора ячеек</string>
+    <string name="label_source">Источник</string>
+    <string name="label_spazio">пространство</string>
+    <string name="label_structure_prefix">[СТРУКТУРА] включает в себя</string>
+    <string name="label_table_locale">Язык таблицы (локаль):</string>
+    <string name="label_tap_to_edit">Нажмите, чтобы изменить, нажмите и удерживайте, чтобы удалить</string>
+    <string name="label_thai">тайский</string>
+    <string name="label_u_grave">у гравис</string>
+    <string name="label_unicode_braille">Юникод Брайля</string>
+    <string name="label_use_8_dots">Используйте 8 точек (компьютерный шрифт Брайля)</string>
+    <string name="label_vietnamese">вьетнамский</string>
     <string name="low">Низкая</string>
     <string name="mark_not_set">Метка не была установлена</string>
     <string name="medium">Средняя</string>
+    <string name="msg_already_bottom">Уже внизу</string>
+    <string name="msg_already_top">Уже наверху</string>
+    <string name="msg_char_empty">Поле символа пусто</string>
+    <string name="msg_confirm_clone">Заменить текущий список содержимым исходной таблицы?</string>
+    <string name="msg_confirm_delete_mass">Удалить %d выбранных правил?</string>
+    <string name="msg_confirm_template">Применение шаблона очистит текущие сопоставления. Продолжать?</string>
+    <string name="msg_delete_external">Также удалить из внешней папки</string>
+    <string name="msg_deleted">Удалено</string>
+    <string name="msg_duplicate_dots">Комбинация %1$s уже используется для «%2$s».</string>
+    <string name="msg_enter_dots">Введите точки (например, 123-45)</string>
+    <string name="msg_invalid_dots_format">Неверный формат точек. Используйте цифры 1–8, разделенные знаком «-» или пробелами.</string>
+    <string name="msg_char_required">Это правило требует наличия персонажа.</string>
+    <string name="msg_dots_required">Введите хотя бы один точечный узор.</string>
+    <string name="msg_error_logs">Ошибка при обработке журналов</string>
+    <string name="msg_fixed_mapping">Это фиксированное системное сопоставление, и его нельзя удалить.</string>
+    <string name="btn_rename">Переименовать</string>
+    <string name="dialog_export_title">Файл существует</string>
+    <string name="msg_export_collision">Файл с именем %1$s уже существует в папке экспорта. Что бы вы хотели сделать?</string>
+    <string name="msg_save_collision">Таблица с именем %1$s уже существует. Что бы вы хотели сделать?</string>
+    <string name="msg_export_failed">Не удалось экспортировать: %1$s</string>
+    <string name="msg_select_mapping_first">Сначала выберите сопоставление из списка.</string>
+    <string name="msg_share_error">Ошибка публикации</string>
+    <string name="label_sync_hub">Синхронизированный концентратор</string>
+    <string name="msg_hands_overlapping">Руки перекрываются</string>
+    <string name="hint_enter_new_name">Введите новое имя файла</string>
+    <string name="msg_imported">Импортировано %s</string>
+    <string name="msg_invalid_pos">Неверная позиция</string>
+    <string name="msg_logs_cleared">Журналы успешно очищены</string>
+    <string name="msg_no_deletable_rules">Удаляемых правил не найдено.</string>
+    <string name="msg_rule_removed">Правило удалено.</string>
+    <string name="msg_rule_found">Существующее правило найдено</string>
+    <string name="msg_rule_updated">Правило обновлено</string>
+    <string name="msg_rule_added">Правило добавлено</string>
+    <string name="msg_rules_filtered">правила отфильтрованы</string>
+    <string name="msg_select_opcode_first">Пожалуйста, сначала выберите правило/код операции</string>
+    <string name="msg_select_source_first">Перед клонированием выберите исходную таблицу.</string>
+    <string name="msg_standard_char_override">Стандартный персонаж выбранного набора. Ваш выбор будет иметь приоритет.</string>
+    <string name="msg_structure_cloned">Исходная структура клонирована в список.</string>
+    <string name="msg_sync_desc">Выберите папку «soft-braille», чтобы предоставить постоянный доступ и автоматически загружать в нее файлы.</string>
+    <string name="msg_sync_error">Ошибка запроса доступа к папке.</string>
+    <string name="msg_sync_success">Доступ к папке активирован!</string>
+    <string name="msg_table_exported">Таблица экспортирована в Download/soft-braille.</string>
+    <string name="msg_table_file_not_found">Файл таблицы не найден.</string>
+    <string name="msg_table_saved">Таблица успешно сохранена!</string>
+    <string name="msg_template_applied">Шаблон успешно применен!</string>
     <string name="newline">Новая строка</string>
     <string name="no_braille_table">Таблиц нет</string>
     <string name="no_more_misspellings"> Орфографических ошибок больше нет</string>
     <string name="no_password_echo">Не произносить пароли</string>
     <string name="no_rotate_keyboard">Не поворачивать клавиатуру</string>
     <string name="no_suggestions">Нет доступных вариантов</string>
+    <string name="none_selected">--- Ничего не выбрано ---</string>
     <string name="nothing_to_delete">нечего удалять</string>
+    <string name="num_sys_6dot_univocal">Компьютерный шрифт Брайля (6 пунктов, стиль Антуана)</string>
+    <string name="num_sys_8dot_computer_lowered">Компьютерный шрифт Брайля (8 пунктов, пониженный, 1=2)</string>
+    <string name="num_sys_8dot_standard">Стандартный 8-точечный (добавлена точка 8, 1=18)</string>
+    <string name="num_sys_antoine">Антуан (точка 6 + литература, 1=16)</string>
+    <string name="num_sys_classic">Классический (3456 + a-j, 1=1)</string>
+    <string name="num_sys_dropped">Выпавшие числа (3456 + Низкий, 1=2)</string>
+    <string name="num_sys_literary">Литературный (контекст G2)</string>
+    <string name="num_sys_none">Нет / сопоставления вручную</string>
+    <string name="opcode_always">Переопределить (всегда)</string>
+    <string name="opcode_begcaps">Начать все заглавными буквами</string>
+    <string name="opcode_begcapsword">Начать слово с заглавной буквы (begcapsword)</string>
+    <string name="opcode_begnum">Числовой префикс</string>
+    <string name="opcode_capsletter">Знак столицы (6)</string>
+    <string name="opcode_class">Класс</string>
+    <string name="opcode_closepunc">Пунктуация после слова (postpunc)</string>
+    <string name="opcode_context">Контекст</string>
+    <string name="opcode_digit">Цифра (0–9)</string>
+    <string name="opcode_endcaps">Завершить все заглавные буквы</string>
+    <string name="opcode_endcapsword">Конец слова с заглавной буквы (endcapsword)</string>
+    <string name="opcode_endnum">Завершить цифровой режим</string>
+    <string name="opcode_include">Включить</string>
+    <string name="opcode_letsign">Буквенный знак (5)</string>
+    <string name="opcode_letter">Общее письмо</string>
+    <string name="opcode_litdigit">Литературная цифра</string>
+    <string name="opcode_lowercase">Строчная буква</string>
+    <string name="opcode_math">Математика</string>
+    <string name="opcode_midendnumericmodechars">Суффикс/Внутренняя цифра</string>
+    <string name="opcode_midnum">Символ внутри чисел</string>
+    <string name="opcode_numericmodechars">Триггер числового режима</string>
+    <string name="opcode_numsign">Цифровой знак (3456)</string>
+    <string name="opcode_openpunc">Пунктуация перед словом (prepunc)</string>
+    <string name="opcode_partword">Часть слова</string>
+    <string name="opcode_punctuation">Пунктуация</string>
+    <string name="opcode_sign">Знак</string>
+    <string name="opcode_space">Космос</string>
+    <string name="opcode_uppercase">Прописная буква</string>
+    <string name="opcode_word">Полное слово (сокращение)</string>
     <string name="pad_horizontal">Установить клавиатуру на горизонтальную раскладку</string>
+    <string name="pad_tabletop">Установить клавиатуру в настольную раскладку</string>
     <string name="pad_vertical">Установить клавиатуру на вертикальную раскладку</string>
-    <string name="pasted">Вставлено</string>
     <string name="paste_error">Произошла ошибка при вставке текста</string>
+    <string name="pasted">Вставлено</string>
+    <string name="pref_app_version_key">APP_VERSION</string>
     <string name="pref_app_version_title">Версия программы: %s.</string>
+    <string name="pref_auto_caps_default">правда</string>
+    <string name="pref_auto_caps_key">AUTO_CAPS</string>
     <string name="pref_auto_caps_summary">Делать заглавной букву в начале первого слова каждого предложения.</string>
     <string name="pref_auto_caps_title">Автоматическая смена регистра</string>
+    <string name="pref_auto_match_keyboard_default">правда</string>
+    <string name="pref_auto_match_keyboard_key">Auto_MATCH_KEYBOARD</string>
     <string name="pref_auto_match_keyboard_summary">При выборе этой настройки клавиатура устанавливается в зависимости от положения ваших пальцев при ручной калибровке.</string>
     <string name="pref_auto_match_keyboard_title">Автоматически устанавливать раскладку клавиатуры в зависимости от положения ваших пальцев</string>
+    <string name="pref_auto_rotate_keyboard_default">ложный</string>
+    <string name="pref_auto_rotate_keyboard_key">Auto_ROTATE_KEYBOARD</string>
+    <string name="pref_braille_computer_table_default">ru-US-comp8</string>
+    <string name="pref_braille_computer_table_key">BRAILLE_TABLE_0</string>
     <string name="pref_braille_grade_summary">Устанавливает желаемую степень Брайля.</string>
+    <string name="pref_braille_literary_table_default">ru-UEB-g1</string>
+    <string name="pref_braille_literary_table_key">BRAILLE_TABLE_1</string>
+    <string name="pref_braille_table_auto">авто</string>
+    <string name="pref_braille_type_default">1</string>
+    <string name="pref_braille_type_key">BRAILLE_GRADE_KEY</string>
+    <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
+    <string name="pref_category_advanced_title">Дополнительно и журналы</string>
+    <string name="pref_category_braille_key">BRAILLE_CATEGORY_KEY</string>
     <string name="pref_category_braille_title">Брайлевские таблицы</string>
+    <string name="pref_category_custom_tables_title">Таблицы Брайля на заказ</string>
+    <string name="pref_category_feedback_key">KEYBOARD_FEEDBACK_Category</string>
     <string name="pref_category_feedback_title">Настройки эха клавиатуры</string>
+    <string name="pref_category_keyboard_key">KEYBOARD_CATEGORY</string>
     <string name="pref_category_keyboard_title">Настройки клавиатуры</string>
+    <string name="pref_category_misc_key">РАЗНОЕ</string>
     <string name="pref_category_misc_title">Прочие настройки</string>
+    <string name="pref_clear_log_key">CLEAR_LOG</string>
+    <string name="pref_clear_log_summary">Очистить существующий буфер logcat</string>
+    <string name="pref_clear_log_title">Очистить журналы</string>
+    <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
     <string name="pref_default_computer_braille_table_summary"></string>
     <string name="pref_default_computer_braille_table_title">Компьютерная Брайлевская таблица</string>
+    <string name="pref_default_keyboard_default">0</string>
+    <string name="pref_default_keyboard_key">DEFAULT_KEYBOARD</string>
     <string name="pref_default_keyboard_summary">Выберите раскладку клавиатуры, отображающуюся по умолчанию.</string>
     <string name="pref_default_keyboard_title">Раскладка клавиатуры по умолчанию</string>
     <string name="pref_default_literary_braille_table_summary"></string>
-    <string name="pref_default_literary_braille_table_title">Литературная Брайлевская таблица</string>    
+    <string name="pref_default_literary_braille_table_title">Литературная Брайлевская таблица</string>
+    <string name="pref_double_space_period_default">правда</string>
+    <string name="pref_double_space_period_key">DOUBLE_SPACE_PERIOD</string>
     <string name="pref_double_space_period_summary">Смахнув дважды пробел, можно поставить точку со следующим за ней пробелом.</string>
-    <string name="pref_double_space_period_title">Точка с пробелом</string>    
+    <string name="pref_double_space_period_title">Точка с пробелом</string>
+    <string name="pref_echo_feedback_key">KEYBOARD_ECHO</string>
     <string name="pref_echo_feedback_summary">Выберите тип эха клавиатуры.</string>
     <string name="pref_echo_feedback_title">Эха клавиатуры</string>
+    <string name="pref_echo_misspellings_default">правда</string>
+    <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
     <string name="pref_echo_misspellings_summary">При выборе этой настройки объявляются орфографические ошибки после того, как вы поставили пробел</string>
-    <string name="pref_echo_misspellings_title">Уведомлять об орфографических ошибках при наборе текста </string>    
+    <string name="pref_echo_misspellings_title">Уведомлять об орфографических ошибках при наборе текста </string>
+    <string name="pref_misspelling_sound_default">ложный</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">В случае орфографических ошибок воспроизводите звук вместо голосовой обратной связи.</string>
+    <string name="pref_misspelling_sound_title">Звуковое уведомление об орфографической ошибке</string>
+    <string name="misspelling_sound_enabled">Звуковое оповещение об орфографической ошибке включено</string>
+    <string name="misspelling_sound_disabled">Звуковое оповещение об орфографической ошибке отключено.</string>
+    <string name="word_added_to_dictionary">Слово %s добавлено в личный словарь</string>
+    <string name="no_word_to_add">Не найдено слов, которые можно было бы добавить в словарь</string>
+    <string name="word_removed_from_dictionary">Слово %s удалено из личного словаря.</string>
+    <string name="word_not_in_dictionary">Слово %s не найдено в личном словаре</string>
+    <string name="no_word_to_remove">Не найдено слов, которые можно было бы удалить из словаря</string>
+    <string name="pref_echo_passwords_default">ложный</string>
+    <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
     <string name="pref_echo_passwords_summary">При выборе этой настройки клавиатура будет проговаривать символы при вводе пароля.</string>
+    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
+    <string name="pref_has_asked_record_audio_key">RECORD_AUDIO</string>
+    <string name="pref_invert_horizontal_swipes_default">ложный</string>
+    <string name="pref_invert_horizontal_swipes_key">INVERT_HORIZONTAL_SWIPES</string>
+    <string name="pref_invert_horizontal_swipes_summary">Поменяйте направления смахивания влево и вправо.</string>
+    <string name="pref_invert_horizontal_swipes_title">Инвертировать горизонтальные смахивания</string>
+    <string name="pref_invert_vertical_swipes_default">ложный</string>
+    <string name="pref_invert_vertical_swipes_key">INVERT_VERTICAL_SWIPES</string>
+    <string name="pref_invert_vertical_swipes_summary">Поменяйте направления смахивания вверх и вниз.</string>
+    <string name="pref_invert_vertical_swipes_title">Инвертировать вертикальные смахивания</string>
+    <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_feedback_summary">Выберите тип тактильного и звукового отклика клавиатуры.</string>
     <string name="pref_keyboard_feedback_title">Отклик клавиатуры</string>
+    <string name="pref_keyboard_invert_default">ложный</string>
+    <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">Когда клавиатура не поворачивается с телефоном Воспользуйтесь этой настройкой, чтобы менять ориентацию клавиатуры на 180 градусов</string>
     <string name="pref_keyboard_invert_title">Перевернуть клавиатуру</string>
+    <string name="pref_keyboard_save_horizontal_landscape_invert_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_landscape_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_horizontal_portrait_invert_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_portrait_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_invert_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE</string>
+    <string name="pref_keyboard_save_tabletop_portrait_invert_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_portrait_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT</string>
+    <string name="pref_keyboard_save_vertical_landscape_invert_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_vertical_landscape_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_vertical_portrait_invert_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_vertical_portrait_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT</string>
+    <string name="pref_keyboard_style_key">KEYBOARD_STYLE</string>
+    <string name="pref_keyboard_style_normal_value">0</string>
+    <string name="pref_keyboard_style_slate_value">1</string>
     <string name="pref_keyboard_style_summary">Измените положение  точек на клавиатуре.</string>
     <string name="pref_keyboard_style_title">Стиль клавиатуры</string>
+    <string name="pref_keyboard_style_top_bottom_value">2</string>
+    <string name="pref_last_calibrated_layout_key">LAST_CALIBRATED_LAYOUT</string>
+    <string name="pref_lock_calibration_default">ложный</string>
+    <string name="pref_lock_calibration_key">LOCK_CALIBRATION</string>
+    <string name="pref_lock_calibration_summary">Предотвращает перемещение точек во время набора текста и сохраняет пользовательский макет.</string>
+    <string name="pref_lock_calibration_title">Зафиксировать положение точек</string>
+    <string name="pref_manage_tables_summary">Импортируйте, удаляйте или создавайте собственные таблицы Брайля.</string>
+    <string name="pref_manage_tables_title">Управление/создание таблиц Брайля</string>
+    <string name="pref_privacy_default">ложный</string>
+    <string name="pref_privacy_key">КОНФИДЕНЦИАЛЬНОСТЬ</string>
     <string name="pref_privacy_summary">При выборе этой настройки при вводе данных экран погасает в целях приватности.</string>
     <string name="pref_privacy_title">Окно приватности</string>
+    <string name="pref_share_log_key">SHARE_LOG</string>
+    <string name="pref_share_log_summary">Собирайте и делитесь системными журналами для отладки.</string>
+    <string name="pref_share_log_title">Поделиться журналами</string>
+    <string name="pref_show_circles_default">правда</string>
+    <string name="pref_show_circles_key">SHOW_CIRCLE_KEY</string>
     <string name="pref_show_circles_summary">При выборе этой настройки появятся маленькие кружочки, указывающие место расположения каждой Брайлевской точки на экране</string>
     <string name="pref_show_circles_title">Показать кружочки на экране?</string>
+    <string name="pref_show_ext_tables_default">ложный</string>
+    <string name="pref_show_ext_tables_key">SHOW_EXT_TABLES</string>
+    <string name="pref_show_ext_tables_summary">Показать все доступные таблицы Либлуи, включая те, которые официально не поддерживаются Google.</string>
+    <string name="pref_show_ext_tables_title">Показать расширенные таблицы Либлуи</string>
+    <string name="pref_speech_rate_default">50</string>
+    <string name="pref_speech_rate_key">SPEECH_RATE</string>
+    <string name="pref_speech_rate_summary">Выберите, насколько быстро будет говорить клавиатура.</string>
+    <string name="pref_speech_rate_title">Скорость речи</string>
+    <string name="pref_swap_swipe_axes_default">ложный</string>
+    <string name="pref_swap_swipe_axes_key">SWAP_SWIPE_AXES</string>
+    <string name="pref_swap_swipe_axes_summary">Интерпретируйте горизонтальные смахивания как вертикальные и наоборот.</string>
+    <string name="pref_swap_swipe_axes_title">Поменять оси смахивания</string>
+    <string name="pref_swipe_sensitivity_key">SWIPE_SENSITIVITY_KEY</string>
     <string name="pref_swipe_sensitivity_summary">Выберите чувствительность смахивания.</string>
     <string name="pref_swipe_sensitivity_title">Чувствительность смахивания</string>
+    <string name="pref_switch_tables_key">SWITCH_TABLES</string>
     <string name="pref_switch_tables_summary">Выберите несколько языков, между которыми можно переключаться в реальном времени при вводе текста.</string>
     <string name="pref_switch_tables_title">Активировать Брайлевские таблицы для переключения между ними в реальном времени.</string>
+    <string name="pref_text_to_speech_engine_key">TEXT_TO_SPEECH</string>
     <string name="pref_text_to_speech_engine_title">Синтезатор речи</string>
     <string name="pref_text_to_speech_title">Настройки преобразования текста в речь</string>
+    <string name="pref_two_hand_calibration_default">правда</string>
+    <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
+    <string name="pref_two_hand_calibration_summary">Разрешить калибровку клавиатуры двумя отдельными касаниями.</string>
+    <string name="pref_two_hand_calibration_title">Калибровка в два касания</string>
+    <string name="pref_use_accessibility_volume_default">ложный</string>
+    <string name="pref_use_accessibility_volume_key">USE_ACCESSIBILITY_VOLUME</string>
+    <string name="pref_use_accessibility_volume_summary">Используйте громкость доступности как для обратной связи TTS, так и для WAV.</string>
+    <string name="pref_use_accessibility_volume_title">Использовать громкость специальных возможностей</string>
+    <string name="pref_use_eight_dots_default">ложный</string>
+    <string name="pref_use_eight_dots_key">USE_EIGHT_DOT</string>
     <string name="pref_use_eight_dots_summary">При выборе этой настройки появляются точки 7 и 8.</string>
     <string name="pref_use_eight_dots_title">Показать восьмиточечную клавиатуру</string>
+    <string name="pref_use_wav_default">ложный</string>
+    <string name="pref_use_wav_key">USE_WAV_TTS</string>
+    <string name="pref_use_wav_summary">Используйте предварительно созданные файлы WAV для отдельных символов вместо механизма TTS (быстрее).</string>
+    <string name="pref_use_wav_title">Используйте обратную связь в формате WAV</string>
+    <string name="pref_vibrate_on_exit_default">правда</string>
+    <string name="pref_vibrate_on_exit_key">VIBRATE_EXIT</string>
     <string name="pref_vibrate_on_exit_title">Вибрация при закрытии клавиатуры</string>
-    <string name="pref_voice_shortcut_summary">При выборе этой настройки коснитесь дважды с удержанием, чтобы начать голосовой ввод при включённом talkback.</string> 
+    <string name="pref_voice_shortcut_default">правда</string>
+    <string name="pref_voice_shortcut_key">VOICE_INPUT_SHORTCUT</string>
+    <string name="pref_voice_shortcut_summary">При выборе этой настройки коснитесь дважды с удержанием, чтобы начать голосовой ввод при включённом talkback.</string>
     <string name="pref_voice_shortcut_title">Команда для голосового ввода</string>
+    <string name="preset_caps_sign">Знак столицы</string>
+    <string name="preset_cat_acute">Острый/испанский (á, ñ...)</string>
+    <string name="preset_cat_base">Базовый алфавит (а-я)</string>
+    <string name="preset_cat_circ">Циркумфлекс/французский (â, œ...)</string>
+    <string name="preset_cat_control">Коды управления (6 пунктов)</string>
+    <string name="preset_cat_dier">Диэрезис (ä, ë...)</string>
+    <string name="preset_cat_it_accents">Итальянский акцент</string>
+    <string name="preset_cat_math">Математика и символы (+, €, ...)</string>
+    <string name="preset_cat_punc">Пунктуация (стандартная/литературная)</string>
+    <string name="preset_let_sign">Письмо Знак</string>
+    <string name="preset_num_sign">Знак числа</string>
     <string name="privacy_disabled">Режим приватности отключён</string>
     <string name="privacy_enabled">Режим приватности включён</string>
+    <string name="punctuation_backslash">Обратная косая черта</string>
+    <string name="punctuation_close_paren">Правая круглая</string>
+    <string name="punctuation_colon">Двоеточие</string>
+    <string name="punctuation_comma">Запятая</string>
+    <string name="punctuation_dot">Точка</string>
+    <string name="punctuation_double_quote">Двойные кавычки</string>
+    <string name="punctuation_exclamation">Восклицательный знак</string>
+    <string name="punctuation_left_brace">Левая квадратная</string>
+    <string name="punctuation_open_paren">Левая круглая</string>
+    <string name="punctuation_questionmark">Вопросительный знак</string>
+    <string name="punctuation_right_brace">Правая квадратная</string>
+    <string name="punctuation_semicolon">Точка с запятой</string>
+    <string name="punctuation_single_quote">апостроф</string>
+    <string name="punctuation_slash">Косая черта</string>
+    <string name="punctuation_space">Пробел</string>
     <string name="ready">клавиатура готова</string>
+    <string name="require_record_audio_now">REQUIRE_RECORD_AUDIO</string>
     <string name="return_key">Вернуться</string>
     <string name="rotate_keyboard">Поворачивать клавиатуру с устройством</string>
     <string name="rotate_summary">При выборе этой настройки клавиатура будет направлена в зависимости от ориентации устройства.</string>
+    <string name="script_arabic">арабский</string>
+    <string name="script_cyrillic">Кириллица (русская/славянская)</string>
+    <string name="script_greek">Греческий</string>
+    <string name="script_hebrew">иврит</string>
+    <string name="script_hindi">Индийский (деванагари)</string>
+    <string name="script_korean">Корейский (Хангыль)</string>
+    <string name="script_latin">Латинский (европейский)</string>
+    <string name="script_thai">тайский</string>
+    <string name="script_unicode">Только символы (Юникод)</string>
+    <string name="script_vietnamese">вьетнамский</string>
     <string name="select_all">Выделить всё</string>
     <string name="selected_all">Весь текст выделен</string>
     <string name="set_mark">Метка поставлена</string>
-    <string name="settings_name">SBK Modern Settings</string>
+    <string name="settings_name">Настройки Soft Braille Keyboard</string>
     <string name="show_input_switcher">Показывается переключатель ввода</string>
     <string name="show_settings">Показываются настройки soft braille keyboard</string>
     <string name="space">Пробел</string>
@@ -121,11 +683,41 @@
     <string name="speak_selection">Произносить выделение</string>
     <string name="spellcheck_not_supported">Проверка орфографии в этой версии Android не поддерживается.</string>
     <string name="start_of_text">Начало текста</string>
+    <string name="swipe_confirm">Для подтверждения смахните снова</string>
     <string name="swipe_confirm_input">смахните ещё раз, чтобы показать настройку выбора клавиатуры</string>
     <string name="swipe_confirm_settings">Смахните ещё раз, чтобы показать настройки Soft Braille Keyboard</string>
-    <string name="swipe_confirm">Для подтверждения смахните снова</string>
+    <string name="table_header_author">Автор:</string>
+    <string name="table_header_desc">Описание:</string>
+    <string name="table_section_base">Базовые правила</string>
+    <string name="table_section_high">HIGH PRIORITY</string>
+    <string name="table_section_standard">STANDARD PRIORITY</string>
+    <string name="table_variant_unofficial">неофициальный</string>
+    <string name="btn_edit_header">Редактировать заголовок таблицы/метаданные</string>
+    <string name="btn_move_to_pos">Переместиться в позицию</string>
+    <string name="btn_pin_mapping">Назначение контактов (защита)</string>
+    <string name="btn_unpin_mapping">Открепить сопоставление</string>
+    <string name="hint_enter_pos">Введите позицию (от 1 до %d)</string>
+    <string name="btn_move_up">Двигаться вверх</string>
+    <string name="btn_move_down">Вниз</string>
+    <string name="btn_move_top">Перейти наверх</string>
+    <string name="btn_insert_alphabet_here">Вставьте сюда алфавит (%s)</string>
+    <string name="btn_insert_numeric_here">Вставьте сюда числа (%s)</string>
+    <string name="title_activity_keyboard_help">Справка по клавиатуре</string>
+    <string name="title_activity_table_creator">Создатель таблиц</string>
+    <string name="title_confirm_delete">Подтвердить удаление</string>
+    <string name="title_duplicate_combination">Дублирующаяся комбинация</string>
+    <string name="title_mass_actions">Массовые акции</string>
+    <string name="title_order_actions">Изменение порядка действий</string>
+    <string name="title_select_prefix">Выберите префикс (например, точка 4, 5 или 6)</string>
+    <string name="title_select_table_file">Выберите файл таблицы Брайля</string>
+    <string name="title_select_template">Выберите шаблон</string>
+    <string name="title_share_table">Поделиться таблицей</string>
     <string name="translator_error">Обнаружена ошибка службы Брайля</string>
+    <string name="trial_buy">Купить</string>
+    <string name="trial_expired_message">Срок действия пробной версии истек.</string>
+    <string name="trial_expired_title">Срок действия пробной версии истек</string>
     <string name="try_box">Попробуйте напечатать что-нибудь здесь.</string>
+    <string name="txt_id_practice">TXT_PRACTICE</string>
     <string name="unknown_character">Неизвестный символ</string>
     <string name="unset_mark">Метка снята</string>
     <string name="voice_input_enable">Пожалуйста, сделайте этот жест быстро два раза. Откроется диалог. С включённым talkback подтвердите разрешение на запись аудио, чтобы активировать голосовой ввод.</string>
@@ -133,100 +725,122 @@
     <string name="voice_input_is_not_available">Голосовой ввод недоступен на этом устройстве.</string>
     <string name="voice_input_permission_message">чтобы голосовой ввод работал,  вам необходимо дать разрешение на запись аудио.</string>
     <string name="voice_input_permission_title">Разрешение на голосовой ввод</string>
-    <string name="word_correction_misspelled">орфографическая ошибка %s</string>
     <string name="word_correct">Слово написано правильно</string>
+    <string name="word_correction_correct">%s верно</string>
+    <string name="word_correction_misspelled">орфографическая ошибка %s</string>
     <string name="word_count">%1$d строки, %2$d слова, %3$d символы</string>
     <string name="word_misspelled">Орфографическая ошибка</string>
-
-    <!-- PUNCTUATION -->
-
-    <!--
-      Source: A value for announcing a question mark.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_questionmark">Вопросительный знак</string>
-
-    <!--
-      Source: A value for announcing a space.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_space">Пробел</string>
-
-    <!--
-      Source: A value for announcing a comma.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_comma">Запятая</string>
-
-    <!--
-      Source: A value for announcing a dot.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_dot">Точка</string>
-
-    <!--
-      Source: A value for announcing an exclamation.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_exclamation">Восклицательный знак</string>
-
-    <!--
-      Source: A value for announcing an opening parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_open_paren">Левая круглая</string>
-
-    <!--
-      Source: A value for announcing a closing parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_close_paren">Правая круглая</string>
-
-    <!--
-      Source: A value for announcing a double quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_double_quote">Двойные кавычки</string>
-
-    <!--
-      Source: A value for announcing a single quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_single_quote">апостроф</string>
-
-    <!--
-      Source: A value for announcing a slash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_slash">Косая черта</string>
-
-    <!--
-      Source: A value for announcing a backslash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_backslash">Обратная косая черта</string>
-
-    <!--
-      Source: A value for announcing a semicolon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_semicolon">Точка с запятой</string>
-
-    <!--
-      Source: A value for announcing a colon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_colon">Двоеточие</string>
-    
-    <!--
-      Source: A value for announcing a left brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_left_brace">Левая квадратная</string>
-    
-    <!--
-      Source: A value for announcing a right brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_right_brace">Правая квадратная</string>
+    <!--  BrailleAction Arrays  -->
+    <string-array name="braille_action_entries">
+        <item>@string/action_none</item>
+        <item>@string/action_move_left_char</item>
+        <item>@string/action_move_right_char</item>
+        <item>@string/action_move_left_word</item>
+        <item>@string/action_move_right_word</item>
+        <item>@string/action_move_left_line</item>
+        <item>@string/action_move_right_line</item>
+        <item>@string/action_move_left_all</item>
+        <item>@string/action_move_right_all</item>
+        <item>@string/action_backspace_char</item>
+        <item>@string/action_backspace_word</item>
+        <item>@string/action_backspace_line</item>
+        <item>@string/action_backspace_all</item>
+        <item>@string/action_read_char</item>
+        <item>@string/action_read_word</item>
+        <item>@string/action_read_line</item>
+        <item>@string/action_read_all</item>
+        <item>@string/action_space</item>
+        <item>@string/action_newline</item>
+        <item>@string/action_voice_input</item>
+        <item>@string/action_toggle_privacy</item>
+        <item>@string/action_toggle_auto_caps</item>
+        <item>@string/action_toggle_echo_passwords</item>
+        <item>@string/action_toggle_mark</item>
+        <item>@string/action_cycle_keyboard_feedback</item>
+        <item>@string/action_cycle_echo_feedback</item>
+        <item>@string/action_switch_braille_type</item>
+        <item>@string/action_switch_braille_table</item>
+        <item>@string/action_open_settings</item>
+        <item>@string/action_open_input_switcher</item>
+        <item>@string/action_close_keyboard</item>
+        <item>@string/action_shrink_keyboard</item>
+        <item>@string/action_word_count</item>
+        <item>@string/action_next_field_action</item>
+        <item>@string/action_select_text_action</item>
+        <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_edit_select_all</item>
+        <item>@string/action_edit_copy</item>
+        <item>@string/action_edit_cut</item>
+        <item>@string/action_edit_paste</item>
+        <item>@string/action_edit_speak</item>
+        <item>@string/action_edit_delete</item>
+        <item>@string/action_spell_check_left</item>
+        <item>@string/action_spell_check_right</item>
+        <item>@string/action_spell_check_next_suggestion</item>
+        <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_abbreviations_no_space</item>
+        <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_toggle_misspelling_sound</item>
+        <item>@string/action_add_to_dictionary</item>
+        <item>@string/action_remove_from_dictionary</item>
+        <item>@string/action_set_dot_7</item>
+        <item>@string/action_set_dot_8</item>
+    </string-array>
+    <string-array name="braille_action_values">
+        <item>NONE</item>
+        <item>MOVE_LEFT_CHAR</item>
+        <item>MOVE_RIGHT_CHAR</item>
+        <item>MOVE_LEFT_WORD</item>
+        <item>MOVE_RIGHT_WORD</item>
+        <item>MOVE_LEFT_LINE</item>
+        <item>MOVE_RIGHT_LINE</item>
+        <item>MOVE_LEFT_ALL</item>
+        <item>MOVE_RIGHT_ALL</item>
+        <item>BACKSPACE_CHAR</item>
+        <item>BACKSPACE_WORD</item>
+        <item>BACKSPACE_LINE</item>
+        <item>BACKSPACE_ALL</item>
+        <item>READ_CHAR</item>
+        <item>READ_WORD</item>
+        <item>READ_LINE</item>
+        <item>READ_ALL</item>
+        <item>SPACE</item>
+        <item>NEWLINE</item>
+        <item>VOICE_INPUT</item>
+        <item>TOGGLE_PRIVACY</item>
+        <item>TOGGLE_AUTO_CAPS</item>
+        <item>TOGGLE_ECHO_PASSWORDS</item>
+        <item>TOGGLE_MARK</item>
+        <item>CYCLE_KEYBOARD_FEEDBACK</item>
+        <item>CYCLE_ECHO_FEEDBACK</item>
+        <item>SWITCH_BRAILLE_TYPE</item>
+        <item>SWITCH_BRAILLE_TABLE</item>
+        <item>OPEN_SETTINGS</item>
+        <item>OPEN_INPUT_SWITCHER</item>
+        <item>CLOSE_KEYBOARD</item>
+        <item>SHRINK_KEYBOARD</item>
+        <item>WORD_COUNT</item>
+        <item>NEXT_FIELD_ACTION</item>
+        <item>SELECT_TEXT_ACTION</item>
+        <item>EMOJI_MODE_TOGGLE</item>
+        <item>EDIT_SELECT_ALL</item>
+        <item>EDIT_COPY</item>
+        <item>EDIT_CUT</item>
+        <item>EDIT_PASTE</item>
+        <item>EDIT_SPEAK</item>
+        <item>EDIT_DELETE</item>
+        <item>SPELL_CHECK_LEFT</item>
+        <item>SPELL_CHECK_RIGHT</item>
+        <item>SPELL_CHECK_NEXT_SUGGESTION</item>
+        <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
+        <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>TOGGLE_MISSPELLING_SOUND</item>
+        <item>ADD_TO_DICTIONARY</item>
+        <item>REMOVE_FROM_DICTIONARY</item>
+        <item>SET_DOT_7</item>
+        <item>SET_DOT_8</item>
+    </string-array>
 </resources>

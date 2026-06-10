@@ -299,7 +299,11 @@ public class StorageManagerActivity extends AppCompatActivity {
     private String mPendingExportName;
     private void performExport(Uri destUri) {
         try {
-            File source = new File(new File(getDir("translator", MODE_PRIVATE), "liblouis/tables"), mPendingExportName);
+            Context storageContext = getApplicationContext();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                storageContext = storageContext.createDeviceProtectedStorageContext();
+            }
+            File source = new File(new File(storageContext.getDir("translator", MODE_PRIVATE), "liblouis/tables"), mPendingExportName);
             try (InputStream is = new FileInputStream(source); OutputStream os = getContentResolver().openOutputStream(destUri)) {
                 byte[] buf = new byte[4096]; int len;
                 while ((len = is.read(buf)) > 0) os.write(buf, 0, len);

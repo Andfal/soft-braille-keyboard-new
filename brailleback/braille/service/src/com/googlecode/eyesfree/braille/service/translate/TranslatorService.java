@@ -77,7 +77,11 @@ public class TranslatorService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mTableList = new TableList(this);
+        android.content.Context storageContext = this;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = createDeviceProtectedStorageContext();
+        }
+        mTableList = new TableList(storageContext);
         extractDataFiles();
 
         android.content.IntentFilter filter = new android.content.IntentFilter(ACTION_TABLE_UPDATED);
@@ -103,10 +107,14 @@ public class TranslatorService extends Service {
     }
 
     private void extractDataFiles() {
-        File baseDir = getDir("translator", MODE_PRIVATE);
+        android.content.Context storageContext = this;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = createDeviceProtectedStorageContext();
+        }
+        File baseDir = storageContext.getDir("translator", MODE_PRIVATE);
         
         ZipResourceExtractor extractor = new ZipResourceExtractor(
-            this, R.raw.translationtables, baseDir) {
+            storageContext, R.raw.translationtables, baseDir) {
             @Override
             protected void onPreExecute() {
                 // Perform cleanup in pre-execute if it's running in background (depends on implementation)
@@ -198,7 +206,11 @@ public class TranslatorService extends Service {
     }
 
     private String getTablePath(String tableName) {
-        File baseDir = getDir("translator", MODE_PRIVATE);
+        android.content.Context storageContext = this;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = createDeviceProtectedStorageContext();
+        }
+        File baseDir = storageContext.getDir("translator", MODE_PRIVATE);
         File tablesDir = new File(baseDir, "liblouis/tables");
         if (tableName.startsWith("/")) {
             // It's a custom table path. To allow Liblouis to find includes (UTIs)

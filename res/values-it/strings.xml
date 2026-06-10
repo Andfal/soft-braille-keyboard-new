@@ -10,6 +10,8 @@
     <string name="auto_caps_enabled">Maiuscole automatiche</string>
     <string name="blank">Vuoto</string>
     <string name="braille_ime">Soft Braille Keyboard</string>
+    <string name="btn_move_to_bottom">Sposta in fondo</string>
+    <string name="label_high_priority_prefix">[H] </string>
     <string name="btn_add">AGGIUNGI</string>
     <string name="btn_add_anyway">Aggiungi comunque</string>
     <string name="btn_add_prefix">Aggiungi prefisso...</string>
@@ -111,7 +113,7 @@
     <string name="keyboard_echo_character">Carattere</string>
     <string name="keyboard_echo_none">Nessuno</string>
     <string name="keyboard_echo_word">Parola</string>
-    <string name="keyboard_error">Impossibile calibrare la tastiera.</string>
+    <string name="keyboard_error">Impossibile impostare la tastiera.</string>
     <string name="keyboard_feedback_all">Suono e vibrazione</string>
     <string name="keyboard_feedback_none">Nessuno</string>
     <string name="keyboard_feedback_sound">Solo suono</string>
@@ -217,13 +219,28 @@
     <string name="msg_deleted">Eliminato</string>
     <string name="msg_duplicate_dots">La combinazione %1$s è già usata per \'%2$s\'.</string>
     <string name="msg_enter_dots">Inserisci i punti (es. 123-45)</string>
+    <string name="msg_invalid_dots_format">Formato punti non valido. Usa le cifre 1-8 separate da \'-\' o spazi.</string>
+    <string name="msg_char_required">Questa regola richiede un carattere.</string>
+    <string name="msg_dots_required">Inserisci almeno una combinazione di punti.</string>
     <string name="msg_error_logs">Errore durante la gestione dei log</string>
     <string name="msg_fixed_mapping">Questa è una mappatura di sistema fissa e non può essere rimossa.</string>
-    <string name="msg_import_rules_confirm">Importa %d regole?</string>
+    <string name="btn_rename">Rinomina</string>
+    <string name="dialog_export_title">File esistente</string>
+    <string name="msg_export_collision">Un file con il nome %1$s esiste già nella cartella di esportazione. Cosa vuoi fare?</string>
+    <string name="msg_save_collision">Una tabella con il nome %1$s esiste già. Cosa vuoi fare?</string>
+    <string name="msg_export_failed">Esportazione fallita: %1$s</string>
+    <string name="msg_select_mapping_first">Seleziona prima una mappatura dalla lista.</string>
+    <string name="msg_share_error">Errore durante la condivisione</string>
+    <string name="label_sync_hub">Hub Sincronizzato</string>
+    <string name="msg_hands_overlapping">Mani sovrapposte</string>
+    <string name="hint_enter_new_name">Inserisci nuovo nome file</string>
     <string name="msg_imported">Importato %s</string>
     <string name="msg_logs_cleared">Log cancellati con successo</string>
     <string name="msg_no_deletable_rules">Nessuna regola eliminabile trovata.</string>
     <string name="msg_rule_removed">Regola rimossa.</string>
+    <string name="msg_rule_found">Regola esistente trovata</string>
+    <string name="msg_rule_updated">Regola aggiornata</string>
+    <string name="msg_rule_added">Regola aggiunta</string>
     <string name="msg_rules_filtered">regole filtrate</string>
     <string name="msg_select_opcode_first">Seleziona prima un Opcode / Regola</string>
     <string name="msg_select_source_first">Seleziona una tabella sorgente prima di clonare.</string>    <string name="msg_standard_char_override">Carattere standard del set selezionato. La tua scelta avrà la precedenza.</string>
@@ -340,6 +357,17 @@
     <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
     <string name="pref_echo_misspellings_summary">Se attivato gli errori di ortografia vengono notificati dopo l\'inserimento di uno spazio</string>
     <string name="pref_echo_misspellings_title">Eco errori di ortografia durante la scrittura</string>
+    <string name="pref_misspelling_sound_default">false</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">Riproduce un suono per gli errori di ortografia invece del riscontro vocale.</string>
+    <string name="pref_misspelling_sound_title">Notifica sonora errori ortografici</string>
+    <string name="misspelling_sound_enabled">Notifica sonora errori ortografici attivata</string>
+    <string name="misspelling_sound_disabled">Notifica sonora errori ortografici disattivata</string>
+    <string name="word_added_to_dictionary">Parola %s aggiunta al dizionario personale</string>
+    <string name="no_word_to_add">Nessuna parola trovata da aggiungere al dizionario</string>
+    <string name="word_removed_from_dictionary">Parola %s rimossa dal dizionario personale</string>
+    <string name="word_not_in_dictionary">Parola %s non trovata nel dizionario personale</string>
+    <string name="no_word_to_remove">Nessuna parola trovata da rimuovere dal dizionario</string>
     <string name="pref_echo_passwords_default">false</string>
     <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
     <string name="pref_echo_passwords_summary">Se abilitato la tastiera pronuncerà le password durante la digitazione.</string>
@@ -541,6 +569,8 @@
     <string name="table_variant_unofficial">Non ufficiale</string>
     <string name="btn_edit_header">Modifica Intestazione / Metadati</string>
     <string name="btn_move_to_pos">Sposta in Posizione</string>
+    <string name="btn_pin_mapping">Fissa (proteggi da eliminazione)</string>
+    <string name="btn_unpin_mapping">Sblocca (permetti modifiche)</string>
     <string name="hint_enter_pos">Inserisci posizione (da 1 a %d)</string>
     <string name="msg_invalid_pos">Posizione non valida</string>
     <string name="btn_move_up">Sposta Su</string>
@@ -548,6 +578,7 @@
     <string name="btn_move_top">Sposta in Cima</string>
     <string name="btn_insert_alphabet_here">Inserisci Alfabeto (%s) qui</string>
     <string name="btn_insert_numeric_here">Inserisci Numeri (%s) qui</string>
+    <string name="title_activity_keyboard_help">Aiuto Tastiera</string>
     <string name="title_activity_table_creator">Creatore Tabelle</string>
     <string name="title_confirm_delete">Conferma Eliminazione</string>
     <string name="title_duplicate_combination">Combinazione Duplicata</string>
@@ -571,6 +602,7 @@
     <string name="voice_input_permission_message">è necessario consentire la registrazione audio perché la dettatura vocale possa funzionare.</string>
     <string name="voice_input_permission_title">Permesso per dettatura vocale</string>
     <string name="word_correct">Parola corretta</string>
+    <string name="word_correction_correct">%s corretto</string>
     <string name="word_correction_misspelled">%s errato</string>
     <string name="word_count">%1$d righe, %2$d parole, %3$d caratteri</string>
     <string name="word_misspelled">Errato</string>
@@ -625,7 +657,13 @@
     <string name="action_set_dot_7">Inserisci punto 7</string>
     <string name="action_set_dot_8">Inserisci punto 8</string>
     <string name="action_toggle_abbreviations">Attiva/disattiva abbreviazioni con spazio</string>
+    <string name="action_toggle_abbreviations_no_space">Attiva/disattiva abbreviazioni senza spazio</string>
     <string name="action_toggle_instant_abbreviations">Attiva/disattiva espansione istantanea</string>
+    <string name="action_toggle_misspelling_sound">Attiva/disattiva notifica sonora errori ortografici</string>
+    <string name="action_add_to_dictionary">Aggiungi parola al dizionario personale</string>
+    <string name="action_add_to_dictionary_option">Aggiungi %s al dizionario personale</string>
+    <string name="action_remove_from_dictionary">Rimuovi parola dal dizionario personale</string>
+    <string name="action_remove_from_dictionary_option">Rimuovi %s dal dizionario personale</string>
 
     <!-- Abbreviations (IT) -->
     <string name="pref_abbreviations_title">Abbreviazioni</string>
@@ -638,11 +676,16 @@
     <string name="pref_abbreviations_enabled_summary">Sostituisce le scorciatoie tramite Spazio o Invio (usati come modificatori, senza inserire spazi aggiuntivi).</string>
     <string name="abbreviations_enabled">Abbreviazioni con spazio attivate</string>
     <string name="abbreviations_disabled">Abbreviazioni con spazio disattivate</string>
+    <string name="abbreviations_no_space_enabled">Abbreviazioni senza spazio attivate</string>
+    <string name="abbreviations_no_space_disabled">Abbreviazioni senza spazio disattivate</string>
     <string name="title_abbreviation_editor">Editor Abbreviazioni</string>
     <string name="hint_shortcut">Scorciatoia (es. ccs o 6-s)</string>
     <string name="hint_expansion">Testo espanso (es. Ciao, come stai?)</string>
     <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
     <string name="pref_abbreviations_enabled_default">false</string>
+    <string name="pref_abbreviations_add_space_title">Espansione con spazio</string>
+    <string name="pref_abbreviations_add_space_summary">Sostituisce le scorciatoie inserendo uno spazio o invio dopo il testo espanso.</string>
+    <string name="nothing_to_expand">Nulla da espandere</string>
 
     <!-- Gesture Names (IT) -->
     <string name="swipe_one_left">Punto 1: Scorri a sinistra.</string>
@@ -877,48 +920,4 @@
 
     
     
-            <string name="btn_move_to_bottom">Sposta in fondo</string>
-    <string name="label_high_priority_prefix">[H] </string>
-    <string name="msg_invalid_dots_format">Formato punti non valido. Usa le cifre 1-8 separate da \'-\' o spazi.</string>
-    <string name="msg_char_required">Questa regola richiede un carattere.</string>
-    <string name="msg_dots_required">Inserisci almeno una combinazione di punti.</string>
-    <string name="btn_rename">Rinomina</string>
-    <string name="dialog_export_title">File esistente</string>
-    <string name="msg_export_collision">Un file con il nome %1$s esiste già nella cartella di esportazione. Cosa vuoi fare?</string>
-    <string name="msg_save_collision">Una tabella con il nome %1$s esiste già. Cosa vuoi fare?</string>
-    <string name="msg_export_failed">Esportazione fallita: %1$s</string>
-    <string name="msg_select_mapping_first">Seleziona prima una mappatura dalla lista.</string>
-    <string name="msg_share_error">Errore durante la condivisione</string>
-    <string name="label_sync_hub">Hub Sincronizzato</string>
-    <string name="msg_hands_overlapping">Mani sovrapposte</string>
-    <string name="hint_enter_new_name">Inserisci nuovo nome file</string>
-    <string name="msg_rule_found">Regola esistente trovata</string>
-    <string name="msg_rule_updated">Regola aggiornata</string>
-    <string name="msg_rule_added">Regola aggiunta</string>
-    <string name="btn_pin_mapping">Fissa (proteggi da eliminazione)</string>
-    <string name="btn_unpin_mapping">Sblocca (permetti modifiche)</string>
-    <string name="title_activity_keyboard_help">Aiuto Tastiera</string>
-    <string name="action_toggle_abbreviations_no_space">Attiva/disattiva abbreviazioni senza spazio</string>
-    <string name="abbreviations_no_space_enabled">Abbreviazioni senza spazio attivate</string>
-    <string name="abbreviations_no_space_disabled">Abbreviazioni senza spazio disattivate</string>
-    <string name="pref_abbreviations_add_space_title">Espansione con spazio</string>
-    <string name="pref_abbreviations_add_space_summary">Sostituisce le scorciatoie inserendo uno spazio o invio dopo il testo espanso.</string>
-    <string name="nothing_to_expand">Nulla da espandere</string>
-    <string name="action_add_to_dictionary">Aggiungi parola al dizionario personale</string>
-    <string name="action_add_to_dictionary_option">Aggiungi %s al dizionario personale</string>
-    <string name="action_remove_from_dictionary">Rimuovi parola dal dizionario personale</string>
-    <string name="action_remove_from_dictionary_option">Rimuovi %s dal dizionario personale</string>
-    <string name="word_added_to_dictionary">Parola %s aggiunta al dizionario personale</string>
-    <string name="no_word_to_add">Nessuna parola trovata da aggiungere al dizionario</string>
-    <string name="word_removed_from_dictionary">Parola %s rimossa dal dizionario personale</string>
-    <string name="word_not_in_dictionary">Parola %s non trovata nel dizionario personale</string>
-    <string name="no_word_to_remove">Nessuna parola trovata da rimuovere dal dizionario</string>
-    <string name="word_correction_correct">La parola %s è corretta</string>
-    <string name="action_toggle_misspelling_sound">Attiva/disattiva notifica sonora errori ortografici</string>
-    <string name="pref_misspelling_sound_default">false</string>
-    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
-    <string name="pref_misspelling_sound_summary">Riproduce un suono per gli errori di ortografia invece del riscontro vocale.</string>
-    <string name="pref_misspelling_sound_title">Notifica sonora errori ortografici</string>
-    <string name="misspelling_sound_enabled">Notifica sonora errori ortografici attivata</string>
-    <string name="misspelling_sound_disabled">Notifica sonora errori ortografici disattivata</string>
-</resources>
+        </resources>

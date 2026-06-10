@@ -1364,7 +1364,11 @@ public class TableCreatorActivity extends AppCompatActivity {
 
     private void cloneBaseTable() {
         int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) { Toast.makeText(this, getString(R.string.msg_select_source_first), 0).show(); return; }
-        File d = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables"); final File f = new File(d, mSystemTableFiles.get(p)); if (!f.exists()) { Toast.makeText(this, getString(R.string.msg_table_file_not_found), 0).show(); return; }
+        Context storageContext = getApplicationContext();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = storageContext.createDeviceProtectedStorageContext();
+        }
+        File d = new File(storageContext.getDir("translator", MODE_PRIVATE), "liblouis/tables"); final File f = new File(d, mSystemTableFiles.get(p)); if (!f.exists()) { Toast.makeText(this, getString(R.string.msg_table_file_not_found), 0).show(); return; }
         new AlertDialog.Builder(this).setTitle(R.string.btn_clone_table).setMessage(R.string.msg_confirm_clone).setPositiveButton(R.string.btn_ok, (dialog, which) -> performClone(f)).setNegativeButton(R.string.btn_cancel, null).show();
     }
 
@@ -1766,7 +1770,12 @@ public class TableCreatorActivity extends AppCompatActivity {
 
     private void exportSystemTable() {
         int p = mBaseTableSpinner.getSelectedItemPosition(); if (p <= 0) { Toast.makeText(this, getString(R.string.msg_select_source_first), 0).show(); return; }
-        final String fileName = mSystemTableFiles.get(p); File tableDir = new File(getDir("translator", MODE_PRIVATE), "liblouis/tables");
+        final String fileName = mSystemTableFiles.get(p);
+        Context storageContext = getApplicationContext();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            storageContext = storageContext.createDeviceProtectedStorageContext();
+        }
+        File tableDir = new File(storageContext.getDir("translator", MODE_PRIVATE), "liblouis/tables");
         final File sourceFile = new File(tableDir, fileName);
         if (!sourceFile.exists()) { Toast.makeText(this, getString(R.string.msg_table_file_not_found), 0).show(); return; }
         

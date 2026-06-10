@@ -1,31 +1,288 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- User interface strings go below here -->
+    <string name="accessibility_service_description">Omogućuje ispravan rad Soft Brailleove tipkovnice kada je TalkBack aktivan stvaranjem područja u kojem čitač zaslona ne presreće dodire.</string>
+    <string name="accessibility_service_dialog_message">Da biste koristili ovu tipkovnicu s TalkBackom, morate omogućiti \"Soft Brailleovu tipkovnicu\" u postavkama pristupačnosti. To omogućuje tipkovnici da prima vaše dodire dok je TalkBack aktivan.</string>
+    <string name="accessibility_service_label">Pristupačnost meke Brailleove tipkovnice</string>
+    <string name="action_record_audio_permission">ACTION_RECORD_AUDIO_PERMISSION</string>
     <string name="action_settings">Postavke</string>
-    <string name="app_name">SBK Modern</string>
+    <string name="app_name">Soft Braille Keyboard</string>
     <string name="auto_caps_disabled">Bez automatskog velikog početnog slova</string>
     <string name="auto_caps_enabled">Automatsko veliko početno slovo</string>
     <string name="blank">Prazno</string>
-    <string name="braille_ime">SBK Modern</string>
+    <string name="braille_ime">Soft Braille Keyboard</string>
+    <string name="btn_move_to_bottom">Pomakni na dno</string>
+    <string name="label_high_priority_prefix">[H]</string>
+    <string name="btn_add">DODAJTE</string>
+    <string name="btn_add_anyway">Svejedno dodajte</string>
+    <string name="btn_add_prefix">Dodaj prefiks...</string>
+    <string name="btn_append_cell">+ Dodaj ćeliju</string>
+    <string name="btn_cancel">Odustani</string>
+    <string name="btn_clear_dots">čisto</string>
+    <string name="btn_clone_table">Clone Source</string>
+    <string name="btn_create_table">Stvorite prilagođenu tablicu</string>
+    <string name="btn_delete">Izbriši</string>
+    <string name="btn_export_system_table">Izvoz tablice sustava</string>
+    <string name="btn_export_original">Izvoz originala</string>
+    <string name="btn_export_table">Izvezite svoj rad</string>
+    <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
+    <string name="btn_id_enable">BTN_ENABLED</string>
+    <string name="btn_import_base_rules">Uvezi sva pravila</string>
+    <string name="btn_import_table">Uvezi postojeću datoteku tablice</string>
+    <string name="btn_import_visual">Pravila uvoza</string>
+    <string name="btn_insert_above">Umetni iznad ovog pravila</string>
+    <string name="btn_load_template">Učitaj predložak</string>
+    <string name="btn_ok">OK</string>
+    <string name="btn_overwrite">Prebriši / Nastavi</string>
+    <string name="dialog_overwrite_title">Prepisati datoteku?</string>
+    <string name="dialog_overwrite_msg">Datoteka %s već postoji. Želite li ga prebrisati?</string>
+    <string name="btn_remove_mapping">Ukloni ovo preslikavanje</string>
+    <string name="btn_save">SAVE</string>
+    <string name="btn_select_mass">Odaberite...</string>
+    <string name="btn_set_cell">Postavi ćeliju</string>
+    <string name="btn_sync_folder">Odobrite pristup mapi za skeniranje</string>
+    <string name="btn_update">AŽURIRAJ</string>
     <string name="button_choose_default_keyboard">Postaviti Soft Braille Keyboard kao zadanu tipkovnicu</string>
     <string name="button_keyboard_settings">Omogućiti Soft Braille Keyboard</string>
     <string name="button_more_info">Pročitati brze upute</string>
+    <string name="calibration_aborted">Kalibracija prekinuta</string>
+    <string name="calibration_init_message">Postavite 6 ili 8 prstiju za trenutnu kalibraciju ili dodirnite točkice jednu po jednu za ručnu kalibraciju</string>
+    <string name="calibration_step">Dodirnite točku %d</string>
+    <string name="calibration_success">Kalibracija je spremljena i zaključana</string>
     <string name="capital">Veliko %s</string>
     <string name="closing_keyboard">Zatvaranje tipkovnice</string>
+    <string name="confirm_delete_msg">Želite li izbrisati %s?</string>
+    <string name="confirm_delete_title">Izbriši tablicu</string>
     <string name="copied">Kopirano</string>
     <string name="copy_error">Greška prilikom kopiranja</string>
+    <string name="custom_table_label_prefix">Prilagođeno:</string>
     <string name="cut_error">Greška prilikom premiještanja</string>
-    <string name="deleted">Izbrisano %s</string>
+    <string name="default_swipe_sensitivity">50</string>
     <string name="delete_selection">Izbriši odabir</string>
+    <string name="deleted">Izbrisano %s</string>
+    <string name="emoji_count_summary">%1$s, %2$d od %3$d</string>
+    <string name="emoji_inserted">Umetnuto</string>
+    <string name="emoji_no_results">Nema rezultata za emoji</string>
+    <string name="emoji_no_results_query">Nema rezultata za %s</string>
+    <string name="emoji_no_to_insert">Nema emotikona za umetanje</string>
+    <string name="emoji_search_mode_off">Način pretraživanja emotikona isključen</string>
+    <string name="emoji_search_mode_on">Način pretraživanja emotikona uključen (%s)</string>
+    <string name="emoji_search_prefix">Pretraživanje emotikona:</string>
+    <string name="emoji_search_query_empty">Upit za pretraživanje emotikona je prazan</string>
     <string name="end_of_text">Kraj teksta</string>
-    <string name="expand_keyboard_talkback">Jedan dodir ovdje za proširenje tipkovnice</string>
+    <string name="error_invalid_file">Nevažeća vrsta datoteke. Odaberite .ctb ili .utb</string>
+    <string name="error_no_name">Unesite naziv tablice</string>
     <string name="expand_keyboard">Jedan dodir ovdje za proširenje tipkovnice</string>
-    <string name="grade_computer">Kompjutorska brajica</string>
+    <string name="expand_keyboard_talkback">Jedan dodir ovdje za proširenje tipkovnice</string>
     <string name="grade">Zadani stupanj brajice</string>
+    <string name="grade_computer">Kompjutorska brajica</string>
     <string name="grade_literary">Literarna brajica</string>
     <string name="grade_table">Stupanj %s</string>
+    <string name="help_desc_autocorrect">Automatsko ispravljanje: prilagođava položaj ili stil ovog simbola.</string>
+    <string name="help_desc_bold">Podebljani indikator načina.</string>
+    <string name="help_desc_caps_letter">Indikator velikih slova: sljedeće slovo čini velikim.</string>
+    <string name="help_desc_caps_lock">Caps Lock: cijelu riječ čini velikim slovima.</string>
+    <string name="help_desc_default">Mapiranje za: %s</string>
+    <string name="help_desc_diacritic">Dijakritički znak: koristi se za izmjenu prethodnog ili sljedećeg znaka.</string>
+    <string name="help_desc_greek_mode">Prebacite se na grčki način rada.</string>
+    <string name="help_desc_italic">Indikator kurzivnog načina.</string>
+    <string name="help_desc_latin_mode">Prebacite se na latinični (međunarodni) način rada.</string>
+    <string name="help_desc_numeric">Redno/numeričko pravilo: primjenjuje se nakon broja.</string>
+    <string name="help_desc_numsign">Brojčani znak: pokreće numerički način rada (sljedeće tipke su brojevi).</string>
+    <string name="help_desc_state_change">Interna promjena stanja (utječe na to kako se sljedeći ključevi tumače).</string>
+    <string name="help_desc_underline">Indikator načina podcrtavanja.</string>
+    <string name="help_desc_whole_word">Sažimanje cijele riječi: radi samo kao samostalna riječ.</string>
     <string name="hide_keyboard">Skrivanje tipkovnice.</string>
+    <!--  Braille Actions  -->
+    <string name="action_none">Nijedan</string>
+    <string name="action_move_left_char">Pomicanje lijevo za znak</string>
+    <string name="action_move_right_char">Pomicanje desno po znaku</string>
+    <string name="action_move_left_word">Pomaknite se lijevo po riječi</string>
+    <string name="action_move_right_word">Pomicanje desno po riječi</string>
+    <string name="action_move_left_line">Pomicanje lijevo po liniju</string>
+    <string name="action_move_right_line">Pomicanje desno po red</string>
+    <string name="action_move_left_all">Prelazak na početak teksta</string>
+    <string name="action_move_right_all">Pomakni se na kraj teksta</string>
+    <string name="action_backspace_char">Brisanje znaka</string>
+    <string name="action_backspace_word">Izbriši riječ</string>
+    <string name="action_backspace_line">Izbriši liniju</string>
+    <string name="action_backspace_all">Izbriši sav tekst</string>
+    <string name="action_read_char">Pročitajte trenutni znak</string>
+    <string name="action_read_word">Pročitaj trenutnu riječ</string>
+    <string name="action_read_line">Pročitaj trenutni redak</string>
+    <string name="action_read_all">Pročitaj cijeli tekst</string>
+    <string name="action_space">Umetni razmak</string>
+    <string name="action_newline">Umetni novi red</string>
+    <string name="action_voice_input">Glasovni unos</string>
+    <string name="action_toggle_privacy">Uključi/isključi način privatnosti</string>
+    <string name="action_toggle_auto_caps">Uključi/isključi automatsku upotrebu velikih slova</string>
+    <string name="action_toggle_echo_passwords">Uključi/isključi govorne lozinke</string>
+    <string name="action_toggle_mark">Promjena oznake odabira</string>
+    <string name="action_cycle_keyboard_feedback">Izmjena povratnih informacija tipkovnice (zvuk/vibracija)</string>
+    <string name="action_cycle_echo_feedback">Ciklusna eho povratna informacija (znak/riječ/ništa)</string>
+    <string name="action_switch_braille_type">Zamijenite književno/računalno Brailleovo pismo</string>
+    <string name="action_switch_braille_table">Promjena Brailleove tablice</string>
+    <string name="action_open_settings">Otvorite postavke tipkovnice</string>
+    <string name="action_open_input_switcher">Otvori alat za odabir metode unosa</string>
+    <string name="action_close_keyboard">Zatvori tipkovnicu</string>
+    <string name="action_shrink_keyboard">Skupi tipkovnicu</string>
+    <string name="action_word_count">Broj riječi i znakova</string>
+    <string name="action_next_field_action">Sljedeće polje/radnja</string>
+    <string name="action_select_text_action">Odaberite / Akcija</string>
+    <string name="action_emoji_mode_toggle">Uključi/isključi način pretraživanja emotikona</string>
+    <string name="action_edit_select_all">Radnja: Odaberite sve</string>
+    <string name="action_edit_copy">Radnja: Kopiraj</string>
+    <string name="action_edit_cut">Radnja: Rez</string>
+    <string name="action_edit_paste">Radnja: Zalijepi</string>
+    <string name="action_edit_speak">Radnja: Izgovori odabir</string>
+    <string name="action_edit_delete">Radnja: Izbriši odabir</string>
+    <string name="action_spell_check_left">Provjera pravopisa prethodne riječi</string>
+    <string name="action_spell_check_right">Provjera pravopisa sljedeće riječi</string>
+    <string name="action_spell_check_next_suggestion">Sljedeći pravopisni prijedlog</string>
+    <string name="action_spell_check_prev_suggestion">Prethodni pravopisni prijedlog</string>
+    <string name="action_set_dot_7">Upišite točku 7</string>
+    <string name="action_set_dot_8">Umetnite točku 8</string>
+    <string name="action_toggle_abbreviations">Prebacite kratice razmakom</string>
+    <string name="action_toggle_abbreviations_no_space">Prebaci kratice bez razmaka</string>
+    <string name="action_toggle_instant_abbreviations">Uključi/isključi trenutačno proširenje</string>
+    <string name="action_toggle_misspelling_sound">Uključi/isključi zvučnu obavijest o pravopisnoj pogrešci</string>
+    <string name="action_add_to_dictionary">Dodajte riječ u osobni rječnik</string>
+    <string name="action_add_to_dictionary_option">Dodaj %s u osobni rječnik</string>
+    <string name="action_remove_from_dictionary">Ukloni riječ iz osobnog rječnika</string>
+    <string name="action_remove_from_dictionary_option">Ukloni %s iz osobnog rječnika</string>
+    <!--  Abbreviations  -->
+    <string name="pref_abbreviations_title">Kratice</string>
+    <string name="pref_abbreviations_summary">Upravljanje proširenjem teksta (s razmakom, bez razmaka ili trenutno).</string>
+    <string name="pref_abbreviations_instant_title">Trenutno proširenje</string>
+    <string name="pref_abbreviations_instant_summary">Zamjenjuje prečace čim se utipkaju.</string>
+    <string name="abbreviations_instant_enabled">Omogućeno trenutno proširenje</string>
+    <string name="abbreviations_instant_disabled">Trenutno proširenje onemogućeno</string>
+    <string name="pref_abbreviations_enabled_title">Proširenje bez prostora</string>
+    <string name="pref_abbreviations_enabled_summary">Zamjenjuje prečace korištenjem razmaka ili unosa samo kao modifikatora (ne umeće se dodatni razmak).</string>
+    <string name="abbreviations_enabled">Kratice s omogućenim razmakom</string>
+    <string name="abbreviations_disabled">Kratice s onemogućenim razmakom</string>
+    <string name="abbreviations_no_space_enabled">Omogućene su kratice bez razmaka</string>
+    <string name="abbreviations_no_space_disabled">Onemogućene su kratice bez razmaka</string>
+    <string name="title_abbreviation_editor">Urednik kratica</string>
+    <string name="hint_shortcut">Prečac (npr. hru ili 6-s)</string>
+    <string name="hint_expansion">Prošireni tekst (npr. Kako si?)</string>
+    <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
+    <string name="pref_abbreviations_enabled_default">lažno</string>
+    <string name="pref_abbreviations_add_space_title">Proširenje s prostorom</string>
+    <string name="pref_abbreviations_add_space_summary">Zamjenjuje prečace korištenjem razmaka ili entera i dodaje razmak.</string>
+    <string name="nothing_to_expand">Ništa za proširenje</string>
+    <!--  Gesture Names  -->
+    <string name="swipe_one_left">Točka 1: prijeđite prstom ulijevo.</string>
+    <string name="swipe_one_right">Točka 1: prijeđite prstom udesno.</string>
+    <string name="swipe_one_up">Točka 1: prijeđite prstom prema gore.</string>
+    <string name="swipe_one_down">Točka 1: prijeđite prstom prema dolje.</string>
+    <string name="swipe_two_left">Točka 2: prijeđite prstom ulijevo.</string>
+    <string name="swipe_two_right">Točka 2: prijeđite prstom udesno.</string>
+    <string name="swipe_two_up">Točka 2: prijeđite prstom prema gore.</string>
+    <string name="swipe_two_down">Točka 2: prijeđite prstom prema dolje.</string>
+    <string name="swipe_three_left">Točka 3: prijeđite prstom ulijevo.</string>
+    <string name="swipe_three_right">Točka 3: prijeđite prstom udesno.</string>
+    <string name="swipe_three_up">Točka 3: prijeđite prstom prema gore.</string>
+    <string name="swipe_three_down">Točka 3: prijeđite prstom prema dolje.</string>
+    <string name="swipe_four_left">Točka 4: prijeđite prstom ulijevo.</string>
+    <string name="swipe_four_right">Točka 4: prijeđite prstom udesno.</string>
+    <string name="swipe_four_up">Točka 4: prijeđite prstom prema gore.</string>
+    <string name="swipe_four_down">Točka 4: prijeđite prstom prema dolje.</string>
+    <string name="swipe_five_left">Točka 5: prijeđite prstom ulijevo.</string>
+    <string name="swipe_five_right">Točka 5: prijeđite prstom udesno.</string>
+    <string name="swipe_five_up">Točka 5: prijeđite prstom prema gore.</string>
+    <string name="swipe_five_down">Točka 5: prijeđite prstom prema dolje.</string>
+    <string name="swipe_six_left">Točka 6: prijeđite prstom ulijevo.</string>
+    <string name="swipe_six_right">Točka 6: prijeđite prstom udesno.</string>
+    <string name="swipe_six_up">Točka 6: prijeđite prstom prema gore.</string>
+    <string name="swipe_six_down">Točka 6: prijeđite prstom prema dolje.</string>
+    <string name="swipe_left_two_down">Lijevo: dva prsta dolje.</string>
+    <string name="swipe_right_two_down">Desno: dva prsta dolje.</string>
+    <string name="swipe_hold_one_left">Točka 1: Držite i povucite ulijevo s drugom rukom.</string>
+    <string name="swipe_hold_one_right">Točka 1: Držite i povucite udesno drugom rukom.</string>
+    <string name="swipe_hold_one_up">Točka 1: Držite i povucite prema gore drugom rukom.</string>
+    <string name="swipe_hold_one_down">Točka 1: Držite i povucite prema dolje drugom rukom.</string>
+    <string name="swipe_hold_two_left">Točka 2: Držite i povucite ulijevo drugom rukom.</string>
+    <string name="swipe_hold_two_right">Točka 2: Držite i povucite udesno drugom rukom.</string>
+    <string name="swipe_hold_two_up">Točka 2: Držite i povucite prema gore drugom rukom.</string>
+    <string name="swipe_hold_two_down">Točka 2: Držite i povucite prema dolje drugom rukom.</string>
+    <string name="swipe_hold_three_left">Točka 3: Držite i povucite ulijevo drugom rukom.</string>
+    <string name="swipe_hold_three_right">Točka 3: Držite i povucite udesno drugom rukom.</string>
+    <string name="swipe_hold_three_up">Točka 3: Držite i povucite prema gore drugom rukom.</string>
+    <string name="swipe_hold_three_down">Točka 3: Držite i povucite prema dolje drugom rukom.</string>
+    <string name="swipe_hold_four_left">Točka 4: Držite i povucite ulijevo drugom rukom.</string>
+    <string name="swipe_hold_four_right">Točka 4: Držite i povucite udesno drugom rukom.</string>
+    <string name="swipe_hold_four_up">Točka 4: Držite i povucite prema gore drugom rukom.</string>
+    <string name="swipe_hold_four_down">Točka 4: Držite i povucite prema dolje drugom rukom.</string>
+    <string name="swipe_hold_five_left">Točka 5: Držite i povucite ulijevo drugom rukom.</string>
+    <string name="swipe_hold_five_right">Točka 5: Držite i povucite udesno drugom rukom.</string>
+    <string name="swipe_hold_five_up">Točka 5: Držite i prijeđite drugom rukom prema gore.</string>
+    <string name="swipe_hold_five_down">Točka 5: Držite i povucite prema dolje drugom rukom.</string>
+    <string name="swipe_hold_six_left">Točka 6: Držite i povucite ulijevo drugom rukom.</string>
+    <string name="swipe_hold_six_right">Točka 6: Držite i povucite udesno drugom rukom.</string>
+    <string name="swipe_hold_six_up">Točka 6: Držite i povucite prema gore drugom rukom.</string>
+    <string name="swipe_hold_six_down">Točka 6: Držite i povucite prema dolje drugom rukom.</string>
+    <!--  Storage Manager (Universal)  -->
+    <string name="label_active_abbreviations">[Rječnik aktivnih kratica]</string>
+    <string name="label_active_gestures">[Shema aktivnih pokreta]</string>
+    <string name="msg_confirm_clear_active">Jeste li sigurni da želite izbrisati sve aktivne podatke s tipkovnice? Ova se radnja ne može poništiti.</string>
+    <string name="checkbox_delete_backup_file">Također izbrišite datoteku sigurnosne kopije u mapi soft-braille</string>
+    <string name="btn_setup_sync_folder">Odobrite pristup mapi za sinkronizaciju</string>
+    <string name="title_storage_manager">Upravitelj pohrane</string>
+    <string name="btn_create_new_table">Stvori novu tablicu</string>
+    <string name="label_file_type_tables">Brailleove tablice</string>
+    <string name="label_file_type_abbreviations">Rječnik kratica</string>
+    <string name="label_file_type_gestures">Shema gesta</string>
+    <string name="msg_confirm_import_generic">Želite li uvesti ovaj resurs? Trenutačni podaci mogu biti prebrisani.</string>
+    <string name="msg_sync_folder">Sinkronizirana mapa</string>
+    <string name="msg_download_folder">Preuzmi mapu</string>
+    <string name="pref_sync_folder_title">Sinkronizacija mapa</string>
+    <string name="pref_sync_folder_summary">Odaberite mapu za sinkronizaciju tablica i sigurnosnih kopija</string>
+    <!--  Backup & Restore  -->
+    <string name="btn_export">Izvoz</string>
+    <string name="btn_import">uvoz</string>
+    <string name="hint_search_items">Traži datoteke...</string>
+    <string name="btn_export_system">Izvezi izvornu tablicu</string>
+    <string name="hint_search_tables">Pretraživanje tablica sustava...</string>
+    <string name="title_export_system">Izvoz izvorne Liblouis tablice</string>
+    <string name="label_found_locales">Pronađeno %d jezika</string>
+    <string name="label_auto_selected">Automatski odabrano</string>
+    <string name="label_no_results">Nema rezultata</string>
+    <string name="hint_search_locale">Jezik pretraživanja...</string>
+    <string name="msg_exported_to">Datoteka izvezena u: %s</string>
+    <string name="msg_import_success">Podaci su uspješno uvezeni!</string>
+    <string name="msg_import_error">Pogreška pri uvozu: %s</string>
+    <string name="title_select_backup">Odaberite Sigurnosna kopija</string>
+    <string name="msg_no_backups">Nisu pronađene sigurnosne kopije na mekoj brajici.</string>
+    <string name="msg_confirm_import">Prepisati trenutne podatke ovom sigurnosnom kopijom?</string>
+    <string name="menu_share">Podijelite</string>
+    <string name="menu_delete">Izbriši</string>
+    <string name="pref_category_gestures_title">Prilagodba gesta</string>
+    <string name="pref_gestures_summary">Dodijelite funkcije pokretima prijelaza i zadržavanja</string>
+    <string name="pref_gestures_title">Prilagodite geste</string>
+    <string name="pref_reset_gestures_title">Vrati geste na zadane</string>
+    <string name="pref_reset_gestures_summary">Vratite izvorne dodijeljene geste</string>
+    <string name="pref_reset_gestures_confirm">Jeste li sigurni da želite vratiti sve pokrete na zadane vrijednosti?</string>
+    <string name="pref_export_gestures_title">Izvezi geste</string>
+    <string name="pref_export_gestures_summary">Spremite prilagođenu mapu pokreta u datoteku</string>
+    <string name="pref_import_gestures_title">Uvezi geste</string>
+    <string name="pref_import_gestures_summary">Učitajte mapu pokreta iz datoteke</string>
+    <string name="pref_gesture_default_format">Zadano: %1$s</string>
+    <string name="export_success">Pokreti su uspješno izvezeni u %1$s</string>
+    <string name="export_error">Pogreška pri izvozu pokreta: %1$s</string>
+    <string name="import_success">Pokreti su uspješno uvezeni</string>
+    <string name="import_error">Pogreška pri uvozu pokreta: %1$s</string>
+    <string name="import_no_valid_data">U datoteci nisu pronađeni valjani podaci o pokretima</string>
+    <string name="pref_group_single_finger">Prevlačenje jednim prstom</string>
+    <string name="pref_group_two_fingers">Prelazi s dva prsta (samo prema dolje)</string>
+    <string name="pref_group_hold_swipe">Jednom rukom držite točku, a drugom prijeđite</string>
     <string name="high">Visoko</string>
+    <string name="hint_author">Autor (npr. Sergio)</string>
+    <string name="hint_char">Char</string>
+    <string name="hint_description">Opis tablice</string>
+    <string name="hint_dots_format">Točke (npr. 123-45)</string>
+    <string name="hint_enter_dots">Unesite točkice (npr. 123)</string>
+    <string name="hint_search_rules">Traži znak ili točkice...</string>
+    <string name="hint_table_name">Unesite naziv tablice (npr. moja_tablica)</string>
     <string name="info_url">https://docs.google.com/document/d/1OX6yFjkK61VfROdU9uQNxjEZ_QNWxiMnUY_1ECnIyRQ/pub</string>
     <string name="keyboard_auto">Automatski</string>
     <string name="keyboard_echo_all">Znakovi i riječi</string>
@@ -38,6 +295,20 @@
     <string name="keyboard_feedback_sound">Samo zvuk</string>
     <string name="keyboard_feedback_vibrate">Samo vibracija</string>
     <string name="keyboard_full_screen">Tipkovnica proširena</string>
+    <string name="keyboard_help_active_table_label">Aktivna tablica: %s</string>
+    <string name="keyboard_help_dots_hint">Točke ili znak</string>
+    <string name="keyboard_help_dots_result">Točkice: %1$s</string>
+    <string name="keyboard_help_enter_dots_toast">Unesite točke ili znakove za pretraživanje</string>
+    <string name="keyboard_help_error_no_table">Greška: aktivna tablica nije pronađena.</string>
+    <string name="keyboard_help_file_not_available">Datoteka tablice nije dostupna</string>
+    <string name="keyboard_help_how_to_write_title">Kako napisati \"%1$s\"</string>
+    <string name="keyboard_help_instruction">Unesite točke (npr. 45) da vidite što rade ili znak (npr. A) da vidite kako to napisati.</string>
+    <string name="keyboard_help_no_results">Nema rezultata za \"%s\"</string>
+    <string name="keyboard_help_pref_summary">Otkrijte što rade Brailleove točke u trenutnom jeziku</string>
+    <string name="keyboard_help_pref_title">Pomoć za tipkovnicu (aktivna tablica)</string>
+    <string name="keyboard_help_result_line">Linija %1$d</string>
+    <string name="keyboard_help_search_btn">Traži</string>
+    <string name="keyboard_help_title">Pomoć za tipkovnicu (aktivna tablica)</string>
     <string name="keyboard_horizontal">Vodoravno</string>
     <string name="keyboard_next_three">Sada, molimo držite tri prsta druge ruke na zaslonu.</string>
     <string name="keyboard_not_set">Molimo položite svih 6 prstiju na zaslon da biste namjestili brajičnu tipkovnicu</string>
@@ -45,75 +316,366 @@
     <string name="keyboard_style_normal">Normalno</string>
     <string name="keyboard_style_slate">Način tablice i šila</string>
     <string name="keyboard_style_top_bottom">Zamijeni točkice 1 i 4 s točkicama 3 i 6</string>
+    <string name="keyboard_tabletop">Stolna ploča</string>
     <string name="keyboard_vertical">Okomito</string>
+    <string name="label_a_grave">a gravis</string>
+    <string name="label_arabic">arapski</string>
+    <string name="label_auto_link">(automatsko povezivanje)</string>
+    <string name="label_base_script">Osnovna abeceda/skripta:</string>
+    <string name="label_base_script_short">abeceda</string>
+    <string name="label_class_prefix">[RAZRED] razred</string>
+    <string name="label_cyrillic">ćirilica</string>
+    <string name="label_dot">Točka %d</string>
+    <string name="label_dots_dialog">Odaberite točke za ovu ćeliju</string>
+    <string name="label_e_acute">e akutno</string>
+    <string name="label_e_grave">e gravis</string>
+    <string name="label_error_prefix">Greška: %s</string>
+    <string name="label_external_synced">[Vanjski]</string>
+    <string name="label_found_rules">Pronađeno %1$d pravila od %2$d</string>
+    <string name="label_greek">grčki</string>
+    <string name="label_hebrew">hebrejski</string>
+    <string name="label_hindi">hindski</string>
+    <string name="label_i_grave">i gravis</string>
+    <string name="label_korean">korejski</string>
+    <string name="label_latin">latinski</string>
+    <string name="label_locale">Jezik tablice (jezik):</string>
+    <string name="label_locale_short">Jezik</string>
+    <string name="label_logic_prefix">[LOGIKA] kontekst</string>
+    <string name="label_long_press_delete">Popis prilagođenih tablica. Dugo pritisnite stavku da biste je izbrisali.</string>
+    <string name="label_mapped_items">Mapirane stavke</string>
+    <string name="label_mapped_items_short">Preslikavanja</string>
+    <string name="label_n_mapped_items">%d mapirane stavke (Dodirnite za uređivanje)</string>
+    <string name="label_no_mapped_items">Nema mapiranih stavki</string>
+    <string name="label_none">Nijedan</string>
+    <string name="label_number_system">Sustav numeriranja:</string>
+    <string name="label_number_system_short">Brojke</string>
+    <string name="label_o_grave">o gravis</string>
+    <string name="label_opcode">Liblouisov operativni kod:</string>
+    <string name="label_opcode_short">pravilo</string>
+    <string name="label_priority_short">Prioritet</string>
+    <string name="label_results_count">Rezultati: %d</string>
+    <string name="label_select_all">Odaberite sve</string>
+    <string name="label_show_visual_picker">Prikaži vizualni birač ćelija</string>
+    <string name="label_source">Izvor</string>
+    <string name="label_spazio">prostoru</string>
+    <string name="label_structure_prefix">[STRUKTURA] uključuju</string>
+    <string name="label_table_locale">Jezik tablice (jezik):</string>
+    <string name="label_tap_to_edit">Dodirnite za uređivanje, dugo pritisnite za brisanje</string>
+    <string name="label_thai">tajlandski</string>
+    <string name="label_u_grave">u gravis</string>
+    <string name="label_unicode_braille">Unicode Braille</string>
+    <string name="label_use_8_dots">Koristite 8 točaka (računalno Brailleovo pismo)</string>
+    <string name="label_vietnamese">vijetnamski</string>
     <string name="low">Nisko</string>
     <string name="mark_not_set">Oznaka nije postavljena</string>
     <string name="medium">Srednje</string>
+    <string name="msg_already_bottom">Već na dnu</string>
+    <string name="msg_already_top">Već na vrhu</string>
+    <string name="msg_char_empty">Polje znakova je prazno</string>
+    <string name="msg_confirm_clone">Zamijeniti trenutni popis sadržajem izvorne tablice?</string>
+    <string name="msg_confirm_delete_mass">Izbrisati %d odabrana pravila?</string>
+    <string name="msg_confirm_template">Primjenom predloška izbrisat će se trenutna mapiranja. Nastaviti?</string>
+    <string name="msg_delete_external">Također izbrišite iz vanjske mape</string>
+    <string name="msg_deleted">Izbrisano</string>
+    <string name="msg_duplicate_dots">Kombinacija %1$s već se koristi za \'%2$s\'.</string>
+    <string name="msg_enter_dots">Unesite točkice (npr. 123-45)</string>
+    <string name="msg_invalid_dots_format">Nevažeći format točaka. Koristite znamenke 1-8 odvojene znakom \'-\' ili razmacima.</string>
+    <string name="msg_char_required">Ovo pravilo zahtijeva karakter.</string>
+    <string name="msg_dots_required">Unesite barem jedan točkasti uzorak.</string>
+    <string name="msg_error_logs">Pogreška prilikom rukovanja zapisnicima</string>
+    <string name="msg_fixed_mapping">Ovo je fiksno mapiranje sustava i ne može se ukloniti.</string>
+    <string name="btn_rename">Preimenuj</string>
+    <string name="dialog_export_title">Datoteka postoji</string>
+    <string name="msg_export_collision">Datoteka pod nazivom %1$s već postoji u mapi za izvoz. Što biste htjeli raditi?</string>
+    <string name="msg_save_collision">Tablica s imenom %1$s već postoji. Što biste htjeli raditi?</string>
+    <string name="msg_export_failed">Izvoz nije uspio: %1$s</string>
+    <string name="msg_select_mapping_first">Prvo odaberite mapiranje s popisa.</string>
+    <string name="msg_share_error">Pogreška dijeljenja</string>
+    <string name="label_sync_hub">Sinkronizirano čvorište</string>
+    <string name="msg_hands_overlapping">Ruke se preklapaju</string>
+    <string name="hint_enter_new_name">Unesite novi naziv datoteke</string>
+    <string name="msg_imported">Uvezeno %s</string>
+    <string name="msg_invalid_pos">Nevažeći položaj</string>
+    <string name="msg_logs_cleared">Dnevnici su uspješno izbrisani</string>
+    <string name="msg_no_deletable_rules">Nema pravila koja se mogu izbrisati.</string>
+    <string name="msg_rule_removed">Pravilo uklonjeno.</string>
+    <string name="msg_rule_found">Pronađeno je postojeće pravilo</string>
+    <string name="msg_rule_updated">Pravilo ažurirano</string>
+    <string name="msg_rule_added">Dodano pravilo</string>
+    <string name="msg_rules_filtered">pravila filtrirana</string>
+    <string name="msg_select_opcode_first">Prvo odaberite pravilo/opcijski kod</string>
+    <string name="msg_select_source_first">Odaberite izvornu tablicu prije kloniranja.</string>
+    <string name="msg_standard_char_override">Standardni karakter odabranog skupa. Vaš izbor će imati prednost.</string>
+    <string name="msg_structure_cloned">Izvorna struktura klonirana na popis.</string>
+    <string name="msg_sync_desc">Odaberite mapu \'soft-braille\' kako biste omogućili stalni pristup i automatski učitavali datoteke unutar nje.</string>
+    <string name="msg_sync_error">Pogreška pri traženju pristupa mapi.</string>
+    <string name="msg_sync_success">Pristup mapi aktiviran!</string>
+    <string name="msg_table_exported">Tablica je izvezena u Download/soft-braille</string>
+    <string name="msg_table_file_not_found">Datoteka tablice nije pronađena.</string>
+    <string name="msg_table_saved">Tablica je uspješno spremljena!</string>
+    <string name="msg_template_applied">Predložak je uspješno primijenjen!</string>
     <string name="newline">Novi redak</string>
     <string name="no_braille_table">Nema tablica</string>
     <string name="no_more_misspellings">Nema više pravopisnih grešaka</string>
     <string name="no_password_echo">Ne izgovaraj lozinke</string>
     <string name="no_rotate_keyboard">Nemoj zaokrenuti tipkovnicu</string>
     <string name="no_suggestions">Nema mogućih prijedloga</string>
+    <string name="none_selected">--- Ništa nije odabrano ---</string>
     <string name="nothing_to_delete">Nema ničega za izbrisati</string>
+    <string name="num_sys_6dot_univocal">Računalno Brailleovo pismo (6-pt, Antoine stil)</string>
+    <string name="num_sys_8dot_computer_lowered">Računalno Brailleovo pismo (8-pt, spušteno, 1=2)</string>
+    <string name="num_sys_8dot_standard">Standardnih 8 točaka (dodana točka 8, 1=18)</string>
+    <string name="num_sys_antoine">Antoine (točka 6 + književno, 1=16)</string>
+    <string name="num_sys_classic">Klasično (3456 + a-j, 1=1)</string>
+    <string name="num_sys_dropped">Odbačeni brojevi (3456 + nisko, 1=2)</string>
+    <string name="num_sys_literary">Književni (G2 kontekst)</string>
+    <string name="num_sys_none">Ništa / Ručna mapiranja</string>
+    <string name="opcode_always">Nadjačaj (uvijek)</string>
+    <string name="opcode_begcaps">Počnite velikim slovima</string>
+    <string name="opcode_begcapsword">Početak riječi velikim slovom (begcapsword)</string>
+    <string name="opcode_begnum">Numerički prefiks</string>
+    <string name="opcode_capsletter">Veliki znak (6)</string>
+    <string name="opcode_class">Klasa</string>
+    <string name="opcode_closepunc">Interpunkcija nakon riječi (postpunc)</string>
+    <string name="opcode_context">Kontekst</string>
+    <string name="opcode_digit">Znamenka (0-9)</string>
+    <string name="opcode_endcaps">Završi sve velikim slovima</string>
+    <string name="opcode_endcapsword">Kraj riječi pisane velikim slovima (endcapsword)</string>
+    <string name="opcode_endnum">Završi numerički način rada</string>
+    <string name="opcode_include">Uključiti</string>
+    <string name="opcode_letsign">Slovni znak (5)</string>
+    <string name="opcode_letter">Generičko pismo</string>
+    <string name="opcode_litdigit">Književna znamenka</string>
+    <string name="opcode_lowercase">Malo slovo</string>
+    <string name="opcode_math">matematika</string>
+    <string name="opcode_midendnumericmodechars">Sufiks/unutarnji broj</string>
+    <string name="opcode_midnum">Znakovi unutar brojeva</string>
+    <string name="opcode_numericmodechars">Okidač numeričkog načina rada</string>
+    <string name="opcode_numsign">Znak broja (3456)</string>
+    <string name="opcode_openpunc">Interpunkcija prije riječi (prepunc)</string>
+    <string name="opcode_partword">Dio Worda</string>
+    <string name="opcode_punctuation">Interpunkcija</string>
+    <string name="opcode_sign">Potpišite</string>
+    <string name="opcode_space">Prostor</string>
+    <string name="opcode_uppercase">Veliko slovo</string>
+    <string name="opcode_word">Puna riječ (kontrakcija)</string>
     <string name="pad_horizontal">Postavi tipkovnicu na vodoravan izgled</string>
+    <string name="pad_tabletop">Postavite tipkovnicu na raspored stola</string>
     <string name="pad_vertical">Postavi tipkovnicu na okomit izgled</string>
-    <string name="pasted">Zalijepljeno</string>
     <string name="paste_error">Dogodila se pogreška prilikom lijepljenja teksta</string>
+    <string name="pasted">Zalijepljeno</string>
+    <string name="pref_app_version_key">APP_VERSION</string>
     <string name="pref_app_version_title">Inačica aplikacije: %s.</string>
+    <string name="pref_auto_caps_default">istina</string>
+    <string name="pref_auto_caps_key">AUTO_CAPS</string>
     <string name="pref_auto_caps_summary">Veliko početno slovo za prvu riječ u svakoj rečenici.</string>
     <string name="pref_auto_caps_title">Automatsko veliko početno slovo</string>
+    <string name="pref_auto_match_keyboard_default">istina</string>
+    <string name="pref_auto_match_keyboard_key">Auto_MATCH_KEYBOARD</string>
     <string name="pref_auto_match_keyboard_summary">Kada je uključeno, tipkovnica će se odabrati ovisno o položaju vaših prstiju kada ručno kalibrirate tipkovnicu.</string>
     <string name="pref_auto_match_keyboard_title">Automatski odabir izgleda tipkovnice ovisno o položaju vaših prstiju</string>
+    <string name="pref_auto_rotate_keyboard_default">lažno</string>
+    <string name="pref_auto_rotate_keyboard_key">Auto_ROTATE_KEYBOARD</string>
+    <string name="pref_braille_computer_table_default">en-US-comp8</string>
+    <string name="pref_braille_computer_table_key">BRAILLE_TABLE_0</string>
     <string name="pref_braille_grade_summary">Namiješta željeni stupanj brajice.</string>
+    <string name="pref_braille_literary_table_default">hr-UEB-g1</string>
+    <string name="pref_braille_literary_table_key">BRAILLE_TABLE_1</string>
+    <string name="pref_braille_table_auto">auto</string>
+    <string name="pref_braille_type_default">1</string>
+    <string name="pref_braille_type_key">BRAILLE_GRADE_KEY</string>
+    <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
+    <string name="pref_category_advanced_title">Napredno i dnevnici</string>
+    <string name="pref_category_braille_key">BRAILLE_CATEGORY_KEY</string>
     <string name="pref_category_braille_title">Postavke brajične tablice</string>
+    <string name="pref_category_custom_tables_title">Prilagođene Brailleove tablice</string>
+    <string name="pref_category_feedback_key">KEYBOARD_FEEDBACK_Kategorija</string>
     <string name="pref_category_feedback_title">Postavke odziva tipkovnice</string>
+    <string name="pref_category_keyboard_key">KEYBOARD_CATEGORY</string>
     <string name="pref_category_keyboard_title">Postavke tipkovnice</string>
+    <string name="pref_category_misc_key">RAZNO</string>
     <string name="pref_category_misc_title">Razne postavke</string>
+    <string name="pref_clear_log_key">CLEAR_LOG</string>
+    <string name="pref_clear_log_summary">Obrišite postojeći logcat međuspremnik</string>
+    <string name="pref_clear_log_title">Obriši zapisnike</string>
+    <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
     <string name="pref_default_computer_braille_table_summary"></string>
     <string name="pref_default_computer_braille_table_title">Tablica za kompjutorsku brajicu</string>
+    <string name="pref_default_keyboard_default">0</string>
+    <string name="pref_default_keyboard_key">DEFAULT_KEYBOARD</string>
     <string name="pref_default_keyboard_summary">Odaberite izgled tipkovnice koji će se prikazati prema zadanoj vrijednosti.</string>
     <string name="pref_default_keyboard_title">Zadani izgled tipkovnice</string>
     <string name="pref_default_literary_braille_table_summary"></string>
     <string name="pref_default_literary_braille_table_title">Tablica za literarnu brajicu</string>
+    <string name="pref_double_space_period_default">istina</string>
+    <string name="pref_double_space_period_key">DOUBLE_SPACE_PERIOD</string>
     <string name="pref_double_space_period_summary">Dvostruki prijelaz prstom po razmaku umetnut će točku pa zatim razmak.</string>
-    <string name="pref_double_space_period_title">Dvostruki razmak točka</string>    
+    <string name="pref_double_space_period_title">Dvostruki razmak točka</string>
+    <string name="pref_echo_feedback_key">KEYBOARD_ECHO</string>
     <string name="pref_echo_feedback_summary">Odaberite vrstu odjeka tipkovnice.</string>
     <string name="pref_echo_feedback_title">Odjek tipkovnice</string>
+    <string name="pref_echo_misspellings_default">istina</string>
+    <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
     <string name="pref_echo_misspellings_summary">Kada je uključeno, najavit će se pravopisne pogreške kada utipkate razmak.</string>
     <string name="pref_echo_misspellings_title">Odjek pravopisnih grešaka za vrijeme tipkanja</string>
+    <string name="pref_misspelling_sound_default">lažno</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">Reproducirajte zvuk za pravopisne pogreške umjesto glasovne povratne informacije.</string>
+    <string name="pref_misspelling_sound_title">Zvučna obavijest o pravopisnoj pogrešci</string>
+    <string name="misspelling_sound_enabled">Omogućena je zvučna obavijest o pravopisnoj pogrešci</string>
+    <string name="misspelling_sound_disabled">Zvučna obavijest o pravopisnoj pogrešci onemogućena</string>
+    <string name="word_added_to_dictionary">Riječ %s dodana je u osobni rječnik</string>
+    <string name="no_word_to_add">Nije pronađena riječ za dodavanje u rječnik</string>
+    <string name="word_removed_from_dictionary">Riječ %s uklonjena je iz osobnog rječnika</string>
+    <string name="word_not_in_dictionary">Riječ %s nije pronađena u osobnom rječniku</string>
+    <string name="no_word_to_remove">Nije pronađena riječ za uklanjanje iz rječnika</string>
+    <string name="pref_echo_passwords_default">lažno</string>
+    <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
     <string name="pref_echo_passwords_summary">Kada je uključeno, tipkovnica će govoriti za vrijeme unošenja lozinki.</string>
+    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
+    <string name="pref_has_asked_record_audio_key">RECORD_AUDIO</string>
+    <string name="pref_invert_horizontal_swipes_default">lažno</string>
+    <string name="pref_invert_horizontal_swipes_key">INVERT_HORIZONTAL_SWIPES</string>
+    <string name="pref_invert_horizontal_swipes_summary">Zamijenite smjer prelaska lijevo i desno.</string>
+    <string name="pref_invert_horizontal_swipes_title">Obrnuti vodoravni prelasci</string>
+    <string name="pref_invert_vertical_swipes_default">lažno</string>
+    <string name="pref_invert_vertical_swipes_key">INVERT_VERTICAL_SWIPES</string>
+    <string name="pref_invert_vertical_swipes_summary">Zamijenite smjerove prelaska gore i dolje.</string>
+    <string name="pref_invert_vertical_swipes_title">Obrnuti okomiti prelasci</string>
+    <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_feedback_summary">Odaberite vrstu odziva tipkovnice kao što je vibracija i zvuk.</string>
     <string name="pref_keyboard_feedback_title">Odziv tipkovnice</string>
+    <string name="pref_keyboard_invert_default">lažno</string>
+    <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">Kada se tipkovnica ne okreće zajedno s telefonom, koristite ovu postavku kako biste zaokrenuli orijentaciju tipkovnice za 180 stupnjeva.</string>
     <string name="pref_keyboard_invert_title">Obrni tipkovnicu</string>
+    <string name="pref_keyboard_save_horizontal_landscape_invert_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_landscape_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_horizontal_portrait_invert_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_portrait_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_invert_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE</string>
+    <string name="pref_keyboard_save_tabletop_portrait_invert_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_portrait_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT</string>
+    <string name="pref_keyboard_save_vertical_landscape_invert_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_vertical_landscape_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_vertical_portrait_invert_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_vertical_portrait_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT</string>
+    <string name="pref_keyboard_style_key">KEYBOARD_STYLE</string>
+    <string name="pref_keyboard_style_normal_value">0</string>
+    <string name="pref_keyboard_style_slate_value">1</string>
     <string name="pref_keyboard_style_summary">Namiještanje izgleda točkica na tipkovnici.</string>
     <string name="pref_keyboard_style_title">Stil tipkovnice</string>
+    <string name="pref_keyboard_style_top_bottom_value">2</string>
+    <string name="pref_last_calibrated_layout_key">LAST_CALIBRATED_LAYOUT</string>
+    <string name="pref_lock_calibration_default">lažno</string>
+    <string name="pref_lock_calibration_key">LOCK_CALIBRATION</string>
+    <string name="pref_lock_calibration_summary">Sprječava pomicanje točkica tijekom tipkanja i zadržava prilagođeni izgled</string>
+    <string name="pref_lock_calibration_title">Zaključajte položaje točkica</string>
+    <string name="pref_manage_tables_summary">Uvezite, izbrišite ili izradite vlastite Brailleove tablice.</string>
+    <string name="pref_manage_tables_title">Upravljanje/Stvaranje Brailleovih tablica</string>
+    <string name="pref_privacy_default">lažno</string>
+    <string name="pref_privacy_key">PRIVATNOST</string>
     <string name="pref_privacy_summary">Kada je uključeno, zaslon će se zacrniti dok tipkate radi privatnosti.</string>
     <string name="pref_privacy_title">Zaslon privatnosti</string>
+    <string name="pref_share_log_key">SHARE_LOG</string>
+    <string name="pref_share_log_summary">Prikupite i dijelite zapisnike sustava za otklanjanje pogrešaka</string>
+    <string name="pref_share_log_title">Podijeli zapisnike</string>
+    <string name="pref_show_circles_default">istina</string>
+    <string name="pref_show_circles_key">SHOW_CIRCLE_KEY</string>
     <string name="pref_show_circles_summary">Kada je uključeno, prikazat će se mali kružići koji označavaju položaj svake brajične točkice na zaslonu.</string>
     <string name="pref_show_circles_title">Prikaži kružiće na zaslonu?</string>
+    <string name="pref_show_ext_tables_default">lažno</string>
+    <string name="pref_show_ext_tables_key">SHOW_EXT_TABLES</string>
+    <string name="pref_show_ext_tables_summary">Prikaži sve dostupne Liblouis tablice, uključujući one koje Google službeno ne podržava.</string>
+    <string name="pref_show_ext_tables_title">Prikaži proširene Liblouisove tablice</string>
+    <string name="pref_speech_rate_default">50</string>
+    <string name="pref_speech_rate_key">SPEECH_RATE</string>
+    <string name="pref_speech_rate_summary">Odaberite koliko brzo tipkovnica govori.</string>
+    <string name="pref_speech_rate_title">Brzina govora</string>
+    <string name="pref_swap_swipe_axes_default">lažno</string>
+    <string name="pref_swap_swipe_axes_key">SWAP_SWIPE_AXES</string>
+    <string name="pref_swap_swipe_axes_summary">Tumačite vodoravne prelaske kao okomite i obrnuto.</string>
+    <string name="pref_swap_swipe_axes_title">Zamijenite osi pomaka</string>
+    <string name="pref_swipe_sensitivity_key">SWIPE_SENSITIVITY_KEY</string>
     <string name="pref_swipe_sensitivity_summary">Izbor osjetljivosti kliznih pokreta.</string>
     <string name="pref_swipe_sensitivity_title">Osjetljivost klizanja</string>
+    <string name="pref_switch_tables_key">SWITCH_TABLES</string>
     <string name="pref_switch_tables_summary">Odabir određenih jezika između kojih se možete prebacivati za vrijeme tipkanja.</string>
     <string name="pref_switch_tables_title">Omogući brajične tablice za brzinsko prebacivanje.</string>
+    <string name="pref_text_to_speech_engine_key">TEXT_TO_SPEECH</string>
     <string name="pref_text_to_speech_engine_title">Sintetizator govora</string>
     <string name="pref_text_to_speech_title">Postavke pretvaranja teksta u govor</string>
+    <string name="pref_two_hand_calibration_default">istina</string>
+    <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
+    <string name="pref_two_hand_calibration_summary">Omogućuje kalibraciju tipkovnice s dva odvojena dodira.</string>
+    <string name="pref_two_hand_calibration_title">Kalibracija s dva dodira</string>
+    <string name="pref_use_accessibility_volume_default">lažno</string>
+    <string name="pref_use_accessibility_volume_key">USE_ACCESSIBILITY_VOLUME</string>
+    <string name="pref_use_accessibility_volume_summary">Koristite glasnoću pristupačnosti i za TTS i za WAV povratne informacije.</string>
+    <string name="pref_use_accessibility_volume_title">Koristite glasnoću pristupačnosti</string>
+    <string name="pref_use_eight_dots_default">lažno</string>
+    <string name="pref_use_eight_dots_key">USE_EIGHT_DOT</string>
     <string name="pref_use_eight_dots_summary">Kada je uključeno, prikazuje točkice 7 i 8.</string>
     <string name="pref_use_eight_dots_title">Prikaži osmotočkastu tipkovnicu</string>
+    <string name="pref_use_wav_default">lažno</string>
+    <string name="pref_use_wav_key">USE_WAV_TTS</string>
+    <string name="pref_use_wav_summary">Koristite unaprijed generirane WAV datoteke za pojedinačne znakove umjesto TTS mehanizma (brži).</string>
+    <string name="pref_use_wav_title">Koristite WAV povratne informacije</string>
+    <string name="pref_vibrate_on_exit_default">istina</string>
+    <string name="pref_vibrate_on_exit_key">VIBRATE_EXIT</string>
     <string name="pref_vibrate_on_exit_title">Vibracija pri zatvaranju tipkovnice</string>
-    <string name="pref_voice_shortcut_summary">Kada je uključeno, dvaput dotaknite i držite kako biste pokrenuli glasovno diktiranje kada je talkback uključen.</string> 
+    <string name="pref_voice_shortcut_default">istina</string>
+    <string name="pref_voice_shortcut_key">VOICE_INPUT_SHORTCUT</string>
+    <string name="pref_voice_shortcut_summary">Kada je uključeno, dvaput dotaknite i držite kako biste pokrenuli glasovno diktiranje kada je talkback uključen.</string>
     <string name="pref_voice_shortcut_title">Prečac glasovnog unosa</string>
+    <string name="preset_caps_sign">Veliki znak</string>
+    <string name="preset_cat_acute">Akutni/španjolski (á, ñ...)</string>
+    <string name="preset_cat_base">Osnovna abeceda (a-z)</string>
+    <string name="preset_cat_circ">cirkumfleks/francuski (â, œ...)</string>
+    <string name="preset_cat_control">Kontrolni kodovi (6-pt)</string>
+    <string name="preset_cat_dier">Dijereza (ä, ë...)</string>
+    <string name="preset_cat_it_accents">Talijanski naglasci</string>
+    <string name="preset_cat_math">Matematika i simboli (+, €, ...)</string>
+    <string name="preset_cat_punc">Interpunkcija (standardna/književna)</string>
+    <string name="preset_let_sign">Slovni znak</string>
+    <string name="preset_num_sign">Znak broja</string>
     <string name="privacy_disabled">Zaslon privatnosti je isključen</string>
     <string name="privacy_enabled">Zaslon privatnosti je uključen</string>
+    <string name="punctuation_backslash">Obrnuta kosa crta</string>
+    <string name="punctuation_close_paren">Desna zagrada</string>
+    <string name="punctuation_colon">Dvotočka</string>
+    <string name="punctuation_comma">Zarez</string>
+    <string name="punctuation_dot">Točka</string>
+    <string name="punctuation_double_quote">Navodnik</string>
+    <string name="punctuation_exclamation">Uskličnik</string>
+    <string name="punctuation_left_brace">Lijeva vitičasta zagrada</string>
+    <string name="punctuation_open_paren">Lijeva zagrada</string>
+    <string name="punctuation_questionmark">Upitnik</string>
+    <string name="punctuation_right_brace">Desna vitičasta zagrada</string>
+    <string name="punctuation_semicolon">Točka zarez</string>
+    <string name="punctuation_single_quote">Izostavnik</string>
+    <string name="punctuation_slash">Kosa crta</string>
+    <string name="punctuation_space">Razmak</string>
     <string name="ready">tipkovnica spremna</string>
+    <string name="require_record_audio_now">REQUIRE_RECORD_AUDIO</string>
     <string name="return_key">Kraj retka</string>
     <string name="rotate_keyboard">Zaokreni tipkovnicu sa uređajem</string>
     <string name="rotate_summary">Kada je uključeno, tipkovnica će se orijentirati prema orijentaciji uređaja.</string>
+    <string name="script_arabic">arapski</string>
+    <string name="script_cyrillic">ćirilica (ruski/slavenski)</string>
+    <string name="script_greek">grčki</string>
+    <string name="script_hebrew">hebrejski</string>
+    <string name="script_hindi">indijski (devanagari)</string>
+    <string name="script_korean">korejski (hangul)</string>
+    <string name="script_latin">latinski (europski)</string>
+    <string name="script_thai">tajlandski</string>
+    <string name="script_unicode">Samo simboli (Unicode)</string>
+    <string name="script_vietnamese">vijetnamski</string>
     <string name="select_all">Odaberi sve</string>
     <string name="selected_all">Cjelokupan tekst je odabran</string>
     <string name="set_mark">Oznaka je postavljena</string>
-    <string name="settings_name">SBK Modern Settings</string>
+    <string name="settings_name">Postavke za Soft Braille Keyboard</string>
     <string name="show_input_switcher">Prikazivanje prebacivača metode unosa</string>
     <string name="show_settings">Prikazivanje postavki za soft braille keyboard</string>
     <string name="space">Razmak</string>
@@ -121,11 +683,41 @@
     <string name="speak_selection">Izgovori odabir</string>
     <string name="spellcheck_not_supported">Provjera pravopisa nije podržana u ovoj inačici sustava Android.</string>
     <string name="start_of_text">Početak teksta</string>
+    <string name="swipe_confirm">Kliznite prstom ponovo za potvrdu</string>
     <string name="swipe_confirm_input">Kliznite prstom ponovo za prikazivanje izbora tipkovnice</string>
     <string name="swipe_confirm_settings">Kliznite prstom ponovo za prikazivanje postavki za Soft Braille Keyboard</string>
-    <string name="swipe_confirm">Kliznite prstom ponovo za potvrdu</string>
+    <string name="table_header_author">Autor:</string>
+    <string name="table_header_desc">Opis:</string>
+    <string name="table_section_base">Osnovna pravila</string>
+    <string name="table_section_high">HIGH PRIORITY</string>
+    <string name="table_section_standard">STANDARD PRIORITY</string>
+    <string name="table_variant_unofficial">Neslužbeno</string>
+    <string name="btn_edit_header">Uredite zaglavlje/metapodatke tablice</string>
+    <string name="btn_move_to_pos">Pomakni se na položaj</string>
+    <string name="btn_pin_mapping">Pin mapiranje (zaštita)</string>
+    <string name="btn_unpin_mapping">Otkvači mapiranje</string>
+    <string name="hint_enter_pos">Unesite poziciju (1 do %d)</string>
+    <string name="btn_move_up">Pomakni se gore</string>
+    <string name="btn_move_down">Pomakni dolje</string>
+    <string name="btn_move_top">Premjesti na vrh</string>
+    <string name="btn_insert_alphabet_here">Ovdje umetnite abecedu (%s).</string>
+    <string name="btn_insert_numeric_here">Ovdje unesite brojeve (%s).</string>
+    <string name="title_activity_keyboard_help">Pomoć za tipkovnicu</string>
+    <string name="title_activity_table_creator">Stvoritelj tablice</string>
+    <string name="title_confirm_delete">Potvrdite brisanje</string>
+    <string name="title_duplicate_combination">Dvostruka kombinacija</string>
+    <string name="title_mass_actions">Masovne akcije</string>
+    <string name="title_order_actions">Akcija ponovnog naručivanja</string>
+    <string name="title_select_prefix">Odaberite prefiks (npr. točka 4, 5 ili 6)</string>
+    <string name="title_select_table_file">Odaberite datoteku Brailleove tablice</string>
+    <string name="title_select_template">Odaberite Predložak</string>
+    <string name="title_share_table">Dijeli tablicu</string>
     <string name="translator_error">Došlo je do problema sa brajičnim servisom</string>
+    <string name="trial_buy">Kupiti</string>
+    <string name="trial_expired_message">Proba je istekla.</string>
+    <string name="trial_expired_title">Proba istekla</string>
     <string name="try_box">Ovdje probajte tipkati s tipkovnicom.</string>
+    <string name="txt_id_practice">TXT_PRACTICE</string>
     <string name="unknown_character">Nepoznat znak</string>
     <string name="unset_mark">Oznaka uklonjena</string>
     <string name="voice_input_enable">Molimo izvršite ovaj pokret dvaput brzo. Tada će se pojaviti dijaloški okvir u kojem onda prihvatite dozvolu koristeći Talkback, kako bi glasovni unos mogao raditi.</string>
@@ -133,99 +725,122 @@
     <string name="voice_input_is_not_available">Glasovni unos nije dostupan na uređaju.</string>
     <string name="voice_input_permission_message">Trebat ćete omogućiti dozvolu za snimanje zvuka kako bi glasovni unos mogao raditi.</string>
     <string name="voice_input_permission_title">Dozvola za glasovni unos</string>
-    <string name="word_correction_misspelled">%s pravopisna pogreška</string>
     <string name="word_correct">Riječ je ispravna</string>
+    <string name="word_correction_correct">%s točno</string>
+    <string name="word_correction_misspelled">%s pravopisna pogreška</string>
     <string name="word_count">%1$d redaka, %2$d riječi, %3$d znakova</string>
     <string name="word_misspelled">Pravopisna pogreška</string>
-    <!-- PUNCTUATION -->
-
-    <!--
-      Source: A value for announcing a question mark.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_questionmark">Upitnik</string>
-
-    <!--
-      Source: A value for announcing a space.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_space">Razmak</string>
-
-    <!--
-      Source: A value for announcing a comma.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_comma">Zarez</string>
-
-    <!--
-      Source: A value for announcing a dot.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_dot">Točka</string>
-
-    <!--
-      Source: A value for announcing an exclamation.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_exclamation">Uskličnik</string>
-
-    <!--
-      Source: A value for announcing an opening parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_open_paren">Lijeva zagrada</string>
-
-    <!--
-      Source: A value for announcing a closing parenthesis.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_close_paren">Desna zagrada</string>
-
-    <!--
-      Source: A value for announcing a double quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_double_quote">Navodnik</string>
-
-    <!--
-      Source: A value for announcing a single quote.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_single_quote">Izostavnik</string>
-
-    <!--
-      Source: A value for announcing a slash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_slash">Kosa crta</string>
-
-    <!--
-      Source: A value for announcing a backslash.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_backslash">Obrnuta kosa crta</string>
-
-    <!--
-      Source: A value for announcing a semicolon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_semicolon">Točka zarez</string>
-
-    <!--
-      Source: A value for announcing a colon.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_colon">Dvotočka</string>
-    
-    <!--
-      Source: A value for announcing a left brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_left_brace">Lijeva vitičasta zagrada</string>
-    
-    <!--
-      Source: A value for announcing a right brace.
-      Description: This is spoken to the user. [CHAR LIMIT="NONE"]
-    -->
-    <string name="punctuation_right_brace">Desna vitičasta zagrada</string>
+    <!--  BrailleAction Arrays  -->
+    <string-array name="braille_action_entries">
+        <item>@string/action_none</item>
+        <item>@string/action_move_left_char</item>
+        <item>@string/action_move_right_char</item>
+        <item>@string/action_move_left_word</item>
+        <item>@string/action_move_right_word</item>
+        <item>@string/action_move_left_line</item>
+        <item>@string/action_move_right_line</item>
+        <item>@string/action_move_left_all</item>
+        <item>@string/action_move_right_all</item>
+        <item>@string/action_backspace_char</item>
+        <item>@string/action_backspace_word</item>
+        <item>@string/action_backspace_line</item>
+        <item>@string/action_backspace_all</item>
+        <item>@string/action_read_char</item>
+        <item>@string/action_read_word</item>
+        <item>@string/action_read_line</item>
+        <item>@string/action_read_all</item>
+        <item>@string/action_space</item>
+        <item>@string/action_newline</item>
+        <item>@string/action_voice_input</item>
+        <item>@string/action_toggle_privacy</item>
+        <item>@string/action_toggle_auto_caps</item>
+        <item>@string/action_toggle_echo_passwords</item>
+        <item>@string/action_toggle_mark</item>
+        <item>@string/action_cycle_keyboard_feedback</item>
+        <item>@string/action_cycle_echo_feedback</item>
+        <item>@string/action_switch_braille_type</item>
+        <item>@string/action_switch_braille_table</item>
+        <item>@string/action_open_settings</item>
+        <item>@string/action_open_input_switcher</item>
+        <item>@string/action_close_keyboard</item>
+        <item>@string/action_shrink_keyboard</item>
+        <item>@string/action_word_count</item>
+        <item>@string/action_next_field_action</item>
+        <item>@string/action_select_text_action</item>
+        <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_edit_select_all</item>
+        <item>@string/action_edit_copy</item>
+        <item>@string/action_edit_cut</item>
+        <item>@string/action_edit_paste</item>
+        <item>@string/action_edit_speak</item>
+        <item>@string/action_edit_delete</item>
+        <item>@string/action_spell_check_left</item>
+        <item>@string/action_spell_check_right</item>
+        <item>@string/action_spell_check_next_suggestion</item>
+        <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_abbreviations_no_space</item>
+        <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_toggle_misspelling_sound</item>
+        <item>@string/action_add_to_dictionary</item>
+        <item>@string/action_remove_from_dictionary</item>
+        <item>@string/action_set_dot_7</item>
+        <item>@string/action_set_dot_8</item>
+    </string-array>
+    <string-array name="braille_action_values">
+        <item>NONE</item>
+        <item>MOVE_LEFT_CHAR</item>
+        <item>MOVE_RIGHT_CHAR</item>
+        <item>MOVE_LEFT_WORD</item>
+        <item>MOVE_RIGHT_WORD</item>
+        <item>MOVE_LEFT_LINE</item>
+        <item>MOVE_RIGHT_LINE</item>
+        <item>MOVE_LEFT_ALL</item>
+        <item>MOVE_RIGHT_ALL</item>
+        <item>BACKSPACE_CHAR</item>
+        <item>BACKSPACE_WORD</item>
+        <item>BACKSPACE_LINE</item>
+        <item>BACKSPACE_ALL</item>
+        <item>READ_CHAR</item>
+        <item>READ_WORD</item>
+        <item>READ_LINE</item>
+        <item>READ_ALL</item>
+        <item>SPACE</item>
+        <item>NEWLINE</item>
+        <item>VOICE_INPUT</item>
+        <item>TOGGLE_PRIVACY</item>
+        <item>TOGGLE_AUTO_CAPS</item>
+        <item>TOGGLE_ECHO_PASSWORDS</item>
+        <item>TOGGLE_MARK</item>
+        <item>CYCLE_KEYBOARD_FEEDBACK</item>
+        <item>CYCLE_ECHO_FEEDBACK</item>
+        <item>SWITCH_BRAILLE_TYPE</item>
+        <item>SWITCH_BRAILLE_TABLE</item>
+        <item>OPEN_SETTINGS</item>
+        <item>OPEN_INPUT_SWITCHER</item>
+        <item>CLOSE_KEYBOARD</item>
+        <item>SHRINK_KEYBOARD</item>
+        <item>WORD_COUNT</item>
+        <item>NEXT_FIELD_ACTION</item>
+        <item>SELECT_TEXT_ACTION</item>
+        <item>EMOJI_MODE_TOGGLE</item>
+        <item>EDIT_SELECT_ALL</item>
+        <item>EDIT_COPY</item>
+        <item>EDIT_CUT</item>
+        <item>EDIT_PASTE</item>
+        <item>EDIT_SPEAK</item>
+        <item>EDIT_DELETE</item>
+        <item>SPELL_CHECK_LEFT</item>
+        <item>SPELL_CHECK_RIGHT</item>
+        <item>SPELL_CHECK_NEXT_SUGGESTION</item>
+        <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
+        <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>TOGGLE_MISSPELLING_SOUND</item>
+        <item>ADD_TO_DICTIONARY</item>
+        <item>REMOVE_FROM_DICTIONARY</item>
+        <item>SET_DOT_7</item>
+        <item>SET_DOT_8</item>
+    </string-array>
 </resources>

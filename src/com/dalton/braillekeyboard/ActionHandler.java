@@ -672,7 +672,30 @@ public class ActionHandler {
         listener.setSelection(suggestion.offset);
         listener.deleteSurroundingText(0, suggestion.getLength());
         listener.commitText(text, 1);
-        listener.setSelection(suggestion.offset);
+        
+        // Se ci sono solo spazi e punteggiatura fino alla fine del testo dopo la parola appena inserita,
+        // spostiamo il cursore oltre di essi per evitare che la parola successiva si attacchi.
+        int cursorShift = 0;
+        CharSequence afterText = listener.getTextAfterCursor(20);
+        if (afterText != null && afterText.length() > 0) {
+            boolean onlyPunctuationOrWhitespace = true;
+            for (int i = 0; i < afterText.length(); i++) {
+                char c = afterText.charAt(i);
+                if (Character.isLetterOrDigit(c)) {
+                    onlyPunctuationOrWhitespace = false;
+                    break;
+                }
+            }
+            if (onlyPunctuationOrWhitespace) {
+                cursorShift = afterText.length();
+            }
+        }
+        if (cursorShift > 0) {
+            listener.setSelection(suggestion.offset + text.length() + cursorShift);
+        } else {
+            listener.setSelection(suggestion.offset);
+        }
+        
         suggestion.setLength();
     }
 
@@ -681,7 +704,7 @@ public class ActionHandler {
 
     private boolean spellCheckerMatchesWord() {
         String text = getInput(Granularity.ALL);
-        if (text != null && spellingSuggestion != null) { int off = spellingSuggestion.offset, len = spellingSuggestion.getLength(), cur = listener.getCursor(); if (text.length() > 0 && (off + len) <= text.length() && cur >= off && cur < (off + len)) return text.substring(off, off + len).equals(spellingSuggestion.getCurrent()); }
+        if (text != null && spellingSuggestion != null) { int off = spellingSuggestion.offset, len = spellingSuggestion.getLength(), cur = listener.getCursor(); if (text.length() > 0 && (off + len) <= text.length() && cur >= off && cur <= (off + len)) return text.substring(off, off + len).equals(spellingSuggestion.getCurrent()); }
         return false;
     }
 
