@@ -127,6 +127,9 @@ public class SpellChecker {
         if (spellChecker != null) {
             return;
         }
+        if (currentLocale == null) {
+            currentLocale = Locale.getDefault();
+        }
         final TextServicesManager tsm = (TextServicesManager) context
                 .getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);
         if (tsm != null) {
