@@ -704,7 +704,33 @@ public class ActionHandler {
 
     private boolean spellCheckerMatchesWord() {
         String text = getInput(Granularity.ALL);
-        if (text != null && spellingSuggestion != null) { int off = spellingSuggestion.offset, len = spellingSuggestion.getLength(), cur = listener.getCursor(); if (text.length() > 0 && (off + len) <= text.length() && cur >= off && cur <= (off + len)) return text.substring(off, off + len).equals(spellingSuggestion.getCurrent()); }
+        if (text != null && spellingSuggestion != null) {
+            int offset = spellingSuggestion.offset;
+            int length = spellingSuggestion.getLength();
+            int cursor = listener.getCursor();
+            if (text.length() > 0 && (offset + length) <= text.length()) {
+                if (cursor >= offset) {
+                    if (cursor <= (offset + length)) {
+                        return text.substring(offset, offset + length).equals(
+                                spellingSuggestion.getCurrent());
+                    } else {
+                        // Check if characters between end of the word (offset + length) and cursor are only whitespace or punctuation
+                        boolean onlyPunctOrWhite = true;
+                        for (int i = offset + length; i < cursor && i < text.length(); i++) {
+                            char c = text.charAt(i);
+                            if (Character.isLetterOrDigit(c)) {
+                                onlyPunctOrWhite = false;
+                                break;
+                            }
+                        }
+                        if (onlyPunctOrWhite) {
+                            return text.substring(offset, offset + length).equals(
+                                    spellingSuggestion.getCurrent());
+                        }
+                    }
+                }
+            }
+        }
         return false;
     }
 
