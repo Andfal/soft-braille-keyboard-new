@@ -65,10 +65,12 @@ public class SpellChecker {
     private static final SpellCheckerSessionListener spellCheckerListener = new SpellCheckerSessionListener() {
         @Override
         public void onGetSuggestions(final SuggestionsInfo[] arg0) {
+            Log.d(TAG, "Listener.onGetSuggestions() callback invoked by OS");
         }
 
         @Override
         public void onGetSentenceSuggestions(SentenceSuggestionsInfo[] arg0) {
+            Log.d(TAG, "Listener.onGetSentenceSuggestions() callback invoked by OS. activeInstance is null? " + (activeInstance == null));
             SpellChecker instance = activeInstance;
             if (instance != null) {
                 instance.handleSentenceSuggestions(arg0);
