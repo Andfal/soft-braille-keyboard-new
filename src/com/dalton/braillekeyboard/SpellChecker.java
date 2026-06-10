@@ -163,18 +163,6 @@ public class SpellChecker {
     public boolean checkSpelling(SpellingSuggestionsReadyListener listener,
             String text, int cursor, Direction direction) {
         Log.d(TAG, "checkSpelling() called: text='" + text + "', cursor=" + cursor + ", direction=" + direction);
-        
-        // Recreate the session on every new checkSpelling request to prevent session freeze bugs
-        if (spellChecker != null) {
-            Log.d(TAG, "checkSpelling(): closing existing spellChecker session");
-            try {
-                spellChecker.close();
-            } catch (Exception e) {
-                Log.w(TAG, "checkSpelling(): error closing spellChecker", e);
-            }
-            spellChecker = null;
-        }
-        
         initSession();
         if (text != null && text.length() > 0) {
             this.cursor = cursor;
