@@ -118,6 +118,12 @@ public class ActionHandler {
     public void setKeyboardListener(KeyboardListener listener) { this.listener = listener; }
     public void shutdown() { voiceInput.destroy(); spellChecker.destroy(); }
 
+    public void closeSpellChecker() {
+        if (spellChecker != null) {
+            spellChecker.destroy();
+        }
+    }
+
     public void onStartInput(Locale locale) {
         if (spellChecker != null) {
             spellChecker.onStartInput(locale);

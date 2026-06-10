@@ -36,6 +36,8 @@ import java.util.Locale;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.textservice.SentenceSuggestionsInfo;
 import android.view.textservice.SpellCheckerSession;
@@ -60,6 +62,8 @@ public class SpellChecker {
 
     private SpellCheckerSession spellChecker;
     private Locale currentLocale;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Runnable initSessionRunnable = null;
 
     private final SpellCheckerSessionListener spellCheckerListener = new SpellCheckerSessionListener() {
         @Override
@@ -164,13 +168,35 @@ public class SpellChecker {
                 spellChecker = null;
             }
         }
-        initSession();
+        
+        if (initSessionRunnable != null) {
+            handler.removeCallbacks(initSessionRunnable);
+        }
+        initSessionRunnable = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (SpellChecker.this) {
+                    Log.d(TAG, "Delayed initSessionRunnable running...");
+                    initSession();
+                    initSessionRunnable = null;
+                }
+            }
+        };
+        handler.postDelayed(initSessionRunnable, 500);
     }
 
     public boolean checkSpelling(SpellingSuggestionsReadyListener listener,
             String text, int cursor, Direction direction) {
         Log.d(TAG, "checkSpelling() called: text='" + text + "', cursor=" + cursor + ", direction=" + direction);
-        initSession();
+        synchronized (this) {
+            if (initSessionRunnable != null) {
+                handler.removeCallbacks(initSessionRunnable);
+                initSessionRunnable = null;
+                initSession();
+            } else {
+                initSession();
+            }
+        }
         if (text != null && text.length() > 0) {
             this.cursor = cursor;
             this.direction = direction;
@@ -224,6 +250,10 @@ public class SpellChecker {
 
     public synchronized void destroy() {
         Log.d(TAG, "destroy() called. spellChecker is null? " + (spellChecker == null));
+        if (initSessionRunnable != null) {
+            handler.removeCallbacks(initSessionRunnable);
+            initSessionRunnable = null;
+        }
         if (spellChecker != null) {
             try {
                 spellChecker.close();

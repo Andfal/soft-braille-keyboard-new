@@ -166,6 +166,9 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         super.onFinishInput();
         mIsFinishing = true;
         finishComposingText(false);
+        if (brailleView != null) {
+            brailleView.closeSpellChecker();
+        }
     }
 
     @Override

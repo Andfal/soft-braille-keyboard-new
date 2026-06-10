@@ -339,6 +339,12 @@ public class BrailleView extends View {
         speech.shutdown(getContext().getString(R.string.closing_keyboard));
         actionHandler.shutdown();
         setLocale(Locale.getDefault(), false);
+     }
+
+    public void closeSpellChecker() {
+        if (actionHandler != null) {
+            actionHandler.closeSpellChecker();
+        }
     }
 
     @Override
