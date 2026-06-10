@@ -96,7 +96,10 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     public void onWindowShown() {
         super.onWindowShown();
         mIsFinishing = false;
-        if (brailleView != null) brailleView.setVisibility(View.VISIBLE);
+        if (brailleView != null) {
+            brailleView.setVisibility(View.VISIBLE);
+            brailleView.onStartInput(getLocale());
+        }
         scheduleAccessibilityUpdate(5, 400);
     }
 

@@ -284,7 +284,6 @@ public class BrailleView extends View {
         actionHandler = new ActionHandler(context);
         actionHandler.setCallback(actionListener);
         actionHandler.setKeyboardListener(listener);
-        actionHandler.onStartInput(listener.getLocale());
     }
 
     private String getDynamicCalibrationKey(int width, int height) {
