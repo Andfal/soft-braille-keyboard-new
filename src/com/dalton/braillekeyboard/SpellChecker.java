@@ -145,7 +145,7 @@ public class SpellChecker {
             try {
                 Log.d(TAG, "initSession(): creating newSpellCheckerSession");
                 spellChecker = tsm.newSpellCheckerSession(null, currentLocale,
-                        spellCheckerListener, false);
+                        spellCheckerListener, true);
                 Log.d(TAG, "initSession(): newSpellCheckerSession returned: " + spellChecker);
             } catch (Exception e) {
                 Log.e(TAG, "initSession(): Exception creating spell checker session", e);
