@@ -2,9 +2,11 @@
 ađ
 er
 ūađ
+í
 ekki
 og
 ūú
+á
 viđ
 ūetta
 hann
@@ -183,6 +185,7 @@ satt
 verđum
 hefurđu
 veist
+ķ
 annađ
 elskan
 eitt
@@ -310,6 +313,7 @@ lífi
 ætlarđu
 einhvern
 hafđi
+i
 víst
 mann
 geta
@@ -317,6 +321,7 @@ daginn
 handa
 héđan
 sinn
+a
 nķtt
 líđur
 hjálpa
@@ -483,6 +488,7 @@ konan
 engan
 hátt
 helvítis
+ú
 tími
 annan
 sú
@@ -535,6 +541,7 @@ síđasta
 kyrr
 finn
 börn
+ū
 seinna
 gerđir
 meiri
@@ -821,6 +828,7 @@ verđiđ
 systir
 vann
 sérđ
+ā
 greiđa
 krakkar
 sinnum
@@ -1035,6 +1043,7 @@ james
 drep
 gærkvöldi
 mönnum
+æ
 komumst
 skyldi
 nærri
@@ -1165,6 +1174,7 @@ hina
 greinilega
 hringt
 ríđa
+o
 tvisvar
 gjöf
 hvíta
@@ -1217,6 +1227,7 @@ verra
 stríđ
 stjķrna
 sũnir
+s
 samūykkt
 áhrif
 stela
@@ -1331,6 +1342,7 @@ gķđir
 manneskja
 skrítiđ
 drífa
+k
 svariđ
 sætt
 hugsađi
@@ -1363,6 +1375,7 @@ stúlkan
 syngja
 sinna
 lít
+u
 hefđu
 draga
 amy
@@ -1436,6 +1449,7 @@ rķlega
 byrjađi
 vinnunni
 misst
+ä
 ákvörđun
 jķl
 fķrstu
@@ -1852,6 +1866,7 @@ kílķmetra
 stend
 aumingja
 hljķta
+g
 kaliforníu
 missir
 andađu
@@ -1884,6 +1899,7 @@ biđst
 sífellt
 nægir
 de
+y
 síminn
 grafa
 líkama
@@ -1919,6 +1935,7 @@ lestu
 hliđina
 ímyndađ
 kunna
+t
 trúirđu
 yfirgefa
 lest
@@ -2356,6 +2373,7 @@ gefast
 fķgeti
 holly
 ūessara
+v
 etta
 amen
 bandaríkin
@@ -2397,6 +2415,7 @@ skiljiđ
 ráđiđ
 vii
 skilst
+e
 köllum
 byrjun
 blessi
@@ -2551,6 +2570,7 @@ jenny
 deyjum
 netinu
 skrifar
+d
 slást
 spjalla
 tilviljun
@@ -2649,6 +2669,7 @@ dans
 tekin
 öskra
 árin
+b
 deild
 gettu
 stöđvađu
@@ -2930,6 +2951,7 @@ sv
 vélina
 harđur
 hverjar
+f
 raunverulega
 skipa
 forseta
@@ -3259,6 +3281,7 @@ nein
 hest
 dķu
 skyldu
+l
 tekist
 hugrakkur
 skemmti
@@ -3299,6 +3322,7 @@ hægđu
 ig
 ted
 jesse
+c
 jafnvægi
 stans
 hefjast
@@ -3317,6 +3341,7 @@ svalur
 verðum
 mættur
 joseph
+ų
 misstum
 klúđra
 viđurkenna
@@ -3326,6 +3351,7 @@ foreldrum
 dagana
 ađallega
 ræddum
+â
 ūvílík
 líki
 kaffiđ
@@ -3544,6 +3570,7 @@ ríki
 læst
 finnist
 ekur
+x
 city
 veröld
 klípu
@@ -3611,11 +3638,13 @@ bita
 háls
 skápnum
 litlar
+r
 vannst
 hugmyndina
 sverđ
 hringiđ
 tristan
+h
 fyrirmæli
 bláa
 anne
@@ -4297,6 +4326,7 @@ væni
 æstur
 heilan
 bravķ
+m
 birtast
 sebastian
 morđingja
@@ -4548,6 +4578,7 @@ ađstođar
 slķđ
 líkjast
 gæfi
+n
 verstu
 tķnlistin
 hringdirđu
@@ -4918,6 +4949,7 @@ ruby
 fyrirmælum
 haus
 marvin
+ö
 skķginn
 nammi
 skoriđ
@@ -5827,6 +5859,7 @@ madison
 fađma
 bank
 rebecca
+j
 forrit
 hörku
 nokkuð
@@ -6058,6 +6091,7 @@ tilfinningum
 scotty
 monsieur
 kennara
+z
 vondu
 gjalda
 veislunni
@@ -6103,6 +6137,7 @@ meõ
 haust
 finnir
 hoppandi
+ó
 teymi
 sķun
 arizona
@@ -6298,6 +6333,7 @@ ofursta
 bķkum
 meiđi
 fátt
+ė
 senn
 beri
 vindur
@@ -7321,6 +7357,7 @@ dude
 stefnum
 máttur
 hálfvita
+p
 unnusta
 hrađann
 svíkur
@@ -10400,6 +10437,7 @@ fķrnir
 āđur
 ímyndađi
 rodney
+đ
 spilltur
 smella
 ketcham
@@ -14307,6 +14345,7 @@ aiiar
 verndađi
 bađinu
 samningar
+ũ
 grennst
 nemenda
 arch
@@ -14545,6 +14584,7 @@ samvinna
 titill
 kitla
 viđskiptunum
+q
 heimaslķđum
 hjálpuđu
 búnađi
@@ -16380,6 +16420,7 @@ handsama
 upptækt
 tapast
 bjargi
+å
 građur
 spiluđum
 lođna
@@ -20072,6 +20113,7 @@ luiz
 edmund
 endanlegt
 lesi
+w
 sálfræđings
 gong
 klķr
@@ -20761,6 +20803,7 @@ feitari
 útgjöld
 málaliđi
 forđađ
+é
 sölunni
 verndiđ
 tjara
@@ -29955,46 +29998,3 @@ stríđshetju
 gömiu
 ævisaga
 hefōi
-tilrauninni
-glott
-liđlangan
-dottinn
-meiđiđ
-bogaskyttur
-hreinskilnir
-varúđarráđstöfun
-hamfarir
-árgangi
-kioss
-föđurinn
-tuna
-örina
-leiđarljķs
-barnshafandi
-endurtakiđ
-mũrinni
-meiđum
-menntunar
-tatanka
-risu
-mimieux
-frystu
-kenningum
-léttar
-skađađi
-ijķt
-sögumađur
-hléi
-bermuda
-usla
-precious
-brynvörđum
-gréstu
-nantz
-undirfylki
-talaði
-tahítí
-viđtölin
-gjörbreytt
-barnaherbergiđ
-aha

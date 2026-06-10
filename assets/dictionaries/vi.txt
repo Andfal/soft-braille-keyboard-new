@@ -26,6 +26,7 @@ em
 con
 ông
 sao
+ở
 biết
 nói
 nó
@@ -77,6 +78,7 @@ cần
 vì
 việc
 tới
+à
 điều
 chứ
 xin
@@ -109,6 +111,7 @@ trước
 hay
 tên
 tất
+ý
 công
 bao
 bà
@@ -175,6 +178,7 @@ bây
 nay
 khỏi
 nhân
+i
 tiền
 đường
 nhận
@@ -220,9 +224,11 @@ quay
 nhớ
 thực
 chiến
+t
 chẳng
 vô
 đại
+c
 lý
 ko
 vui
@@ -243,6 +249,7 @@ máy
 giống
 trai
 vị
+n
 kia
 chị
 tâm
@@ -263,6 +270,7 @@ giữ
 tiếng
 câu
 bởi
+ừ
 chờ
 đẹp
 kết
@@ -321,11 +329,13 @@ thay
 an
 xác
 bay
+a
 đêm
 tiên
 điện
 dùng
 tội
+y
 đổi
 dù
 thân
@@ -349,6 +359,7 @@ ngồi
 trông
 trường
 đất
+m
 trẻ
 tính
 đàn
@@ -368,10 +379,12 @@ quyết
 tập
 dừng
 khó
+ồ
 nhỉ
 mở
 năng
 ít
+ạ
 đình
 cao
 kế
@@ -405,12 +418,14 @@ gã
 chọn
 kỳ
 quý
+l
 sàng
 hoặc
 may
 mừng
 loại
 chân
+s
 sai
 chắn
 yên
@@ -446,6 +461,7 @@ tàu
 chó
 trí
 pháp
+ư
 nhiêu
 nổi
 đặt
@@ -522,6 +538,7 @@ lệnh
 nè
 xuất
 tấn
+v
 liệu
 giỏi
 xử
@@ -602,6 +619,7 @@ hộ
 đóng
 nhảy
 chừng
+u
 trang
 khỏe
 phản
@@ -630,6 +648,7 @@ nổ
 suốt
 ngựa
 tiếc
+b
 khoảng
 đùa
 nàng
@@ -737,6 +756,7 @@ cắt
 cũ
 đảm
 âm
+h
 lợi
 hủy
 chi
@@ -787,6 +807,7 @@ vượt
 chả
 thi
 lễ
+ê
 cuốn
 trại
 lệ
@@ -796,6 +817,7 @@ dữ
 tiết
 săn
 miệng
+o
 kim
 lạnh
 đoàn
@@ -818,6 +840,7 @@ ty
 tích
 mái
 thuận
+d
 sửa
 vương
 kì
@@ -890,6 +913,7 @@ thuê
 giấu
 ứng
 giản
+g
 cơn
 lành
 hầu
@@ -899,9 +923,11 @@ loạn
 lặng
 thăm
 cực
+á
 mùi
 tăng
 phóng
+r
 sam
 đột
 đoạn
@@ -993,6 +1019,7 @@ ngục
 khóc
 mẫu
 đào
+ô
 nguồn
 thang
 tồn
@@ -1019,6 +1046,7 @@ ném
 tung
 khởi
 hổ
+e
 sáu
 hoang
 rừng
@@ -1032,6 +1060,7 @@ york
 nga
 vinh
 xứng
+ờ
 hào
 kỷ
 nhầm
@@ -1047,6 +1076,7 @@ sông
 dao
 so
 mê
+ả
 vận
 dòng
 chiều
@@ -1062,6 +1092,7 @@ hải
 dặm
 hồng
 lương
+p
 harry
 tốc
 gà
@@ -1205,6 +1236,7 @@ võ
 rồ
 khứ
 tan
+q
 bạo
 xu
 tom
@@ -1417,6 +1449,7 @@ ghé
 mô
 cấm
 đéo
+x
 bông
 mập
 kí
@@ -1563,6 +1596,7 @@ tuyến
 heo
 jake
 tuân
+k
 sữa
 âu
 tháp
@@ -1577,6 +1611,7 @@ gốc
 vờ
 đền
 khô
+ổ
 phẫu
 ngũ
 vĩnh
@@ -1737,6 +1772,7 @@ rẻ
 tịch
 đảng
 thiệp
+j
 li
 trục
 râu
@@ -1858,6 +1894,7 @@ ung
 lén
 chấn
 chui
+ơ
 ván
 bọc
 alice
@@ -2294,6 +2331,7 @@ jay
 ốc
 giảng
 nhở
+f
 rủi
 tứ
 larry
@@ -2639,6 +2677,7 @@ tỉa
 toi
 khuất
 lannister
+ă
 sophie
 cấy
 bịt
@@ -2667,6 +2706,7 @@ mac
 joseph
 gai
 emma
+ó
 vần
 kid
 hiếu
@@ -2738,6 +2778,7 @@ chồn
 trơn
 gầy
 karl
+ä
 greg
 rùa
 merlin
@@ -2756,6 +2797,7 @@ kông
 kiềm
 nảy
 daisy
+đ
 jessica
 sandwich
 diego
@@ -2805,6 +2847,7 @@ never
 dang
 manny
 xuẩn
+w
 khái
 ollie
 tý
@@ -3212,6 +3255,7 @@ băn
 sid
 đắc
 oa
+z
 lút
 nhẽ
 dí
@@ -3327,6 +3371,7 @@ fisk
 nồi
 bọt
 rải
+ã
 lim
 nhọn
 hot
@@ -3353,6 +3398,7 @@ dale
 halloween
 sài
 romeo
+ü
 eugene
 colombia
 abu
@@ -3894,6 +3940,7 @@ cosette
 nọc
 fusco
 bói
+ç
 dòm
 foot
 hăm
@@ -3904,6 +3951,7 @@ cúc
 people
 whitney
 thệ
+ị
 fury
 nanh
 stu
@@ -3918,6 +3966,7 @@ gatsby
 wait
 nhót
 biêt
+í
 end
 cúm
 godfrey
@@ -4025,6 +4074,7 @@ tít
 xở
 yankee
 lữ
+ố
 rourke
 chướng
 cợt
@@ -4208,6 +4258,7 @@ reggie
 lloyd
 baratheon
 bẽ
+ủ
 chance
 first
 chandler
@@ -4424,6 +4475,7 @@ valentine
 khải
 sylvia
 bừng
+æ
 hendricks
 tango
 lòi
@@ -4727,6 +4779,7 @@ nang
 darren
 uế
 jerome
+ĩ
 lún
 renly
 gien
@@ -4754,6 +4807,7 @@ aa
 toan
 dvd
 liang
+ú
 cằm
 carla
 boyd
@@ -5270,6 +5324,7 @@ talk
 cop
 tancredi
 north
+ù
 lyn
 augustus
 hansel
@@ -5520,6 +5575,7 @@ village
 gondor
 gao
 quàng
+ò
 girls
 trác
 might
@@ -5608,6 +5664,7 @@ vassili
 mig
 stewart
 goku
+ế
 giư
 gẫy
 khắt
@@ -6757,6 +6814,7 @@ shepard
 mèm
 small
 xóc
+ß
 ramirez
 cullen
 trệt
@@ -6920,6 +6978,7 @@ stig
 laszlo
 badger
 salomon
+ợ
 émilien
 drex
 somebody
@@ -8130,6 +8189,7 @@ agatha
 fsb
 suyễn
 silicon
+ớ
 jang
 kappa
 gút
@@ -8984,6 +9044,7 @@ ky
 chườm
 milano
 dreyfus
+ụ
 cheese
 falcon
 ransom
@@ -8998,6 +9059,7 @@ licinia
 roar
 burn
 cleo
+ª
 lia
 chong
 tửng
@@ -9008,6 +9070,7 @@ josef
 gemellus
 schneider
 ucla
+ứ
 chessani
 ruổi
 nhê
@@ -9483,6 +9546,7 @@ straight
 bonaparte
 paulson
 vothaison
+â
 loco
 sollozzo
 monaco
@@ -9529,6 +9593,7 @@ anakin
 akari
 werther
 bantams
+ỷ
 salameh
 ironhide
 kemper
@@ -9706,6 +9771,7 @@ nhât
 munro
 lun
 arlene
+ẹ
 iỗi
 rise
 mayday
@@ -10168,6 +10234,7 @@ koa
 delarue
 chicken
 wil
+ñ
 gym
 moria
 add
@@ -10750,6 +10817,7 @@ jedediah
 lok
 halfhand
 pleasure
+û
 arlington
 pride
 westchester
@@ -11257,6 +11325,7 @@ volvo
 choa
 nẵng
 saxo
+ë
 silky
 europol
 sabrina
@@ -11543,6 +11612,7 @@ bnd
 beckers
 thưi
 niagara
+ì
 blow
 shaq
 stereo
@@ -11809,6 +11879,7 @@ allomere
 pycelle
 blauner
 eversmann
+喂
 nhæ
 indominus
 lotte
@@ -12711,6 +12782,7 @@ dina
 vẳng
 americano
 shasta
+ỉ
 prospector
 naiyeer
 chug
@@ -13474,6 +13546,7 @@ keane
 cữu
 macmorrow
 phø
+ẻ
 zatoichi
 baht
 outcome
@@ -14826,6 +14899,7 @@ license
 amoniac
 dzậy
 hazar
+ỹ
 monitor
 hendry
 ghar
@@ -15072,6 +15146,7 @@ mirdin
 doran
 gilpin
 hillary
+ấ
 ankertill
 abbas
 colors
@@ -15436,6 +15511,7 @@ basterds
 redondo
 islands
 mccann
+ử
 dibbuk
 guts
 lanka
@@ -15460,6 +15536,7 @@ kemmerick
 cabret
 collings
 lovely
+ỏ
 tiêt
 meep
 remington
@@ -16688,6 +16765,7 @@ hark
 chikara
 simón
 hapen
+õ
 wedding
 track
 romans
@@ -16936,6 +17014,7 @@ laguna
 boise
 vires
 nemesis
+é
 totem
 flip
 targo
@@ -16943,6 +17022,7 @@ altus
 ðến
 crimea
 tuskegee
+ẽ
 kruschev
 cooley
 exodus
@@ -19070,6 +19150,7 @@ shaking
 namtrang
 mauritius
 zuriel
+噯
 ostos
 nhem
 farms
@@ -19269,6 +19350,7 @@ angkor
 steps
 asap
 hellfire
+ø
 beckly
 palpatine
 nem
@@ -19957,6 +20039,7 @@ hennessey
 andreyev
 yeon
 adore
+è
 đii
 colleen
 elk
@@ -20211,6 +20294,7 @@ chöc
 cancer
 ammonites
 sylvester
+å
 anxious
 nepenthe
 tempest
@@ -21260,6 +21344,7 @@ strachwitz
 schenk
 blank
 håi
+好
 navacerrada
 wyrick
 keystone
@@ -21830,6 +21915,7 @@ mcgeever
 brass
 lịa
 gumb
+о
 ludmilla
 chorus
 engineering
@@ -22594,6 +22680,7 @@ presbyterian
 ngri
 performed
 timing
+ể
 forgotten
 patrizio
 pulled
@@ -22992,6 +23079,7 @@ taekwondo
 sono
 vespucci
 frawley
+ỳ
 oakley
 zr
 bannochhoven
@@ -23374,6 +23462,7 @@ qurac
 flipper
 nasick
 forward
+ầ
 ostrov
 panel
 savior
@@ -23423,6 +23512,7 @@ mamarut
 dallo
 koshmar
 nghiãm
+走
 xẽ
 dinkley
 nỏi
@@ -24257,6 +24347,7 @@ valedero
 ddi
 jemima
 ðôò
+º
 yukari
 forester
 catoca
@@ -24295,6 +24386,7 @@ chõi
 tsumoto
 murmur
 clanking
+啊
 rõi
 âý
 nững
@@ -24453,6 +24545,7 @@ biét
 đửng
 jheri
 keesey
+ự
 marleah
 rafferty
 stedmeyer
@@ -25494,6 +25587,7 @@ basement
 kurtz
 xico
 siemens
+ề
 salamis
 heavily
 rickard
@@ -26887,6 +26981,7 @@ laketown
 wand
 hedeler
 viento
+ï
 centis
 dờ
 dunland
@@ -27245,6 +27340,7 @@ hashimoto
 thănm
 curd
 angga
+哇
 mụi
 thàn
 kleenex
@@ -27727,6 +27823,7 @@ actin
 merovingian
 đẹ
 suburban
+ð
 kamala
 especially
 seein
@@ -29901,100 +29998,3 @@ xoã
 bagram
 seokhwawon
 dormobile
-sạnl
-tôil
-corso
-đk
-düöng
-yangjae
-fullham
-adherbal
-carburateur
-counting
-switcherland
-clancey
-label
-samsun
-vincenzo
-sophy
-cbạn
-marichal
-trbạng
-pappy
-ironsides
-iính
-nek
-mos
-oogn
-felding
-corregidor
-sancta
-ney
-dorchen
-peseta
-winterfest
-adolphus
-pré
-botzaris
-galăng
-fêtes
-brambilla
-monza
-vaako
-tragic
-bosch
-staufer
-espejo
-mammoths
-bravos
-putterman
-shudders
-varanasi
-skipjack
-tantra
-zubov
-lalito
-uytky
-applauding
-murmuring
-bretagne
-worldly
-laylah
-lavatino
-corse
-lambeth
-thệt
-thuyêt
-lênin
-lenoix
-bal
-djinns
-southwick
-chíng
-peseus
-portal
-brooker
-mortal
-chadwick
-linney
-rumi
-buyl
-jcpenney
-hutchy
-smirnoff
-dellow
-aguliar
-enriquez
-wheller
-zamoro
-renaud
-noryangjin
-jurgenn
-bua
-sanger
-laughin
-telephone
-mesquite
-fiorano
-gdansk
-lockspur

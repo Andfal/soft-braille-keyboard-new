@@ -233,6 +233,7 @@ tuolla
 asia
 heitä
 meille
+n
 jonka
 varmaan
 teille
@@ -961,6 +962,7 @@ sattuu
 miljoonaa
 kohti
 oltava
+s
 voimmeko
 peter
 onnellinen
@@ -991,6 +993,7 @@ tiedätte
 uutisia
 halusit
 mr
+o
 kaverit
 vaimo
 ylpeä
@@ -1150,6 +1153,7 @@ kesken
 pää
 mitäs
 vankilaan
+t
 puhumaan
 kuva
 jonkin
@@ -1233,6 +1237,7 @@ noita
 ray
 mukaani
 moni
+a
 kunpa
 kenelle
 yrittänyt
@@ -1648,6 +1653,7 @@ puhelimessa
 toiset
 lle
 keksi
+e
 suhde
 itsellesi
 jatkuvasti
@@ -1697,6 +1703,7 @@ joilla
 huumeita
 vittua
 herran
+i
 jätin
 aseet
 uudet
@@ -2024,6 +2031,7 @@ aioin
 scott
 ikävää
 väittää
+b
 kiitollinen
 jestas
 vaatteita
@@ -2105,6 +2113,7 @@ typerää
 elokuva
 hänhän
 elämään
+d
 kasvot
 mennäänkö
 esimerkiksi
@@ -2325,6 +2334,7 @@ rakasta
 pudota
 alue
 omistaa
+l
 aluksi
 tilaisuuden
 ihmisistä
@@ -2911,6 +2921,7 @@ pelastamaan
 musiikki
 tunteita
 vanhat
+c
 kotoa
 erilaista
 muutakaan
@@ -2968,6 +2979,7 @@ hoitamaan
 vaikeuksia
 paremman
 autat
+p
 yhteistä
 pimeää
 sara
@@ -3572,6 +3584,7 @@ muutamia
 käykää
 kirkossa
 jollain
+u
 ongelmaa
 marty
 parempaan
@@ -3838,6 +3851,7 @@ onnistua
 isällesi
 pahempi
 kävelylle
+h
 turvaan
 asemalle
 kuulostat
@@ -4471,6 +4485,7 @@ ikkuna
 ihmeen
 kodin
 jäit
+m
 viereen
 harkita
 kysyit
@@ -4492,6 +4507,7 @@ rakastatko
 lopetti
 miles
 ajattelimme
+y
 tarinaa
 kuolemaansa
 seonnut
@@ -4816,6 +4832,7 @@ elävä
 ilmestyy
 etsitte
 jollekulle
+k
 taistelua
 puuta
 uida
@@ -5090,6 +5107,7 @@ malli
 tapoja
 asiasi
 leiki
+ä
 näille
 käärme
 pyydämme
@@ -5300,6 +5318,7 @@ sormenjäljet
 käskystä
 perse
 yksikin
+x
 vauvaa
 viikkoja
 juoppo
@@ -5435,10 +5454,12 @@ liiton
 barney
 venäläiset
 warren
+g
 megan
 iltapäivää
 vapauta
 kauniisti
+v
 tapahtuvan
 kirjoitat
 päätellen
@@ -7882,6 +7903,7 @@ suunnitelmani
 tuomme
 päästänyt
 tehokas
+w
 laiha
 huolehdit
 valtaan
@@ -8073,6 +8095,7 @@ selvän
 huoneesi
 pelasin
 harkinnut
+j
 tieteen
 vaatteeni
 aviomieheni
@@ -8803,6 +8826,7 @@ porter
 pätee
 mieleesi
 onnettomuudessa
+z
 myytävänä
 kehittynyt
 veljeä
@@ -10534,6 +10558,7 @@ yllätyin
 silmänne
 valitkaa
 taivaasta
+r
 ansiota
 tuolin
 wells
@@ -13136,6 +13161,7 @@ kidutusta
 unelmien
 kuulkaas
 peterson
+f
 toimikaa
 artikkeli
 professorin
@@ -13220,6 +13246,7 @@ pyyhkeitä
 kävellään
 laseja
 tyhmäksi
+q
 aukon
 toimita
 nurkassa
@@ -23146,6 +23173,7 @@ ystäväänsä
 potsie
 kaivoin
 tavanomainen
+ã
 pidäthän
 ulottumattomissa
 valppaina
@@ -29970,31 +29998,3 @@ karkaamaan
 mammanpoika
 vaaleaa
 säästyy
-kokkaamaan
-miehestäsi
-unohdettava
-republikaani
-avustuksella
-kongissa
-juotava
-panette
-luonnollisen
-kerholle
-marissan
-houkka
-marraskuu
-hook
-lyhentää
-luovuttava
-nahkansa
-joudutaan
-haamun
-griff
-tutkimustyötä
-joukkueelle
-havenin
-hubert
-taisteluasemiin
-oopiumia
-sataprosenttisesti
-pinnassa

@@ -117,23 +117,37 @@ public class SpellChecker {
         
         String sub = text.substring(startOffset, endOffset);
         
-        // Find all word tokens in the substring
+        // Find all word tokens in the substring (supporting letters and internal apostrophes)
         List<WordToken> tokens = new ArrayList<WordToken>();
         int i = 0;
         int subLen = sub.length();
         while (i < subLen) {
-            while (i < subLen && !Character.isLetter(sub.charAt(i))) {
+            while (i < subLen && !isWordChar(sub.charAt(i))) {
                 i++;
             }
             if (i >= subLen) {
                 break;
             }
             int start = i;
-            while (i < subLen && Character.isLetter(sub.charAt(i))) {
+            while (i < subLen && isWordChar(sub.charAt(i))) {
                 i++;
             }
             String wordText = sub.substring(start, i);
-            tokens.add(new WordToken(wordText, start, i - start));
+            
+            // Strip leading and trailing apostrophes
+            int tokenStart = 0;
+            int tokenEnd = wordText.length();
+            while (tokenStart < tokenEnd && isApostrophe(wordText.charAt(tokenStart))) {
+                tokenStart++;
+            }
+            while (tokenEnd > tokenStart && isApostrophe(wordText.charAt(tokenEnd - 1))) {
+                tokenEnd--;
+            }
+            
+            if (tokenStart < tokenEnd) {
+                String cleanWord = wordText.substring(tokenStart, tokenEnd);
+                tokens.add(new WordToken(cleanWord, start + tokenStart, tokenEnd - tokenStart));
+            }
         }
         
         int count = tokens.size();
@@ -197,13 +211,57 @@ public class SpellChecker {
             // Dictionary not loaded/supported for this language, treat all words as correct
             return false;
         }
-        String lower = word.toLowerCase();
-        if (localDictionary.contains(lower)) {
+        String normalized = word.toLowerCase().replace('\u2019', '\'');
+        if (localDictionary.contains(normalized)) {
             return false;
         }
-        if (isWordInUserDictionary(word) || isWordInUserDictionary(lower)) {
+        if (isWordInUserDictionary(word) || isWordInUserDictionary(normalized)) {
             return false;
         }
+        
+        // Language-specific rules for apostrophes/contractions/elisions
+        if ("en".equals(loadedLanguage)) {
+            if (normalized.endsWith("'s") && normalized.length() > 2) {
+                String base = normalized.substring(0, normalized.length() - 2);
+                if (localDictionary.contains(base) || isWordInUserDictionary(base)) {
+                    return false;
+                }
+            }
+        } else if ("it".equals(loadedLanguage)) {
+            int apoIdx = normalized.indexOf('\'');
+            if (apoIdx > 0 && apoIdx < normalized.length() - 1) {
+                String prefix = normalized.substring(0, apoIdx);
+                String suffix = normalized.substring(apoIdx + 1);
+                if (isItalianElisionPrefix(prefix)) {
+                    if (localDictionary.contains(suffix) || isWordInUserDictionary(suffix)) {
+                        return false;
+                    }
+                }
+            }
+        } else if ("fr".equals(loadedLanguage)) {
+            int apoIdx = normalized.indexOf('\'');
+            if (apoIdx > 0 && apoIdx < normalized.length() - 1) {
+                String prefix = normalized.substring(0, apoIdx);
+                String suffix = normalized.substring(apoIdx + 1);
+                if (isFrenchElisionPrefix(prefix)) {
+                    if (localDictionary.contains(suffix) || isWordInUserDictionary(suffix)) {
+                        return false;
+                    }
+                }
+            }
+        } else if ("ca".equals(loadedLanguage)) {
+            int apoIdx = normalized.indexOf('\'');
+            if (apoIdx > 0 && apoIdx < normalized.length() - 1) {
+                String prefix = normalized.substring(0, apoIdx);
+                String suffix = normalized.substring(apoIdx + 1);
+                if (isCatalanElisionPrefix(prefix)) {
+                    if (localDictionary.contains(suffix) || isWordInUserDictionary(suffix)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        
         return true;
     }
 
@@ -213,8 +271,35 @@ public class SpellChecker {
         List<String> dist1 = new ArrayList<String>();
         List<String> dist2 = new ArrayList<String>();
         
-        String lowerWord = word.toLowerCase();
-        int wordLen = lowerWord.length();
+        String normalizedWord = word.replace('\u2019', '\'');
+        int apoIdx = normalizedWord.indexOf('\'');
+        String prefix = "";
+        String suffix = "";
+        String lookupWord = normalizedWord.toLowerCase();
+        
+        if (apoIdx > 0 && apoIdx < normalizedWord.length() - 1) {
+            String prefixPart = normalizedWord.substring(0, apoIdx);
+            boolean isValidElision = false;
+            if ("it".equals(loadedLanguage)) {
+                isValidElision = isItalianElisionPrefix(prefixPart.toLowerCase());
+            } else if ("fr".equals(loadedLanguage)) {
+                isValidElision = isFrenchElisionPrefix(prefixPart.toLowerCase());
+            } else if ("ca".equals(loadedLanguage)) {
+                isValidElision = isCatalanElisionPrefix(prefixPart.toLowerCase());
+            }
+            
+            if (isValidElision) {
+                prefix = normalizedWord.substring(0, apoIdx + 1);
+                lookupWord = normalizedWord.substring(apoIdx + 1).toLowerCase();
+            }
+        }
+        
+        if ("en".equals(loadedLanguage) && lookupWord.endsWith("'s") && lookupWord.length() > 2) {
+            suffix = normalizedWord.substring(normalizedWord.length() - 2);
+            lookupWord = lookupWord.substring(0, lookupWord.length() - 2);
+        }
+        
+        int wordLen = lookupWord.length();
         
         // Iterate through the list of dictionary words (already sorted by frequency)
         for (String dictWord : dictionaryList) {
@@ -223,11 +308,17 @@ public class SpellChecker {
                 continue;
             }
             
-            int dist = getLevenshteinDistance(lowerWord, dictWord);
+            int dist = getLevenshteinDistance(lookupWord, dictWord);
             if (dist == 1) {
-                dist1.add(matchCapitalization(word, dictWord));
+                int origStart = prefix.length();
+                int origEnd = word.length() - suffix.length();
+                String origPart = (origStart < origEnd) ? word.substring(origStart, origEnd) : "";
+                dist1.add(prefix + matchCapitalization(origPart, dictWord) + suffix);
             } else if (dist == 2) {
-                dist2.add(matchCapitalization(word, dictWord));
+                int origStart = prefix.length();
+                int origEnd = word.length() - suffix.length();
+                String origPart = (origStart < origEnd) ? word.substring(origStart, origEnd) : "";
+                dist2.add(prefix + matchCapitalization(origPart, dictWord) + suffix);
             }
         }
         
@@ -327,6 +418,17 @@ public class SpellChecker {
         if (word == null || word.trim().isEmpty()) {
             return false;
         }
+        String normalized = word.replace('\u2019', '\'');
+        if (checkUserDb(normalized)) {
+            return true;
+        }
+        if (!word.equals(normalized) && checkUserDb(word)) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean checkUserDb(String word) {
         Cursor cursor = null;
         try {
             ContentResolver resolver = context.getContentResolver();
@@ -350,6 +452,35 @@ public class SpellChecker {
             }
         }
         return false;
+    }
+
+    private static boolean isWordChar(char c) {
+        return Character.isLetter(c) || c == '\'' || c == '\u2019';
+    }
+
+    private static boolean isApostrophe(char c) {
+        return c == '\'' || c == '\u2019';
+    }
+
+    private static final Set<String> ITALIAN_PREFIXES = new HashSet<String>(java.util.Arrays.asList(
+        "l", "d", "c", "s", "m", "t", "v", "n", "un", "bell", "quell", "quest", "anch", "tutt", "all", "dell", "nell", "sull", "coll", "dall", "pell"
+    ));
+    private static boolean isItalianElisionPrefix(String prefix) {
+        return ITALIAN_PREFIXES.contains(prefix);
+    }
+
+    private static final Set<String> FRENCH_PREFIXES = new HashSet<String>(java.util.Arrays.asList(
+        "j", "n", "m", "t", "s", "c", "d", "l", "qu", "puisqu", "lorsqu", "quoiqu", "jusqu"
+    ));
+    private static boolean isFrenchElisionPrefix(String prefix) {
+        return FRENCH_PREFIXES.contains(prefix);
+    }
+
+    private static final Set<String> CATALAN_PREFIXES = new HashSet<String>(java.util.Arrays.asList(
+        "l", "d", "m", "t", "s", "n"
+    ));
+    private static boolean isCatalanElisionPrefix(String prefix) {
+        return CATALAN_PREFIXES.contains(prefix);
     }
 
     private static boolean isDirection(Direction direction, int cursor,

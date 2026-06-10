@@ -12,6 +12,7 @@ kaip
 ar
 su
 man
+o
 kas
 gerai
 mano
@@ -182,12 +183,14 @@ eiti
 juo
 šūdas
 geras
+a
 visus
 daryti
 nenoriu
 irgi
 sveikas
 tačiau
+i
 galbūt
 tokia
 gi
@@ -879,6 +882,7 @@ paimti
 regis
 vienu
 geri
+u
 trijų
 turėtume
 patikėk
@@ -29994,7 +29998,3 @@ klausą
 įeisime
 storio
 būrius
-patiekalus
-nužudę
-atsikratysime
-nepatikimi

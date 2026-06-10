@@ -2,6 +2,7 @@ que
 no
 de
 la
+a
 el
 és
 un
@@ -60,6 +61,7 @@ qui
 així
 seu
 sóc
+o
 ets
 estic
 us
@@ -1746,6 +1748,7 @@ trucades
 carl
 marie
 cinta
+u
 sospitós
 alcalde
 eixe
@@ -2955,6 +2958,7 @@ reis
 naixement
 desitjaria
 alè
+e
 demanen
 límit
 manté
@@ -29994,7 +29998,3 @@ festejant
 desercions
 motivo
 bump
-hollister
-chug
-clang
-queixarà

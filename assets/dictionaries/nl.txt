@@ -30,6 +30,7 @@ om
 dit
 mijn
 aan
+u
 dan
 naar
 weet
@@ -273,6 +274,7 @@ hoor
 gevonden
 jongen
 staan
+o
 denken
 vandaag
 gezegd
@@ -1023,6 +1025,7 @@ zwanger
 tijdje
 eind
 komaan
+i
 amerika
 operatie
 betrokken
@@ -1030,6 +1033,7 @@ lastig
 gebied
 persoonlijk
 diep
+a
 respect
 maat
 steek
@@ -29994,7 +29998,3 @@ gaarkeuken
 ganzel
 ldioot
 uitgestuurd
-colossus
-ontkwam
-tricorder
-farr

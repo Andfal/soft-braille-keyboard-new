@@ -58,6 +58,54 @@ def download_url(url):
         # Fine if some URLs fail or are not found
         return None
 
+SINGLE_LETTER_WORDS = {
+    'en': {'a', 'i', 'o'},
+    'it': {'a', 'e', 'i', 'o', 'u'},
+    'es': {'a', 'e', 'o', 'u', 'y'},
+    'fr': {'a', 'y', 'ô'},
+    'pt': {'a', 'e', 'o'},
+    'de': {'o'},
+    'nl': {'u', 'a', 'i', 'o'},
+    'sv': {'i', 'å', 'ö'},
+    'da': {'i', 'å', 'ø'},
+    'no': {'i', 'å', 'ø'},
+    'pl': {'a', 'i', 'o', 'u', 'w', 'z'},
+    'ru': {'а', 'и', 'о', 'у', 'в', 'с', 'к', 'я'},
+    'uk': {'а', 'і', 'и', 'о', 'у', 'в', 'з', 'я'},
+    'bg': {'а', 'и', 'о', 'у', 'в', 'с', 'к', 'я'},
+    'cs': {'a', 'i', 'o', 'u', 'v', 's', 'k', 'z'},
+    'sk': {'a', 'i', 'o', 'u', 'v', 's', 'k', 'z'},
+    'hr': {'a', 'i', 'o', 'u', 's', 'k', 'v'},
+    'sr': {'а', 'и', 'о', 'у', 'с', 'к', 'в'},
+    'tr': {'o', 'a'},
+    'el': {'ο', 'η', 'α', 'ι'},
+    'ca': {'a', 'e', 'o', 'u'},
+    'et': {'a', 'e', 'i', 'o', 'u'},
+    'lt': {'a', 'i', 'o', 'u'},
+    'lv': {'a', 'i', 'o', 'u'},
+}
+
+def clean_and_validate_word(word, lang):
+    # Normalize curly apostrophes to straight apostrophes
+    word = word.replace("\u2019", "'")
+    # Strip leading/trailing apostrophes
+    w = word.strip("'")
+    if not w:
+        return None
+    # Check length
+    if len(w) == 1:
+        if not w.isalpha():
+            return None
+        if lang in SINGLE_LETTER_WORDS:
+            if w.lower() in SINGLE_LETTER_WORDS[lang]:
+                return w
+            return None
+        return w # Fallback for other languages
+    # Check if all characters are letters or internal apostrophes
+    if all(c.isalpha() or c == "'" for c in w):
+        return w
+    return None
+
 def process_language(lang, output_dir):
     print(f"\n--- Processing language: {lang} ---")
     
@@ -76,9 +124,10 @@ def process_language(lang, output_dir):
                     continue
                 # Strip flags
                 word = line.split('/')[0].strip().lower()
-                # Simple check for alphabetic words (supports unicode letters)
-                if word.isalpha() and len(word) > 1:
-                    libre_words.add(word)
+                # Clean and validate (supports unicode letters and apostrophes)
+                validated = clean_and_validate_word(word, lang)
+                if validated:
+                    libre_words.add(validated)
                     count += 1
             print(f"Loaded {count} stems from LibreOffice.")
         else:
@@ -103,10 +152,11 @@ def process_language(lang, output_dir):
             if not parts:
                 continue
             word = parts[0].strip().lower()
-            if word.isalpha() and len(word) > 1:
-                if word not in seen:
-                    seen.add(word)
-                    freq_words.append(word)
+            validated = clean_and_validate_word(word, lang)
+            if validated:
+                if validated not in seen:
+                    seen.add(validated)
+                    freq_words.append(validated)
                     count += 1
                     if count >= limit:
                         break

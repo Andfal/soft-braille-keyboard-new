@@ -1,11 +1,14 @@
 de
 nu
 să
+o
+e
 în
 ce
 şi
 că
 la
+a
 cu
 pe
 am
@@ -203,6 +206,7 @@ trei
 această
 lor
 numele
+i
 stiu
 cea
 dintre
@@ -455,6 +459,7 @@ asemenea
 maşină
 vina
 omul
+s
 dragă
 pun
 faceţi
@@ -772,6 +777,7 @@ fugi
 zece
 sincer
 pana
+l
 plăcea
 jurul
 cat
@@ -829,7 +835,9 @@ vedere
 voie
 agent
 întrebat
+m
 luptă
+n
 întrebări
 joe
 cunoşti
@@ -894,6 +902,7 @@ acele
 salvat
 fiind
 plan
+c
 folosi
 stare
 secret
@@ -1078,6 +1087,7 @@ supărat
 par
 permite
 aflu
+t
 scos
 rămân
 avocat
@@ -1161,6 +1171,7 @@ tai
 noastra
 bere
 înţelege
+d
 sarah
 stăm
 diferite
@@ -2114,6 +2125,7 @@ principal
 peşte
 emma
 serie
+b
 îngrozitor
 cînd
 semnalul
@@ -2456,6 +2468,7 @@ laura
 speranţă
 locurile
 rezultatele
+r
 acuma
 deranjez
 imaginea
@@ -2536,6 +2549,7 @@ sâmbătă
 puşti
 domn
 lily
+u
 maior
 trăim
 controla
@@ -2879,6 +2893,7 @@ rick
 încrederea
 mac
 şanse
+v
 angeles
 culoarea
 atentă
@@ -3122,6 +3137,7 @@ edward
 piesa
 acoperiş
 glonţ
+p
 folosind
 scump
 star
@@ -3482,6 +3498,7 @@ membri
 raymond
 rosie
 fura
+y
 detaliile
 olivia
 teddy
@@ -3567,6 +3584,7 @@ echipajul
 angel
 lumi
 voastra
+f
 atrage
 bineinteles
 înregistrare
@@ -3675,6 +3693,7 @@ pretinde
 iubesti
 fraţi
 maxim
+g
 urechi
 diferenţă
 preajmă
@@ -4374,6 +4393,7 @@ acelei
 şcolii
 discuţia
 servici
+x
 bijuterii
 maximă
 libere
@@ -4440,6 +4460,7 @@ nenorocita
 trebuiască
 explodat
 multumim
+ă
 înregistrarea
 nostim
 gandesti
@@ -4597,6 +4618,7 @@ anchetă
 plângere
 maya
 considera
+â
 bunul
 ascundă
 alegeri
@@ -4636,6 +4658,7 @@ oarecum
 zâmbet
 intalnire
 răniţi
+ş
 înfricoşător
 tura
 tunel
@@ -4804,6 +4827,7 @@ rude
 respins
 masini
 încetat
+h
 atmosfera
 rita
 informaţia
@@ -6599,6 +6623,7 @@ consideri
 comitetul
 intervenit
 spaniolă
+j
 puterii
 mutare
 vrajă
@@ -6725,6 +6750,7 @@ mireasă
 păsat
 umărul
 părăseşte
+k
 operă
 arestată
 dawn
@@ -8320,6 +8346,7 @@ combinaţie
 arahide
 eşec
 profesorii
+z
 serii
 apuci
 ellis
@@ -8785,6 +8812,7 @@ virgil
 producător
 lupi
 shelly
+w
 cos
 fugar
 incoace
@@ -11326,6 +11354,7 @@ lamă
 devotat
 recomandare
 destinat
+î
 esenţial
 deplină
 vinnie
@@ -11823,6 +11852,7 @@ dificultăţi
 persoanei
 îndepărtate
 grenadă
+q
 centură
 jun
 susul
@@ -12480,6 +12510,7 @@ nerăbdătoare
 visurilor
 guvernamentale
 înselat
+ü
 registrele
 salvată
 ostaticii
@@ -13850,6 +13881,7 @@ mămico
 vindec
 plătite
 fiinta
+ã
 ieşirile
 prinderea
 armură
@@ -21258,10 +21290,12 @@ română
 oroare
 blogul
 carlisle
+è
 aplaudăm
 menţinut
 colegiului
 profitabil
+ĺ
 falca
 martorului
 subs
@@ -22486,6 +22520,7 @@ neclintit
 degenerat
 fragile
 stării
+č
 pronunţ
 rhode
 patrie
@@ -29963,38 +29998,3 @@ târfei
 days
 alegătorii
 începeau
-castitate
-contribuabililor
-army
-dezbrăca
-clonat
-spatiale
-împachetaţi
-ozon
-marines
-compromise
-cântăreţi
-antoinette
-dialogul
-colesterol
-tremurând
-klingonieni
-colaborează
-gi
-structurile
-colegele
-prezentam
-maud
-nfl
-succese
-curcubeului
-wynn
-mătuşica
-vrajitoarea
-stâlpi
-mecanicii
-pond
-experienţei
-mathilde
-anturajul
-compoziţie
