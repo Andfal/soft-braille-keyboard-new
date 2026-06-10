@@ -318,6 +318,12 @@ public class BrailleView extends View {
         loadDefaultPad(w, h);
     }
 
+    public void onStartInput(Locale locale) {
+        if (actionHandler != null) {
+            actionHandler.onStartInput(locale);
+        }
+    }
+
     public void close() {
         if (Options.getBooleanPreference(
                 getContext(),

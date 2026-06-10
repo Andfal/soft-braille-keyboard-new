@@ -31,6 +31,7 @@ import com.dalton.braillekeyboard.SpellChecker.SpellingSuggestionsReadyListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -108,7 +109,9 @@ public class SpellChecker {
         }
     };
 
-    private final SpellCheckerSession spellChecker;
+    private final Context context;
+    private SpellCheckerSession spellChecker;
+    private Locale currentLocale;
     private SpellingSuggestionsReadyListener listener;
     private int cursor;
     private Direction direction;
@@ -117,48 +120,94 @@ public class SpellChecker {
     private int endOffset;
 
     public SpellChecker(Context context) {
+        this.context = context;
+    }
+
+    private synchronized void initSession() {
+        if (spellChecker != null) {
+            return;
+        }
         final TextServicesManager tsm = (TextServicesManager) context
                 .getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);
-        spellChecker = tsm.newSpellCheckerSession(null, null,
-                spellCheckerListener, true);
+        if (tsm != null) {
+            // Force the spellchecker to follow our selected keyboard locale
+            spellChecker = tsm.newSpellCheckerSession(null, currentLocale,
+                    spellCheckerListener, false);
+        }
+    }
+
+    public synchronized void onStartInput(Locale locale) {
+        if (locale == null) {
+            locale = Locale.getDefault();
+        }
+        if (currentLocale == null || !locale.equals(currentLocale)) {
+            currentLocale = locale;
+            if (spellChecker != null) {
+                spellChecker.close();
+                spellChecker = null;
+            }
+        }
+        initSession();
     }
 
     public boolean checkSpelling(SpellingSuggestionsReadyListener listener,
             String text, int cursor, Direction direction) {
-        if (isSpellCheckAvailable() && text.length() > 0) {
+        initSession();
+        if (text != null && text.length() > 0) {
             this.cursor = cursor;
             this.direction = direction;
             this.text = text;
             this.listener = listener;
-            initOffsets();
-            doSpellCheck();
-            return true;
-        } else {
-            return false;
+
+            if (direction == Direction.UNDER_CURSOR) {
+                int start = cursor;
+                while (start > 0 && isWordChar(text.charAt(start - 1))) {
+                    start--;
+                }
+                int end = cursor;
+                while (end < text.length() && isWordChar(text.charAt(end))) {
+                    end++;
+                }
+                if (start < end) {
+                    String word = text.substring(start, end);
+                    if (isWordInUserDictionary(word) || isWordInUserDictionary(word.toLowerCase())) {
+                        listener.suggestionsReady(new Suggestion(word, start, true));
+                        return true;
+                    }
+                }
+            }
+
+            if (spellChecker != null) {
+                initOffsets();
+                doSpellCheck();
+                return true;
+            }
         }
+        return false;
     }
 
     @SuppressLint("NewApi")
     private void doSpellCheck() {
-        spellChecker.cancel();
-
-        // Append a space (" ") to the input string to the spelling checker.
-        // This resolves some edge cases like a word followed by a period
-        // without a following space.
-        spellChecker.getSentenceSuggestions(
-                new TextInfo[] { new TextInfo(text.substring(startOffset,
-                        endOffset) + " ") }, MAX_SUGGESTIONS);
+        if (spellChecker != null) {
+            spellChecker.cancel();
+            // Append a space (" ") to the input string to the spelling checker.
+            // This resolves some edge cases like a word followed by a period
+            // without a following space.
+            spellChecker.getSentenceSuggestions(
+                    new TextInfo[] { new TextInfo(text.substring(startOffset,
+                            endOffset) + " ") }, MAX_SUGGESTIONS);
+        }
     }
 
-    public void destroy() {
+    public synchronized void destroy() {
         if (spellChecker != null) {
             spellChecker.close();
+            spellChecker = null;
         }
     }
 
     public boolean isSpellCheckAvailable() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
-                && spellChecker != null;
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN;
     }
 
     private Suggestion compileSuggestions(SuggestionsInfo suggestionInfo,
@@ -168,13 +217,46 @@ public class SpellChecker {
             return null;
         }
 
-        Suggestion suggestion = new Suggestion(text.substring(offset, length
-                + offset), offset);
+        String originalWord = text.substring(offset, length + offset);
+        boolean isUser = isWordInUserDictionary(originalWord);
+        Suggestion suggestion = new Suggestion(originalWord, offset, isUser);
         for (int i = 0; i < suggestionInfo.getSuggestionsCount(); i++) {
-            suggestion.results.add(suggestionInfo.getSuggestionAt(i));
+            String sug = suggestionInfo.getSuggestionAt(i);
+            if (sug != null && !sug.isEmpty()) {
+                suggestion.results.add(sug);
+            }
         }
 
         return suggestion;
+    }
+
+    private boolean isWordInUserDictionary(String word) {
+        if (word == null || word.trim().isEmpty()) {
+            return false;
+        }
+        android.database.Cursor cursor = null;
+        try {
+            android.content.ContentResolver resolver = context.getContentResolver();
+            String selection = android.provider.UserDictionary.Words.WORD + "=?";
+            String[] selectionArgs = new String[] { word };
+            cursor = resolver.query(
+                    android.provider.UserDictionary.Words.CONTENT_URI,
+                    new String[] { android.provider.UserDictionary.Words.WORD },
+                    selection,
+                    selectionArgs,
+                    null
+            );
+            if (cursor != null && cursor.getCount() > 0) {
+                return true;
+            }
+        } catch (Exception e) {
+            // Ignore permission issues or unavailable provider
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return false;
     }
 
     private static boolean isDirection(Direction direction, int cursor,
@@ -199,6 +281,10 @@ public class SpellChecker {
             }
         }
         return false;
+    }
+
+    private static boolean isWordChar(char c) {
+        return Character.isLetter(c) || c == '\'' || c == '\u2019';
     }
 
     private void initOffsets() {
@@ -261,38 +347,65 @@ public class SpellChecker {
     public static class Suggestion {
         public final List<String> results = new ArrayList<String>();
         public final int offset;
+        public final boolean isUserDictWord;
+        private final String originalWord;
         private int current = 0;
         private int length = -1;
 
-        public Suggestion(String word, int offset) {
+        public Suggestion(String word, int offset, boolean isUserDictWord) {
             this.offset = offset;
+            this.isUserDictWord = isUserDictWord;
+            this.originalWord = word;
+            if (isUserDictWord) {
+                results.add("##REMOVE_FROM_DICTIONARY##");
+            } else {
+                results.add("##REMOVE_FROM_DICTIONARY##");
+                results.add("##ADD_TO_DICTIONARY##");
+            }
             results.add(word);
+            current = results.indexOf(word);
         }
 
         public String next() {
             current = ++current >= results.size() ? 0 : current;
-            return results.get(current);
+            return getCurrent();
         }
 
         public String prev() {
             current = --current < 0 ? results.size() - 1 : current;
-            return results.get(current);
+            return getCurrent();
         }
 
         public String getCurrent() {
-            return results.get(current);
+            String val = results.get(current);
+            if ("##ADD_TO_DICTIONARY##".equals(val) || "##REMOVE_FROM_DICTIONARY##".equals(val)) {
+                return originalWord;
+            }
+            return val;
+        }
+
+        public boolean isAddToDictionaryOption() {
+            return "##ADD_TO_DICTIONARY##".equals(results.get(current));
+        }
+
+        public boolean isRemoveFromDictionaryOption() {
+            return "##REMOVE_FROM_DICTIONARY##".equals(results.get(current));
+        }
+
+        public String getOriginalWord() {
+            return originalWord;
         }
 
         public void setLength() {
-            length = results.get(current).length();
+            length = getCurrent().length();
         }
 
         public int getLength() {
-            return length == -1 ? results.get(0).length() : length;
+            return length == -1 ? originalWord.length() : length;
         }
 
         public boolean isMisspelledWord() {
-            return current == 0;
+            return current == results.indexOf(originalWord);
         }
     }
 }

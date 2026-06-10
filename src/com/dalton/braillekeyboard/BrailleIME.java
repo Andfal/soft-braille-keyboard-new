@@ -150,7 +150,11 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
     public void onStartInputView(EditorInfo info, boolean restarting) {
         super.onStartInputView(info, restarting);
         mIsFinishing = false;
-        if (!restarting && brailleView != null) brailleView.onInitialiseForInput(this, this);
+        if (!restarting && brailleView != null) {
+            brailleView.onInitialiseForInput(this, this);
+        } else if (restarting && brailleView != null) {
+            brailleView.onStartInput(getLocale());
+        }
         brailleParser.setTranslator(this);
         scheduleAccessibilityUpdate(3, 400);
     }

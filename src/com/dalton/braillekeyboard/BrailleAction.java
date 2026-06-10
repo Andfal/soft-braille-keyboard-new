@@ -71,6 +71,9 @@ public enum BrailleAction {
     SPELL_CHECK_RIGHT(R.string.action_spell_check_right),
     SPELL_CHECK_NEXT_SUGGESTION(R.string.action_spell_check_next_suggestion),
     SPELL_CHECK_PREV_SUGGESTION(R.string.action_spell_check_prev_suggestion),
+    TOGGLE_MISSPELLING_SOUND(R.string.action_toggle_misspelling_sound),
+    ADD_TO_DICTIONARY(R.string.action_add_to_dictionary),
+    REMOVE_FROM_DICTIONARY(R.string.action_remove_from_dictionary),
     
     // Braille Dots (7 and 8)
     TOGGLE_ABBREVIATIONS_NO_SPACE(R.string.action_toggle_abbreviations_no_space),

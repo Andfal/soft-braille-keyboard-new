@@ -808,7 +808,11 @@
         <item>@string/action_spell_check_next_suggestion</item>
         <item>@string/action_spell_check_prev_suggestion</item>
         <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_abbreviations_no_space</item>
         <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_toggle_misspelling_sound</item>
+        <item>@string/action_add_to_dictionary</item>
+        <item>@string/action_remove_from_dictionary</item>
         <item>@string/action_set_dot_7</item>
         <item>@string/action_set_dot_8</item>
     </string-array>
@@ -863,6 +867,9 @@
         <item>TOGGLE_ABBREVIATIONS</item>
         <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
         <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>TOGGLE_MISSPELLING_SOUND</item>
+        <item>ADD_TO_DICTIONARY</item>
+        <item>REMOVE_FROM_DICTIONARY</item>
         <item>SET_DOT_7</item>
         <item>SET_DOT_8</item>
     </string-array>
@@ -897,4 +904,21 @@
     <string name="btn_pin_mapping">Pin mapping (protect)</string>
     <string name="btn_unpin_mapping">Unpin mapping</string>
     <string name="title_activity_keyboard_help">Keyboard Help</string>
+    <string name="action_add_to_dictionary">Add word to personal dictionary</string>
+    <string name="action_add_to_dictionary_option">Add %s to personal dictionary</string>
+    <string name="action_remove_from_dictionary">Remove word from personal dictionary</string>
+    <string name="action_remove_from_dictionary_option">Remove %s from personal dictionary</string>
+    <string name="word_added_to_dictionary">Word %s added to personal dictionary</string>
+    <string name="no_word_to_add">No word found to add to dictionary</string>
+    <string name="word_removed_from_dictionary">Word %s removed from personal dictionary</string>
+    <string name="word_not_in_dictionary">Word %s was not found in personal dictionary</string>
+    <string name="no_word_to_remove">No word found to remove from dictionary</string>
+    <string name="word_correction_correct">%s is correct</string>
+    <string name="action_toggle_misspelling_sound">Toggle spelling error sound notification</string>
+    <string name="pref_misspelling_sound_default">false</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">Play a sound for misspelling errors instead of vocal feedback.</string>
+    <string name="pref_misspelling_sound_title">Spelling error sound notification</string>
+    <string name="misspelling_sound_enabled">Spelling error sound notification enabled</string>
+    <string name="misspelling_sound_disabled">Spelling error sound notification disabled</string>
 </resources>

@@ -29,6 +29,10 @@ import android.inputmethodservice.Keyboard;
 import androidx.core.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
+import android.os.Vibrator;
+import android.media.ToneGenerator;
+import android.media.AudioManager;
+import android.util.Log;
 
 import com.dalton.braillekeyboard.EditingUtilities.Word;
 import com.dalton.braillekeyboard.EmojiDictionary.EmojiEntry;
@@ -113,6 +117,142 @@ public class ActionHandler {
     public void setCallback(OnActionListener callback) { this.callback = callback; }
     public void setKeyboardListener(KeyboardListener listener) { this.listener = listener; }
     public void shutdown() { voiceInput.destroy(); spellChecker.destroy(); }
+
+    public void onStartInput(Locale locale) {
+        if (spellChecker != null) {
+            spellChecker.onStartInput(locale);
+        }
+    }
+
+    private static ToneGenerator toneGenerator;
+    private static final Object toneLock = new Object();
+
+    private static void playSpellingBeep() {
+        synchronized (toneLock) {
+            if (toneGenerator == null) {
+                try {
+                    toneGenerator = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
+                } catch (Exception e) {
+                    Log.e("SBK_ActionHandler", "Failed to create ToneGenerator", e);
+                }
+            }
+            if (toneGenerator != null) {
+                try {
+                    toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, 150);
+                } catch (Exception e) {
+                    Log.e("SBK_ActionHandler", "Failed to play tone", e);
+                }
+            }
+        }
+    }
+
+    private static void triggerVibration(Context context, long duration) {
+        try {
+            Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            if (v != null) {
+                v.vibrate(duration);
+            }
+        } catch (Exception e) {
+            Log.e("SBK_ActionHandler", "Failed to vibrate", e);
+        }
+    }
+
+    private String getTargetSpellingWord() {
+        if (spellingSuggestion != null && spellCheckerMatchesWord()) {
+            return spellingSuggestion.getOriginalWord();
+        }
+        Word word = EditingUtilities.getWord(listener);
+        if (word != null && word.word != null && !word.word.trim().isEmpty()) {
+            return word.word;
+        }
+        return null;
+    }
+
+    private void addWordToPersonalDictionary(Context context, String word) {
+        if (word == null || word.trim().isEmpty()) {
+            callback.onText("%s", context.getString(R.string.no_word_to_add), false);
+            return;
+        }
+        word = word.trim();
+        try {
+            Locale locale = listener.getLocale();
+            if (android.os.Build.VERSION.SDK_INT >= 16) {
+                android.provider.UserDictionary.Words.addWord(context, word, 250, null, locale);
+            } else {
+                android.content.ContentValues values = new android.content.ContentValues();
+                values.put(android.provider.UserDictionary.Words.WORD, word);
+                values.put(android.provider.UserDictionary.Words.FREQUENCY, 250);
+                values.put(android.provider.UserDictionary.Words.LOCALE, locale == null ? null : locale.toString());
+                context.getContentResolver().insert(android.provider.UserDictionary.Words.CONTENT_URI, values);
+            }
+            callback.onText(context.getString(R.string.word_added_to_dictionary), word, false);
+            if (spellChecker.isSpellCheckAvailable()) {
+                doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, 0, listener.getCursor());
+            }
+        } catch (Exception e) {
+            android.util.Log.e("SBK_ActionHandler", "Failed to add word to UserDictionary", e);
+        }
+    }
+
+    private void addWordToPersonalDictionaryNoAnnounce(Context context, String word) {
+        if (word == null || word.trim().isEmpty()) {
+            return;
+        }
+        word = word.trim();
+        try {
+            Locale locale = listener.getLocale();
+            if (android.os.Build.VERSION.SDK_INT >= 16) {
+                android.provider.UserDictionary.Words.addWord(context, word, 250, null, locale);
+            } else {
+                android.content.ContentValues values = new android.content.ContentValues();
+                values.put(android.provider.UserDictionary.Words.WORD, word);
+                values.put(android.provider.UserDictionary.Words.FREQUENCY, 250);
+                values.put(android.provider.UserDictionary.Words.LOCALE, locale == null ? null : locale.toString());
+                context.getContentResolver().insert(android.provider.UserDictionary.Words.CONTENT_URI, values);
+            }
+        } catch (Exception e) {
+            android.util.Log.e("SBK_ActionHandler", "Failed to add word to UserDictionary", e);
+        }
+    }
+
+    private void removeWordFromPersonalDictionaryNoAnnounce(Context context, String word) {
+        if (word == null || word.trim().isEmpty()) {
+            return;
+        }
+        word = word.trim();
+        try {
+            android.content.ContentResolver resolver = context.getContentResolver();
+            String selection = android.provider.UserDictionary.Words.WORD + "=?";
+            String[] selectionArgs = new String[] { word };
+            resolver.delete(android.provider.UserDictionary.Words.CONTENT_URI, selection, selectionArgs);
+        } catch (Exception e) {
+            android.util.Log.e("SBK_ActionHandler", "Failed to remove word from UserDictionary", e);
+        }
+    }
+
+    private void removeWordFromPersonalDictionary(Context context, String word) {
+        if (word == null || word.trim().isEmpty()) {
+            callback.onText("%s", context.getString(R.string.no_word_to_remove), false);
+            return;
+        }
+        word = word.trim();
+        try {
+            android.content.ContentResolver resolver = context.getContentResolver();
+            String selection = android.provider.UserDictionary.Words.WORD + "=?";
+            String[] selectionArgs = new String[] { word };
+            int rowsDeleted = resolver.delete(android.provider.UserDictionary.Words.CONTENT_URI, selection, selectionArgs);
+            if (rowsDeleted > 0) {
+                callback.onText(context.getString(R.string.word_removed_from_dictionary), word, false);
+                if (spellChecker.isSpellCheckAvailable()) {
+                    doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, 0, listener.getCursor());
+                }
+            } else {
+                callback.onText(context.getString(R.string.word_not_in_dictionary), word, false);
+            }
+        } catch (Exception e) {
+            android.util.Log.e("SBK_ActionHandler", "Failed to remove word from UserDictionary", e);
+        }
+    }
 
     public boolean handleSwipe(Context context, Swipe value) {
         if (voiceInput.isListening()) return true;
@@ -202,6 +342,21 @@ public class ActionHandler {
             boolean instantEnabled = Options.toggleAbbreviationOption(context, 2);
             message = context.getString(instantEnabled ? R.string.abbreviations_instant_enabled
                     : R.string.abbreviations_instant_disabled);
+            break;
+        case TOGGLE_MISSPELLING_SOUND:
+            boolean misspellingSound = Options.switchBooleanPreference(context,
+                    R.string.pref_misspelling_sound_key,
+                    Boolean.parseBoolean(context.getString(R.string.pref_misspelling_sound_default)));
+            message = context.getString(misspellingSound ? R.string.misspelling_sound_enabled
+                    : R.string.misspelling_sound_disabled);
+            break;
+        case ADD_TO_DICTIONARY:
+            String targetWord = getTargetSpellingWord();
+            addWordToPersonalDictionary(context, targetWord);
+            break;
+        case REMOVE_FROM_DICTIONARY:
+            String targetWordToRemove = getTargetSpellingWord();
+            removeWordFromPersonalDictionary(context, targetWordToRemove);
             break;
         case CYCLE_KEYBOARD_FEEDBACK:
             KeyboardFeedback fb = KeyboardFeedback.valueOf(Integer.parseInt(Options.getStringPreference(context, R.string.pref_keyboard_feedback_key, KeyboardFeedback.SOUND.getValue())));
@@ -441,11 +596,84 @@ public class ActionHandler {
     }
 
     private void handleSpellingSuggestion(Context context) {
-        boolean pass = false; String msg = null;
-        if (spellingSuggestion == null && directionThroughSuggestionList != 0) msg = context.getString(R.string.word_correct);
-        else if (spellingSuggestion != null && spellingDirection == SpellChecker.Direction.UNDER_CURSOR) { spellingDirection = null; if (directionThroughSuggestionList > 0) nextSpellCheckSuggestion(context); else if (directionThroughSuggestionList < 0) previousSpellCheckSuggestion(context); else msg = context.getString(R.string.word_misspelled); }
-        else if (spellingSuggestion != null) { pass = true; msg = spellingSuggestion.isMisspelledWord() ? String.format(context.getString(R.string.word_correction_misspelled), spellingSuggestion.getCurrent()) : spellingSuggestion.getCurrent(); listener.setSelection(spellingSuggestion.offset); listener.deleteSurroundingText(0, spellingSuggestion.getLength()); listener.commitText(spellingSuggestion.getCurrent(), 1); listener.setSelection(spellingSuggestion.offset); spellingSuggestion.setLength(); }
-        if (msg != null) callback.onText("%s", msg, listener.isPasswordField() && pass, Speech.QUEUE_ADD);
+        boolean pass = false;
+        String msg = null;
+        if (spellingSuggestion == null && directionThroughSuggestionList != 0) {
+            msg = context.getString(R.string.word_correct);
+        } else if (spellingSuggestion != null && spellingDirection == SpellChecker.Direction.UNDER_CURSOR) {
+            spellingDirection = null;
+            if (directionThroughSuggestionList != 0) {
+                listener.setSelection(spellingSuggestion.offset);
+            }
+            if (directionThroughSuggestionList > 0) {
+                nextSpellCheckSuggestion(context);
+            } else if (directionThroughSuggestionList < 0) {
+                previousSpellCheckSuggestion(context);
+            } else {
+                if (spellingSuggestion.isUserDictWord) {
+                    msg = null;
+                } else {
+                    if (Options.getBooleanPreference(context,
+                            R.string.pref_misspelling_sound_key,
+                            Boolean.parseBoolean(context.getString(R.string.pref_misspelling_sound_default)))) {
+                        int feedbackVal = Integer.parseInt(Options.getStringPreference(context,
+                                R.string.pref_keyboard_feedback_key,
+                                KeyboardFeedback.SOUND.getValue()));
+                        boolean playSound = (feedbackVal == KeyboardFeedback.SOUND.value 
+                                          || feedbackVal == KeyboardFeedback.ALL.value);
+                        boolean vibrate = (feedbackVal == KeyboardFeedback.VIBRATE.value 
+                                        || feedbackVal == KeyboardFeedback.ALL.value);
+                        if (playSound) {
+                            playSpellingBeep();
+                        }
+                        if (vibrate) {
+                            triggerVibration(context, 125);
+                        }
+                    } else {
+                        msg = context.getString(R.string.word_misspelled);
+                    }
+                }
+            }
+        } else if (spellingSuggestion != null) {
+            pass = true;
+            if (spellingSuggestion.isAddToDictionaryOption()) {
+                String originalWord = spellingSuggestion.getOriginalWord();
+                msg = String.format(
+                        context.getString(R.string.action_add_to_dictionary_option),
+                        originalWord);
+                commitSuggestionText(originalWord, spellingSuggestion);
+                addWordToPersonalDictionaryNoAnnounce(context, originalWord);
+            } else if (spellingSuggestion.isRemoveFromDictionaryOption()) {
+                String originalWord = spellingSuggestion.getOriginalWord();
+                msg = String.format(
+                        context.getString(R.string.action_remove_from_dictionary_option),
+                        originalWord);
+                commitSuggestionText(originalWord, spellingSuggestion);
+                removeWordFromPersonalDictionaryNoAnnounce(context, originalWord);
+            } else {
+                if (spellingSuggestion.isUserDictWord && spellingSuggestion.isMisspelledWord()) {
+                    msg = String.format(
+                            context.getString(R.string.word_correction_correct),
+                            spellingSuggestion.getCurrent());
+                } else {
+                    msg = spellingSuggestion.isMisspelledWord() ? String.format(
+                            context.getString(R.string.word_correction_misspelled),
+                            spellingSuggestion.getCurrent()) : spellingSuggestion.getCurrent();
+                }
+                commitSuggestionText(spellingSuggestion.getCurrent(), spellingSuggestion);
+            }
+        }
+        if (msg != null) {
+            callback.onText("%s", msg, listener.isPasswordField() && pass, Speech.QUEUE_ADD);
+        }
+    }
+
+    private void commitSuggestionText(String text, Suggestion suggestion) {
+        listener.setSelection(suggestion.offset);
+        listener.deleteSurroundingText(0, suggestion.getLength());
+        listener.commitText(text, 1);
+        listener.setSelection(suggestion.offset);
+        suggestion.setLength();
     }
 
     private void nextSpellCheckSuggestion(Context context) { if (spellingSuggestion != null && spellCheckerMatchesWord()) { spellingSuggestion.next(); handleSpellingSuggestion(context); return; } doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, 1, listener.getCursor()); }

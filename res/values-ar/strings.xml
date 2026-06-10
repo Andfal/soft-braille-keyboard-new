@@ -1,0 +1,846 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="accessibility_service_description">للسماح للوحة مفاتيح Soft Braille بالعمل بشكل صحيح عندما يكون TalkBack نشطًا عن طريق إنشاء منطقة لا يعترض فيها قارئ الشاشة اللمسات.</string>
+    <string name="accessibility_service_dialog_message">لاستخدام لوحة المفاتيح هذه مع TalkBack، يجب عليك تمكين \"Soft Braille Keyboard\" في إعدادات إمكانية الوصول. يتيح ذلك للوحة المفاتيح استقبال اللمسات أثناء تنشيط TalkBack.</string>
+    <string name="accessibility_service_label">إمكانية الوصول إلى لوحة مفاتيح برايل الناعمة</string>
+    <string name="action_record_audio_permission">ACTION_RECORD_AUDIO_PERMISSION</string>
+    <string name="action_settings">الإعدادات</string>
+    <string name="app_name">لوحة مفاتيح برايل ناعمة</string>
+    <string name="auto_caps_disabled">لا الكتابة بالأحرف الكبيرة التلقائية</string>
+    <string name="auto_caps_enabled">الكتابة بالأحرف الكبيرة تلقائيًا</string>
+    <string name="blank">فارغ</string>
+    <string name="braille_ime">لوحة مفاتيح برايل ناعمة</string>
+    <string name="btn_move_to_bottom">الانتقال إلى الأسفل</string>
+    <string name="label_high_priority_prefix">[ح]</string>
+    <string name="btn_add">إضافة</string>
+    <string name="btn_add_anyway">أضف على أي حال</string>
+    <string name="btn_add_prefix">إضافة بادئة...</string>
+    <string name="btn_append_cell">+ إلحاق الخلية</string>
+    <string name="btn_cancel">إلغاء</string>
+    <string name="btn_clear_dots">واضح</string>
+    <string name="btn_clone_table">مصدر الاستنساخ</string>
+    <string name="btn_create_table">إنشاء جدول مخصص</string>
+    <string name="btn_delete">حذف</string>
+    <string name="btn_export_system_table">جدول نظام التصدير</string>
+    <string name="btn_export_original">تصدير الأصل</string>
+    <string name="btn_export_table">تصدير عملك</string>
+    <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
+    <string name="btn_id_enable">BTN_ENABLED</string>
+    <string name="btn_import_base_rules">استيراد كافة القواعد</string>
+    <string name="btn_import_table">استيراد ملف الجدول الموجود</string>
+    <string name="btn_import_visual">قواعد الاستيراد</string>
+    <string name="btn_insert_above">أدخل فوق هذه القاعدة</string>
+    <string name="btn_load_template">تحميل القالب</string>
+    <string name="btn_ok">حسنًا</string>
+    <string name="btn_overwrite">الكتابة الفوقية / المتابعة</string>
+    <string name="dialog_overwrite_title">هل تريد الكتابة فوق الملف؟</string>
+    <string name="dialog_overwrite_msg">الملف %s موجود بالفعل. هل تريد الكتابة فوقه؟</string>
+    <string name="btn_remove_mapping">قم بإزالة هذا التعيين</string>
+    <string name="btn_save">حفظ</string>
+    <string name="btn_select_mass">اختر...</string>
+    <string name="btn_set_cell">تعيين الخلية</string>
+    <string name="btn_sync_folder">منح الوصول إلى المجلد للمسح الضوئي</string>
+    <string name="btn_update">تحديث</string>
+    <string name="button_choose_default_keyboard">قم بتعيين لوحة مفاتيح Soft Braille لتكون لوحة المفاتيح الافتراضية</string>
+    <string name="button_keyboard_settings">تمكين لوحة مفاتيح برايل الناعمة</string>
+    <string name="button_more_info">اقرأ دليل البدء السريع</string>
+    <string name="calibration_aborted">تم إحباط المعايرة</string>
+    <string name="calibration_init_message">ضع 6 أو 8 أصابع للمعايرة على الفور، أو المس النقاط واحدة تلو الأخرى للمعايرة اليدوية</string>
+    <string name="calibration_step">المس النقطة %d</string>
+    <string name="calibration_success">تم حفظ المعايرة وتأمينها</string>
+    <string name="capital">رأس المال %s</string>
+    <string name="closing_keyboard">إغلاق لوحة المفاتيح</string>
+    <string name="confirm_delete_msg">هل تريد حذف %s؟</string>
+    <string name="confirm_delete_title">حذف الجدول</string>
+    <string name="copied">منقول</string>
+    <string name="copy_error">خطأ في النسخ</string>
+    <string name="custom_table_label_prefix">مخصص:</string>
+    <string name="cut_error">قطع الخطأ</string>
+    <string name="default_swipe_sensitivity">50</string>
+    <string name="delete_selection">حذف التحديد</string>
+    <string name="deleted">تم حذف %s</string>
+    <string name="emoji_count_summary">%1$s، %2$d من %3$d</string>
+    <string name="emoji_inserted">تم إدراجه</string>
+    <string name="emoji_no_results">لا توجد نتائج الرموز التعبيرية</string>
+    <string name="emoji_no_results_query">لا توجد نتائج لـ %s</string>
+    <string name="emoji_no_to_insert">لا توجد رموز تعبيرية لإدراجها</string>
+    <string name="emoji_search_mode_off">تم إيقاف وضع البحث عن الرموز التعبيرية</string>
+    <string name="emoji_search_mode_on">وضع البحث عن الرموز التعبيرية قيد التشغيل (%s)</string>
+    <string name="emoji_search_prefix">بحث الرموز التعبيرية:</string>
+    <string name="emoji_search_query_empty">استعلام البحث عن الرموز التعبيرية فارغ</string>
+    <string name="end_of_text">نهاية النص</string>
+    <string name="error_invalid_file">نوع الملف غير صالح. حدد .ctb أو .utb</string>
+    <string name="error_no_name">الرجاء إدخال اسم الجدول</string>
+    <string name="expand_keyboard">انقر مرة واحدة هنا لتوسيع لوحة المفاتيح</string>
+    <string name="expand_keyboard_talkback">انقر مرة واحدة هنا لتوسيع لوحة المفاتيح</string>
+    <string name="grade">درجة برايل الافتراضية</string>
+    <string name="grade_computer">الكمبيوتر بطريقة برايل</string>
+    <string name="grade_literary">طريقة برايل الأدبية</string>
+    <string name="grade_table">الدرجة %s</string>
+    <string name="help_desc_autocorrect">التصحيح التلقائي: يضبط موضع أو نمط هذا الرمز.</string>
+    <string name="help_desc_bold">مؤشر الوضع الغامق.</string>
+    <string name="help_desc_caps_letter">مؤشر الكتابة بالأحرف الكبيرة: يجعل الحرف التالي كبيرًا.</string>
+    <string name="help_desc_caps_lock">Caps Lock: يجعل الكلمة بأكملها كبيرة.</string>
+    <string name="help_desc_default">التعيين لـ: %s</string>
+    <string name="help_desc_diacritic">علامة التشكيل: تستخدم لتعديل الحرف السابق أو التالي.</string>
+    <string name="help_desc_greek_mode">التبديل إلى الوضع اليوناني.</string>
+    <string name="help_desc_italic">مؤشر الوضع المائل.</string>
+    <string name="help_desc_latin_mode">قم بالتبديل إلى الوضع اللاتيني (الدولي).</string>
+    <string name="help_desc_numeric">القاعدة الترتيبية/الرقمية: تنطبق بعد الرقم.</string>
+    <string name="help_desc_numsign">علامة الرقم: يبدأ الوضع الرقمي (المفاتيح التالية هي أرقام).</string>
+    <string name="help_desc_state_change">تغيير الحالة الداخلية (يؤثر على كيفية تفسير المفاتيح التالية).</string>
+    <string name="help_desc_underline">مؤشر وضع التسطير.</string>
+    <string name="help_desc_whole_word">تقلص الكلمة بأكملها: يعمل فقط ككلمة مستقلة.</string>
+    <string name="hide_keyboard">إخفاء لوحة المفاتيح.</string>
+    <!--  Braille Actions  -->
+    <string name="action_none">لا شيء</string>
+    <string name="action_move_left_char">التحرك لليسار حسب الحرف</string>
+    <string name="action_move_right_char">تحرك لليمين حسب الحرف</string>
+    <string name="action_move_left_word">تحرك لليسار بكلمة</string>
+    <string name="action_move_right_word">تحرك لليمين بكلمة</string>
+    <string name="action_move_left_line">التحرك لليسار سطرًا</string>
+    <string name="action_move_right_line">التحرك لليمين سطرًا</string>
+    <string name="action_move_left_all">الانتقال إلى بداية النص</string>
+    <string name="action_move_right_all">الانتقال إلى نهاية النص</string>
+    <string name="action_backspace_char">حذف الحرف</string>
+    <string name="action_backspace_word">حذف كلمة</string>
+    <string name="action_backspace_line">حذف السطر</string>
+    <string name="action_backspace_all">حذف كل النص</string>
+    <string name="action_read_char">قراءة الحرف الحالي</string>
+    <string name="action_read_word">قراءة الكلمة الحالية</string>
+    <string name="action_read_line">قراءة السطر الحالي</string>
+    <string name="action_read_all">قراءة كل النص</string>
+    <string name="action_space">أدخل مساحة</string>
+    <string name="action_newline">أدخل السطر الجديد</string>
+    <string name="action_voice_input">الإدخال الصوتي</string>
+    <string name="action_toggle_privacy">تبديل وضع الخصوصية</string>
+    <string name="action_toggle_auto_caps">تبديل الكتابة بالأحرف الكبيرة تلقائيًا</string>
+    <string name="action_toggle_echo_passwords">تبديل نطق كلمات المرور</string>
+    <string name="action_toggle_mark">تبديل علامة الاختيار</string>
+    <string name="action_cycle_keyboard_feedback">تدوير ردود فعل لوحة المفاتيح (الصوت/الاهتزاز)</string>
+    <string name="action_cycle_echo_feedback">ردود فعل صدى الدورة (حرف/كلمة/لا شيء)</string>
+    <string name="action_switch_braille_type">تبديل طريقة برايل الأدبية/الكمبيوتر</string>
+    <string name="action_switch_braille_table">تبديل جدول برايل</string>
+    <string name="action_open_settings">افتح إعدادات لوحة المفاتيح</string>
+    <string name="action_open_input_switcher">فتح منتقي أسلوب الإدخال</string>
+    <string name="action_close_keyboard">إغلاق لوحة المفاتيح</string>
+    <string name="action_shrink_keyboard">تقليص لوحة المفاتيح</string>
+    <string name="action_word_count">عدد الكلمات والحروف</string>
+    <string name="action_next_field_action">الحقل / الإجراء التالي</string>
+    <string name="action_select_text_action">حدد / الإجراء</string>
+    <string name="action_emoji_mode_toggle">تبديل وضع البحث عن الرموز التعبيرية</string>
+    <string name="action_edit_select_all">الإجراء: حدد الكل</string>
+    <string name="action_edit_copy">الإجراء: نسخ</string>
+    <string name="action_edit_cut">الإجراء: قطع</string>
+    <string name="action_edit_paste">الإجراء: لصق</string>
+    <string name="action_edit_speak">الإجراء: نطق التحديد</string>
+    <string name="action_edit_delete">الإجراء: حذف التحديد</string>
+    <string name="action_spell_check_left">التدقيق الإملائي للكلمة السابقة</string>
+    <string name="action_spell_check_right">التدقيق الإملائي للكلمة التالية</string>
+    <string name="action_spell_check_next_suggestion">الاقتراح الإملائي التالي</string>
+    <string name="action_spell_check_prev_suggestion">الاقتراح الإملائي السابق</string>
+    <string name="action_set_dot_7">اكتب النقطة 7</string>
+    <string name="action_set_dot_8">أدخل النقطة 8</string>
+    <string name="action_toggle_abbreviations">تبديل الاختصارات مع الفضاء</string>
+    <string name="action_toggle_abbreviations_no_space">تبديل الاختصارات بدون مسافة</string>
+    <string name="action_toggle_instant_abbreviations">تبديل التوسع الفوري</string>
+    <string name="action_toggle_misspelling_sound">تبديل الإخطار الصوتي للأخطاء الإملائية</string>
+    <string name="action_add_to_dictionary">إضافة كلمة إلى القاموس الشخصي</string>
+    <string name="action_add_to_dictionary_option">أضف %s إلى القاموس الشخصي</string>
+    <string name="action_remove_from_dictionary">إزالة الكلمة من القاموس الشخصي</string>
+    <string name="action_remove_from_dictionary_option">قم بإزالة %s من القاموس الشخصي</string>
+    <!--  Abbreviations  -->
+    <string name="pref_abbreviations_title">الاختصارات</string>
+    <string name="pref_abbreviations_summary">إدارة توسيع النص (بمسافة، بدون مسافة، أو فوري).</string>
+    <string name="pref_abbreviations_instant_title">التوسع الفوري</string>
+    <string name="pref_abbreviations_instant_summary">يستبدل الاختصارات بمجرد كتابتها.</string>
+    <string name="abbreviations_instant_enabled">تم تمكين التوسع الفوري</string>
+    <string name="abbreviations_instant_disabled">تم تعطيل التوسع الفوري</string>
+    <string name="pref_abbreviations_enabled_title">التوسع بدون مساحة</string>
+    <string name="pref_abbreviations_enabled_summary">يستبدل الاختصارات باستخدام المسافة أو الإدخال كمعدلات فقط (لا يتم إدراج مسافة إضافية).</string>
+    <string name="abbreviations_enabled">الاختصارات مع تمكين الفضاء</string>
+    <string name="abbreviations_disabled">الاختصارات مع تعطيل الفضاء</string>
+    <string name="abbreviations_no_space_enabled">الاختصارات بدون تمكين المسافة</string>
+    <string name="abbreviations_no_space_disabled">الاختصارات بدون مسافة معطلة</string>
+    <string name="title_abbreviation_editor">محرر الاختصارات</string>
+    <string name="hint_shortcut">الاختصار (على سبيل المثال، hru أو 6-s)</string>
+    <string name="hint_expansion">نص موسع (على سبيل المثال، كيف حالك؟)</string>
+    <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
+    <string name="pref_abbreviations_enabled_default">كاذبة</string>
+    <string name="pref_abbreviations_add_space_title">التوسع مع الفضاء</string>
+    <string name="pref_abbreviations_add_space_summary">يستبدل الاختصارات باستخدام مسافة أو أدخل ويضيف مسافة.</string>
+    <string name="nothing_to_expand">لا شيء للتوسع</string>
+    <!--  Gesture Names  -->
+    <string name="swipe_one_left">النقطة 1: اسحب لليسار.</string>
+    <string name="swipe_one_right">النقطة 1: اسحب لليمين.</string>
+    <string name="swipe_one_up">النقطة 1: اسحب لأعلى.</string>
+    <string name="swipe_one_down">النقطة 1: اسحب لأسفل.</string>
+    <string name="swipe_two_left">النقطة 2: اسحب لليسار.</string>
+    <string name="swipe_two_right">النقطة 2: اسحب لليمين.</string>
+    <string name="swipe_two_up">النقطة 2: اسحب لأعلى.</string>
+    <string name="swipe_two_down">النقطة 2: اسحب لأسفل.</string>
+    <string name="swipe_three_left">النقطة 3: اسحب لليسار.</string>
+    <string name="swipe_three_right">النقطة 3: اسحب لليمين.</string>
+    <string name="swipe_three_up">النقطة 3: اسحب لأعلى.</string>
+    <string name="swipe_three_down">النقطة 3: اسحب لأسفل.</string>
+    <string name="swipe_four_left">النقطة 4: اسحب لليسار.</string>
+    <string name="swipe_four_right">النقطة 4: اسحب لليمين.</string>
+    <string name="swipe_four_up">النقطة 4: اسحب لأعلى.</string>
+    <string name="swipe_four_down">النقطة 4: اسحب لأسفل.</string>
+    <string name="swipe_five_left">النقطة 5: اسحب لليسار.</string>
+    <string name="swipe_five_right">النقطة 5: اسحب لليمين.</string>
+    <string name="swipe_five_up">النقطة 5: اسحب لأعلى.</string>
+    <string name="swipe_five_down">النقطة 5: اسحب لأسفل.</string>
+    <string name="swipe_six_left">النقطة 6: اسحب لليسار.</string>
+    <string name="swipe_six_right">النقطة 6: اسحب لليمين.</string>
+    <string name="swipe_six_up">النقطة 6: اسحب لأعلى.</string>
+    <string name="swipe_six_down">النقطة 6: اسحب لأسفل.</string>
+    <string name="swipe_left_two_down">اليسار: إصبعين للأسفل.</string>
+    <string name="swipe_right_two_down">اليمين: إصبعين للأسفل.</string>
+    <string name="swipe_hold_one_left">النقطة 1: اضغط مع الاستمرار واسحب لليسار باليد الأخرى.</string>
+    <string name="swipe_hold_one_right">النقطة 1: اضغط مع الاستمرار واسحب لليمين باليد الأخرى.</string>
+    <string name="swipe_hold_one_up">النقطة 1: اضغط مع الاستمرار واسحب لأعلى باليد الأخرى.</string>
+    <string name="swipe_hold_one_down">النقطة 1: اضغط مع الاستمرار واسحب لأسفل باليد الأخرى.</string>
+    <string name="swipe_hold_two_left">النقطة 2: اضغط مع الاستمرار واسحب لليسار باليد الأخرى.</string>
+    <string name="swipe_hold_two_right">النقطة 2: اضغط مع الاستمرار واسحب لليمين باليد الأخرى.</string>
+    <string name="swipe_hold_two_up">النقطة 2: اضغط مع الاستمرار واسحب لأعلى باليد الأخرى.</string>
+    <string name="swipe_hold_two_down">النقطة 2: اضغط مع الاستمرار واسحب لأسفل باليد الأخرى.</string>
+    <string name="swipe_hold_three_left">النقطة 3: اضغط مع الاستمرار واسحب لليسار باليد الأخرى.</string>
+    <string name="swipe_hold_three_right">النقطة 3: اضغط مع الاستمرار واسحب لليمين باليد الأخرى.</string>
+    <string name="swipe_hold_three_up">النقطة 3: اضغط مع الاستمرار واسحب لأعلى باليد الأخرى.</string>
+    <string name="swipe_hold_three_down">النقطة 3: اضغط مع الاستمرار واسحب لأسفل باليد الأخرى.</string>
+    <string name="swipe_hold_four_left">النقطة 4: اضغط مع الاستمرار واسحب لليسار باليد الأخرى.</string>
+    <string name="swipe_hold_four_right">النقطة 4: اضغط مع الاستمرار واسحب لليمين باليد الأخرى.</string>
+    <string name="swipe_hold_four_up">النقطة 4: اضغط مع الاستمرار واسحب لأعلى باليد الأخرى.</string>
+    <string name="swipe_hold_four_down">النقطة 4: اضغط مع الاستمرار واسحب لأسفل باليد الأخرى.</string>
+    <string name="swipe_hold_five_left">النقطة 5: اضغط مع الاستمرار واسحب لليسار باليد الأخرى.</string>
+    <string name="swipe_hold_five_right">النقطة 5: اضغط مع الاستمرار واسحب لليمين باليد الأخرى.</string>
+    <string name="swipe_hold_five_up">النقطة 5: اضغط مع الاستمرار واسحب لأعلى باليد الأخرى.</string>
+    <string name="swipe_hold_five_down">النقطة 5: اضغط مع الاستمرار واسحب لأسفل باليد الأخرى.</string>
+    <string name="swipe_hold_six_left">النقطة 6: اضغط مع الاستمرار واسحب لليسار باليد الأخرى.</string>
+    <string name="swipe_hold_six_right">النقطة 6: اضغط مع الاستمرار واسحب لليمين باليد الأخرى.</string>
+    <string name="swipe_hold_six_up">النقطة 6: اضغط مع الاستمرار واسحب لأعلى باليد الأخرى.</string>
+    <string name="swipe_hold_six_down">النقطة 6: اضغط مع الاستمرار واسحب لأسفل باليد الأخرى.</string>
+    <!--  Storage Manager (Universal)  -->
+    <string name="label_active_abbreviations">[قاموس الاختصارات النشطة]</string>
+    <string name="label_active_gestures">[مخطط الإيماءات النشطة]</string>
+    <string name="msg_confirm_clear_active">هل أنت متأكد أنك تريد مسح كافة البيانات النشطة من لوحة المفاتيح؟ لا يمكن التراجع عن هذا الإجراء.</string>
+    <string name="checkbox_delete_backup_file">قم أيضًا بحذف ملف النسخة الاحتياطية الموجود في مجلد soft-braille</string>
+    <string name="btn_setup_sync_folder">منح الوصول إلى المجلد للمزامنة</string>
+    <string name="title_storage_manager">مدير التخزين</string>
+    <string name="btn_create_new_table">إنشاء جدول جديد</string>
+    <string name="label_file_type_tables">جداول برايل</string>
+    <string name="label_file_type_abbreviations">قاموس المختصرات</string>
+    <string name="label_file_type_gestures">مخطط الإيماءات</string>
+    <string name="msg_confirm_import_generic">هل تريد استيراد هذا المورد؟ قد تتم الكتابة فوق البيانات الحالية.</string>
+    <string name="msg_sync_folder">المجلد المتزامن</string>
+    <string name="msg_download_folder">تحميل المجلد</string>
+    <string name="pref_sync_folder_title">مزامنة المجلد</string>
+    <string name="pref_sync_folder_summary">اختر مجلدًا لمزامنة الجداول والنسخ الاحتياطية</string>
+    <!--  Backup & Restore  -->
+    <string name="btn_export">تصدير</string>
+    <string name="btn_import">استيراد</string>
+    <string name="hint_search_items">بحث في الملفات...</string>
+    <string name="btn_export_system">تصدير الجدول الأصلي</string>
+    <string name="hint_search_tables">البحث في جداول النظام...</string>
+    <string name="title_export_system">تصدير جدول Liblouis الأصلي</string>
+    <string name="label_found_locales">تم العثور على %d لغة</string>
+    <string name="label_auto_selected">تم اختياره تلقائيًا</string>
+    <string name="label_no_results">لم يتم العثور على نتائج</string>
+    <string name="hint_search_locale">لغة البحث...</string>
+    <string name="msg_exported_to">تم تصدير الملف إلى: %s</string>
+    <string name="msg_import_success">تم استيراد البيانات بنجاح!</string>
+    <string name="msg_import_error">خطأ في الاستيراد: %s</string>
+    <string name="title_select_backup">حدد النسخ الاحتياطي</string>
+    <string name="msg_no_backups">لم يتم العثور على نسخ احتياطية بطريقة برايل الناعمة.</string>
+    <string name="msg_confirm_import">هل تريد استبدال البيانات الحالية بهذه النسخة الاحتياطية؟</string>
+    <string name="menu_share">شارك</string>
+    <string name="menu_delete">حذف</string>
+    <string name="pref_category_gestures_title">تخصيص الإيماءات</string>
+    <string name="pref_gestures_summary">قم بتعيين وظائف للتمرير السريع والإيماءات مع الاستمرار</string>
+    <string name="pref_gestures_title">تخصيص الإيماءات</string>
+    <string name="pref_reset_gestures_title">إعادة تعيين الإيماءات إلى الوضع الافتراضي</string>
+    <string name="pref_reset_gestures_summary">استعادة مهام الإيماءات الأصلية</string>
+    <string name="pref_reset_gestures_confirm">هل أنت متأكد أنك تريد إعادة تعيين جميع الإيماءات إلى مهامها الافتراضية؟</string>
+    <string name="pref_export_gestures_title">إيماءات التصدير</string>
+    <string name="pref_export_gestures_summary">احفظ خريطة الإيماءات المخصصة في ملف</string>
+    <string name="pref_import_gestures_title">إيماءات الاستيراد</string>
+    <string name="pref_import_gestures_summary">قم بتحميل خريطة الإيماءات من ملف</string>
+    <string name="pref_gesture_default_format">الافتراضي: %1$s</string>
+    <string name="export_success">تم تصدير الإيماءات بنجاح إلى %1$s</string>
+    <string name="export_error">خطأ في تصدير الإيماءات: %1$s</string>
+    <string name="import_success">تم استيراد الإيماءات بنجاح</string>
+    <string name="import_error">خطأ في استيراد الإيماءات: %1$s</string>
+    <string name="import_no_valid_data">لم يتم العثور على بيانات إيماءة صالحة في الملف</string>
+    <string name="pref_group_single_finger">الضربات الشديدة بإصبع واحد</string>
+    <string name="pref_group_two_fingers">التمرير بإصبعين (للأسفل فقط)</string>
+    <string name="pref_group_hold_swipe">أمسك نقطة بيد واحدة واسحبها باليد الأخرى</string>
+    <string name="high">عالية</string>
+    <string name="hint_author">المؤلف (على سبيل المثال سيرجيو)</string>
+    <string name="hint_char">شار</string>
+    <string name="hint_description">وصف الجدول</string>
+    <string name="hint_dots_format">النقاط (على سبيل المثال 123-45)</string>
+    <string name="hint_enter_dots">أدخل النقاط (على سبيل المثال 123)</string>
+    <string name="hint_search_rules">البحث عن حرف أو نقاط...</string>
+    <string name="hint_table_name">أدخل اسم الجدول (على سبيل المثال، my_table)</string>
+    <string name="info_url">https://docs.google.com/document/d/1OX6yFjkK61VfROdU9uQNxjEZ_QNWxiMnUY_1ECnIyRQ/pub</string>
+    <string name="keyboard_auto">تلقائي</string>
+    <string name="keyboard_echo_all">كل من الحروف والكلمات</string>
+    <string name="keyboard_echo_character">الشخصيات</string>
+    <string name="keyboard_echo_none">لا شيء</string>
+    <string name="keyboard_echo_word">كلمات</string>
+    <string name="keyboard_error">لا يمكن ضبط لوحة المفاتيح.</string>
+    <string name="keyboard_feedback_all">كل من الصوت والاهتزاز</string>
+    <string name="keyboard_feedback_none">لا شيء</string>
+    <string name="keyboard_feedback_sound">الصوت فقط</string>
+    <string name="keyboard_feedback_vibrate">اهتزاز فقط</string>
+    <string name="keyboard_full_screen">تم توسيع لوحة المفاتيح</string>
+    <string name="keyboard_help_active_table_label">الجدول النشط: %s</string>
+    <string name="keyboard_help_dots_hint">النقاط أو الحرف</string>
+    <string name="keyboard_help_dots_result">النقاط: %1$s</string>
+    <string name="keyboard_help_enter_dots_toast">الرجاء إدخال النقاط أو الأحرف للبحث</string>
+    <string name="keyboard_help_error_no_table">خطأ: لم يتم العثور على الجدول النشط.</string>
+    <string name="keyboard_help_file_not_available">ملف الجدول غير متوفر</string>
+    <string name="keyboard_help_how_to_write_title">كيفية كتابة \"%1$s\"</string>
+    <string name="keyboard_help_instruction">أدخل النقاط (على سبيل المثال، 45) لمعرفة ما تفعله، أو حرفًا (على سبيل المثال، A) لمعرفة كيفية كتابته.</string>
+    <string name="keyboard_help_no_results">لم يتم العثور على أي نتائج لـ \"%s\"</string>
+    <string name="keyboard_help_pref_summary">اكتشف ما تفعله نقاط برايل في اللغة الحالية</string>
+    <string name="keyboard_help_pref_title">تعليمات لوحة المفاتيح (الجدول النشط)</string>
+    <string name="keyboard_help_result_line">السطر %1$d</string>
+    <string name="keyboard_help_search_btn">بحث</string>
+    <string name="keyboard_help_title">تعليمات لوحة المفاتيح (الجدول النشط)</string>
+    <string name="keyboard_horizontal">أفقي</string>
+    <string name="keyboard_next_three">من فضلك ضع أصابعك الثلاثة الأخرى على الشاشة الآن.</string>
+    <string name="keyboard_not_set">يرجى وضع جميع الأصابع الستة على الشاشة لضبط لوحة مفاتيح برايل</string>
+    <string name="keyboard_shrink">لوحة المفاتيح مخفية</string>
+    <string name="keyboard_style_normal">عادي</string>
+    <string name="keyboard_style_slate">وضع اللوح والقلم</string>
+    <string name="keyboard_style_top_bottom">استبدل النقطتين 1 و4 بالنقطتين 3 و6</string>
+    <string name="keyboard_tabletop">منضدية</string>
+    <string name="keyboard_vertical">عمودي</string>
+    <string name="label_a_grave">a بلكنة خافضة</string>
+    <string name="label_arabic">العربية</string>
+    <string name="label_auto_link">(الارتباط التلقائي)</string>
+    <string name="label_base_script">الأبجدية الأساسية / البرنامج النصي:</string>
+    <string name="label_base_script_short">الأبجدية</string>
+    <string name="label_class_prefix">[فئة] فئة</string>
+    <string name="label_cyrillic">السيريلية</string>
+    <string name="label_dot">نقطة %d</string>
+    <string name="label_dots_dialog">حدد النقاط لهذه الخلية</string>
+    <string name="label_e_acute">ه حاد</string>
+    <string name="label_e_grave">e بلكنة خافضة</string>
+    <string name="label_error_prefix">خطأ: %s</string>
+    <string name="label_external_synced">[خارجي]</string>
+    <string name="label_found_rules">تم العثور على %1$d قاعدة من أصل %2$d</string>
+    <string name="label_greek">اليونانية</string>
+    <string name="label_hebrew">العبرية</string>
+    <string name="label_hindi">الهندية</string>
+    <string name="label_i_grave">i بلكنة خافضة</string>
+    <string name="label_korean">الكورية</string>
+    <string name="label_latin">اللاتينية</string>
+    <string name="label_locale">لغة الجدول (اللغة المحلية):</string>
+    <string name="label_locale_short">اللغة</string>
+    <string name="label_logic_prefix">[المنطق] السياق</string>
+    <string name="label_long_press_delete">قائمة الجداول المخصصة. اضغط لفترة طويلة على العنصر لحذفه.</string>
+    <string name="label_mapped_items">العناصر المعينة</string>
+    <string name="label_mapped_items_short">التعيينات</string>
+    <string name="label_n_mapped_items">تم تعيين %d من العناصر (انقر للتعديل)</string>
+    <string name="label_no_mapped_items">لم يتم تعيين أي عناصر</string>
+    <string name="label_none">لا شيء</string>
+    <string name="label_number_system">نظام الترقيم:</string>
+    <string name="label_number_system_short">أرقام</string>
+    <string name="label_o_grave">o بلكنة خافضة</string>
+    <string name="label_opcode">رمز تشغيل ليبلويس:</string>
+    <string name="label_opcode_short">القاعدة</string>
+    <string name="label_priority_short">الأولوية</string>
+    <string name="label_results_count">النتائج: %d</string>
+    <string name="label_select_all">حدد الكل</string>
+    <string name="label_show_visual_picker">إظهار منتقي الخلايا المرئية</string>
+    <string name="label_source">المصدر</string>
+    <string name="label_spazio">الفضاء</string>
+    <string name="label_structure_prefix">[الهيكل] يشمل</string>
+    <string name="label_table_locale">لغة الجدول (اللغة المحلية):</string>
+    <string name="label_tap_to_edit">انقر للتحرير، اضغط لفترة طويلة للحذف</string>
+    <string name="label_thai">التايلاندية</string>
+    <string name="label_u_grave">u بلكنة خافضة</string>
+    <string name="label_unicode_braille">يونيكود برايل</string>
+    <string name="label_use_8_dots">استخدم 8 نقاط (كمبيوتر برايل)</string>
+    <string name="label_vietnamese">الفيتنامية</string>
+    <string name="low">منخفض</string>
+    <string name="mark_not_set">لم يتم تعيين العلامة</string>
+    <string name="medium">متوسط</string>
+    <string name="msg_already_bottom">بالفعل في الأسفل</string>
+    <string name="msg_already_top">بالفعل في الأعلى</string>
+    <string name="msg_char_empty">حقل الحرف فارغ</string>
+    <string name="msg_confirm_clone">هل تريد استبدال القائمة الحالية بمحتوى الجدول المصدر؟</string>
+    <string name="msg_confirm_delete_mass">هل تريد حذف %d من القواعد المحددة؟</string>
+    <string name="msg_confirm_template">سيؤدي تطبيق القالب إلى مسح التعيينات الحالية. يكمل؟</string>
+    <string name="msg_delete_external">احذف أيضًا من المجلد الخارجي</string>
+    <string name="msg_deleted">تم الحذف</string>
+    <string name="msg_duplicate_dots">المجموعة %1$s مستخدمة بالفعل لـ \'%2$s\'.</string>
+    <string name="msg_enter_dots">الرجاء إدخال النقاط (على سبيل المثال 123-45)</string>
+    <string name="msg_invalid_dots_format">تنسيق النقاط غير صالح. استخدم الأرقام من 1 إلى 8 مفصولة بـ \"-\" أو مسافات.</string>
+    <string name="msg_char_required">هذه القاعدة تتطلب حرفا.</string>
+    <string name="msg_dots_required">الرجاء إدخال نمط نقطة واحد على الأقل.</string>
+    <string name="msg_error_logs">حدث خطأ أثناء التعامل مع السجلات</string>
+    <string name="msg_fixed_mapping">هذا تعيين نظام ثابت ولا يمكن إزالته.</string>
+    <string name="btn_rename">إعادة تسمية</string>
+    <string name="dialog_export_title">الملف موجود</string>
+    <string name="msg_export_collision">هناك ملف بالاسم %1$s موجود بالفعل في مجلد التصدير. ماذا تريد أن تفعل؟</string>
+    <string name="msg_save_collision">يوجد جدول بالاسم %1$s بالفعل. ماذا تريد أن تفعل؟</string>
+    <string name="msg_export_failed">فشل التصدير: %1$s</string>
+    <string name="msg_select_mapping_first">الرجاء تحديد تعيين من القائمة أولاً.</string>
+    <string name="msg_share_error">خطأ في المشاركة</string>
+    <string name="label_sync_hub">المحور المتزامن</string>
+    <string name="msg_hands_overlapping">الأيدي متداخلة</string>
+    <string name="hint_enter_new_name">أدخل اسم الملف الجديد</string>
+    <string name="msg_imported">تم استيراد %s</string>
+    <string name="msg_invalid_pos">موضع غير صالح</string>
+    <string name="msg_logs_cleared">تم مسح السجلات بنجاح</string>
+    <string name="msg_no_deletable_rules">لم يتم العثور على قواعد قابلة للحذف.</string>
+    <string name="msg_rule_removed">تمت إزالة القاعدة.</string>
+    <string name="msg_rule_found">تم العثور على القاعدة الحالية</string>
+    <string name="msg_rule_updated">تم تحديث القاعدة</string>
+    <string name="msg_rule_added">تمت إضافة القاعدة</string>
+    <string name="msg_rules_filtered">تمت تصفية القواعد</string>
+    <string name="msg_select_opcode_first">الرجاء تحديد القاعدة/رمز التشغيل أولاً</string>
+    <string name="msg_select_source_first">حدد الجدول المصدر قبل الاستنساخ.</string>
+    <string name="msg_standard_char_override">الطابع القياسي للمجموعة المحددة. سيكون لاختيارك الأسبقية.</string>
+    <string name="msg_structure_cloned">تم استنساخ البنية الأصلية إلى القائمة.</string>
+    <string name="msg_sync_desc">حدد المجلد \"soft-braille\" لمنح الوصول الدائم وتحميل الملفات داخله تلقائيًا.</string>
+    <string name="msg_sync_error">خطأ في طلب الوصول إلى المجلد.</string>
+    <string name="msg_sync_success">تم تفعيل الوصول إلى المجلد!</string>
+    <string name="msg_table_exported">تم تصدير الجدول إلى التنزيل/طريقة برايل الناعمة</string>
+    <string name="msg_table_file_not_found">لم يتم العثور على ملف الجدول.</string>
+    <string name="msg_table_saved">تم حفظ الجدول بنجاح!</string>
+    <string name="msg_template_applied">تم تطبيق القالب بنجاح!</string>
+    <string name="newline">خط جديد</string>
+    <string name="no_braille_table">لا توجد طاولات</string>
+    <string name="no_more_misspellings">لا مزيد من الأخطاء الإملائية</string>
+    <string name="no_password_echo">لا تتكلم كلمات المرور</string>
+    <string name="no_rotate_keyboard">لا تقم بتدوير لوحة المفاتيح</string>
+    <string name="no_suggestions">لا توجد اقتراحات متاحة</string>
+    <string name="none_selected">--- لم يتم التحديد ---</string>
+    <string name="nothing_to_delete">لا شيء لحذفه</string>
+    <string name="num_sys_6dot_univocal">طريقة برايل للكمبيوتر (6 نقاط، بأسلوب أنطوان)</string>
+    <string name="num_sys_8dot_computer_lowered">طريقة برايل للكمبيوتر (8 نقاط، منخفضة، 1=2)</string>
+    <string name="num_sys_8dot_standard">معيار 8 نقاط (أضيفت النقطة 8، 1=18)</string>
+    <string name="num_sys_antoine">أنطوان (نقطة 6 + أدبي 1=16)</string>
+    <string name="num_sys_classic">كلاسيكي (3456 + أ، ي، 1=1)</string>
+    <string name="num_sys_dropped">الأرقام المسقطة (3456 + منخفض، 1=2)</string>
+    <string name="num_sys_literary">الأدبي (سياق G2)</string>
+    <string name="num_sys_none">لا شيء / التعيينات اليدوية</string>
+    <string name="opcode_always">تجاوز (دائمًا)</string>
+    <string name="opcode_begcaps">ابدأ بالأحرف الكبيرة</string>
+    <string name="opcode_begcapsword">بدء الكلمة المكتوبة بخط كبير (begcapsword)</string>
+    <string name="opcode_begnum">بادئة رقمية</string>
+    <string name="opcode_capsletter">علامة رأس المال (6)</string>
+    <string name="opcode_class">فئة</string>
+    <string name="opcode_closepunc">علامات الترقيم بعد الكلمة (postpunc)</string>
+    <string name="opcode_context">السياق</string>
+    <string name="opcode_digit">الرقم (0-9)</string>
+    <string name="opcode_endcaps">إنهاء كافة الأحرف الاستهلالية</string>
+    <string name="opcode_endcapsword">نهاية الكلمة الكبيرة (endcapsword)</string>
+    <string name="opcode_endnum">إنهاء الوضع الرقمي</string>
+    <string name="opcode_include">تضمين</string>
+    <string name="opcode_letsign">علامة الرسالة (5)</string>
+    <string name="opcode_letter">خطاب عام</string>
+    <string name="opcode_litdigit">الرقم الأدبي</string>
+    <string name="opcode_lowercase">حرف صغير</string>
+    <string name="opcode_math">الرياضيات</string>
+    <string name="opcode_midendnumericmodechars">لاحقة/رقمية داخلية</string>
+    <string name="opcode_midnum">حرف داخل الأرقام</string>
+    <string name="opcode_numericmodechars">مشغل الوضع الرقمي</string>
+    <string name="opcode_numsign">علامة الرقم (3456)</string>
+    <string name="opcode_openpunc">علامات الترقيم قبل الكلمة (prepunc)</string>
+    <string name="opcode_partword">جزء من الكلمة</string>
+    <string name="opcode_punctuation">علامات الترقيم</string>
+    <string name="opcode_sign">تسجيل</string>
+    <string name="opcode_space">الفضاء</string>
+    <string name="opcode_uppercase">حرف كبير</string>
+    <string name="opcode_word">كلمة كاملة (الانكماش)</string>
+    <string name="pad_horizontal">اضبط لوحة المفاتيح على التخطيط الأفقي</string>
+    <string name="pad_tabletop">اضبط لوحة المفاتيح على تخطيط سطح الطاولة</string>
+    <string name="pad_vertical">اضبط لوحة المفاتيح على التخطيط الرأسي</string>
+    <string name="paste_error">حدث خطأ في لصق النص</string>
+    <string name="pasted">تم لصقه</string>
+    <string name="pref_app_version_key">APP_VERSION</string>
+    <string name="pref_app_version_title">إصدار التطبيق: %s.</string>
+    <string name="pref_auto_caps_default">صحيح</string>
+    <string name="pref_auto_caps_key">AUTO_CAPS</string>
+    <string name="pref_auto_caps_summary">تكبير الكلمة الأولى من كل جملة.</string>
+    <string name="pref_auto_caps_title">الكتابة بالأحرف الكبيرة تلقائيًا</string>
+    <string name="pref_auto_match_keyboard_default">صحيح</string>
+    <string name="pref_auto_match_keyboard_key">Auto_MATCH_KEYBOARD</string>
+    <string name="pref_auto_match_keyboard_summary">عند التمكين، يتم تحديد لوحة المفاتيح بناءً على موضع أصابعك عند معايرة لوحة المفاتيح يدويًا.</string>
+    <string name="pref_auto_match_keyboard_title">تحديد تخطيط لوحة المفاتيح تلقائيًا بناءً على موضع أصابعك</string>
+    <string name="pref_auto_rotate_keyboard_default">كاذبة</string>
+    <string name="pref_auto_rotate_keyboard_key">Auto_ROTATE_KEYBOARD</string>
+    <string name="pref_braille_computer_table_default">ar-US-comp8</string>
+    <string name="pref_braille_computer_table_key">BRAILLE_TABLE_0</string>
+    <string name="pref_braille_grade_summary">يضبط درجة برايل المفضلة.</string>
+    <string name="pref_braille_literary_table_default">ar-UEB-g1</string>
+    <string name="pref_braille_literary_table_key">BRAILLE_TABLE_1</string>
+    <string name="pref_braille_table_auto">تلقائي</string>
+    <string name="pref_braille_type_default">1</string>
+    <string name="pref_braille_type_key">BRAILLE_GRADE_KEY</string>
+    <string name="pref_category_advanced_key">ADVANCED_LOGS</string>
+    <string name="pref_category_advanced_title">المتقدمة والسجلات</string>
+    <string name="pref_category_braille_key">BRAILLE_CATEGORY_KEY</string>
+    <string name="pref_category_braille_title">إعدادات جدول برايل</string>
+    <string name="pref_category_custom_tables_title">جداول برايل مخصصة</string>
+    <string name="pref_category_feedback_key">KEYBOARD_FEEDBACK_Category</string>
+    <string name="pref_category_feedback_title">إعدادات تعليقات لوحة المفاتيح</string>
+    <string name="pref_category_keyboard_key">KEYBOARD_CATEGORY</string>
+    <string name="pref_category_keyboard_title">إعدادات لوحة المفاتيح</string>
+    <string name="pref_category_misc_key">متفرقات</string>
+    <string name="pref_category_misc_title">إعدادات متنوعة</string>
+    <string name="pref_clear_log_key">CLEAR_LOG</string>
+    <string name="pref_clear_log_summary">مسح المخزن المؤقت logcat الموجود</string>
+    <string name="pref_clear_log_title">مسح السجلات</string>
+    <string name="pref_custom_dots_key">CUSTOM_DOTS_LAYOUT</string>
+    <string name="pref_default_computer_braille_table_summary"></string>
+    <string name="pref_default_computer_braille_table_title">جدول برايل للكمبيوتر</string>
+    <string name="pref_default_keyboard_default">0</string>
+    <string name="pref_default_keyboard_key">DEFAULT_KEYBOARD</string>
+    <string name="pref_default_keyboard_summary">اختر تخطيط لوحة المفاتيح الذي يتم عرضه افتراضيًا.</string>
+    <string name="pref_default_keyboard_title">تخطيط لوحة المفاتيح الافتراضي</string>
+    <string name="pref_default_literary_braille_table_summary"></string>
+    <string name="pref_default_literary_braille_table_title">جدول برايل الأدبي</string>
+    <string name="pref_double_space_period_default">صحيح</string>
+    <string name="pref_double_space_period_key">DOUBLE_SPACE_PERIOD</string>
+    <string name="pref_double_space_period_summary">تُدرج مسافة الضرب المزدوجة نقطة متبوعة بمسافة.</string>
+    <string name="pref_double_space_period_title">فترة الفضاء المزدوج</string>
+    <string name="pref_echo_feedback_key">KEYBOARD_ECHO</string>
+    <string name="pref_echo_feedback_summary">اختر نوع صدى لوحة المفاتيح.</string>
+    <string name="pref_echo_feedback_title">صدى لوحة المفاتيح</string>
+    <string name="pref_echo_misspellings_default">صحيح</string>
+    <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
+    <string name="pref_echo_misspellings_summary">عندما يتم الإعلان عن الأخطاء الإملائية تمكين عند كتابة مسافة</string>
+    <string name="pref_echo_misspellings_title">صدى الأخطاء الإملائية أثناء الكتابة</string>
+    <string name="pref_misspelling_sound_default">كاذبة</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">قم بتشغيل صوت للأخطاء الإملائية بدلاً من التعليقات الصوتية.</string>
+    <string name="pref_misspelling_sound_title">إشعار صوتي بوجود خطأ إملائي</string>
+    <string name="misspelling_sound_enabled">تم تمكين الإعلام الصوتي للأخطاء الإملائية</string>
+    <string name="misspelling_sound_disabled">تم تعطيل الإشعار الصوتي للأخطاء الإملائية</string>
+    <string name="word_added_to_dictionary">تمت إضافة الكلمة %s إلى القاموس الشخصي</string>
+    <string name="no_word_to_add">لم يتم العثور على كلمة لإضافتها إلى القاموس</string>
+    <string name="word_removed_from_dictionary">تمت إزالة الكلمة %s من القاموس الشخصي</string>
+    <string name="word_not_in_dictionary">لم يتم العثور على الكلمة %s في القاموس الشخصي</string>
+    <string name="no_word_to_remove">لم يتم العثور على كلمة لإزالتها من القاموس</string>
+    <string name="pref_echo_passwords_default">كاذبة</string>
+    <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
+    <string name="pref_echo_passwords_summary">عند التمكين، ستتحدث لوحة المفاتيح أثناء إدخال كلمة المرور.</string>
+    <string name="pref_has_asked_accessibility_service_key">pref_has_asked_accessibility_service_key</string>
+    <string name="pref_has_asked_record_audio_key">RECORD_AUDIO</string>
+    <string name="pref_invert_horizontal_swipes_default">كاذبة</string>
+    <string name="pref_invert_horizontal_swipes_key">INVERT_HORIZONTAL_SWIPES</string>
+    <string name="pref_invert_horizontal_swipes_summary">مبادلة الاتجاهات انتقاد اليسار واليمين.</string>
+    <string name="pref_invert_horizontal_swipes_title">عكس الضربات الشديدة الأفقية</string>
+    <string name="pref_invert_vertical_swipes_default">كاذبة</string>
+    <string name="pref_invert_vertical_swipes_key">INVERT_VERTICAL_SWIPES</string>
+    <string name="pref_invert_vertical_swipes_summary">مبادلة صعودا وهبوطا في الاتجاهات انتقاد.</string>
+    <string name="pref_invert_vertical_swipes_title">عكس الضربات الشديدة العمودية</string>
+    <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
+    <string name="pref_keyboard_feedback_summary">اختر نوع ردود الفعل اللمسية والصوتية للوحة المفاتيح.</string>
+    <string name="pref_keyboard_feedback_title">ردود فعل لوحة المفاتيح</string>
+    <string name="pref_keyboard_invert_default">كاذبة</string>
+    <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
+    <string name="pref_keyboard_invert_summary">عندما لا تدور لوحة المفاتيح مع الهاتف، استخدم هذا الإعداد لقلب اتجاه لوحة المفاتيح 180 درجة</string>
+    <string name="pref_keyboard_invert_title">عكس لوحة المفاتيح</string>
+    <string name="pref_keyboard_save_horizontal_landscape_invert_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_landscape_key">KEYBOARD_SAVE_HORIZONTAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_horizontal_portrait_invert_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_horizontal_portrait_key">KEYBOARD_SAVE_HORIZONTAL_PORTRAIT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_invert_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_landscape_key">KEYBOARD_SAVE_TABLETOP_LANDSCAPE</string>
+    <string name="pref_keyboard_save_tabletop_portrait_invert_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_tabletop_portrait_key">KEYBOARD_SAVE_TABLETOP_PORTRAIT</string>
+    <string name="pref_keyboard_save_vertical_landscape_invert_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE_INVERT</string>
+    <string name="pref_keyboard_save_vertical_landscape_key">KEYBOARD_SAVE_VERTICAL_LANDSCAPE</string>
+    <string name="pref_keyboard_save_vertical_portrait_invert_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT_INVERT</string>
+    <string name="pref_keyboard_save_vertical_portrait_key">KEYBOARD_SAVE_VERTICAL_PORTRAIT</string>
+    <string name="pref_keyboard_style_key">KEYBOARD_STYLE</string>
+    <string name="pref_keyboard_style_normal_value">0</string>
+    <string name="pref_keyboard_style_slate_value">1</string>
+    <string name="pref_keyboard_style_summary">تكوين تخطيط النقاط على لوحة المفاتيح.</string>
+    <string name="pref_keyboard_style_title">نمط لوحة المفاتيح</string>
+    <string name="pref_keyboard_style_top_bottom_value">2</string>
+    <string name="pref_last_calibrated_layout_key">LAST_CALIBRATED_LAYOUT</string>
+    <string name="pref_lock_calibration_default">كاذبة</string>
+    <string name="pref_lock_calibration_key">LOCK_CALIBRATION</string>
+    <string name="pref_lock_calibration_summary">يمنع النقاط من التحرك أثناء الكتابة ويحافظ على التخطيط المخصص</string>
+    <string name="pref_lock_calibration_title">قفل مواضع النقاط</string>
+    <string name="pref_manage_tables_summary">استيراد أو حذف أو إنشاء جداول برايل الخاصة بك.</string>
+    <string name="pref_manage_tables_title">إدارة/إنشاء جداول برايل</string>
+    <string name="pref_privacy_default">كاذبة</string>
+    <string name="pref_privacy_key">الخصوصية</string>
+    <string name="pref_privacy_summary">عند التمكين، يتم حجب الشاشة أثناء الكتابة من أجل الخصوصية.</string>
+    <string name="pref_privacy_title">شاشة الخصوصية</string>
+    <string name="pref_share_log_key">SHARE_LOG</string>
+    <string name="pref_share_log_summary">جمع ومشاركة سجلات النظام لتصحيح الأخطاء</string>
+    <string name="pref_share_log_title">مشاركة السجلات</string>
+    <string name="pref_show_circles_default">صحيح</string>
+    <string name="pref_show_circles_key">SHOW_CIRCLE_KEY</string>
+    <string name="pref_show_circles_summary">عند التمكين، يتم عرض دوائر صغيرة للإشارة إلى موضع كل نقطة برايل على الشاشة</string>
+    <string name="pref_show_circles_title">هل تريد إظهار الدوائر على الشاشة؟</string>
+    <string name="pref_show_ext_tables_default">كاذبة</string>
+    <string name="pref_show_ext_tables_key">SHOW_EXT_TABLES</string>
+    <string name="pref_show_ext_tables_summary">إظهار جميع جداول Liblouis المتاحة، بما في ذلك تلك التي لا تدعمها Google رسميًا.</string>
+    <string name="pref_show_ext_tables_title">عرض جداول Liblouis الموسعة</string>
+    <string name="pref_speech_rate_default">50</string>
+    <string name="pref_speech_rate_key">SPEECH_RATE</string>
+    <string name="pref_speech_rate_summary">اختر مدى سرعة تحدث لوحة المفاتيح.</string>
+    <string name="pref_speech_rate_title">معدل الكلام</string>
+    <string name="pref_swap_swipe_axes_default">كاذبة</string>
+    <string name="pref_swap_swipe_axes_key">SWAP_SWIPE_AXES</string>
+    <string name="pref_swap_swipe_axes_summary">قم بتفسير الضربات الأفقية على أنها عمودية والعكس صحيح.</string>
+    <string name="pref_swap_swipe_axes_title">مبادلة محاور التمرير</string>
+    <string name="pref_swipe_sensitivity_key">SWIPE_SENSITIVITY_KEY</string>
+    <string name="pref_swipe_sensitivity_summary">اختر حساسية إيماءات التمرير.</string>
+    <string name="pref_swipe_sensitivity_title">انتقد الحساسية</string>
+    <string name="pref_switch_tables_key">SWITCH_TABLES</string>
+    <string name="pref_switch_tables_summary">حدد لغات معينة يمكن التبديل بينها أثناء الكتابة.</string>
+    <string name="pref_switch_tables_title">تمكين جداول برايل للتبديل السريع.</string>
+    <string name="pref_text_to_speech_engine_key">TEXT_TO_SPEECH</string>
+    <string name="pref_text_to_speech_engine_title">محرك تحويل النص إلى كلام</string>
+    <string name="pref_text_to_speech_title">إعدادات تحويل النص إلى كلام</string>
+    <string name="pref_two_hand_calibration_default">صحيح</string>
+    <string name="pref_two_hand_calibration_key">TWO_HAND_CALIBRATE</string>
+    <string name="pref_two_hand_calibration_summary">السماح بمعايرة لوحة المفاتيح بلمستين منفصلتين.</string>
+    <string name="pref_two_hand_calibration_title">معايرة بلمستين</string>
+    <string name="pref_use_accessibility_volume_default">كاذبة</string>
+    <string name="pref_use_accessibility_volume_key">USE_ACCESSIBILITY_VOLUME</string>
+    <string name="pref_use_accessibility_volume_summary">استخدم حجم إمكانية الوصول لكل من تعليقات TTS وWAV.</string>
+    <string name="pref_use_accessibility_volume_title">استخدم حجم إمكانية الوصول</string>
+    <string name="pref_use_eight_dots_default">كاذبة</string>
+    <string name="pref_use_eight_dots_key">USE_EIGHT_DOT</string>
+    <string name="pref_use_eight_dots_summary">عند التمكين يظهر النقطتان 7 و8.</string>
+    <string name="pref_use_eight_dots_title">إظهار لوحة المفاتيح ذات الثماني نقاط</string>
+    <string name="pref_use_wav_default">كاذبة</string>
+    <string name="pref_use_wav_key">USE_WAV_TTS</string>
+    <string name="pref_use_wav_summary">استخدم ملفات WAV التي تم إنشاؤها مسبقًا للأحرف الفردية بدلاً من محرك TTS (أسرع).</string>
+    <string name="pref_use_wav_title">استخدم تعليقات WAV</string>
+    <string name="pref_vibrate_on_exit_default">صحيح</string>
+    <string name="pref_vibrate_on_exit_key">VIBRATE_EXIT</string>
+    <string name="pref_vibrate_on_exit_title">يهتز عند إغلاق لوحة المفاتيح</string>
+    <string name="pref_voice_shortcut_default">صحيح</string>
+    <string name="pref_voice_shortcut_key">VOICE_INPUT_SHORTCUT</string>
+    <string name="pref_voice_shortcut_summary">عند التمكين، انقر نقرًا مزدوجًا مع الاستمرار لبدء الإملاء الصوتي أثناء تمكين ميزة الرد.</string>
+    <string name="pref_voice_shortcut_title">اختصار الإدخال الصوتي</string>
+    <string name="preset_caps_sign">علامة رأس المال</string>
+    <string name="preset_cat_acute">الحادة / الإسبانية (á، ñ...)</string>
+    <string name="preset_cat_base">الأبجدية الأساسية (من الألف إلى الياء)</string>
+    <string name="preset_cat_circ">محيطي/فرنسي (â, œ...)</string>
+    <string name="preset_cat_control">رموز التحكم (6 نقاط)</string>
+    <string name="preset_cat_dier">علامة النقطتين فوق الحرف (ä، ë...)</string>
+    <string name="preset_cat_it_accents">لهجات إيطالية</string>
+    <string name="preset_cat_math">الرياضيات والرموز (+، €، ...)</string>
+    <string name="preset_cat_punc">علامات الترقيم (قياسية/أدبية)</string>
+    <string name="preset_let_sign">علامة الرسالة</string>
+    <string name="preset_num_sign">علامة الرقم</string>
+    <string name="privacy_disabled">شاشة الخصوصية مغلقة</string>
+    <string name="privacy_enabled">شاشة الخصوصية قيد التشغيل</string>
+    <string name="punctuation_backslash">شرطة مائلة عكسية</string>
+    <string name="punctuation_close_paren">إغلاق القوس</string>
+    <string name="punctuation_colon">القولون</string>
+    <string name="punctuation_comma">فاصلة</string>
+    <string name="punctuation_dot">نقطة</string>
+    <string name="punctuation_double_quote">اقتباس مزدوج</string>
+    <string name="punctuation_exclamation">علامة تعجب</string>
+    <string name="punctuation_left_brace">الدعامة اليسرى</string>
+    <string name="punctuation_open_paren">فتح القوس</string>
+    <string name="punctuation_questionmark">علامة استفهام</string>
+    <string name="punctuation_right_brace">دعامة صحيحة</string>
+    <string name="punctuation_semicolon">فاصلة منقوطة</string>
+    <string name="punctuation_single_quote">الفاصلة العليا</string>
+    <string name="punctuation_slash">شرطة مائلة</string>
+    <string name="punctuation_space">الفضاء</string>
+    <string name="ready">لوحة المفاتيح جاهزة</string>
+    <string name="require_record_audio_now">REQUIRE_RECORD_AUDIO</string>
+    <string name="return_key">العودة</string>
+    <string name="rotate_keyboard">تدوير لوحة المفاتيح مع الجهاز</string>
+    <string name="rotate_summary">عند التمكين، سيتم توجيه لوحة المفاتيح وفقًا لاتجاه الجهاز.</string>
+    <string name="script_arabic">العربية</string>
+    <string name="script_cyrillic">السيريلية (الروسية/السلافية)</string>
+    <string name="script_greek">اليونانية</string>
+    <string name="script_hebrew">العبرية</string>
+    <string name="script_hindi">الهندية (الديفاناغارية)</string>
+    <string name="script_korean">الكورية (الهانغول)</string>
+    <string name="script_latin">اللاتينية (الأوروبية)</string>
+    <string name="script_thai">التايلاندية</string>
+    <string name="script_unicode">الرموز فقط (Unicode)</string>
+    <string name="script_vietnamese">الفيتنامية</string>
+    <string name="select_all">حدد الكل</string>
+    <string name="selected_all">تم تحديد كل النص</string>
+    <string name="set_mark">مجموعة مارك</string>
+    <string name="settings_name">إعدادات لوحة المفاتيح بطريقة برايل الناعمة</string>
+    <string name="show_input_switcher">إظهار محول الإدخال</string>
+    <string name="show_settings">عرض إعدادات لوحة المفاتيح بطريقة برايل الناعمة</string>
+    <string name="space">الفضاء</string>
+    <string name="speak_passwords">نطق كلمات المرور</string>
+    <string name="speak_selection">التحدث بالاختيار</string>
+    <string name="spellcheck_not_supported">التدقيق الإملائي غير مدعوم في هذا الإصدار من Android.</string>
+    <string name="start_of_text">بداية النص</string>
+    <string name="swipe_confirm">اسحب مرة أخرى للتأكيد</string>
+    <string name="swipe_confirm_input">اسحب مرة أخرى لعرض منتقي لوحة المفاتيح</string>
+    <string name="swipe_confirm_settings">اسحب مرة أخرى لإظهار إعدادات لوحة مفاتيح Soft Braille</string>
+    <string name="table_header_author">المؤلف:</string>
+    <string name="table_header_desc">الوصف:</string>
+    <string name="table_section_base">القواعد الأساسية</string>
+    <string name="table_section_high">HIGH PRIORITY</string>
+    <string name="table_section_standard">STANDARD PRIORITY</string>
+    <string name="table_variant_unofficial">غير رسمي</string>
+    <string name="btn_edit_header">تحرير رأس الجدول/بيانات التعريف</string>
+    <string name="btn_move_to_pos">الانتقال إلى الموقف</string>
+    <string name="btn_pin_mapping">تعيين الدبوس (الحماية)</string>
+    <string name="btn_unpin_mapping">قم بإلغاء تثبيت التعيين</string>
+    <string name="hint_enter_pos">أدخل الموضع (1 إلى %d)</string>
+    <string name="btn_move_up">تحرك لأعلى</string>
+    <string name="btn_move_down">تحرك للأسفل</string>
+    <string name="btn_move_top">الانتقال إلى الأعلى</string>
+    <string name="btn_insert_alphabet_here">أدخل الأبجدية (%s) هنا</string>
+    <string name="btn_insert_numeric_here">أدخل الأرقام (%s) هنا</string>
+    <string name="title_activity_keyboard_help">مساعدة في لوحة المفاتيح</string>
+    <string name="title_activity_table_creator">منشئ الجدول</string>
+    <string name="title_confirm_delete">تأكيد الحذف</string>
+    <string name="title_duplicate_combination">تركيبة مكررة</string>
+    <string name="title_mass_actions">الإجراءات الجماعية</string>
+    <string name="title_order_actions">إعادة ترتيب الإجراء</string>
+    <string name="title_select_prefix">تحديد البادئة (على سبيل المثال، النقطة 4 أو 5 أو 6)</string>
+    <string name="title_select_table_file">حدد ملف جدول برايل</string>
+    <string name="title_select_template">حدد القالب</string>
+    <string name="title_share_table">مشاركة الجدول</string>
+    <string name="translator_error">هناك مشكلة في خدمة برايل</string>
+    <string name="trial_buy">شراء</string>
+    <string name="trial_expired_message">انتهت الفترة التجريبية.</string>
+    <string name="trial_expired_title">انتهت المحاكمة</string>
+    <string name="try_box">حاول الكتابة باستخدام لوحة المفاتيح هنا.</string>
+    <string name="txt_id_practice">TXT_PRACTICE</string>
+    <string name="unknown_character">شخصية غير معروفة</string>
+    <string name="unset_mark">وضع علامة \"غير محدد\".</string>
+    <string name="voice_input_enable">يرجى تنفيذ هذه الإيماءة مرتين بسرعة. سيتم عرض مربع حوار استخدم التعقيب لقبول الإذن، حتى يعمل الإدخال الصوتي.</string>
+    <string name="voice_input_error">حدث خطأ في محرك إدخال الصوت، الرمز: %d</string>
+    <string name="voice_input_is_not_available">الإدخال الصوتي غير متوفر على الجهاز.</string>
+    <string name="voice_input_permission_message">تحتاج إلى تمكين إذن تسجيل الصوت حتى يعمل الإدخال الصوتي.</string>
+    <string name="voice_input_permission_title">إذن الإدخال الصوتي</string>
+    <string name="word_correct">الكلمة صحيحة</string>
+    <string name="word_correction_correct">%s صحيح</string>
+    <string name="word_correction_misspelled">خطأ إملائي في %s</string>
+    <string name="word_count">%1$d سطر، %2$d كلمة، %3$d حرف</string>
+    <string name="word_misspelled">خطأ إملائي</string>
+    <!--  BrailleAction Arrays  -->
+    <string-array name="braille_action_entries">
+        <item>@string/action_none</item>
+        <item>@string/action_move_left_char</item>
+        <item>@string/action_move_right_char</item>
+        <item>@string/action_move_left_word</item>
+        <item>@string/action_move_right_word</item>
+        <item>@string/action_move_left_line</item>
+        <item>@string/action_move_right_line</item>
+        <item>@string/action_move_left_all</item>
+        <item>@string/action_move_right_all</item>
+        <item>@string/action_backspace_char</item>
+        <item>@string/action_backspace_word</item>
+        <item>@string/action_backspace_line</item>
+        <item>@string/action_backspace_all</item>
+        <item>@string/action_read_char</item>
+        <item>@string/action_read_word</item>
+        <item>@string/action_read_line</item>
+        <item>@string/action_read_all</item>
+        <item>@string/action_space</item>
+        <item>@string/action_newline</item>
+        <item>@string/action_voice_input</item>
+        <item>@string/action_toggle_privacy</item>
+        <item>@string/action_toggle_auto_caps</item>
+        <item>@string/action_toggle_echo_passwords</item>
+        <item>@string/action_toggle_mark</item>
+        <item>@string/action_cycle_keyboard_feedback</item>
+        <item>@string/action_cycle_echo_feedback</item>
+        <item>@string/action_switch_braille_type</item>
+        <item>@string/action_switch_braille_table</item>
+        <item>@string/action_open_settings</item>
+        <item>@string/action_open_input_switcher</item>
+        <item>@string/action_close_keyboard</item>
+        <item>@string/action_shrink_keyboard</item>
+        <item>@string/action_word_count</item>
+        <item>@string/action_next_field_action</item>
+        <item>@string/action_select_text_action</item>
+        <item>@string/action_emoji_mode_toggle</item>
+        <item>@string/action_edit_select_all</item>
+        <item>@string/action_edit_copy</item>
+        <item>@string/action_edit_cut</item>
+        <item>@string/action_edit_paste</item>
+        <item>@string/action_edit_speak</item>
+        <item>@string/action_edit_delete</item>
+        <item>@string/action_spell_check_left</item>
+        <item>@string/action_spell_check_right</item>
+        <item>@string/action_spell_check_next_suggestion</item>
+        <item>@string/action_spell_check_prev_suggestion</item>
+        <item>@string/action_toggle_abbreviations</item>
+        <item>@string/action_toggle_abbreviations_no_space</item>
+        <item>@string/action_toggle_instant_abbreviations</item>
+        <item>@string/action_toggle_misspelling_sound</item>
+        <item>@string/action_add_to_dictionary</item>
+        <item>@string/action_remove_from_dictionary</item>
+        <item>@string/action_set_dot_7</item>
+        <item>@string/action_set_dot_8</item>
+    </string-array>
+    <string-array name="braille_action_values">
+        <item>NONE</item>
+        <item>MOVE_LEFT_CHAR</item>
+        <item>MOVE_RIGHT_CHAR</item>
+        <item>MOVE_LEFT_WORD</item>
+        <item>MOVE_RIGHT_WORD</item>
+        <item>MOVE_LEFT_LINE</item>
+        <item>MOVE_RIGHT_LINE</item>
+        <item>MOVE_LEFT_ALL</item>
+        <item>MOVE_RIGHT_ALL</item>
+        <item>BACKSPACE_CHAR</item>
+        <item>BACKSPACE_WORD</item>
+        <item>BACKSPACE_LINE</item>
+        <item>BACKSPACE_ALL</item>
+        <item>READ_CHAR</item>
+        <item>READ_WORD</item>
+        <item>READ_LINE</item>
+        <item>READ_ALL</item>
+        <item>SPACE</item>
+        <item>NEWLINE</item>
+        <item>VOICE_INPUT</item>
+        <item>TOGGLE_PRIVACY</item>
+        <item>TOGGLE_AUTO_CAPS</item>
+        <item>TOGGLE_ECHO_PASSWORDS</item>
+        <item>TOGGLE_MARK</item>
+        <item>CYCLE_KEYBOARD_FEEDBACK</item>
+        <item>CYCLE_ECHO_FEEDBACK</item>
+        <item>SWITCH_BRAILLE_TYPE</item>
+        <item>SWITCH_BRAILLE_TABLE</item>
+        <item>OPEN_SETTINGS</item>
+        <item>OPEN_INPUT_SWITCHER</item>
+        <item>CLOSE_KEYBOARD</item>
+        <item>SHRINK_KEYBOARD</item>
+        <item>WORD_COUNT</item>
+        <item>NEXT_FIELD_ACTION</item>
+        <item>SELECT_TEXT_ACTION</item>
+        <item>EMOJI_MODE_TOGGLE</item>
+        <item>EDIT_SELECT_ALL</item>
+        <item>EDIT_COPY</item>
+        <item>EDIT_CUT</item>
+        <item>EDIT_PASTE</item>
+        <item>EDIT_SPEAK</item>
+        <item>EDIT_DELETE</item>
+        <item>SPELL_CHECK_LEFT</item>
+        <item>SPELL_CHECK_RIGHT</item>
+        <item>SPELL_CHECK_NEXT_SUGGESTION</item>
+        <item>SPELL_CHECK_PREV_SUGGESTION</item>
+        <item>TOGGLE_ABBREVIATIONS</item>
+        <item>TOGGLE_ABBREVIATIONS_NO_SPACE</item>
+        <item>TOGGLE_INSTANT_ABBREVIATIONS</item>
+        <item>TOGGLE_MISSPELLING_SOUND</item>
+        <item>ADD_TO_DICTIONARY</item>
+        <item>REMOVE_FROM_DICTIONARY</item>
+        <item>SET_DOT_7</item>
+        <item>SET_DOT_8</item>
+    </string-array>
+</resources>
