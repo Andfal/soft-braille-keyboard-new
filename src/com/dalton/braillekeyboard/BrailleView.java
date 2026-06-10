@@ -278,9 +278,13 @@ public class BrailleView extends View {
             invalidate();
             requestLayout();
         }
+        if (actionHandler != null) {
+            actionHandler.shutdown();
+        }
         actionHandler = new ActionHandler(context);
         actionHandler.setCallback(actionListener);
         actionHandler.setKeyboardListener(listener);
+        actionHandler.onStartInput(listener.getLocale());
     }
 
     private String getDynamicCalibrationKey(int width, int height) {
