@@ -187,7 +187,6 @@ public class BrailleIME extends InputMethodService implements KeyboardListener {
         mIsFinishing = true; mAccessibilityHandler.removeCallbacksAndMessages(null);
         if (brailleParser != null) { brailleParser.destroy(); brailleParser = null; }
         clearAccessibilityState();
-        SpellChecker.closeSession();
     }
 
     private void clearAccessibilityState() {

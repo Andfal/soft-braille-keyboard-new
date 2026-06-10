@@ -58,11 +58,10 @@ public class SpellChecker {
         LEFT, UNDER_CURSOR, RIGHT;
     }
 
-    private static SpellChecker activeInstance;
-    private static SpellCheckerSession spellChecker;
-    private static Locale currentLocale;
+    private SpellCheckerSession spellChecker;
+    private Locale currentLocale;
 
-    private static final SpellCheckerSessionListener spellCheckerListener = new SpellCheckerSessionListener() {
+    private final SpellCheckerSessionListener spellCheckerListener = new SpellCheckerSessionListener() {
         @Override
         public void onGetSuggestions(final SuggestionsInfo[] arg0) {
             Log.d(TAG, "Listener.onGetSuggestions() callback invoked by OS");
@@ -70,11 +69,8 @@ public class SpellChecker {
 
         @Override
         public void onGetSentenceSuggestions(SentenceSuggestionsInfo[] arg0) {
-            Log.d(TAG, "Listener.onGetSentenceSuggestions() callback invoked by OS. activeInstance is null? " + (activeInstance == null));
-            SpellChecker instance = activeInstance;
-            if (instance != null) {
-                instance.handleSentenceSuggestions(arg0);
-            }
+            Log.d(TAG, "Listener.onGetSentenceSuggestions() callback invoked by OS");
+            handleSentenceSuggestions(arg0);
         }
     };
 
@@ -174,7 +170,6 @@ public class SpellChecker {
     public boolean checkSpelling(SpellingSuggestionsReadyListener listener,
             String text, int cursor, Direction direction) {
         Log.d(TAG, "checkSpelling() called: text='" + text + "', cursor=" + cursor + ", direction=" + direction);
-        activeInstance = this;
         initSession();
         if (text != null && text.length() > 0) {
             this.cursor = cursor;
@@ -228,23 +223,15 @@ public class SpellChecker {
     }
 
     public synchronized void destroy() {
-        Log.d(TAG, "destroy() called. activeInstance is this? " + (activeInstance == this));
-        if (activeInstance == this) {
-            activeInstance = null;
-        }
-    }
-
-    public static synchronized void closeSession() {
-        Log.d(TAG, "closeSession() called. spellChecker is null? " + (spellChecker == null));
+        Log.d(TAG, "destroy() called. spellChecker is null? " + (spellChecker == null));
         if (spellChecker != null) {
             try {
                 spellChecker.close();
             } catch (Exception e) {
-                Log.w(TAG, "closeSession(): error closing spellChecker", e);
+                Log.w(TAG, "destroy(): error closing spellChecker", e);
             }
             spellChecker = null;
         }
-        activeInstance = null;
     }
 
     public boolean isSpellCheckAvailable() {
