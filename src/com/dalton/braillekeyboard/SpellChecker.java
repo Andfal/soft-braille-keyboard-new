@@ -58,55 +58,64 @@ public class SpellChecker {
         LEFT, UNDER_CURSOR, RIGHT;
     }
 
-    private final SpellCheckerSessionListener spellCheckerListener = new SpellCheckerSessionListener() {
+    private static SpellChecker activeInstance;
+    private static SpellCheckerSession spellChecker;
+    private static Locale currentLocale;
+
+    private static final SpellCheckerSessionListener spellCheckerListener = new SpellCheckerSessionListener() {
         @Override
         public void onGetSuggestions(final SuggestionsInfo[] arg0) {
         }
 
         @Override
-        @SuppressLint("NewApi")
         public void onGetSentenceSuggestions(SentenceSuggestionsInfo[] arg0) {
-            Log.d(TAG, "onGetSentenceSuggestions() received. Results length: " + (arg0 != null ? arg0.length : "null"));
-            if (arg0 != null && arg0.length == 1) {
-                SentenceSuggestionsInfo ssi = arg0[0];
-                Suggestion results = null;
-                if (ssi != null) {
-                    int count = ssi.getSuggestionsCount();
-                    Log.d(TAG, "onGetSentenceSuggestions(): suggestions count = " + count);
-                    int start = direction == Direction.LEFT ? count - 1 : 0;
-                    int end = direction == Direction.LEFT ? -1 : count;
-                    int step = end < start ? -1 : 1;
-                    int i = start;
-                    while (i != end && results == null) {
-                        int lengthAt = ssi.getLengthAt(i);
-                        int offsetAt = ssi.getOffsetAt(i) + startOffset;
-                        boolean matchDir = isDirection(direction, cursor, lengthAt, offsetAt);
-                        Log.d(TAG, "  suggestion index " + i + ": length=" + lengthAt + ", offset=" + offsetAt + ", matchDir=" + matchDir);
-                        if (matchDir) {
-                            results = compileSuggestions(
-                                    ssi.getSuggestionsInfoAt(i),
-                                    lengthAt, offsetAt);
-                        }
-                        i += step;
-                    }
-                }
-
-                boolean moreToExpand = expandOffsets(true);
-                Log.d(TAG, "onGetSentenceSuggestions(): results = " + (results != null ? results.getCurrent() : "null") + ", moreToExpand = " + moreToExpand);
-                if (results != null || !moreToExpand) {
-                    listener.suggestionsReady(results);
-                } else {
-                    doSpellCheck();
-                }
-            } else {
-                Log.w(TAG, "onGetSentenceSuggestions(): invalid arg0 length: " + (arg0 != null ? arg0.length : 0));
+            SpellChecker instance = activeInstance;
+            if (instance != null) {
+                instance.handleSentenceSuggestions(arg0);
             }
         }
     };
 
+    @SuppressLint("NewApi")
+    private void handleSentenceSuggestions(SentenceSuggestionsInfo[] arg0) {
+        Log.d(TAG, "onGetSentenceSuggestions() received. Results length: " + (arg0 != null ? arg0.length : "null"));
+        if (arg0 != null && arg0.length == 1) {
+            SentenceSuggestionsInfo ssi = arg0[0];
+            Suggestion results = null;
+            if (ssi != null) {
+                int count = ssi.getSuggestionsCount();
+                Log.d(TAG, "onGetSentenceSuggestions(): suggestions count = " + count);
+                int start = direction == Direction.LEFT ? count - 1 : 0;
+                int end = direction == Direction.LEFT ? -1 : count;
+                int step = end < start ? -1 : 1;
+                int i = start;
+                while (i != end && results == null) {
+                    int lengthAt = ssi.getLengthAt(i);
+                    int offsetAt = ssi.getOffsetAt(i) + startOffset;
+                    boolean matchDir = isDirection(direction, cursor, lengthAt, offsetAt);
+                    Log.d(TAG, "  suggestion index " + i + ": length=" + lengthAt + ", offset=" + offsetAt + ", matchDir=" + matchDir);
+                    if (matchDir) {
+                        results = compileSuggestions(
+                                ssi.getSuggestionsInfoAt(i),
+                                lengthAt, offsetAt);
+                    }
+                    i += step;
+                }
+            }
+
+            boolean moreToExpand = expandOffsets(true);
+            Log.d(TAG, "onGetSentenceSuggestions(): results = " + (results != null ? results.getCurrent() : "null") + ", moreToExpand = " + moreToExpand);
+            if (results != null || !moreToExpand) {
+                listener.suggestionsReady(results);
+            } else {
+                doSpellCheck();
+            }
+        } else {
+            Log.w(TAG, "onGetSentenceSuggestions(): invalid arg0 length: " + (arg0 != null ? arg0.length : 0));
+        }
+    }
+
     private final Context context;
-    private SpellCheckerSession spellChecker;
-    private Locale currentLocale;
     private SpellingSuggestionsReadyListener listener;
     private int cursor;
     private Direction direction;
@@ -163,6 +172,7 @@ public class SpellChecker {
     public boolean checkSpelling(SpellingSuggestionsReadyListener listener,
             String text, int cursor, Direction direction) {
         Log.d(TAG, "checkSpelling() called: text='" + text + "', cursor=" + cursor + ", direction=" + direction);
+        activeInstance = this;
         initSession();
         if (text != null && text.length() > 0) {
             this.cursor = cursor;
@@ -216,11 +226,23 @@ public class SpellChecker {
     }
 
     public synchronized void destroy() {
-        Log.d(TAG, "destroy() called. spellChecker is null? " + (spellChecker == null));
+        Log.d(TAG, "destroy() called. activeInstance is this? " + (activeInstance == this));
+        if (activeInstance == this) {
+            activeInstance = null;
+        }
+    }
+
+    public static synchronized void closeSession() {
+        Log.d(TAG, "closeSession() called. spellChecker is null? " + (spellChecker == null));
         if (spellChecker != null) {
-            spellChecker.close();
+            try {
+                spellChecker.close();
+            } catch (Exception e) {
+                Log.w(TAG, "closeSession(): error closing spellChecker", e);
+            }
             spellChecker = null;
         }
+        activeInstance = null;
     }
 
     public boolean isSpellCheckAvailable() {
