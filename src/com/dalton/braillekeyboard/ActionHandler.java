@@ -19,6 +19,9 @@ package com.dalton.braillekeyboard;
 import java.util.Locale;
 import java.util.List;
 import java.util.ArrayList;
+import android.database.Cursor;
+import java.util.Set;
+import java.util.HashSet;
 
 import android.Manifest;
 import android.content.ClipboardManager;
@@ -101,6 +104,8 @@ public class ActionHandler {
     private int directionThroughSuggestionList;
     private SpellChecker.Direction spellingDirection;
     private Suggestion spellingSuggestion;
+    private String pendingAddToDictionary = null;
+    private String pendingRemoveFromDictionary = null;
 
     private boolean emojiMode = false;
     private StringBuilder emojiSearchQuery = new StringBuilder();
@@ -116,7 +121,12 @@ public class ActionHandler {
 
     public void setCallback(OnActionListener callback) { this.callback = callback; }
     public void setKeyboardListener(KeyboardListener listener) { this.listener = listener; }
-    public void shutdown() { voiceInput.destroy(); spellChecker.destroy(); }
+    public void shutdown() {
+        pendingAddToDictionary = null;
+        pendingRemoveFromDictionary = null;
+        voiceInput.destroy();
+        spellChecker.destroy();
+    }
 
     public void closeSpellChecker() {
         if (spellChecker != null) {
@@ -125,6 +135,8 @@ public class ActionHandler {
     }
 
     public void onStartInput(Locale locale) {
+        pendingAddToDictionary = null;
+        pendingRemoveFromDictionary = null;
         if (spellChecker != null) {
             spellChecker.onStartInput(locale);
         }
@@ -222,18 +234,60 @@ public class ActionHandler {
     }
 
     private void removeWordFromPersonalDictionaryNoAnnounce(Context context, String word) {
+        deleteWordFromUserDictionaryCaseInsensitive(context, word);
+    }
+
+    private int deleteWordFromUserDictionaryCaseInsensitive(Context context, String word) {
         if (word == null || word.trim().isEmpty()) {
-            return;
+            return 0;
         }
         word = word.trim();
+        String normalized = word.replace('\u2019', '\'');
+        android.content.ContentResolver resolver = context.getContentResolver();
+        
+        Set<String> exactWordsToDelete = new HashSet<String>();
+        exactWordsToDelete.add(word);
+        exactWordsToDelete.add(normalized);
+        exactWordsToDelete.add(word.toLowerCase());
+        exactWordsToDelete.add(normalized.toLowerCase());
+        
+        Cursor cursor = null;
         try {
-            android.content.ContentResolver resolver = context.getContentResolver();
-            String selection = android.provider.UserDictionary.Words.WORD + "=?";
-            String[] selectionArgs = new String[] { word };
-            resolver.delete(android.provider.UserDictionary.Words.CONTENT_URI, selection, selectionArgs);
+            cursor = resolver.query(
+                    android.provider.UserDictionary.Words.CONTENT_URI,
+                    new String[] { android.provider.UserDictionary.Words.WORD },
+                    null, null, null
+            );
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    String dbWord = cursor.getString(0);
+                    if (dbWord != null && (dbWord.equalsIgnoreCase(word) || dbWord.equalsIgnoreCase(normalized))) {
+                        exactWordsToDelete.add(dbWord);
+                    }
+                }
+            }
         } catch (Exception e) {
-            android.util.Log.e("SBK_ActionHandler", "Failed to remove word from UserDictionary", e);
+            android.util.Log.e("SBK_ActionHandler", "Failed to query UserDictionary", e);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
+        
+        int totalDeleted = 0;
+        String selection = android.provider.UserDictionary.Words.WORD + "=?";
+        for (String target : exactWordsToDelete) {
+            try {
+                totalDeleted += resolver.delete(
+                        android.provider.UserDictionary.Words.CONTENT_URI,
+                        selection,
+                        new String[] { target }
+                );
+            } catch (Exception e) {
+                android.util.Log.e("SBK_ActionHandler", "Failed to delete word variant: " + target, e);
+            }
+        }
+        return totalDeleted;
     }
 
     private void removeWordFromPersonalDictionary(Context context, String word) {
@@ -241,22 +295,26 @@ public class ActionHandler {
             callback.onText("%s", context.getString(R.string.no_word_to_remove), false);
             return;
         }
-        word = word.trim();
-        try {
-            android.content.ContentResolver resolver = context.getContentResolver();
-            String selection = android.provider.UserDictionary.Words.WORD + "=?";
-            String[] selectionArgs = new String[] { word };
-            int rowsDeleted = resolver.delete(android.provider.UserDictionary.Words.CONTENT_URI, selection, selectionArgs);
-            if (rowsDeleted > 0) {
-                callback.onText(context.getString(R.string.word_removed_from_dictionary), word, false);
-                if (spellChecker.isSpellCheckAvailable()) {
-                    doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, 0, listener.getCursor());
-                }
-            } else {
-                callback.onText(context.getString(R.string.word_not_in_dictionary), word, false);
+        int rowsDeleted = deleteWordFromUserDictionaryCaseInsensitive(context, word);
+        if (rowsDeleted > 0) {
+            callback.onText(context.getString(R.string.word_removed_from_dictionary), word, false);
+            if (spellChecker.isSpellCheckAvailable()) {
+                doSpellCheck(context, SpellChecker.Direction.UNDER_CURSOR, 0, listener.getCursor());
             }
-        } catch (Exception e) {
-            android.util.Log.e("SBK_ActionHandler", "Failed to remove word from UserDictionary", e);
+        } else {
+            callback.onText(context.getString(R.string.word_not_in_dictionary), word, false);
+        }
+    }
+
+    public void onFingerUp(Context context) {
+        if (pendingAddToDictionary != null) {
+            String word = pendingAddToDictionary;
+            pendingAddToDictionary = null;
+            addWordToPersonalDictionary(context, word);
+        } else if (pendingRemoveFromDictionary != null) {
+            String word = pendingRemoveFromDictionary;
+            pendingRemoveFromDictionary = null;
+            removeWordFromPersonalDictionary(context, word);
         }
     }
 
@@ -648,15 +706,19 @@ public class ActionHandler {
                         context.getString(R.string.action_add_to_dictionary_option),
                         originalWord);
                 commitSuggestionText(originalWord, spellingSuggestion);
-                addWordToPersonalDictionaryNoAnnounce(context, originalWord);
+                pendingAddToDictionary = originalWord;
+                pendingRemoveFromDictionary = null;
             } else if (spellingSuggestion.isRemoveFromDictionaryOption()) {
                 String originalWord = spellingSuggestion.getOriginalWord();
                 msg = String.format(
                         context.getString(R.string.action_remove_from_dictionary_option),
                         originalWord);
                 commitSuggestionText(originalWord, spellingSuggestion);
-                removeWordFromPersonalDictionaryNoAnnounce(context, originalWord);
+                pendingRemoveFromDictionary = originalWord;
+                pendingAddToDictionary = null;
             } else {
+                pendingAddToDictionary = null;
+                pendingRemoveFromDictionary = null;
                 if (spellingSuggestion.isUserDictWord && spellingSuggestion.isMisspelledWord()) {
                     msg = String.format(
                             context.getString(R.string.word_correction_correct),

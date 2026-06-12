@@ -69,6 +69,9 @@ public class GestureSettingsActivity extends AppCompatActivity {
         @Override
         public void onCreate(@Nullable Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                getPreferenceManager().setStorageDeviceProtected();
+            }
             mSyncFolderLauncher = registerForActivityResult(
                     new ActivityResultContracts.OpenDocumentTree(),
                     uri -> {
@@ -157,6 +160,7 @@ public class GestureSettingsActivity extends AppCompatActivity {
                         listPref.setValue(defaultAction.name());
                         updateSummary(listPref, defaultAction.name(), swipe, false);
                     } else {
+                        listPref.setValue(savedValue);
                         updateSummary(listPref, savedValue, swipe, true);
                     }
                 }
@@ -174,6 +178,7 @@ public class GestureSettingsActivity extends AppCompatActivity {
                         Options.getSharedPreferences(requireContext()).edit()
                                 .putString(key, newValue.toString())
                                 .apply();
+                        ((ListPreference) preference).setValue(newValue.toString());
                         updateSummary((ListPreference) preference, newValue.toString(), swipe, true);
                         return false; 
                     } catch (IllegalArgumentException e) {
