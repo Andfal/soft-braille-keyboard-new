@@ -71,6 +71,9 @@ public class GestureSettingsActivity extends PreferenceActivity {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                getPreferenceManager().setStorageDeviceProtected();
+            }
             addPreferencesFromResource(R.xml.prefs_gestures);
 
             String syncUri = Options.getSharedPreferences(getActivity()).getString("sync_folder_uri", null);
@@ -153,6 +156,7 @@ public class GestureSettingsActivity extends PreferenceActivity {
                         listPref.setValue(defaultAction.name());
                         updateSummary(listPref, defaultAction.name(), swipe, false);
                     } else {
+                        listPref.setValue(savedValue);
                         updateSummary(listPref, savedValue, swipe, true);
                     }
                 }
@@ -172,6 +176,7 @@ public class GestureSettingsActivity extends PreferenceActivity {
                                 .putString(key, newValue.toString())
                                 .apply();
                         // When changed, it's now explicit
+                        ((ListPreference) preference).setValue(newValue.toString());
                         updateSummary((ListPreference) preference, newValue.toString(), swipe, true);
                         return false; // We handled the save manually
                     } catch (IllegalArgumentException e) {

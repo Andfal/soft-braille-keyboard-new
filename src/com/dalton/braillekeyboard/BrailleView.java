@@ -488,6 +488,9 @@ public class BrailleView extends View {
                 }
             }
             resetDots();
+            if (actionHandler != null) {
+                actionHandler.onFingerUp(getContext());
+            }
 
             if (pad != null) {
                 boolean locked = Options.getBooleanPreference(getContext(), R.string.pref_lock_calibration_key, false);
