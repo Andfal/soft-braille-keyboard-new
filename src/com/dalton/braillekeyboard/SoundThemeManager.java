@@ -27,6 +27,8 @@ public class SoundThemeManager {
     private String currentTheme = "system";
     private String customThemeUri = null;
     private AudioManager audioManager;
+    private long lastSoundTime = 0;
+    private static final long DEBOUNCE_DELAY_MS = 60;
 
     private SoundThemeManager(Context context) {
         this.context = context.getApplicationContext();
@@ -152,6 +154,12 @@ public class SoundThemeManager {
     }
 
     public synchronized void playSound(int soundType) {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastSoundTime < DEBOUNCE_DELAY_MS) {
+            return;
+        }
+        lastSoundTime = currentTime;
+
         if (currentTheme.equals("system")) {
             playSystemSound(soundType);
             return;
