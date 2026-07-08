@@ -545,6 +545,7 @@
     <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_feedback_summary">Wybierz rodzaj informacji zwrotnej klawiatury.</string>
     <string name="pref_keyboard_feedback_title">Wibracja i dźwięki</string>
+
     <string name="pref_keyboard_invert_default">false</string>
     <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">Jeśli klawiatura nie obraca się razem z telefonem, użyj tego ustawienia, aby odwrócić orientację klawiatury o 180 stopni</string>

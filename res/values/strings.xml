@@ -577,6 +577,16 @@
     <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_feedback_summary">Choose the type of haptic and sound keyboard feedback.</string>
     <string name="pref_keyboard_feedback_title">Keyboard Feedback</string>
+    <string name="pref_keyboard_sound_theme_key">pref_keyboard_sound_theme</string>
+    <string name="pref_keyboard_sound_theme_title">Keyboard Sound Theme</string>
+    <string name="pref_keyboard_sound_theme_summary">Choose sound effects for keypresses</string>
+    <string name="sound_theme_system">System Default</string>
+    <string name="sound_theme_mechanical">Mechanical Keyboard</string>
+    <string name="sound_theme_typewriter">Typewriter</string>
+    <string name="sound_theme_bubble">Bubble</string>
+    <string name="sound_theme_custom">Custom Theme (folder)</string>
+    <string name="pref_custom_sound_theme_folder_title">Custom Sound Theme Folder</string>
+    <string name="pref_custom_sound_theme_folder_summary">Choose folder containing tap.wav, space.wav, delete.wav, enter.wav</string>
     <string name="pref_keyboard_invert_default">false</string>
     <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">When the keyboard is not rotating with the phone use this setting to flip the orientation of the keyboard 180 degrees</string>

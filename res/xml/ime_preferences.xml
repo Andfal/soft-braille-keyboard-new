@@ -148,6 +148,17 @@
              android:title="@string/pref_keyboard_feedback_title"
              android:summary="@string/pref_keyboard_feedback_summary"
              android:defaultValue="2" />
+         <ListPreference
+             android:key="@string/pref_keyboard_sound_theme_key"
+             android:title="@string/pref_keyboard_sound_theme_title"
+             android:summary="@string/pref_keyboard_sound_theme_summary"
+             android:entries="@array/keyboard_sound_theme_entries"
+             android:entryValues="@array/keyboard_sound_theme_values"
+             android:defaultValue="system" />
+         <Preference
+             android:key="pref_custom_sound_theme_folder_key"
+             android:title="@string/pref_custom_sound_theme_folder_title"
+             android:summary="@string/pref_custom_sound_theme_folder_summary" />
          <CheckBoxPreference
          android:key="@string/pref_echo_passwords_key"
          android:title="@string/speak_passwords"

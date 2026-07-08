@@ -384,6 +384,16 @@
     <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_feedback_summary">Scegli feedback vibrazione e suono.</string>
     <string name="pref_keyboard_feedback_title">Feedback Tastiera</string>
+    <string name="pref_keyboard_sound_theme_key">pref_keyboard_sound_theme</string>
+    <string name="pref_keyboard_sound_theme_title">Tema sonoro della tastiera</string>
+    <string name="pref_keyboard_sound_theme_summary">Scegli gli effetti sonori per la pressione dei tasti</string>
+    <string name="sound_theme_system">Predefinito di sistema</string>
+    <string name="sound_theme_mechanical">Tastiera meccanica</string>
+    <string name="sound_theme_typewriter">Macchina da scrivere</string>
+    <string name="sound_theme_bubble">Bolle</string>
+    <string name="sound_theme_custom">Tema personalizzato (cartella)</string>
+    <string name="pref_custom_sound_theme_folder_title">Cartella del tema sonoro personalizzato</string>
+    <string name="pref_custom_sound_theme_folder_summary">Scegli la cartella contenente tap.wav, space.wav, delete.wav, enter.wav</string>
     <string name="pref_keyboard_invert_default">false</string>
     <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">Quando la tastiera non ruota con il telefono usa questa impostazione per invertire l\'orientamento della tastiera di 180 gradi</string>

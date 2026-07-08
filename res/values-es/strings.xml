@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="accessibility_service_description">Permite que el teclado Soft Braille funcione correctamente cuando TalkBack está activo al crear un área donde el lector de pantalla no intercepta los toques.</string>
   <string name="accessibility_service_dialog_message">Para usar este teclado con TalkBack, debes activar el \'Teclado Soft braille\' en la configuración de Accesibilidad. Esto permite que el teclado reciba tus toques mientras TalkBack está activo.</string>
@@ -545,6 +545,7 @@
   <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
   <string name="pref_keyboard_feedback_summary">Seleccionar las claves hápticas y sonoras del teclado.</string>
   <string name="pref_keyboard_feedback_title">Claves del teclado</string>
+
   <string name="pref_keyboard_invert_default">falso</string>
   <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
   <string name="pref_keyboard_invert_summary">Cuando el teclado no gira con el equipo, use este ajuste para voltear la orientación del teclado 180 grados</string>

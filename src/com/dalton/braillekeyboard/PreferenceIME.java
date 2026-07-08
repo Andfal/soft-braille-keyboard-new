@@ -40,6 +40,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import android.net.Uri;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
+import android.os.Handler;
 
 import com.dalton.braillekeyboard.BrailleParser.BrailleType;
 import com.dalton.braillekeyboard.Options.KeyboardEcho;
@@ -128,6 +130,34 @@ public class PreferenceIME extends PreferenceActivity {
                 });
             }
 
+            ListPreference soundThemePref = (ListPreference) findPreference(getString(R.string.pref_keyboard_sound_theme_key));
+            if (soundThemePref != null) {
+                soundThemePref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                SoundThemeManager.getInstance(getActivity()).loadSelectedTheme();
+                            }
+                        });
+                        return true;
+                    }
+                });
+            }
+
+            Preference customFolderPref = findPreference("pref_custom_sound_theme_folder_key");
+            if (customFolderPref != null) {
+                customFolderPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                        startActivityForResult(intent, 2002);
+                        return true;
+                    }
+                });
+            }
+
             Preference preference = findPreference(getActivity().getString(
                     R.string.pref_app_version_key));
             try {
@@ -209,6 +239,27 @@ public class PreferenceIME extends PreferenceActivity {
                         return true;
                     }
                 });
+            }
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == 2002 && resultCode == android.app.Activity.RESULT_OK && data != null) {
+                Uri uri = data.getData();
+                if (uri != null) {
+                    try {
+                        getActivity().getContentResolver().takePersistableUriPermission(
+                                uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        Options.writeStringPreferenceStringKey(getActivity(), 
+                                "pref_custom_sound_theme_folder_uri", uri.toString());
+                        SoundThemeManager.getInstance(getActivity()).loadSelectedTheme();
+                        Toast.makeText(getActivity(), "Custom sound theme folder selected", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Log.e("SBK_PreferenceIME", "Failed to take persistable URI permission", e);
+                        Toast.makeText(getActivity(), "Error selecting custom folder", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
 

@@ -69,6 +69,11 @@ public class ActionHandler {
     // double swipe.
     private static final long DOUBLE_TOUCH_THRESHOLD = 1300;
 
+    public static final int SOUND_TYPE_DEFAULT = 0;
+    public static final int SOUND_TYPE_SPACE = 1;
+    public static final int SOUND_TYPE_DELETE = 2;
+    public static final int SOUND_TYPE_ENTER = 3;
+
     /**
      * Listener for handling the results of requests to the input methods. You
      * should implement these callbacks in your View and display the results to
@@ -104,7 +109,7 @@ public class ActionHandler {
          * @param playSound
          *            true if a sound should be played for this notification.
          */
-        void onNotify(boolean vibrate, boolean playSound);
+        void onNotify(boolean vibrate, boolean playSound, int soundType);
 
         /**
          * Called when dots 7 and 8 should be set in the View.
@@ -541,7 +546,7 @@ public class ActionHandler {
             }
             
             if (emojiHandled) {
-                callback.onNotify(true, true);
+                callback.onNotify(true, true, SOUND_TYPE_DEFAULT);
                 if (message != null) {
                     callback.onText("%s", message, false);
                 }
@@ -838,7 +843,22 @@ public class ActionHandler {
         }
 
         // Invoke the notification callback
-        callback.onNotify(notify, notify);
+        int soundType = SOUND_TYPE_DEFAULT;
+        switch (action) {
+            case SPACE:
+                soundType = SOUND_TYPE_SPACE;
+                break;
+            case NEWLINE:
+                soundType = SOUND_TYPE_ENTER;
+                break;
+            case BACKSPACE_CHAR:
+            case BACKSPACE_WORD:
+            case BACKSPACE_LINE:
+            case BACKSPACE_ALL:
+                soundType = SOUND_TYPE_DELETE;
+                break;
+        }
+        callback.onNotify(notify, notify, soundType);
         if (message != null) {
             // Only invoke onText callback if there is a message to send i.e. it
             // wasn't already handled.
@@ -880,10 +900,10 @@ public class ActionHandler {
             if (translated != null && translated.length() > 0) {
                 emojiSearchQuery.append(translated);
                 updateEmojiResults();
-                callback.onNotify(true, true);
+                callback.onNotify(true, true, SOUND_TYPE_DEFAULT);
                 callback.onText("%s", getEmojiSummary(), false);
             } else {
-                callback.onNotify(true, false);
+                callback.onNotify(true, false, SOUND_TYPE_DEFAULT);
             }
             return;
         }
@@ -896,7 +916,7 @@ public class ActionHandler {
             callback.onText("%s",
                     context.getString(R.string.unknown_character), false);
         } else {
-            callback.onNotify(true, true);
+            callback.onNotify(true, true, SOUND_TYPE_DEFAULT);
 
             // Decide what to deliver to the callback such as a key echo or
             // autocompletion string.
