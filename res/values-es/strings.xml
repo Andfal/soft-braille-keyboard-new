@@ -23,12 +23,12 @@
   <string name="btn_delete">Eliminar</string>
   <string name="btn_export_system_table">Exportar tabla del sistema</string>
   <string name="btn_export_original">Exportar original</string>
-  <string name="btn_export_table">Exportar tu trabajo</string>
+  <string name="btn_export_table">Exportar tu trabajo</string>
   <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
   <string name="btn_id_enable">BTN_ENABLED</string>
   <string name="btn_import_base_rules">Importar todas las reglas</string>
   <string name="btn_import_table">Importar archivo de tabla existente</string>
-  <string name="btn_import_visual">Importar reglas</string>
+  <string name="btn_import_visual">Importar reglas</string>
   <string name="btn_insert_above">Insertar encima de esta regla</string>
   <string name="btn_load_template">Cargar plantilla</string>
   <string name="btn_ok">aceptar</string>
@@ -65,9 +65,9 @@
   <string name="emoji_no_results_query">No hay resultados para %s</string>
   <string name="emoji_no_to_insert">No hay emoji para insertar</string>
   <string name="emoji_search_mode_off">Modo de búsqueda de emojis desactivado</string>
-  <string name="emoji_search_mode_on">Modo de búsqueda de emoji activado (%s)</string>
+  <string name="emoji_search_mode_on">Modo de búsqueda de emojis activado (%s)</string>
   <string name="emoji_search_prefix">Búsqueda de emojis:</string>
-  <string name="emoji_search_query_empty">Consulta de búsqueda de emoji vacía</string>
+  <string name="emoji_search_query_empty">Consulta de búsqueda de emojis vacía</string>
   <string name="end_of_text">Final del texto</string>
   <string name="error_invalid_file">Tipo de archivo no válido. Selecciona .ctb o .utb</string>
   <string name="error_no_name">Por favor ingresa un nombre de tabla</string>
@@ -124,7 +124,7 @@
   <string name="action_open_settings">Abrir ajustes del teclado</string>
   <string name="action_open_input_switcher">Abrir selector de método de entrada</string>
   <string name="action_close_keyboard">Cerrar teclado</string>
-  <string name="action_shrink_keyboard">Encoger el teclado</string>
+  <string name="action_shrink_keyboard">Reducir el teclado</string>
   <string name="action_word_count">Recuento de palabras y caracteres</string>
   <string name="action_next_field_action">Siguiente campo/acción</string>
   <string name="action_select_text_action">Seleccionar / Acción</string>
@@ -545,7 +545,6 @@
   <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
   <string name="pref_keyboard_feedback_summary">Seleccionar las claves hápticas y sonoras del teclado.</string>
   <string name="pref_keyboard_feedback_title">Claves del teclado</string>
-
   <string name="pref_keyboard_invert_default">falso</string>
   <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
   <string name="pref_keyboard_invert_summary">Cuando el teclado no gira con el equipo, use este ajuste para voltear la orientación del teclado 180 grados</string>
@@ -729,7 +728,7 @@
   <string name="word_correct">Palabra correcta</string>
   <string name="word_correction_correct">%s correcto</string>
   <string name="word_correction_misspelled">%s incorrecto</string>
-  <string name="word_count">%1$de líneas, %2$de palabras, %3$de caracteres</string>
+  <string name="word_count">%1$d líneas, %2$d palabras, %3$d caracteres</string>
   <string name="word_misspelled">Errata</string>
   <!-- BrailleAction Arrays -->
   <string-array name="braille_action_entries">

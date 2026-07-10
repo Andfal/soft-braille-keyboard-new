@@ -146,7 +146,7 @@ public class PreferenceIME extends PreferenceActivity {
                 });
             }
 
-            Preference customFolderPref = findPreference("pref_custom_sound_theme_folder_key");
+            Preference customFolderPref = findPreference(getString(R.string.pref_custom_sound_theme_folder_key));
             if (customFolderPref != null) {
                 customFolderPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
@@ -252,12 +252,12 @@ public class PreferenceIME extends PreferenceActivity {
                         getActivity().getContentResolver().takePersistableUriPermission(
                                 uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         Options.writeStringPreferenceStringKey(getActivity(), 
-                                "pref_custom_sound_theme_folder_uri", uri.toString());
+                                getString(R.string.pref_custom_sound_theme_folder_uri_key), uri.toString());
                         SoundThemeManager.getInstance(getActivity()).loadSelectedTheme();
-                        Toast.makeText(getActivity(), "Custom sound theme folder selected", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.toast_custom_sound_theme_folder_selected), Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         Log.e("SBK_PreferenceIME", "Failed to take persistable URI permission", e);
-                        Toast.makeText(getActivity(), "Error selecting custom folder", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getString(R.string.toast_custom_sound_theme_folder_error), Toast.LENGTH_SHORT).show();
                     }
                 }
             }

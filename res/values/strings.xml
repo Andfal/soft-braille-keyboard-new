@@ -585,8 +585,15 @@
     <string name="sound_theme_typewriter">Typewriter</string>
     <string name="sound_theme_bubble">Bubble</string>
     <string name="sound_theme_custom">Custom Theme (folder)</string>
+    <string name="pref_custom_sound_theme_folder_key">pref_custom_sound_theme_folder</string>
+    <string name="pref_custom_sound_theme_folder_uri_key">pref_custom_sound_theme_folder_uri</string>
     <string name="pref_custom_sound_theme_folder_title">Custom Sound Theme Folder</string>
     <string name="pref_custom_sound_theme_folder_summary">Choose folder containing tap.wav, space.wav, delete.wav, enter.wav</string>
+    <string name="pref_keyboard_sound_volume_key">pref_keyboard_sound_volume</string>
+    <string name="pref_keyboard_sound_volume_title">Sound theme volume</string>
+    <string name="pref_keyboard_sound_volume_dialog">Adjust sound theme volume</string>
+    <string name="toast_custom_sound_theme_folder_selected">Custom sound theme folder selected</string>
+    <string name="toast_custom_sound_theme_folder_error">Error selecting custom folder</string>
     <string name="pref_keyboard_invert_default">false</string>
     <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">When the keyboard is not rotating with the phone use this setting to flip the orientation of the keyboard 180 degrees</string>

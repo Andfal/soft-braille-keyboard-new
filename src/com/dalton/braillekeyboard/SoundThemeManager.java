@@ -30,9 +30,25 @@ public class SoundThemeManager {
     private long lastSoundTime = 0;
     private static final long DEBOUNCE_DELAY_MS = 60;
 
+    private float volumeFactor = 1.0f;
+    private final SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+
     private SoundThemeManager(Context context) {
         this.context = context.getApplicationContext();
         this.audioManager = (AudioManager) this.context.getSystemService(Context.AUDIO_SERVICE);
+        
+        SharedPreferences prefs = Options.getSharedPreferences(this.context);
+        updateVolumeFactor(prefs);
+        this.preferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals(SoundThemeManager.this.context.getString(R.string.pref_keyboard_sound_volume_key))) {
+                    updateVolumeFactor(sharedPreferences);
+                }
+            }
+        };
+        prefs.registerOnSharedPreferenceChangeListener(this.preferenceChangeListener);
+
         initSoundPool();
         loadSelectedTheme();
     }
@@ -48,8 +64,26 @@ public class SoundThemeManager {
         if (soundPool != null) {
             soundPool.release();
         }
-        soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            android.media.AudioAttributes audioAttributes = new android.media.AudioAttributes.Builder()
+                    .setUsage(android.media.AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                    .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build();
+            soundPool = new SoundPool.Builder()
+                    .setMaxStreams(4)
+                    .setAudioAttributes(audioAttributes)
+                    .build();
+        } else {
+            soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 0);
+        }
         soundIdMap.clear();
+    }
+
+    private void updateVolumeFactor(SharedPreferences prefs) {
+        String volKey = context.getString(R.string.pref_keyboard_sound_volume_key);
+        int volPercent = prefs.getInt(volKey, 100);
+        volumeFactor = volPercent / 100.0f;
+        Log.d(TAG, "Updated sound volume factor: " + volumeFactor);
     }
 
     public synchronized void loadSelectedTheme() {
@@ -58,7 +92,7 @@ public class SoundThemeManager {
         String themeKey = context.getString(R.string.pref_keyboard_sound_theme_key);
         String theme = prefs.getString(themeKey, "system");
         
-        String customUriKey = "pref_custom_sound_theme_folder_uri";
+        String customUriKey = context.getString(R.string.pref_custom_sound_theme_folder_uri_key);
         String uriStr = prefs.getString(customUriKey, null);
 
         if (theme.equals(currentTheme) && 
@@ -167,7 +201,7 @@ public class SoundThemeManager {
 
         Integer soundId = soundIdMap.get(soundType);
         if (soundId != null && soundId > 0) {
-            soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f);
+            soundPool.play(soundId, volumeFactor, volumeFactor, 1, 0, 1.0f);
         } else {
             playSystemSound(soundType);
         }
