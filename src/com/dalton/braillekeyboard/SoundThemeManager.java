@@ -21,6 +21,12 @@ public class SoundThemeManager {
     public static final int SOUND_TYPE_ENTER = 3;
 
     private static SoundThemeManager instance;
+    private static volatile long lastSoundPlayedTime = 0;
+
+    public static long getLastSoundPlayedTime() {
+        return lastSoundPlayedTime;
+    }
+
     private final Context context;
     private SoundPool soundPool;
     private final Map<Integer, Integer> soundIdMap = new HashMap<Integer, Integer>();
@@ -195,6 +201,9 @@ public class SoundThemeManager {
             return;
         }
         lastSoundTime = currentTime;
+
+        lastSoundPlayedTime = currentTime;
+        Log.i("SBK_LATENCY", "SOUND_PLAYED:" + currentTime);
 
         playSoundWithVolume(soundType, volumeFactor);
     }
