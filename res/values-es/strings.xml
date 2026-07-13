@@ -23,12 +23,12 @@
   <string name="btn_delete">Eliminar</string>
   <string name="btn_export_system_table">Exportar tabla del sistema</string>
   <string name="btn_export_original">Exportar original</string>
-  <string name="btn_export_table">Exportar tu trabajo</string>
+  <string name="btn_export_table">Exportar tu trabajo</string>
   <string name="btn_id_default_keyboard">BTN_DEFAULT_KEYBOARD</string>
   <string name="btn_id_enable">BTN_ENABLED</string>
   <string name="btn_import_base_rules">Importar todas las reglas</string>
   <string name="btn_import_table">Importar archivo de tabla existente</string>
-  <string name="btn_import_visual">Importar reglas</string>
+  <string name="btn_import_visual">Importar reglas</string>
   <string name="btn_insert_above">Insertar encima de esta regla</string>
   <string name="btn_load_template">Cargar plantilla</string>
   <string name="btn_ok">aceptar</string>
@@ -60,7 +60,7 @@
   <string name="delete_selection">Borrar selección</string>
   <string name="deleted">%s borrado</string>
   <string name="emoji_count_summary">%1$s, %2$d de %3$d</string>
-  <string name="emoji_inserted">insertado. </string>
+  <string name="emoji_inserted">insertado</string>
   <string name="emoji_no_results">No hay resultados de emojis</string>
   <string name="emoji_no_results_query">No hay resultados para %s</string>
   <string name="emoji_no_to_insert">No hay emoji para insertar</string>
@@ -135,7 +135,7 @@
   <string name="action_edit_paste">Acción: Pegar</string>
   <string name="action_edit_speak">Acción: Verbalizar selección</string>
   <string name="action_edit_delete">Acción: Eliminar selección</string>
-  <string name="action_spell_check_left">Revisa la ortografía de la palabra anterior.</string>
+  <string name="action_spell_check_left">Revisa la ortografía de la palabra anterior</string>
   <string name="action_spell_check_right">Revisa la ortografía de la siguiente palabra</string>
   <string name="action_spell_check_next_suggestion">Próxima sugerencia ortográfica</string>
   <string name="action_spell_check_prev_suggestion">Sugerencia ortográfica anterior</string>
@@ -274,7 +274,7 @@
   <string name="import_no_valid_data">No se encontraron datos de gestos válidos en el archivo</string>
   <string name="pref_group_single_finger">Deslizamientos con un solo dedo</string>
   <string name="pref_group_two_fingers">Deslizar dos dedos (solo hacia abajo)</string>
-  <string name="pref_group_hold_swipe">Sostenga un punto con una mano y desliza con la otra.</string>
+  <string name="pref_group_hold_swipe">Sostén un punto con una mano y desliza con la otra.</string>
   <string name="high">Alta</string>
   <string name="hint_author">Autor (por ejemplo, Sergio)</string>
   <string name="hint_char">carácter</string>
@@ -311,7 +311,7 @@
   <string name="keyboard_help_title">Ayuda del teclado (tabla activa)</string>
   <string name="keyboard_horizontal">Horizontal</string>
   <string name="keyboard_next_three">Pon tres dedos más en la pantalla por favor.</string>
-  <string name="keyboard_not_set">Pon seis dedos en la pantalla para establecer el teclado Braille por favor.</string>
+  <string name="keyboard_not_set">Pon seis dedos en la pantalla para establecer el teclado Braille por favor</string>
   <string name="keyboard_shrink">Teclado ocultado</string>
   <string name="keyboard_style_normal">Normal</string>
   <string name="keyboard_style_slate">Modo regleta y punzón</string>
@@ -371,7 +371,7 @@
   <string name="medium">Media</string>
   <string name="msg_already_bottom">Ya al final</string>
   <string name="msg_already_top">ya al inicio</string>
-  <string name="msg_char_empty">El campo de carácter está vacío.</string>
+  <string name="msg_char_empty">El campo de carácter está vacío</string>
   <string name="msg_confirm_clone">¿Reemplazar la lista actual con el contenido de la tabla fuente?</string>
   <string name="msg_confirm_delete_mass">¿Eliminar %d reglas seleccionadas?</string>
   <string name="msg_confirm_template">La aplicación de una plantilla borrará las asignaciones actuales. ¿Continuar?</string>
@@ -516,7 +516,7 @@
   <string name="pref_echo_feedback_title">Eco del teclado</string>
   <string name="pref_echo_misspellings_default">cierto</string>
   <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
-  <string name="pref_echo_misspellings_summary">Al activarlo, se anuncian los errores ortográficos al espaciar.</string>
+  <string name="pref_echo_misspellings_summary">Al activarlo, se anuncian los errores ortográficos al espaciar</string>
   <string name="pref_echo_misspellings_title">Eco de errores ortográficos al escribir</string>
   <string name="pref_misspelling_sound_default">falso</string>
   <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
@@ -525,10 +525,10 @@
   <string name="misspelling_sound_enabled">Notificación de sonido de error ortográfico activada</string>
   <string name="misspelling_sound_disabled">Notificación de sonido de error ortográfico desactivada</string>
   <string name="word_added_to_dictionary">Palabra %s agregada al diccionario personal</string>
-  <string name="no_word_to_add">No se encontró ninguna palabra para agregar al diccionario.</string>
+  <string name="no_word_to_add">No se encontró ninguna palabra para agregar al diccionario</string>
   <string name="word_removed_from_dictionary">Palabra %s eliminada del diccionario personal</string>
   <string name="word_not_in_dictionary">La palabra %s no se encontró en el diccionario personal</string>
-  <string name="no_word_to_remove">No se encontró ninguna palabra para eliminar del diccionario.</string>
+  <string name="no_word_to_remove">No se encontró ninguna palabra para eliminar del diccionario</string>
   <string name="pref_echo_passwords_default">falso</string>
   <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
   <string name="pref_echo_passwords_summary">Al activarlo, el teclado habla para escribir contraseñas.</string>

@@ -82,6 +82,8 @@ public class SoundThemeManager {
     private void updateVolumeFactor(SharedPreferences prefs) {
         String volKey = context.getString(R.string.pref_keyboard_sound_volume_key);
         int volPercent = prefs.getInt(volKey, 100);
+        if (volPercent < 0) volPercent = 0;
+        if (volPercent > 100) volPercent = 100;
         volumeFactor = volPercent / 100.0f;
         Log.d(TAG, "Updated sound volume factor: " + volumeFactor);
     }
@@ -194,20 +196,24 @@ public class SoundThemeManager {
         }
         lastSoundTime = currentTime;
 
+        playSoundWithVolume(soundType, volumeFactor);
+    }
+
+    public synchronized void playSoundWithVolume(int soundType, float volume) {
         if (currentTheme.equals("system")) {
-            playSystemSound(soundType);
+            playSystemSound(soundType, volume);
             return;
         }
 
         Integer soundId = soundIdMap.get(soundType);
         if (soundId != null && soundId > 0) {
-            soundPool.play(soundId, volumeFactor, volumeFactor, 1, 0, 1.0f);
+            soundPool.play(soundId, volume, volume, 1, 0, 1.0f);
         } else {
-            playSystemSound(soundType);
+            playSystemSound(soundType, volume);
         }
     }
 
-    private void playSystemSound(int soundType) {
+    private void playSystemSound(int soundType, float volume) {
         if (audioManager == null) return;
         
         int effect;
@@ -226,6 +232,6 @@ public class SoundThemeManager {
                 effect = AudioManager.FX_KEYPRESS_STANDARD;
                 break;
         }
-        audioManager.playSoundEffect(effect);
+        audioManager.playSoundEffect(effect, volume);
     }
 }

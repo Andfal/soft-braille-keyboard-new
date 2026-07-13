@@ -13,6 +13,7 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
     private SeekBar seekBar;
     private TextView valueText;
     private int value = DEFAULT_VALUE;
+    private boolean isTrackingTouch = false;
 
     public SeekBarPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,13 +62,26 @@ public class SeekBarPreference extends DialogPreference implements SeekBar.OnSee
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         updateText(progress);
+        if (fromUser && !isTrackingTouch) {
+            float previewVolume = progress / 100.0f;
+            SoundThemeManager.getInstance(getContext()).playSoundWithVolume(
+                    SoundThemeManager.SOUND_TYPE_DEFAULT, previewVolume);
+        }
     }
 
     @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {}
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        isTrackingTouch = true;
+    }
 
     @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {}
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        isTrackingTouch = false;
+        int progress = seekBar.getProgress();
+        float previewVolume = progress / 100.0f;
+        SoundThemeManager.getInstance(getContext()).playSoundWithVolume(
+                SoundThemeManager.SOUND_TYPE_DEFAULT, previewVolume);
+    }
 
     private void updateText(int progress) {
         valueText.setText(String.format("%d%%", progress));
