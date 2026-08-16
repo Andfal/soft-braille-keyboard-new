@@ -358,8 +358,21 @@ public class BrailleParser {
         }
         if (filteredTables == null || filteredTables.isEmpty()) return null;
         TableInfo best = null;
-        for (TableInfo info : filteredTables) { if (best == null || matchRank(info.getLocale(), Locale.getDefault()) > matchRank(best.getLocale(), Locale.getDefault())) best = info; }
+        for (TableInfo info : filteredTables) {
+            if (betterTable(info, best)) best = info;
+        }
         return best;
+    }
+
+    private static boolean betterTable(TableInfo first, TableInfo second) {
+        if (second == null) return true;
+        int rank1 = matchRank(first.getLocale(), Locale.getDefault());
+        int rank2 = matchRank(second.getLocale(), Locale.getDefault());
+        if (rank1 > rank2) return true;
+        if (rank1 < rank2) return false;
+        boolean isExt1 = first.getVariant() != null && first.getVariant().startsWith("[Ext]");
+        boolean isExt2 = second.getVariant() != null && second.getVariant().startsWith("[Ext]");
+        return !isExt1 && isExt2;
     }
 
     private static int matchRank(Locale first, Locale second) {

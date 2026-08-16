@@ -214,4 +214,8 @@ public class AbbreviationManager {
         }
         return null;
     }
+
+    public String getExpansionWithDots(String typedWord, KeyboardListener listener) {
+        return getExpansion(typedWord, -1, listener);
+    }
 }
