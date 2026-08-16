@@ -99,7 +99,22 @@ public class Speech {
                         .setOnAudioFocusChangeListener(audioFocusChangeListener)
                         .build();
             }
-            audioManager.requestAudioFocus(mFocusRequest);
+                        audioManager.requestAudioFocus(mFocusRequest);
+            
+            try {
+                long now = System.currentTimeMillis();
+                long ttsQueued = Long.parseLong(utteranceId);
+                long lastSound = SoundThemeManager.getLastSoundPlayedTime();
+                long engineLatency = now - ttsQueued;
+                String logMsg = "TTS_STARTED:" + now + " [Engine latency: " + engineLatency + " ms]";
+                if (lastSound > 0) {
+                    long totalLatency = now - lastSound;
+                    logMsg += " [Total latency since sound: " + totalLatency + " ms]";
+                }
+                android.util.Log.i("SBK_LATENCY", logMsg);
+            } catch (Exception e) {
+                // Ignore parsing errors for non-numeric utterance IDs
+            }
         }
 
         @Override

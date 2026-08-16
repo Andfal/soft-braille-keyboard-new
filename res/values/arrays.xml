@@ -197,5 +197,20 @@
                 <item>95</item>
                 <item>100</item>
             </string-array>        <string-array name="empty_array"/>
+
+    <string-array name="keyboard_sound_theme_entries">
+        <item>@string/sound_theme_system</item>
+        <item>@string/sound_theme_mechanical</item>
+        <item>@string/sound_theme_typewriter</item>
+        <item>@string/sound_theme_bubble</item>
+        <item>@string/sound_theme_custom</item>
+    </string-array>
+    <string-array name="keyboard_sound_theme_values">
+        <item>system</item>
+        <item>mechanical</item>
+        <item>typewriter</item>
+        <item>bubble</item>
+        <item>custom</item>
+    </string-array>
 </resources>
 

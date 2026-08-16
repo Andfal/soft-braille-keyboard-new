@@ -11,6 +11,8 @@
     <string name="auto_caps_enabled">Auto-capitalisation</string>
     <string name="blank">Blank</string>
     <string name="braille_ime">Soft Braille Keyboard</string>
+    <string name="btn_move_to_bottom">Move to bottom</string>
+    <string name="label_high_priority_prefix">[H] </string>
     <string name="btn_add">ADD</string>
     <string name="btn_add_anyway">Add anyway</string>
     <string name="btn_add_prefix">Add prefix...</string>
@@ -42,7 +44,6 @@
     <string name="btn_select_mass">Select...</string>
     <string name="btn_set_cell">Set Cell</string>
     <string name="btn_sync_folder">Grant folder access for scanning</string>
-    <string name="msg_sync_folder_desc">To synchronize your custom tables across devices or back them up, please select a folder where the app can read and write table files.</string>
     <string name="btn_update">UPDATE</string>
     <string name="button_choose_default_keyboard">Set Soft Braille Keyboard as the default keyboard</string>
     <string name="button_keyboard_settings">Enable Soft Braille Keyboard</string>
@@ -148,7 +149,13 @@
     <string name="action_set_dot_7">Type dot 7</string>
     <string name="action_set_dot_8">Insert dot 8</string>
     <string name="action_toggle_abbreviations">Toggle abbreviations with space</string>
+    <string name="action_toggle_abbreviations_no_space">Toggle abbreviations without space</string>
     <string name="action_toggle_instant_abbreviations">Toggle instant expansion</string>
+    <string name="action_toggle_misspelling_sound">Toggle spelling error sound notification</string>
+    <string name="action_add_to_dictionary">Add word to personal dictionary</string>
+    <string name="action_add_to_dictionary_option">Add %s to personal dictionary</string>
+    <string name="action_remove_from_dictionary">Remove word from personal dictionary</string>
+    <string name="action_remove_from_dictionary_option">Remove %s from personal dictionary</string>
 
     <!-- Abbreviations -->
     <string name="pref_abbreviations_title">Abbreviations</string>
@@ -161,11 +168,16 @@
     <string name="pref_abbreviations_enabled_summary">Replaces shortcuts using space or enter as modifiers only (no extra space is inserted).</string>
     <string name="abbreviations_enabled">Abbreviations with space enabled</string>
     <string name="abbreviations_disabled">Abbreviations with space disabled</string>
+    <string name="abbreviations_no_space_enabled">Abbreviations without space enabled</string>
+    <string name="abbreviations_no_space_disabled">Abbreviations without space disabled</string>
     <string name="title_abbreviation_editor">Abbreviation Editor</string>
     <string name="hint_shortcut">Shortcut (e.g., hru or 6-s)</string>
     <string name="hint_expansion">Expanded text (e.g., How are you?)</string>
     <string name="pref_abbreviations_enabled_key">ABBREVIATIONS_ENABLED</string>
     <string name="pref_abbreviations_enabled_default">false</string>
+    <string name="pref_abbreviations_add_space_title">Expansion with space</string>
+    <string name="pref_abbreviations_add_space_summary">Replaces shortcuts using space or enter and appends a space.</string>
+    <string name="nothing_to_expand">Nothing to expand</string>
 
     <!-- Gesture Names -->
     <string name="swipe_one_left">Dot 1: Swipe Left.</string>
@@ -397,16 +409,31 @@
     <string name="msg_deleted">Deleted</string>
     <string name="msg_duplicate_dots">Combination %1$s is already used for \'%2$s\'.</string>
     <string name="msg_enter_dots">Please enter dots (e.g. 123-45)</string>
+    <string name="msg_invalid_dots_format">Invalid dots format. Use digits 1-8 separated by \'-\' or spaces.</string>
+    <string name="msg_char_required">This rule requires a character.</string>
+    <string name="msg_dots_required">Please enter at least one dot pattern.</string>
 
     
     <string name="msg_error_logs">Error while handling logs</string>
     <string name="msg_fixed_mapping">This is a fixed system mapping and cannot be removed.</string>
-    <string name="msg_import_rules_confirm">Import %d rules?</string>
+    <string name="btn_rename">Rename</string>
+    <string name="dialog_export_title">File exists</string>
+    <string name="msg_export_collision">A file with the name %1$s already exists in the export folder. What would you like to do?</string>
+    <string name="msg_save_collision">A table with the name %1$s already exists. What would you like to do?</string>
+    <string name="msg_export_failed">Export failed: %1$s</string>
+    <string name="msg_select_mapping_first">Please select a mapping from the list first.</string>
+    <string name="msg_share_error">Share error</string>
+    <string name="label_sync_hub">Synchronized Hub</string>
+    <string name="msg_hands_overlapping">Hands overlapping</string>
+    <string name="hint_enter_new_name">Enter new filename</string>
     <string name="msg_imported">Imported %s</string>
     <string name="msg_invalid_pos">Invalid position</string>
     <string name="msg_logs_cleared">Logs cleared successfully</string>
     <string name="msg_no_deletable_rules">No deletable rules found.</string>
     <string name="msg_rule_removed">Rule removed.</string>
+    <string name="msg_rule_found">Existing rule found</string>
+    <string name="msg_rule_updated">Rule updated</string>
+    <string name="msg_rule_added">Rule added</string>
     <string name="msg_rules_filtered">rules filtered</string>
     <string name="msg_select_opcode_first">Please select a Rule/Opcode first</string>
     <string name="msg_select_source_first">Select a source table before cloning.</string>    <string name="msg_standard_char_override">Standard character of the selected set. Your choice will take precedence.</string>
@@ -523,6 +550,17 @@
     <string name="pref_echo_misspellings_key">ECHO_MISSPELLING</string>
     <string name="pref_echo_misspellings_summary">When enabled misspellings are announced when a space is typed</string>
     <string name="pref_echo_misspellings_title">Echo misspellings as you type</string>
+    <string name="pref_misspelling_sound_default">false</string>
+    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
+    <string name="pref_misspelling_sound_summary">Play a sound for misspelling errors instead of vocal feedback.</string>
+    <string name="pref_misspelling_sound_title">Spelling error sound notification</string>
+    <string name="misspelling_sound_enabled">Spelling error sound notification enabled</string>
+    <string name="misspelling_sound_disabled">Spelling error sound notification disabled</string>
+    <string name="word_added_to_dictionary">Word %s added to personal dictionary</string>
+    <string name="no_word_to_add">No word found to add to dictionary</string>
+    <string name="word_removed_from_dictionary">Word %s removed from personal dictionary</string>
+    <string name="word_not_in_dictionary">Word %s was not found in personal dictionary</string>
+    <string name="no_word_to_remove">No word found to remove from dictionary</string>
     <string name="pref_echo_passwords_default">false</string>
     <string name="pref_echo_passwords_key">PASSWORD_ECHO</string>
     <string name="pref_echo_passwords_summary">When enabled the keyboard will speak during password input.</string>
@@ -539,6 +577,23 @@
     <string name="pref_keyboard_feedback_key">KEYBOARD_FEEDBACK</string>
     <string name="pref_keyboard_feedback_summary">Choose the type of haptic and sound keyboard feedback.</string>
     <string name="pref_keyboard_feedback_title">Keyboard Feedback</string>
+    <string name="pref_keyboard_sound_theme_key">pref_keyboard_sound_theme</string>
+    <string name="pref_keyboard_sound_theme_title">Keyboard Sound Theme</string>
+    <string name="pref_keyboard_sound_theme_summary">Choose sound effects for keypresses</string>
+    <string name="sound_theme_system">System Default</string>
+    <string name="sound_theme_mechanical">Mechanical Keyboard</string>
+    <string name="sound_theme_typewriter">Typewriter</string>
+    <string name="sound_theme_bubble">Bubble</string>
+    <string name="sound_theme_custom">Custom Theme (folder)</string>
+    <string name="pref_custom_sound_theme_folder_key">pref_custom_sound_theme_folder</string>
+    <string name="pref_custom_sound_theme_folder_uri_key">pref_custom_sound_theme_folder_uri</string>
+    <string name="pref_custom_sound_theme_folder_title">Custom Sound Theme Folder</string>
+    <string name="pref_custom_sound_theme_folder_summary">Choose folder containing tap.wav, space.wav, delete.wav, enter.wav</string>
+    <string name="pref_keyboard_sound_volume_key">pref_keyboard_sound_volume</string>
+    <string name="pref_keyboard_sound_volume_title">Sound theme volume</string>
+    <string name="pref_keyboard_sound_volume_dialog">Adjust sound theme volume</string>
+    <string name="toast_custom_sound_theme_folder_selected">Custom sound theme folder selected</string>
+    <string name="toast_custom_sound_theme_folder_error">Error selecting custom folder</string>
     <string name="pref_keyboard_invert_default">false</string>
     <string name="pref_keyboard_invert_key">KEYBOARD_INVERT</string>
     <string name="pref_keyboard_invert_summary">When the keyboard is not rotating with the phone use this setting to flip the orientation of the keyboard 180 degrees</string>
@@ -723,12 +778,15 @@
     <string name="table_variant_unofficial">Unofficial</string>
     <string name="btn_edit_header">Edit Table Header / Metadata</string>
     <string name="btn_move_to_pos">Move to Position</string>
+    <string name="btn_pin_mapping">Pin mapping (protect)</string>
+    <string name="btn_unpin_mapping">Unpin mapping</string>
     <string name="hint_enter_pos">Enter position (1 to %d)</string>
     <string name="btn_move_up">Move Up</string>
     <string name="btn_move_down">Move Down</string>
     <string name="btn_move_top">Move to Top</string>
     <string name="btn_insert_alphabet_here">Insert Alphabet (%s) here</string>
     <string name="btn_insert_numeric_here">Insert Numbers (%s) here</string>
+    <string name="title_activity_keyboard_help">Keyboard Help</string>
     <string name="title_activity_table_creator">Table Creator</string>
     <string name="title_confirm_delete">Confirm Delete</string>
     <string name="title_duplicate_combination">Duplicate Combination</string>
@@ -755,6 +813,7 @@
     <string name="voice_input_permission_message">You need to enable the record audio permission for voice input to work.</string>
     <string name="voice_input_permission_title">Voice Input Permission</string>
     <string name="word_correct">Word is correct</string>
+    <string name="word_correction_correct">%s correct</string>
     <string name="word_correction_misspelled">%s misspelled</string>
     <string name="word_count">%1$d lines, %2$d words, %3$d characters</string>
     <string name="word_misspelled">Misspelled</string>
@@ -877,48 +936,6 @@
     
 
     
-            <string name="btn_move_to_bottom">Move to bottom</string>
-    <string name="label_high_priority_prefix">[H] </string>
-    <string name="action_toggle_abbreviations_no_space">Toggle abbreviations without space</string>
-    <string name="abbreviations_no_space_enabled">Abbreviations without space enabled</string>
-    <string name="abbreviations_no_space_disabled">Abbreviations without space disabled</string>
-    <string name="pref_abbreviations_add_space_title">Expansion with space</string>
-    <string name="pref_abbreviations_add_space_summary">Replaces shortcuts using space or enter and appends a space.</string>
-    <string name="nothing_to_expand">Nothing to expand</string>
-    <string name="msg_invalid_dots_format">Invalid dots format. Use digits 1-8 separated by \'-\' or spaces.</string>
-    <string name="msg_char_required">This rule requires a character.</string>
-    <string name="msg_dots_required">Please enter at least one dot pattern.</string>
-    <string name="btn_rename">Rename</string>
-    <string name="dialog_export_title">File exists</string>
-    <string name="msg_export_collision">A file with the name %1$s already exists in the export folder. What would you like to do?</string>
-    <string name="msg_save_collision">A table with the name %1$s already exists. What would you like to do?</string>
-    <string name="msg_export_failed">Export failed: %1$s</string>
-    <string name="msg_select_mapping_first">Please select a mapping from the list first.</string>
-    <string name="msg_share_error">Share error</string>
-    <string name="label_sync_hub">Synchronized Hub</string>
-    <string name="msg_hands_overlapping">Hands overlapping</string>
-    <string name="hint_enter_new_name">Enter new filename</string>
-    <string name="msg_rule_found">Existing rule found</string>
-    <string name="msg_rule_updated">Rule updated</string>
-    <string name="msg_rule_added">Rule added</string>
-    <string name="btn_pin_mapping">Pin mapping (protect)</string>
-    <string name="btn_unpin_mapping">Unpin mapping</string>
-    <string name="title_activity_keyboard_help">Keyboard Help</string>
-    <string name="action_add_to_dictionary">Add word to personal dictionary</string>
-    <string name="action_add_to_dictionary_option">Add %s to personal dictionary</string>
-    <string name="action_remove_from_dictionary">Remove word from personal dictionary</string>
-    <string name="action_remove_from_dictionary_option">Remove %s from personal dictionary</string>
-    <string name="word_added_to_dictionary">Word %s added to personal dictionary</string>
-    <string name="no_word_to_add">No word found to add to dictionary</string>
-    <string name="word_removed_from_dictionary">Word %s removed from personal dictionary</string>
-    <string name="word_not_in_dictionary">Word %s was not found in personal dictionary</string>
-    <string name="no_word_to_remove">No word found to remove from dictionary</string>
-    <string name="word_correction_correct">%s is correct</string>
-    <string name="action_toggle_misspelling_sound">Toggle spelling error sound notification</string>
-    <string name="pref_misspelling_sound_default">false</string>
-    <string name="pref_misspelling_sound_key">MISSPELLING_SOUND</string>
-    <string name="pref_misspelling_sound_summary">Play a sound for misspelling errors instead of vocal feedback.</string>
-    <string name="pref_misspelling_sound_title">Spelling error sound notification</string>
-    <string name="misspelling_sound_enabled">Spelling error sound notification enabled</string>
-    <string name="misspelling_sound_disabled">Spelling error sound notification disabled</string>
+            <string name="msg_sync_folder_desc">Select a folder to automatically sync and import custom tables.</string>
+    <string name="msg_import_rules_confirm">Import all rules from this table into the editor?</string>
 </resources>

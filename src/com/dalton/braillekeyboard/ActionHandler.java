@@ -53,10 +53,15 @@ import com.dalton.braillekeyboard.SpellChecker.Suggestion;
 public class ActionHandler {
     private static final long DOUBLE_TOUCH_THRESHOLD = 1300;
 
+    public static final int SOUND_TYPE_DEFAULT = 0;
+    public static final int SOUND_TYPE_SPACE = 1;
+    public static final int SOUND_TYPE_DELETE = 2;
+    public static final int SOUND_TYPE_ENTER = 3;
+
     public interface OnActionListener {
         void onText(String format, String text, boolean isPasswordField);
         void onText(String format, String text, boolean isPasswordField, int mode);
-        void onNotify(boolean vibrate, boolean playSound);
+        void onNotify(boolean vibrate, boolean playSound, int soundType);
         void onSetDots(boolean dot7, boolean dot8);
         void onSetLocale(Locale locale);
         void onShrink();
@@ -359,7 +364,7 @@ public class ActionHandler {
                     break;
                 default: emojiHandled = false;
             }
-            if (emojiHandled) { callback.onNotify(true, true); if (message != null) callback.onText("%s", message, false); lastSwipe = value; return true; }
+            if (emojiHandled) { callback.onNotify(true, true, SOUND_TYPE_DEFAULT); if (message != null) callback.onText("%s", message, false); lastSwipe = value; return true; }
         }
 
         switch (action) {
@@ -468,7 +473,22 @@ public class ActionHandler {
         default: notify = false;
         }
 
-        callback.onNotify(notify, notify);
+        int soundType = SOUND_TYPE_DEFAULT;
+        switch (action) {
+            case SPACE:
+                soundType = SOUND_TYPE_SPACE;
+                break;
+            case NEWLINE:
+                soundType = SOUND_TYPE_ENTER;
+                break;
+            case BACKSPACE_CHAR:
+            case BACKSPACE_WORD:
+            case BACKSPACE_LINE:
+            case BACKSPACE_ALL:
+                soundType = SOUND_TYPE_DELETE;
+                break;
+        }
+        callback.onNotify(notify, notify, soundType);
         if (message != null) callback.onText("%s", message, considerPassword ? listener.isPasswordField() : false);
         if (setDots) callback.onSetDots(dots[0], dots[1]);
         lastSwipe = value;
@@ -487,15 +507,15 @@ public class ActionHandler {
         if (voiceInput.isListening()) return;
         if (emojiMode) {
             String trans = listener.translateLiteral(value);
-            if (trans != null && trans.length() > 0) { emojiSearchQuery.append(trans); updateEmojiResults(); callback.onNotify(true, true); callback.onText("%s", getEmojiSummary(), false); }
-            else callback.onNotify(true, false);
+            if (trans != null && trans.length() > 0) { emojiSearchQuery.append(trans); updateEmojiResults(); callback.onNotify(true, true, SOUND_TYPE_DEFAULT); callback.onText("%s", getEmojiSummary(), false); }
+            else callback.onNotify(true, false, SOUND_TYPE_DEFAULT);
             return;
         }
         lastSwipe = Swipe.NONE;
         String result = listener.handleTypedCharacter(value);
         if (result == null) callback.onText("%s", context.getString(R.string.unknown_character), false);
         else {
-            callback.onNotify(true, true);
+            callback.onNotify(true, true, SOUND_TYPE_DEFAULT);
             String character = echoCharacter(context, result);
             result = (character == null) ? "" : character;
             if (!(result = result.trim()).equals("")) callback.onText("%s", result, listener.isPasswordField());

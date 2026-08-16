@@ -93,8 +93,8 @@ public class BrailleView extends View {
         }
 
         @Override
-        public void onNotify(boolean vibrate, boolean playSound) {
-            sendNotification(vibrate, playSound);
+        public void onNotify(boolean vibrate, boolean playSound, int soundType) {
+            sendNotification(vibrate, playSound, soundType);
         }
 
         @Override
@@ -810,7 +810,7 @@ public class BrailleView extends View {
         return value;
     }
 
-    private void sendNotification(boolean vibrate, boolean playSound) {
+    private void sendNotification(boolean vibrate, boolean playSound, int soundType) {
         if (vibrate
                 && (KeyboardFeedback.VIBRATE.value & Integer.parseInt(Options
                         .getStringPreference(getContext(),
@@ -823,7 +823,7 @@ public class BrailleView extends View {
                         .getStringPreference(getContext(),
                                 R.string.pref_keyboard_feedback_key,
                                 KeyboardFeedback.SOUND.getValue()))) != 0) {
-            playSoundEffect(SoundEffectConstants.CLICK);
+            SoundThemeManager.getInstance(getContext()).playSound(soundType);
         }
     }
 

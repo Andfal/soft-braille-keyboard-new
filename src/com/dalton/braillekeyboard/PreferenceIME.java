@@ -31,6 +31,8 @@ import java.util.Locale;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.ListPreference;
@@ -192,6 +194,27 @@ public class PreferenceIME extends AppCompatActivity implements
             ListPreference feedback = findPreference(getString(R.string.pref_keyboard_feedback_key));
             if (echo != null) addOptions(echo, KeyboardEcho.ALL);
             if (feedback != null) addOptions(feedback, KeyboardFeedback.ALL);
+
+            ListPreference soundThemePref = findPreference(getString(R.string.pref_keyboard_sound_theme_key));
+            if (soundThemePref != null) {
+                soundThemePref.setOnPreferenceChangeListener((preference, newValue) -> {
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        if (getActivity() != null) {
+                            SoundThemeManager.getInstance(getActivity()).loadSelectedTheme();
+                        }
+                    });
+                    return true;
+                });
+            }
+
+            Preference customFolderPref = findPreference(getString(R.string.pref_custom_sound_theme_folder_key));
+            if (customFolderPref != null) {
+                customFolderPref.setOnPreferenceClickListener(p -> {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                    startActivityForResult(intent, 2002);
+                    return true;
+                });
+            }
         }
 
         private void setupBraillePreferences() {
@@ -266,6 +289,27 @@ public class PreferenceIME extends AppCompatActivity implements
                     String vName = getActivity().getPackageManager().getPackageInfo(getActivity().getPackageName(), 0).versionName;
                     version.setTitle(String.format(getString(R.string.pref_app_version_title), vName));
                 } catch (Exception ignored) {}
+            }
+        }
+
+        @Override
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (requestCode == 2002 && resultCode == android.app.Activity.RESULT_OK && data != null) {
+                Uri uri = data.getData();
+                if (uri != null && getActivity() != null) {
+                    try {
+                        getActivity().getContentResolver().takePersistableUriPermission(
+                                uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        Options.writeStringPreferenceStringKey(getActivity(), 
+                                getString(R.string.pref_custom_sound_theme_folder_uri_key), uri.toString());
+                        SoundThemeManager.getInstance(getActivity()).loadSelectedTheme();
+                        Toast.makeText(getActivity(), getString(R.string.toast_custom_sound_theme_folder_selected), Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        android.util.Log.e("PreferenceIME", "Failed to take persistable URI permission", e);
+                        Toast.makeText(getActivity(), getString(R.string.toast_custom_sound_theme_folder_error), Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
 
