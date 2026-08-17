@@ -7,7 +7,7 @@ An accessible on-screen soft Braille keyboard input method (IME) for Android dev
 
 This branch (main) is the **primary modern version** of the project, fully refactored for **AndroidX**, targeting modern Android versions (Android 8.0 Oreo up to Android 15+ / API 34+), with 16KB memory page alignment, updated component lifecycles, and modern Android APIs.
 
-For older Android versions (API 14 to API 25, Android 4.0+), please refer to the [classic](https://github.com/vortex1024/soft-braille-keyboard/tree/classic) legacy branch.
+For older Android versions (API 14 to API 25, Android 4.0+), please refer to the [classic](https://github.com/catilina2/soft-braille-keyboard-new/tree/classic) legacy branch.
 
 ---
 
