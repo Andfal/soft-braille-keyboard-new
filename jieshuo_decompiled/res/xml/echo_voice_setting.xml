@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference android:entries="@array/tts_speaker_entries" android:title="@string/tts_speaker_title" android:key="@string/echo_tts_speaker" android:defaultValue="3" android:entryValues="@array/tts_speaker_values" />
-</PreferenceScreen>

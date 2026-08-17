@@ -1,9 +1,0 @@
-{
-  LinearLayout,
-  orientation="vertical",
-  {
-    ListView,
-    id="list",
-    layout_width="fill"
-  },
-}
