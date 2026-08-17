@@ -16,7 +16,7 @@ out/
 
 # Gradle files
 .gradle/
-build/
+/build/
 app/build/
 service/build/
 client/build/
@@ -82,3 +82,40 @@ liblouis_files.txt
 # Python scripts generated files (if any)
 __pycache__/
 *.pyc
+# Credenziali e documenti privati
+/*.docx
+/*.doc
+credenziali*
+
+# Repository originali di confronto ed esclusioni esterne
+originals/
+*_original/
+dalton_original/
+vortex_original/
+
+# Decompilazioni e reverse engineering
+*_decompiled/
+abk_decompiled/
+jieshuo_decompiled/
+
+# Strumenti standalone e log locali
+apktool*.jar
+apktool*.bat
+COMANDI_GIT.txt
+log utenti/
+build_error.log
+*.log
+
+# File temporanei di traduzione, test e dump XML
+stringhe/
+view*.xml
+ultimate_manual_test.ctb
+prova*.ctb
+sergio_test.ctb
+tabella francese.ctb
+esplosa_*.ctb
+it_definitiva_funzionante.ctb
+test_it_hybrid_*.ctb
+test_it_numbers.ctb
+manual_test_*.ctb
+final_manual_test.ctb
