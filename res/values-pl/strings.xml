@@ -639,7 +639,7 @@
     <string name="preset_cat_math">Matematyka i symbole (+, €, ...)</string>
     <string name="preset_cat_punc">Interpunkcja (standardowa/literacka)</string>
     <string name="preset_let_sign">Znak listu</string>
-    <string name="preset_num_sign">Znak liczby</string>
+    <string name="preset_num_sign">Znak litery</string>
     <string name="privacy_disabled">Ukrywanie ekranu wyłączone</string>
     <string name="privacy_enabled">Ukrywanie ekranu włączone</string>
     <string name="punctuation_backslash">Bekslesz</string>
