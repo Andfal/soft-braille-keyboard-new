@@ -1,7 +1,7 @@
 workflows:
   android-apk-classic-build:
     name: Android APK Classic Build
-    max_build_duration: 7
+    max_build_duration: 20
     instance_type: mac_mini_m2
     environment:
       vars:
@@ -10,9 +10,13 @@ workflows:
       events:
         - push
     scripts:
-      - name: Build Android APK
+      - name: Generate permanent keystore file
+        script: |
+          keytool -genkey -v -keystore moimaju-key.jks -alias moimaju-alias -keyalg RSA -keysize 2048 -validity 10000 -storepass ObalamyKeySBK07 -keypass ObalamyKeySBK07 -dname "CN=Andfal, OU=Development, O=Braille, L=Warsaw, S=Mazovia, C=PL"
+      - name: Build Android APK signed with permanent key
         script: |
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug -Pandroid.injected.signing.store.file=$(pwd)/moimaju-key.jks -Pandroid.injected.signing.store.password=ObalamyKeySBK07 -Pandroid.injected.signing.key.alias=moimaju-alias -Pandroid.injected.signing.key.password=ObalamyKeySBK07
     artifacts:
       - "**/*.apk"
+      - "**/*.jks"
