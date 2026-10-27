@@ -10,10 +10,6 @@ workflows:
       events:
         - push
     scripts:
-      - name: Generate version properties
-        script: |
-          echo "VERSION_CODE=${CM_BUILD_NUMBER}" > version.properties
-          echo "VERSION_NAME=Obalamy 0.7" >> version.properties
       - name: Build Android APK
         script: |
           chmod +x gradlew
