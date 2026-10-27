@@ -1,7 +1,7 @@
 workflows:
   android-apk-classic-build:
     name: Android APK Classic Build
-    max_build_duration: 7
+    max_build_duration: 8
     instance_type: mac_mini_m2
     environment:
       vars:
@@ -10,10 +10,11 @@ workflows:
       events:
         - push
     scripts:
-      - name: Generate version properties from current date
+      - name: Generate unique date-based version code
         script: |
-          CURRENT_DATE_CODE=$(date +"%Y%m%d")
-          echo "VERSION_CODE=${CURRENT_DATE_CODE}" > version.properties
+          DATE_PART=$(date +"%Y%m%d")
+          UNIQUE_VERSION_CODE="${DATE_PART}${CM_BUILD_NUMBER}"
+          echo "VERSION_CODE=${UNIQUE_VERSION_CODE}" > version.properties
           echo "VERSION_NAME=Obalamy 0.7" >> version.properties
       - name: Build Android APK signed with permanent key
         script: |
