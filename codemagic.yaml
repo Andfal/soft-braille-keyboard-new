@@ -12,9 +12,7 @@ workflows:
     scripts:
       - name: Generate unique date-based version code
         script: |
-          DATE_PART=$(date +"%Y%m%d")
-          UNIQUE_VERSION_CODE="${DATE_PART}${CM_BUILD_NUMBER}"
-          echo "VERSION_CODE=${UNIQUE_VERSION_CODE}" > version.properties
+          echo "VERSION_CODE=$(date +%Y%m%d)$CM_BUILD_NUMBER" > version.properties
           echo "VERSION_NAME=Obalamy 0.7" >> version.properties
       - name: Build Android APK signed with permanent key
         script: |
