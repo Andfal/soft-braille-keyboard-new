@@ -443,7 +443,7 @@
     <string name="opcode_endcapsword">Wyłącz słowa z dużej litery</string>
     <string name="opcode_endnum">Wyłącz tryb liczby</string>
     <string name="opcode_include">Uwzględnij</string>
-    <string name="opcode_letsign">Znak litery (5)</string>
+    <string name="opcode_letsign">Znak małej litery (5)</string>
     <string name="opcode_letter">Znak ogólny</string>
     <string name="opcode_litdigit">Cyfra literacka</string>
     <string name="opcode_lowercase">Mała litera</string>
