@@ -313,7 +313,7 @@
     <string name="keyboard_next_three">Przytrzymaj teraz kolejne trzy palce na ekranie.</string>
     <string name="keyboard_not_set">Aby ustawić klawiaturę brajlowską, połóż wszystkie 6 palców na ekranie</string>
     <string name="keyboard_shrink">Klawiatura zwinięta</string>
-    <string name="keyboard_style_normal">Normalne</string>
+    <string name="keyboard_style_normal">Normalny</string>
     <string name="keyboard_style_slate">Tryb tabliczki i dłutka</string>
     <string name="keyboard_style_top_bottom">Zamień punkty 1 i 4 z punktami 3 i 6</string>
     <string name="keyboard_tabletop">Płasko na stole</string>
@@ -443,7 +443,7 @@
     <string name="opcode_endcapsword">Wyłącz słowa z dużej litery</string>
     <string name="opcode_endnum">Wyłącz tryb liczby</string>
     <string name="opcode_include">Uwzględnij</string>
-    <string name="opcode_letsign">Znak małej litery (5)</string>
+    <string name="opcode_letsign">Znak litery (5)</string>
     <string name="opcode_letter">Znak ogólny</string>
     <string name="opcode_litdigit">Cyfra literacka</string>
     <string name="opcode_lowercase">Mała litera</string>
