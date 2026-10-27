@@ -1,7 +1,7 @@
 workflows:
   android-apk-classic-build:
     name: Android APK Classic Build
-    max_build_duration: 20
+    max_build_duration: 8
     instance_type: mac_mini_m2
     environment:
       vars:
@@ -14,5 +14,5 @@ workflows:
         script: |
           chmod +x gradlew
           ./gradlew assembleDebug -Pandroid.injected.signing.store.file=$(pwd)/moimaju-key.jks -Pandroid.injected.signing.store.password=ObalamyKeySBK07 -Pandroid.injected.signing.key.alias=moimaju-alias -Pandroid.injected.signing.key.password=ObalamyKeySBK07
-          artifacts:
+    artifacts:
       - "**/*.apk"
