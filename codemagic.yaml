@@ -13,7 +13,7 @@ workflows:
       - name: Build Android APK signed with permanent key
         script: |
           chmod +x gradlew
-          ./gradlew assembleDebug -Pandroid.injected.signing.store.file=$(pwd)/moimaju-key.jks -Pandroid.injected.signing.store.password=ObalamyKlucz2026 -Pandroid.injected.signing.key.alias=moimaju-alias -Pandroid.injected.signing.key.password=ObalamyKlucz2026
+          ./gradlew assembleDebug -Pandroid.injected.signing.store.file=$(pwd)/moimaju-key.jks -Pandroid.injected.signing.store.password=ObalamyKeySBK07 -Pandroid.injected.signing.key.alias=moimaju-alias -Pandroid.injected.signing.key.password=ObalamyKeySBK07
       - name: Add date to the output APK filename
         script: |
           DATE_TAG=$(date +"%Y%m%d")
