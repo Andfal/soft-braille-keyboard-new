@@ -14,9 +14,5 @@ workflows:
         script: |
           chmod +x gradlew
           ./gradlew assembleDebug -Pandroid.injected.signing.store.file=$(pwd)/moimaju-key.jks -Pandroid.injected.signing.store.password=ObalamyKeySBK07 -Pandroid.injected.signing.key.alias=moimaju-alias -Pandroid.injected.signing.key.password=ObalamyKeySBK07
-      - name: Add date to the output APK filename
-        script: |
-          DATE_TAG=$(date +"%Y%m%d")
-          mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/Klawiatura-${DATE_TAG}.apk
-    artifacts:
+          artifacts:
       - "**/*.apk"
